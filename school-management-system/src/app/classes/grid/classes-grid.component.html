@@ -1,0 +1,35 @@
+<div id="class_grid">
+    <app-reusable-grid [gridData]="datasource_classes">
+        <app-reusable-grid-column field="name" title="Class Name">
+    
+    
+        </app-reusable-grid-column>
+    
+        <app-reusable-grid-column field="sections" title="Sections">
+            <ng-template reusableGridCellTemplate let-dataItem="dataItem" let-rowIndex="rowIndex">
+                <span> {{dataItem.sections.join(',')}}</span>
+            </ng-template>
+    
+        </app-reusable-grid-column>
+    
+        <app-reusable-grid-column field="Action">
+            <ng-template reusableGridCellTemplate let-dataItem="dataItem" let-rowIndex="rowIndex">
+                <button type="button" class="btn btn-sm btn-success me-2" (click)="onEdit(dataItem)">
+                    Edit
+                </button>
+                <button type="button" class="btn btn-sm btn-danger" (click)="onDelete(dataItem)">
+                    Delete
+                </button>
+            </ng-template>
+    
+    
+        </app-reusable-grid-column>
+    
+        <ng-template noDataTemplate>
+            <div class="custom-no-data">
+                <p>No Classes Available</p>
+            </div>
+        </ng-template>
+    
+    </app-reusable-grid>
+</div>

@@ -1,0 +1,46 @@
+
+
+/* Modal Dialog Styles */
+.modal-dialog {
+  margin: auto;
+  max-width: 500px;
+
+  @media (max-width: 576px) {
+    max-width: 90%;
+  }
+}
+
+/* Modal Header */
+.modal-header {
+  display: flex;
+  justify-content: space-between !important;
+  width: 100%;
+  .modal-title {
+    font-size: 18px;
+    font-weight: bold;
+  }
+}
+
+/* Modal Body */
+.modal-body {
+  p {
+    font-size: 16px;
+    margin: 0;
+    color: #333;
+  }
+}
+
+/* Modal Footer */
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+
+  button {
+    min-width: 80px;
+
+    @media (max-width: 576px) {
+      font-size: 12px;
+    }
+  }
+}

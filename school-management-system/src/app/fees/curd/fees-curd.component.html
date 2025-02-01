@@ -1,0 +1,97 @@
+<div class="mx-2 form-container" id="classCurd">
+    <!-- Header -->
+    <div class="d-flex w-100 justify-content-between align-items-center py-2 bottom_border">
+        <h6>{{heaeder_name}}</h6>
+        <div class="close-btn" (click)="close()">
+            <i class="bi bi-x"></i>
+        </div>
+    </div>
+
+    <!-- Form Body -->
+    <div class="form-body container">
+
+
+        <form [formGroup]="feeForm" (ngSubmit)="submitForm()">
+            <!-- Name Field -->
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input id="name" type="text" class="form-control" formControlName="name" placeholder="Enter name" />
+                <div *ngIf="name?.invalid && name?.touched" class="text-danger">
+                    <div *ngIf="name?.hasError('required')">Name is required.</div>
+                    <div *ngIf="name?.hasError('minLength')">Name must be at least 3 characters long.</div>
+                </div>
+            </div>
+
+            <!-- Class Dropdown -->
+            <div class="form-group">
+                <label for="class">Class</label>
+                <select id="class" class="form-control" formControlName="class">
+                    <option value="" disabled>Select Class</option>
+                    <option *ngFor="let classOption of classOptions" [value]="classOption._id">
+                        {{ classOption.name }}
+                    </option>
+                </select>
+                <div *ngIf="classField?.invalid && classField?.touched" class="text-danger">
+                    <div *ngIf="classField?.hasError('required')">Class is required.</div>
+                </div>
+            </div>
+
+            <!-- Fee Groups -->
+            <div formArrayName="feeGroups" class="fee-groups">
+                <div *ngFor="let feeGroup of feeGroups.controls; let i = index" [formGroupName]="i"
+                    class="fee-group-row">
+                    <div class="form-group-inline fee-type-group">
+                        <label for="feeType-{{ i }}">Fee Type</label>
+                        <select id="feeType-{{ i }}" class="form-control" formControlName="feeType">
+                            <option value="" disabled>Select Fee Type</option>
+                            <option *ngFor="let type of feeTypes" [value]="type.name">
+                                {{ type.name }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group-inline">
+                        <label for="amount-{{ i }}">Amount</label>
+                        <input id="amount-{{ i }}" type="number" class="form-control" formControlName="amount"
+                            placeholder="Amount" />
+                    </div>
+
+                    <div class="form-group-inline">
+                        <label for="date-{{ i }}">Date</label>
+                        <input id="date-{{ i }}" type="date" class="form-control" formControlName="date" />
+                    </div>
+
+                    <!-- Remove Fee Group Icon -->
+                    <button type="button" class="btn-icon remove-icon" (click)="removeFeeGroup(i)"
+                        title="Remove Fee Group">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Add Fee Group Icon -->
+            <div class="add-fee-group">
+                <button type="button" class="btn-icon add-icon" (click)="addFeeGroup()" title="Add Fee Group">
+                    <i class="bi bi-plus"></i>
+                </button>
+            </div>
+
+          
+        </form>
+
+
+
+
+    </div>
+
+
+
+
+
+
+
+    <!-- Footer -->
+    <div class="btn-panel d-flex justify-content-end py-2">
+        <button class="btn btn-primary" [disabled]="feeForm.invalid" (click)="submitForm()">{{button}}</button>
+    </div>
+</div>

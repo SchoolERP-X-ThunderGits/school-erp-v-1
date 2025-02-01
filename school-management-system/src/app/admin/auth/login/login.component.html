@@ -1,0 +1,46 @@
+<div id="LoginBox" class="login-container">
+  <!-- Left Section: Login Form -->
+   <div class="login-box">
+    <div class="login-form theme-bg">
+      <h2>Login</h2>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
+            placeholder="Enter your email"
+            [ngClass]="{ 'is-invalid': form_control['email'].touched && form_control['email'].invalid }"
+          />
+          <div *ngIf="form_control['email'].touched && form_control['email'].invalid" class="error">
+            <small *ngIf="form_control['email'].errors?.['required']">Email is required.</small>
+            <small *ngIf="form_control['email'].errors?.['email']">Enter a valid email address.</small>
+          </div>
+        </div>
+  
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <input
+            id="password"
+            type="password"
+            formControlName="password"
+            placeholder="Enter your password"
+            [ngClass]="{ 'is-invalid': form_control['password'].touched && form_control['password'].invalid }"
+          />
+          <div *ngIf="form_control['password'].touched && form_control['password'].invalid" class="error">
+            <small *ngIf="form_control['password'].errors?.['required']">Password is required.</small>
+          </div>
+        </div>
+  
+        <button type="submit" class="btn btn-bg" [disabled]="loginForm.invalid">Login</button>
+      </form>
+    </div>
+   </div>
+  
+
+  <!-- Right Section: Image -->
+  <div class="login-image">
+    <img src="image/loginPage.jpg" alt="Login Illustration" />
+  </div>
+</div>

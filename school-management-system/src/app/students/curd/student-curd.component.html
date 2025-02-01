@@ -1,0 +1,325 @@
+
+
+
+<div id="student_curd" class="mx-2 form-container">
+    <!-- Header -->
+    <div class="d-flex w-100 justify-content-between align-items-center py-2 bottom_border">
+        <h6>Add Student</h6>
+        <div class="close-btn" (click)="close()">
+            <i class="bi bi-x"></i>
+        </div>
+    </div>
+
+    <!-- Form Body -->
+    <div class="form-body">
+        <form [formGroup]="studentForm">
+
+            <div class="form-group mb-2">
+                <label for="admissionNumber" class="required-label">Admission Number</label>
+                <input type="text" id="admissionNumber" formControlName="admissionNumber" class="form-control" />
+            </div>
+            <div class="form-group mb-2">
+                <label for="rollNumber" class="required-label">Roll Number</label>
+                <input type="text" id="rollNumber" formControlName="rollNumber" class="form-control" />
+                <div *ngIf="studentForm.get('rollNumber')?.invalid && studentForm.get('rollNumber')?.touched"
+                    class="error-box">
+                    <small class="text-danger">Roll number is required.</small>
+                </div>
+            </div>
+
+            <div class="form-group mb-2">
+                <label for="firstName" class="required-label">First Name</label>
+                <input type="text" id="firstName" formControlName="firstName" class="form-control" />
+                <div *ngIf="studentForm.get('firstName')?.invalid && studentForm.get('firstName')?.touched"
+                    class="error-box">
+                    <small class="text-danger">First name is required.</small>
+                </div>
+            </div>
+            <div class="form-group mb-2">
+                <label for="lastName" class="required-label">Last Name</label>
+                <input type="text" id="lastName" formControlName="lastName" class="form-control" />
+                <div *ngIf="studentForm.get('lastName')?.invalid && studentForm.get('lastName')?.touched"
+                    class="error-box">
+                    <small class="text-danger">Last name is required.</small>
+                </div>
+            </div>
+
+            <div class="form-group mb-2">
+                <label for="class" class="required-label">Class</label>
+                <select id="class" formControlName="class" class="form-control" (change)="getSection($event)">
+                    <option value="" disabled>Select Class</option>
+                    <option *ngFor="let cls of classes" [value]="cls._id" >{{ cls.name }}</option>
+                </select>
+
+                <div *ngIf="studentForm.get('class')?.invalid && studentForm.get('class')?.touched" class="error-box">
+                    <small class="text-danger">Class is required.</small>
+                </div>
+            </div>
+            <div class="form-group mb-2" *ngIf="studentForm.value.class.length >0 ">
+                <label for="sections" class="required-label">Section</label>
+                <select id="sections" formControlName="section" class="form-control" >
+                    <option value="" disabled>Select Section</option>
+                    <option *ngFor="let sc of sections" [value]="sc">{{ sc }}</option>
+                </select>
+
+                <div *ngIf="studentForm.get('section')?.invalid && studentForm.get('section')?.touched"
+                    class="error-box">
+                    <small class="text-danger">Section is required.</small>
+                </div>
+            </div>
+            <div class="form-group mb-2">
+                <label for="session" class="required-label">Session</label>
+                <select id="session" formControlName="session" class="form-control" >
+                    <option value="" disabled>Select Session</option>
+                    <option *ngFor="let sc of sessions" [value]="sc">{{ sc }}</option>
+                </select>
+
+                <div *ngIf="studentForm.get('session')?.invalid && studentForm.get('session')?.touched"
+                    class="error-box">
+                    <small class="text-danger">Session is required.</small>
+                </div>
+            </div>
+
+            <div class="form-group mb-2">
+                <label for="dob" class="required-label">Date of Birth</label>
+                <input type="date" id="dob" formControlName="dob" class="form-control" />
+                <div *ngIf="studentForm.get('dob')?.invalid && studentForm.get('dob')?.touched" class="error-box">
+                    <small class="text-danger">Date of Birth is required.</small>
+                </div>
+            </div>
+
+            <div class="form-group mb-2">
+                <label for="gender" class="required-label">Gender</label>
+                <select id="gender" formControlName="gender" class="form-control">
+                    <option value="" disabled>Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+                <div *ngIf="studentForm.get('gender')?.invalid && studentForm.get('gender')?.touched" class="error-box">
+                    <small class="text-danger">Gender is required.</small>
+                </div>
+            </div>
+            <div class="form-group mb-2">
+                <label for="permanentAddress" class="required-label">Permanent Address</label>
+                <textarea id="permanentAddress" formControlName="permanentAddress" class="form-control"
+                    rows="3"></textarea>
+                <div *ngIf="studentForm.get('permanentAddress')?.invalid && studentForm.get('permanentAddress')?.touched"
+                    class="error-box">
+                    <small class="text-danger">Permanent Address is required.</small>
+                </div>
+            </div>
+
+            <div class="form-group mb-2">
+                <label for="contactNumber" class="required-label">Contact Number</label>
+                <input type="text" id="contactNumber" formControlName="contactNumber" class="form-control" />
+                <div *ngIf="studentForm.get('contactNumber')?.invalid && studentForm.get('contactNumber')?.touched"
+                    class="error-box">
+                    <small class="text-danger" *ngIf="studentForm.get('contactNumber')?.hasError('required')">Contact
+                        Number is required.</small>
+                    <small class="text-danger" *ngIf="studentForm.get('contactNumber')?.hasError('pattern')">Please
+                        enter a valid contact number.</small>
+                </div>
+            </div>
+
+            <div class="form-group mb-2">
+                <label for="altContactNumber">Alternative Contact Number</label>
+                <input type="text" id="altContactNumber" formControlName="altContactNumber" class="form-control" />
+                <div *ngIf="studentForm.get('altContactNumber')?.invalid && studentForm.get('altContactNumber')?.touched"
+                    class="error-box">
+                    <small class="text-danger" *ngIf="studentForm.get('altContactNumber')?.hasError('pattern')">Please
+                        enter a valid alternative contact number.</small>
+                </div>
+            </div>
+
+
+            <div class="form-group mb-2">
+                <label for="email">Email</label>
+                <input type="email" id="email" formControlName="email" class="form-control" />
+                <div *ngIf="studentForm.get('email')?.invalid && studentForm.get('email')?.touched" class="error-box">
+                    <small class="text-danger" *ngIf="studentForm.get('email')?.hasError('email')">Please enter a valid
+                        email address.</small>
+                </div>
+            </div>
+
+            <div class="form-group mb-2">
+                <label for="nationality" class="required-label">Nationality</label>
+                <select id="nationality" formControlName="nationality" class="form-control">
+                    <option value="" disabled>Select Nationality</option>
+                    <option *ngFor="let nation of nationalities" [value]="nation">{{ nation }}</option>
+                </select>
+                <div *ngIf="studentForm.get('nationality')?.invalid && studentForm.get('nationality')?.touched"
+                    class="error-box">
+                    <small class="text-danger">Nationality is required.</small>
+                </div>
+            </div>
+            <div class="form-group mb-2">
+                <label for="religion" class="required-label">Religion</label>
+                <select id="religion" formControlName="religion" class="form-control">
+                    <option value="" disabled>Select Religion</option>
+                    <option *ngFor="let rel of religions" [value]="rel">{{ rel }}</option>
+                </select>
+                <div *ngIf="studentForm.get('religion')?.invalid && studentForm.get('religion')?.touched"
+                    class="error-box">
+                    <small class="text-danger">Religion is required.</small>
+                </div>
+            </div>
+            <div class="form-group mb-2">
+                <label for="category" class="required-label">Category</label>
+                <select id="category" formControlName="category" class="form-control">
+                    <option value="" disabled>Select Category</option>
+                    <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+                </select>
+                <div *ngIf="studentForm.get('category')?.invalid && studentForm.get('category')?.touched"
+                    class="error-box">
+                    <small class="text-danger">Category is required.</small>
+                </div>
+            </div>
+
+
+            <div class="form-group mb-2">
+                <label for="bloodGroup" class="required-label">Blood Group</label>
+                <select id="bloodGroup" formControlName="bloodGroup" class="form-control">
+                    <option value="" disabled>Select Blood Group</option>
+                    <option *ngFor="let group of bloodGroups" [value]="group">{{ group }}</option>
+                </select>
+                <div *ngIf="studentForm.get('bloodGroup')?.invalid && studentForm.get('bloodGroup')?.touched"
+                    class="error-box">
+                    <small class="text-danger">Blood Group is required.</small>
+                </div>
+            </div>
+            <div class="form-group mb-2">
+                <label for="fatherName" class="required-label">Father's Name</label>
+                <input type="text" id="fatherName" formControlName="fatherName" class="form-control" />
+                <div *ngIf="studentForm.get('fatherName')?.invalid && studentForm.get('fatherName')?.touched"
+                    class="error-box">
+                    <small class="text-danger" *ngIf="studentForm.get('fatherName')?.hasError('required')">
+                        Father's Name is required.
+                    </small>
+                </div>
+            </div>
+            <div class="form-group mb-2">
+                <label for="fatherOccupation">Father's Occupation</label>
+                <input type="text" id="fatherOccupation" formControlName="fatherOccupation" class="form-control" />
+            </div>
+            <div class="form-group mb-2">
+                <label for="motherName" class="required-label">Mother's Name</label>
+                <input type="text" id="motherName" formControlName="motherName" class="form-control" />
+                <div *ngIf="studentForm.get('motherName')?.invalid && studentForm.get('motherName')?.touched"
+                    class="error-box">
+                    <small class="text-danger" *ngIf="studentForm.get('motherName')?.hasError('required')">
+                        Mother's Name is required.
+                    </small>
+                </div>
+            </div>
+            <div class="form-group mb-2">
+                <label for="motherOccupation">Mother's Occupation</label>
+                <input type="text" id="motherOccupation" formControlName="motherOccupation" class="form-control" />
+            </div>
+
+            <div class="form-group mb-2">
+                <label for="dueAmount" class="required-label">Due Amount</label>
+                <input type="number" id="dueAmount" formControlName="dueAmount" class="form-control"
+                    placeholder="Enter due amount" />
+                <div *ngIf="studentForm.get('dueAmount')?.invalid && studentForm.get('dueAmount')?.touched"
+                    class="error-box">
+                    <small class="text-danger" *ngIf="studentForm.get('dueAmount')?.hasError('required')">
+                        Due Amount is required.
+                    </small>
+                    <small class="text-danger" *ngIf="studentForm.get('dueAmount')?.hasError('min')">
+                        Amount cannot be less than 0.
+                    </small>
+                </div>
+            </div>
+            <div class="form-group mb-2">
+                <label for="dateOfAdmission" class="required-label">Date of Admission</label>
+                <input type="date" id="dateOfAdmission" formControlName="dateOfAdmission" class="form-control" />
+                <div *ngIf="studentForm.get('dateOfAdmission')?.invalid && studentForm.get('dateOfAdmission')?.touched"
+                    class="error-box">
+                    <small class="text-danger">Date of Admission is required.</small>
+                </div>
+            </div>
+            <div class="form-group mb-2">
+                <label for="studentPhoto" class="required-label">Student Photo</label>
+                <input type="file" id="studentPhoto" (change)="onPhotoSelected($event)" class="form-control"
+                    accept="image/*" />
+                <div *ngIf="photoError || studentForm.get('studentPhoto')?.invalid && studentForm.get('studentPhoto')?.touched"
+                    class="error-box">
+                    <small class="text-danger" *ngIf="photoError">{{ photoError }}</small>
+                    <small class="text-danger" *ngIf="studentForm.get('studentPhoto')?.hasError('required')">
+                        Student Photo is required.
+                    </small>
+                </div>
+                <div class="preview-box mt-2 " *ngIf="photoPreview">
+                    <img [src]="photoPreview" alt="Student Photo Preview" class="img-thumbnail imgBox" />
+                </div>
+            </div>
+
+            <div class="form-group mb-2">
+                <label for="aadharNumber" class="required-label">Aadhar Number</label>
+                <input type="text" id="aadharNumber" formControlName="aadharNumber" class="form-control"
+                    placeholder="Enter Aadhar Number" />
+                <div *ngIf="studentForm.get('aadharNumber')?.invalid && studentForm.get('aadharNumber')?.touched"
+                    class="error-box">
+                    <small class="text-danger" *ngIf="studentForm.get('aadharNumber')?.hasError('required')">
+                        Aadhar Number is required.
+                    </small>
+                    <small class="text-danger" *ngIf="studentForm.get('aadharNumber')?.hasError('pattern')">
+                        Aadhar Number must be a 12-digit number.
+                    </small>
+                </div>
+            </div>
+            <div class="accordion" id="feeTypeAccordion">
+                <div *ngFor="let fee of feeStructure; let i = index" class="accordion-item border-0">
+                    <h2 class="accordion-header d-flex align-items-center p-0" id="heading{{ i }}">
+
+                        <div class="header-content d-flex align-items-center w-100 p-2">
+
+                            <input type="checkbox" (change)="onFeeSelection($event,fee._id)"
+                                class="form-check-input custom-checkbox me-2 square-checkbox" [id]="'feeType' + fee._id"
+                                [value]="fee._id" />
+
+                            <button class="accordion-button collapsed custom-accordion-button flex-grow-1 p-0"
+                                type="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#collapse' + i"
+                                aria-expanded="false" [attr.aria-controls]="'collapse' + i">
+                                {{ fee.name }}
+                            </button>
+                        </div>
+                    </h2>
+
+                    <div [id]="'collapse' + i" class="accordion-collapse collapse"
+                        [attr.aria-labelledby]="'heading' + i" data-bs-parent="#feeTypeAccordion">
+                        <div class="accordion-body p-0">
+                            <app-reusable-grid [gridData]="fee.feeGroups">
+                                <app-reusable-grid-column field="feeType" title="Fee Type"></app-reusable-grid-column>
+
+                                <app-reusable-grid-column field="amount" title="Amount"></app-reusable-grid-column>
+
+                                <app-reusable-grid-column field="dueDate" title="Due Date">
+                                    <ng-template reusableGridCellTemplate let-dataItem="dataItem"
+                                        let-rowIndex="rowIndex">
+                                        <span class="no-wrap">{{ dataItem.dueDate | date :'shortDate' }}</span>
+                                    </ng-template>
+                                </app-reusable-grid-column>
+                            </app-reusable-grid>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+        </form>
+    </div>
+
+
+
+
+
+    <!-- Footer -->
+    <div class="btn-panel d-flex justify-content-end py-2">
+        <button class="btn btn-primary" [disabled]="studentForm.invalid" (click)="submitForm()">Submit</button>
+    </div>
+</div>

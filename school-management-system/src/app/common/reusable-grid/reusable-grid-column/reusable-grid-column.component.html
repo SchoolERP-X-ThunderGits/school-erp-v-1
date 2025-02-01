@@ -1,0 +1,17 @@
+<th>
+  <ng-container *ngIf="headerTemplate; else defaultHeader">
+    <ng-template [ngTemplateOutlet]="headerTemplate"></ng-template>
+  </ng-container>
+  <ng-template #defaultHeader>
+    {{ field }}
+  </ng-template>
+</th>
+
+<td>
+  <ng-container *ngIf="cellTemplate; else defaultCell">
+    <ng-template [ngTemplateOutlet]="cellTemplate" [ngTemplateOutletContext]="{ rowData: rowData }"></ng-template>
+  </ng-container>
+  <ng-template #defaultCell>
+    {{ rowData[field] }}
+  </ng-template>
+</td>

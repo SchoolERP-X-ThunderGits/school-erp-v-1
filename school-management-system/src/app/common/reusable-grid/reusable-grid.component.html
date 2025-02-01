@@ -1,0 +1,45 @@
+<table class="reusable-grid">
+  <thead class="grid-header">
+    <tr class="header-row">
+      <ng-container *ngFor="let column of columns; let columnIndex = index">
+        <th class="header-cell">
+          <ng-template [ngTemplateOutlet]="column.headerTemplate || defaultHeader"
+            [ngTemplateOutletContext]="{ column: column, columnIndex: columnIndex }"></ng-template>
+          <ng-template #defaultHeader>
+            {{ column.title ? column.title : column.field }}
+          </ng-template>
+        </th>
+      </ng-container>
+    </tr>
+  </thead>
+  <tbody class="grid-body" >
+
+    <tr class="grid-row" *ngFor="let row of gridData; let rowIndex = index; trackBy: trackByIndex">
+      <ng-container *ngFor="let column of columns">
+        <td class="grid-cell">
+          <ng-container *ngIf="column.cellTemplate; else defaultCell">
+            <ng-template [ngTemplateOutlet]="column.cellTemplate"
+              [ngTemplateOutletContext]="{ dataItem: row, rowIndex: rowIndex }"></ng-template>
+          </ng-container>
+          <ng-template #defaultCell>
+            {{ row[column.field] }}
+          </ng-template>
+        </td>
+      </ng-container>
+    </tr>
+
+  </tbody>
+
+</table>
+
+<ng-container *ngIf="gridData.length ==0">
+  <div class="no-data-container">
+    <ng-container *ngIf="noDataTemplateDirective?.template; else defaultNoData">
+      <ng-template [ngTemplateOutlet]="noDataTemplateDirective.template"></ng-template>
+    </ng-container>
+
+  </div>
+  <ng-template #defaultNoData>
+    <div class="no-data-message">No data available.</div>
+  </ng-template>
+</ng-container>

@@ -1,0 +1,53 @@
+
+.accordion-button {
+  box-shadow: none !important; 
+  background-color: transparent !important; 
+  padding-right: 1.5rem; 
+}
+
+
+.accordion-button::after {
+  content: none; 
+}
+
+
+.square-checkbox {
+  width: 16px;
+  height: 16px;
+  border-radius: 0; 
+}
+
+
+.square-checkbox {
+  margin: 0 10px 0 0; 
+  padding: 2px;
+}
+.header-content {
+  background-color: #f0f0f0; 
+  border-radius: 5px;
+  padding: 10px;
+}
+
+
+.accordion-header {
+  padding: 0;
+  margin-bottom: 0; 
+}
+
+
+.accordion-button:not(.collapsed) {
+  background-color: transparent !important; 
+}
+
+
+.accordion-collapse.collapse.show + .accordion-header .header-content {
+  background-color: #e0e0e0; 
+}
+
+.accordion-body {
+  padding: 10px;
+}
+.imgBox{
+  height:100px;
+  width: 100px;
+}

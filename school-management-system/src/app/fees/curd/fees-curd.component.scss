@@ -1,0 +1,105 @@
+#classCurd {
+    .form-container {
+      // max-width: 600px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+  
+    .fee-groups {
+      margin-top: 20px;
+    }
+  
+    .fee-group-row {
+      position: relative; 
+      width: 95%;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      margin-bottom: 15px;
+      background-color: #f9f9f9;
+  
+      display: flex;
+      flex-wrap: wrap; /* Allow inputs to wrap if needed */
+  
+      .form-group-inline {
+        flex: 1; /* Default width for inputs */
+        margin-right: 10px;
+  
+        &.fee-type-group {
+          flex: 2; /* Give Fee Type field more space */
+        }
+  
+        label {
+          display: block;
+          font-size: 12px;
+          color: #555;
+          margin-bottom: 5px;
+        }
+  
+        .form-control {
+          height: 35px;
+          padding: 5px 10px;
+        }
+      }
+  
+      /* Top Right Remove Button */
+      .btn-icon.remove-icon {
+        position: absolute;
+        top: 5px; 
+        right: -40px; 
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: none;
+        border: none;
+        font-size: 18px;
+        color: #dc3545;
+        cursor: pointer;
+        transition: color 0.2s;
+  
+        &:hover {
+          color: #b52a34;
+        }
+      }
+    }
+  
+    .add-fee-group {
+      display: flex;
+      justify-content: center;
+      margin-top: 15px;
+  
+      .btn-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 5px;
+        background-color: #28a745;
+        color: #fff;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.2s;
+  
+        &:hover {
+          background-color: #218838;
+          transform: scale(1.1);
+        }
+  
+        &:active {
+          background-color: #1e7e34;
+        }
+      }
+    }
+  
+    .btn-panel {
+      margin-top: 20px;
+  
+      button {
+        min-width: 100px;
+      }
+    }
+  }
+  

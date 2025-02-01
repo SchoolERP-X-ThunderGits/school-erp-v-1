@@ -1,0 +1,35 @@
+<div class="sidebar theme-bg" [class.collapsed]="isCollapsed">
+    <!-- Expand/Collapse Button -->
+    <div class="toggle-button btn-bg" (click)="toggleSidebar()">
+        <i class="bi" [class.bi-chevron-double-left]="!isCollapsed" [class.bi-chevron-double-right]="isCollapsed"></i>
+    </div>
+
+    <!-- Logo Section -->
+    <div class="sidebar-logo">
+        <a href="javascript:void(0)" class="logo">
+            <img src="image/download.jpg" alt="Logo" />
+        </a>
+    </div>
+
+    <!-- Sidebar Menu -->
+    <ul class="sidebar-menu">
+        <!-- Iterate through schoolModules -->
+        <li *ngFor="let module of schoolModules | keyValue" class="menu-item"
+            [class.has-children]="module.value.children.length > 0"  >
+            <!-- Main Menu -->
+            <a [class.active]="currentRoute.includes(module.value.route)" class="menu-link" *ngIf="module.value.display" (click)="changeInternalView(module.value.route)">
+                <i class="bi {{module.value.icon}}"></i>
+                <span *ngIf="!isCollapsed">{{ module.value.name }}</span>
+            </a>
+
+            <!-- Dropdown Menu on Hover -->
+            <ul class="submenu" *ngIf="module.value.children.length > 0">
+                <li *ngFor="let child of module.value.children">
+                    <a *ngIf="child.display" class="submenu-link">
+                        <i class="bi {{child.icon}}"></i> {{ child.name }}
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>

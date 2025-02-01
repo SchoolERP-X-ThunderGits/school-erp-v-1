@@ -1,0 +1,6 @@
+<div class="notification-container" *ngFor="let notification of (notifications$ | async)">
+    <div class="notification" [ngClass]="[notification.type, notification.position || 'bottom-right']">
+        <span>{{ notification.message }}</span>
+        <!-- <div class="close-btn" (click)="dismissNotification(notification.id)">×</div> -->
+    </div>
+</div>

@@ -1,0 +1,14 @@
+<div class="mx-3">
+    <app-fees-toolbar (toolbarOperation)="toolbarOperation($event)"></app-fees-toolbar>
+    <div class="mt-2">
+        <app-fees-grid [data_to_add]="{dataItem:data_to_add}" [data_to_update]="{dataItem:data_to_update}" (toolbarOperation)="toolbarOperation($event)" ></app-fees-grid>
+    </div>
+</div>
+
+<div *ngIf="display_right_panel" class="inner-right-panel">
+    <app-fees-curd [child_data]="{callsource:callsource,dataItem:selectedDataItem}"
+        (toolbarOperation)="toolbarOperation($event)"></app-fees-curd>
+</div>
+<div class="sliderOverlay" *ngIf="display_right_panel">
+
+</div>

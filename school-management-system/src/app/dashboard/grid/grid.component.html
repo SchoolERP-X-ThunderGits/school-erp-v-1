@@ -1,0 +1,20 @@
+<app-reusable-grid [gridData]="gridData">
+    <app-reusable-grid-column field="Product Name">
+     
+      <ng-template reusableGridCellTemplate let-dataItem="dataItem" let-rowIndex="rowIndex">
+        <span>{{ dataItem.ProductName}} {{rowIndex}}</span>
+      </ng-template>
+    </app-reusable-grid-column>
+  
+    <app-reusable-grid-column field="UnitPrice" title="Unit Price">
+      <ng-template reusableGridHeaderTemplate let-column="column" let-columnIndex="columnIndex">
+        <span>{{ column.field }}{{columnIndex}} </span>
+      </ng-template>
+  
+    </app-reusable-grid-column>
+  
+    <app-reusable-grid-column field="UnitsInStock">
+    
+    </app-reusable-grid-column>
+  </app-reusable-grid>
+  

@@ -1,0 +1,112 @@
+/* Add gap between accordion items */
+.accordion-item {
+  margin-bottom: 10px; /* Adjust the value to increase or decrease the gap */
+}
+
+/* Accordion Button */
+.accordion-button {
+  box-shadow: none !important;
+  background-color: transparent !important;
+  padding-right: 1.5rem;
+  font-size: 16px;
+  font-weight: 500;
+  color: #495057;
+  border: none;
+  transition: color 0.3s, background-color 0.3s;
+}
+
+.accordion-button:hover {
+  color: #0d6efd; /* Change to your theme's primary color */
+}
+
+.accordion-button::after {
+  content: none; /* Remove default Bootstrap caret */
+}
+
+/* Header Content */
+.header-content {
+  background-color: #f8f9fa;
+  border-radius: 5px;
+  padding: 10px 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background-color 0.3s;
+}
+
+.header-content:hover {
+  background-color: #e9ecef;
+}
+
+/* Accordion Header */
+.accordion-header {
+  padding: 0;
+  margin-bottom: 0;
+}
+
+/* Accordion Button Expanded State */
+.accordion-button:not(.collapsed) {
+  color: #0d6efd; /* Primary color for active state */
+  font-weight: 600;
+  background-color: #e9ecef !important;
+}
+
+.accordion-collapse.collapse.show + .accordion-header .header-content {
+  background-color: #dee2e6; /* Slightly darker shade for active accordion */
+}
+
+/* Accordion Body */
+.accordion-body {
+  padding: 15px;
+  background-color: #fff; /* Clean white background for the content */
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+  margin: 5px 0;
+}
+
+/* No Data Container */
+.no-data-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 150px;
+  background-color: #f8f9fa;
+  color: #6c757d;
+  font-size: 16px;
+  font-weight: 500;
+  border: 2px dashed #ced4da;
+  border-radius: 5px;
+}
+
+.no-data-message {
+  font-size: 18px;
+  font-weight: 600;
+  color: #495057;
+  text-align: center;
+}
+
+/* Reusable Grid Styling */
+.app-reusable-grid {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 15px 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.app-reusable-grid th {
+  background-color: #f8f9fa;
+  text-align: left;
+  padding: 10px;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.app-reusable-grid td {
+  padding: 10px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.app-reusable-grid .no-wrap {
+  white-space: nowrap;
+}

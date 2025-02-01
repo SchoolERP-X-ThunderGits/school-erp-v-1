@@ -1,0 +1,125 @@
+.sidebar {
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  color: white;
+  z-index: 99999;
+
+  .toggle-button {
+    position: absolute;
+    top: 10px;
+    right: -15px;
+
+    border: none;
+    border-radius: 50%;
+    color: white;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    &:hover {
+      background-color: #1abc9c;
+    }
+
+    i {
+      font-size: 1rem;
+    }
+  }
+
+
+  .sidebar-logo {
+    text-align: center;
+    margin: 10px 0;
+
+    img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+    }
+  }
+
+  .sidebar-menu {
+    list-style: none;
+    padding: 0;
+
+    .menu-item {
+      position: relative;
+
+      .menu-link {
+        text-decoration: none;
+        color: white;
+        display: flex;
+        align-items: center;
+        padding: 10px 15px;
+        transition: background-color 0.3s;
+
+        i {
+          margin-right: 10px;
+        }
+
+        &:hover {
+          background-color: #1abc9c;
+        }
+
+      }
+
+      .active {
+        background-color: #1abc9c;
+      }
+
+      .submenu {
+        list-style: none;
+        position: absolute;
+        top: 0;
+        left: 100%;
+        /* Dropdown opens to the right */
+        background-color: #495057;
+        padding: 10px 0;
+        margin: 0;
+        display: none;
+        /* Initially hidden */
+        border-radius: 5px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+        .submenu-link {
+          text-decoration: none;
+          color: white;
+          padding: 8px 15px;
+          display: flex;
+          align-items: center;
+          font-size: 0.9rem;
+
+          i {
+            margin-right: 8px;
+          }
+
+          &:hover {
+            background-color: #17a2b8;
+          }
+        }
+
+        /* Arrow pointing to the parent menu */
+        &::before {
+          content: '';
+          position: absolute;
+          top: 15px;
+          left: -10px;
+          width: 0;
+          height: 0;
+          border-style: solid;
+          border-width: 10px 10px 10px 0;
+          border-color: transparent #495057 transparent transparent;
+        }
+      }
+
+      &:hover>.submenu {
+        display: block;
+      }
+    }
+  }
+}

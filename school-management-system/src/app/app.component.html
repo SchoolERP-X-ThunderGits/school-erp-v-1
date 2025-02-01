@@ -1,0 +1,20 @@
+<ng-container *ngIf="loggedIn && !is_api_call_pending;">
+  <div id="navPanel" class="d-flex">
+    <!-- Sidebar -->
+    <div [ngStyle]="{ width: isCollapsed ? '3.5rem' : '9.5rem' }">
+      <app-navigator-left (toggleOperation)="toggleOperation($event)"></app-navigator-left>
+    </div>
+
+    <!-- Main Content -->
+    <div [ngStyle]="{ width: isCollapsed? 'calc(100% - 3.5rem)' : 'calc(100% - 9.5rem)' }">
+      <app-navigator-top></app-navigator-top>
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="!loggedIn">
+  <app-login (loginSuccess)="loginOperation($event)"></app-login>
+</ng-container>
+
+<app-notification></app-notification>

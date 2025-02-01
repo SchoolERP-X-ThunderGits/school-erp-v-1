@@ -1,0 +1,61 @@
+.notification-container {
+    position: fixed;
+    z-index: 1000;
+  }
+  
+  .notification {
+    padding: 5px 15px ;
+    margin: 10px 0;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    color: #fff;
+  
+    &.success {
+      background-color: #4caf50;
+    }
+  
+    &.error {
+      background-color: #f44336;
+    }
+  
+    &.info {
+      background-color: #2196f3;
+    }
+  
+    &.warning {
+      background-color: #ff9800;
+    }
+  
+    .close-btn {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  
+    &.top-right {
+      top: 10px;
+      right: 10px;
+    }
+  
+    &.top-left {
+      top: 10px;
+      left: 10px;
+    }
+  
+    &.bottom-right {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+    }
+  
+    &.bottom-left {
+      bottom: 10px;
+      left: 10px;
+    }
+  }
+  

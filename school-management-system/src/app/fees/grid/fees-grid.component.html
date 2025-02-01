@@ -1,0 +1,37 @@
+<div class="accordion" id="feeTypeAccordion">
+    <div *ngFor="let fee of datasource_fees; let i = index" class="accordion-item border-0">
+        <h2 class="accordion-header d-flex align-items-center p-0" id="heading{{ i }}">
+
+            <div class="header-content d-flex align-items-center w-100 p-2">
+
+                <button class="accordion-button collapsed custom-accordion-button flex-grow-1 p-0" type="button"
+                    data-bs-toggle="collapse" [attr.data-bs-target]="'#collapse' + i" aria-expanded="false"
+                    [attr.aria-controls]="'collapse' + i">
+                    {{ fee.name }}
+                </button>
+            </div>
+        </h2>
+
+        <div [id]="'collapse' + i" class="accordion-collapse collapse" [attr.aria-labelledby]="'heading' + i"
+            data-bs-parent="#feeTypeAccordion">
+            <div class="accordion-body p-0">
+                <app-reusable-grid [gridData]="fee.feeGroups">
+                    <app-reusable-grid-column field="feeType" title="Fee Type"></app-reusable-grid-column>
+
+                    <app-reusable-grid-column field="amount" title="Amount"></app-reusable-grid-column>
+
+                    <app-reusable-grid-column field="dueDate" title="Due Date">
+                        <ng-template reusableGridCellTemplate let-dataItem="dataItem" let-rowIndex="rowIndex">
+                            <span class="no-wrap">{{ dataItem.dueDate | date :'shortDate' }}</span>
+                        </ng-template>
+                    </app-reusable-grid-column>
+                </app-reusable-grid>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="datasource_fees.length == 0" class="no-data-container">
+    <div class="no-data-message">No Fees Available.</div>
+
+</div>
