@@ -98,7 +98,6 @@ const AdmissionReceipt = ({ studentData, setRegistrationCompleted }) => {
             <tr><td><strong>Roll Number:</strong></td><td>{studentData.roll_Number}</td></tr>
             <tr><td><strong>Name:</strong></td><td>{studentData.first_Name} {studentData.last_Name}</td></tr>
             <tr><td><strong>Date of Birth:</strong></td><td>{formattedDateOfBirth}</td></tr>
-            <tr><td><strong>Gender:</strong></td><td>{studentData.gender}</td></tr>
             <tr><td><strong>Contact Number:</strong></td><td>{studentData.contact_Number}</td></tr>
           </tbody>
         </table>
@@ -197,6 +196,44 @@ const AdmissionReceipt = ({ studentData, setRegistrationCompleted }) => {
         }
         .signature p {
           margin-top: 10px;
+        }
+
+        /* Print Specific Styles */
+        @media print {
+          .admission-receipt {
+            width: 100%;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+          }
+
+         
+          table {
+            width: 100%;
+            page-break-before: always;
+          }
+
+          .school-info, .student-details, .academic-details, .additional-details {
+            page-break-inside: avoid;
+          }
+
+          .school-logo-adm-res {
+            width: 100px;
+          }
+
+          .student-photo-cell {
+            text-align: center;
+          }
+
+          .student-photo-image {
+            max-width: 150px;
+            height: auto;
+          }
+
+          /* Adjust font size for print */
+          body {
+            font-size: 12pt;
+          }
         }
       `}</style>
     </div>
