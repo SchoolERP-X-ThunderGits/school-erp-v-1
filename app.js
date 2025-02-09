@@ -14,7 +14,7 @@ const feesType = require("./routes/fee/feeTypeRoutes.js");
 const feeStructure = require("./routes/fee/feeStructureRoutes.js");
 const classRoutes = require("./routes/classRoutes.js");
 const studentFeeProfileRoutes = require('./routes/studentFeeProfileRoutes.js');
-const paymentRoutes = require("./routes/paymentRoutes.js")
+// const paymentRoutes = require("./routes/paymentRoutes.js")
 // Import routes
 const subjectRoutes = require('./routes/subjectRoutes');
 const subjectClassMappingRoutes = require('./routes/subjectClassMapping');
@@ -37,7 +37,7 @@ app.use("/api/fee", feesType);
 app.use("/api/fee", feeStructure);
 app.use("/api/class", classRoutes);
 app.use("/api/student", studentFeeProfileRoutes)
-app.use("/api/payment", paymentRoutes)
+// app.use("/api/payment", paymentRoutes)
 app.use('/api/subjects', subjectRoutes);
 app.use('/api/subject-class-mappings', subjectClassMappingRoutes);
 app.use('/api/exam-schedules', examScheduleRoutes);
