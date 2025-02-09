@@ -59,7 +59,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
         }`}
     >
       {/* <!-- SIDEBAR HEADER --> */}
-      <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
+      <div className="flex items-center justify-between gap-2 py-6.5">
         <NavLink to="/admin/home" style={{
           display: 'flex',
           justifyContent: 'center', // Centers the content horizontally
@@ -68,11 +68,11 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
           width: '100%'             // Ensures the container takes the full width available
         }}>
           <img style={{
-            height: 30,
-            width: 30,
+            height:65,
+            width: 65,
             objectFit: 'contain', // Ensures the logo doesn't get distorted
           }} src={thunderLogo} alt="Logo" />
-          <h1 style={{ color: 'white', fontSize: 15, fontWeight: 'bold' }}>School ERP</h1>
+          <h1 style={{ color: 'white', fontSize: 25, fontWeight: 'bold' }}>School ERP</h1>
         </NavLink>
 
 
@@ -102,7 +102,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 
       <div className="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
         {/* <!-- Sidebar Menu --> */}
-        <nav className="mt-5 py-4 px-4 lg:mt-9 lg:px-6">
+        <nav style={{marginLeft:20,marginRight:20}}>
           {/* <!-- Menu Group --> */}
           <div>
             <h3 className="mb-4 ml-4 text-sm font-semibold text-bodydark2">
