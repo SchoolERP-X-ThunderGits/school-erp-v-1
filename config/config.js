@@ -8,7 +8,7 @@ const config = {
 
   // Database configuration
   database: {
-    url: process.env.MONGODB_URI || 'mongodb://localhost:27017/schoolDb', // MongoDB connection URI
+    url: process.env.MONGODB_URI || 'mongodb+srv://thundergits:VSjOjRcjhaF8ohFP@cluster0.z23dt.mongodb.net/', // MongoDB connection URI
   },
 
   // Authentication configuration
