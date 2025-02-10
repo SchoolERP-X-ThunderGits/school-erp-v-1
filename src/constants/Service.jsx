@@ -6,7 +6,7 @@ const api = axios.create({
   baseURL: BASE_URL,
   headers: {
     'Content-Type': 'application/json',
-    "Authorization": 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NWM3YjEyNzk2NmI2YTRmOGEwZTJiNyIsImlhdCI6MTczOTAwNTc4MSwiZXhwIjoxNzQxNTk3NzgxfQ.owUf8ylrp0Ft2Dj7FK7xCyNRJi7n2Eoi9T_O7Fb9V5c',
+    "Authorization":localStorage.getItem("token"),
     // Add any other common headers if needed, e.g. Authorization
   },
 });

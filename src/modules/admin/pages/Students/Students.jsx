@@ -30,6 +30,7 @@ const Students = () => {
     const [studentToDelete, setStudentToDelete] = useState(null);
     const [editMode, setEditMode] = useState(false);
     const [classFilter, setClassFilter] = useState('');
+    const [lastAdmissionNumber, setLastAdmissionNumber] = useState("");
     const [sectionFilter, setSectionFilter] = useState('');
     const [searchText, setSearchText] = useState('');
     const [formData, setFormData] = useState({
@@ -61,7 +62,7 @@ const Students = () => {
         aadhar_number: '',
         feeStructures: []
     });
-
+    { console.log('new Date()', new Date()) }
     useEffect(() => {
         setLoading(true);
         fetchClasses();
@@ -101,12 +102,32 @@ const Students = () => {
         })
     }
 
+    const fetchLastAdmissionNumber = async () => {
+        try {
+            const result = await getService(apiName.getLastAdmissionNumber); // API to get fee structures
+            setLastAdmissionNumber(result?.lastGeneratedAdmissionNumber)
+            console.log('ksfkskfskfksfks', result)
+        } catch (error) {
+            showToast('Error fetching fee structures', 'error');
+        }
+    };
+    useEffect(() => {
+        if (lastAdmissionNumber && !formData.admission_Number) {
+            const numericPart = parseInt(lastAdmissionNumber.match(/\d+/)[0], 10);
+            console.log("numb", numericPart)
+            const newAdmissionNumber = `AD-${numericPart}`;
+            console.log('newAdmissionNumber', newAdmissionNumber)
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                admission_Number: newAdmissionNumber,
+            }));
+        }
+    }, [lastAdmissionNumber]);
     const fetchStudents = async () => {
         try {
             const result = await getService(apiName.getStudent); // API to get fee structures
             setStudents(result)
             setEditMode(false)
-            resetForm()
             setLoading(false)
             console.log('ksfkskfskfksfks', result)
         } catch (error) {
@@ -214,7 +235,12 @@ const Students = () => {
     }
 
     const handleSubmit = async () => {
-        if (!formData.first_Name || !formData.last_Name || !formData.admission_Number || !formData.roll_Number) {
+        console.log('vblbvlb',formData.first_Name,formData.last_Name)
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            admission_Number: lastAdmissionNumber,
+        }));
+        if (!formData.first_Name || !formData.last_Name ) {
             showToast("Please fill all the required fields.", 'error');
             return;
         }
@@ -310,47 +336,47 @@ const Students = () => {
     const renderStudentList = () => {
         return (
             <div className="container mx-auto p-4">
-            <div className="overflow-x-auto bg-white shadow-md rounded-lg">
-                <table className="min-w-full table-auto">
-                    <thead>
-                        <tr className="bg-gray-100 text-gray-600">
-                            <th className="py-3 px-6 text-left text-sm font-semibold">Admission Number</th>
-                            <th className="py-3 px-6 text-left text-sm font-semibold">Roll Number</th>
-                            <th className="py-3 px-6 text-left text-sm font-semibold">First Name</th>
-                            <th className="py-3 px-6 text-left text-sm font-semibold">Last Name</th>
-                            <th className="py-3 px-6 text-left text-sm font-semibold">Class</th>
-                            <th className="py-3 px-6 text-left text-sm font-semibold">Section</th>
-                            <th className="py-3 px-6 text-left text-sm font-semibold">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {filteredStudents.map((student) => (
-                            <tr key={student._id} className="border-b hover:bg-gray-50 transition duration-200">
-                                <td className="px-4 py-2 text-sm text-gray-800">{student.admission_Number}</td>
-                                <td className="px-4 py-2 text-sm text-gray-800">{student.roll_Number}</td>
-                                <td className="px-4 py-2 text-sm text-gray-800">{student.first_Name}</td>
-                                <td className="px-4 py-2 text-sm text-gray-800">{student.last_Name}</td>
-                                <td className="px-4 py-2 text-sm text-gray-800">{student.class_Id?.name}</td>
-                                <td className="px-4 py-2 text-sm text-gray-800">{student.section}</td>
-                                <td className="px-4 py-2 flex space-x-4">
-                                    <button
-                                        onClick={() => handleEdit(student)}
-                                        className="text-blue-500 hover:text-blue-700 transition duration-200"
-                                    >
-                                        <FaEdit />
-                                    </button>
-                                    <button
-                                        onClick={() => handleDelete(student._id)}
-                                        className="text-red-500 hover:text-red-700 transition duration-200"
-                                    >
-                                        <FaTrash />
-                                    </button>
-                                </td>
+                <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+                    <table className="min-w-full table-auto">
+                        <thead>
+                            <tr className="bg-gray-100 text-gray-600">
+                                <th className="py-3 px-6 text-left text-sm font-semibold">Admission Number</th>
+                                <th className="py-3 px-6 text-left text-sm font-semibold">Roll Number</th>
+                                <th className="py-3 px-6 text-left text-sm font-semibold">First Name</th>
+                                <th className="py-3 px-6 text-left text-sm font-semibold">Last Name</th>
+                                <th className="py-3 px-6 text-left text-sm font-semibold">Class</th>
+                                <th className="py-3 px-6 text-left text-sm font-semibold">Section</th>
+                                <th className="py-3 px-6 text-left text-sm font-semibold">Actions</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody>
+                            {filteredStudents.map((student) => (
+                                <tr key={student._id} className="border-b hover:bg-gray-50 transition duration-200">
+                                    <td className="px-4 py-2 text-sm text-gray-800">{student.admission_Number}</td>
+                                    <td className="px-4 py-2 text-sm text-gray-800">{student.roll_Number}</td>
+                                    <td className="px-4 py-2 text-sm text-gray-800">{student.first_Name}</td>
+                                    <td className="px-4 py-2 text-sm text-gray-800">{student.last_Name}</td>
+                                    <td className="px-4 py-2 text-sm text-gray-800">{student.class_Id?.name}</td>
+                                    <td className="px-4 py-2 text-sm text-gray-800">{student.section}</td>
+                                    <td className="px-4 py-2 flex space-x-4">
+                                        <button
+                                            onClick={() => handleEdit(student)}
+                                            className="text-blue-500 hover:text-blue-700 transition duration-200"
+                                        >
+                                            <FaEdit />
+                                        </button>
+                                        <button
+                                            onClick={() => handleDelete(student._id)}
+                                            className="text-red-500 hover:text-red-700 transition duration-200"
+                                        >
+                                            <FaTrash />
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         );
     };
@@ -359,68 +385,72 @@ const Students = () => {
         <div className="container mx-auto p-4">
             {
                 !showModal ?
-                (
+                    (
 
-                   loading?<Loader/>: <div>
+                        loading ? <Loader /> : <div>
 
-                        <div className="mb-6 flex justify-between items-center">
-                            <h1 className="text-2xl font-semibold text-gray-800">Student Registration</h1>
-                            <button
-                                onClick={() => { setShowModal(true), setEditMode(false), resetForm() }}
-                                className="flex items-center px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
-                            >
-                                <FaPlus className="mr-2" /> Add Student
-                            </button>
+                            <div className="mb-6 flex justify-between items-center">
+                                <h1 className="text-2xl font-semibold text-gray-800">Student Registration</h1>
+                                <button
+                                    onClick={() => {
+                                        resetForm(), setShowModal(true), setEditMode(false), setTimeout(() => {
+                                            fetchLastAdmissionNumber()
+                                        }, 5000);
+                                    }}
+                                    className="flex items-center px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
+                                >
+                                    <FaPlus className="mr-2" /> Add Student
+                                </button>
 
+                            </div>
+                            {/* Filters */}
+                            <div className="mb-4 flex gap-4">
+                                <select
+                                    className="p-2 border rounded"
+                                    value={classFilter}
+                                    onChange={(e) => setClassFilter(e.target.value)}
+                                >
+                                    <option value="">Filter by Class</option>
+                                    {classes.map((classItem) => (
+                                        <option key={classItem._id} value={classItem.name}>{classItem.name}</option>
+                                    ))}
+                                </select>
+                                <select
+                                    className="p-2 border rounded"
+                                    value={sectionFilter}
+                                    onChange={(e) => setSectionFilter(e.target.value)}
+                                >
+                                    <option value="">Filter by Section</option>
+                                    {sections.map((section) => (
+                                        <option key={section} value={section}>{section}</option>
+                                    ))}
+                                </select>
+                                <input
+                                    type="text"
+                                    placeholder="Search"
+                                    value={searchText}
+                                    onChange={(e) => setSearchText(e.target.value)}
+                                    className="p-2 border rounded"
+                                />
+                            </div>
+
+                            <div className="mt-6">
+                                {renderStudentList()}
+                            </div>
                         </div>
-                        {/* Filters */}
-                        <div className="mb-4 flex gap-4">
-                            <select
-                                className="p-2 border rounded"
-                                value={classFilter}
-                                onChange={(e) => setClassFilter(e.target.value)}
-                            >
-                                <option value="">Filter by Class</option>
-                                {classes.map((classItem) => (
-                                    <option key={classItem._id} value={classItem.name}>{classItem.name}</option>
-                                ))}
-                            </select>
-                            <select
-                                className="p-2 border rounded"
-                                value={sectionFilter}
-                                onChange={(e) => setSectionFilter(e.target.value)}
-                            >
-                                <option value="">Filter by Section</option>
-                                {sections.map((section) => (
-                                    <option key={section} value={section}>{section}</option>
-                                ))}
-                            </select>
-                            <input
-                                type="text"
-                                placeholder="Search"
-                                value={searchText}
-                                onChange={(e) => setSearchText(e.target.value)}
-                                className="p-2 border rounded"
-                            />
-                        </div>
-
-                        <div className="mt-6">
-                            {renderStudentList()}
-                        </div>
-                    </div>
-                )
+                    )
                     :
                     (
                         registrationCompleted ?
                             <div className=''>
 
-                                {console.log('formDataformData', formData)}
                                 <AdmissionReceipt setRegistrationCompleted={setRegistrationCompleted} studentData={formData} />
                             </div>
                             :
-                            <AddStudent formData={formData} handleInputChange={handleInputChange} handleSubmit={handleSubmit} feeStructures={feeStructures} imagePreview={imagePreview} editMode={editMode} classes={classes} sessions={sessions} sections={sections} setShowModal={setShowModal} handleFeeStructureChange={handleFeeStructureChange}/>
+                            <AddStudent lastAdmissionNumber={lastAdmissionNumber} formData={formData} handleInputChange={handleInputChange} handleSubmit={handleSubmit} feeStructures={feeStructures} imagePreview={imagePreview} editMode={editMode} classes={classes} sessions={sessions} sections={sections} setShowModal={setShowModal} handleFeeStructureChange={handleFeeStructureChange} />
                     )
             }
+            {console.log('formDataformData', formData)}
             {showDeleteModal && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div className="bg-white p-8 rounded-lg shadow-lg w-96 max-w-sm">

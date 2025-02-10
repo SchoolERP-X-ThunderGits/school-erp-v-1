@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-const AddStudent = ({ formData, handleInputChange, classes, sections, sessions, editMode, imagePreview, feeStructures, handleSubmit, setShowModal, setEditMode,handleFeeStructureChange }) => {
+const AddStudent = ({ formData, handleInputChange, classes, sections, sessions, editMode, imagePreview, feeStructures, handleSubmit, setShowModal, setEditMode, handleFeeStructureChange,lastAdmissionNumber }) => {
   const [expandedFees, setExpandedFees] = useState({});
 
   // Toggle function for expanding/collapsing fee details
@@ -23,10 +23,12 @@ const AddStudent = ({ formData, handleInputChange, classes, sections, sessions, 
           {/* Admission Number */}
           <div className="mb-4">
             <label className="block text-gray-700">Admission Number *:</label>
+            {console.log('formData',formData)}
             <input
               type="text"
+              readOnly
               name="admission_Number"
-              value={formData.admission_Number}
+              value={formData.admission_Number?formData?.admission_Number:lastAdmissionNumber}
               onChange={handleInputChange}
               className="mt-2 p-2 border border-gray-300 rounded-md w-full"
             />
@@ -34,7 +36,7 @@ const AddStudent = ({ formData, handleInputChange, classes, sections, sessions, 
 
           {/* Roll Number */}
           <div className="mb-4">
-            <label className="block text-gray-700">Roll Number *:</label>
+            <label className="block text-gray-700">Roll Number :</label>
             <input
               type="text"
               name="roll_Number"
@@ -207,7 +209,7 @@ const AddStudent = ({ formData, handleInputChange, classes, sections, sessions, 
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700">Nationality *:</label>
+            <label className="block text-gray-700">Nationality :</label>
             <input
               type="text"
               name="nationality"
@@ -218,7 +220,7 @@ const AddStudent = ({ formData, handleInputChange, classes, sections, sessions, 
           </div>
 
           <div className="mb-4">
-            <label className="block text-gray-700">Religion *:</label>
+            <label className="block text-gray-700">Religion :</label>
             <input
               type="text"
               name="religion"
@@ -244,7 +246,7 @@ const AddStudent = ({ formData, handleInputChange, classes, sections, sessions, 
             </select>
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700">Blood Group *:</label>
+            <label className="block text-gray-700">Blood Group :</label>
             <select
               name="blood_Group"
               value={formData.blood_Group}
@@ -309,7 +311,7 @@ const AddStudent = ({ formData, handleInputChange, classes, sections, sessions, 
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700">Due amount *:</label>
+            <label className="block text-gray-700">Due amount :</label>
             <input
               type="text"
               name="due_amount"
@@ -321,10 +323,11 @@ const AddStudent = ({ formData, handleInputChange, classes, sections, sessions, 
 
           <div className="mb-4">
             <label className="block text-gray-700">Date of Admission *:</label>
+            {console.log('formData.date_Of_Admission',formData.date_Of_Admission)}
             <input
               type="date"
               name="date_Of_Admission"
-              value={formData.date_Of_Admission.split('T')[0]}
+              value={formData.date_Of_Admission !=''?formData.date_Of_Admission.split('T')[0]: new Date().toISOString().split('T')[0]}
               onChange={handleInputChange}
               className="mt-2 p-2 border border-gray-300 rounded-md w-full"
             />
