@@ -11,14 +11,6 @@ const SignIn = () => {
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
-  const handleSignIn = () => {
-    // Simulate authentication
-    if (username === 'admin' && password === 'admin') {
-      navigate('/admin/home');
-    } else {
-      setErrorMessage('Invalid username or password');
-    }
-  };
   const handleLogin = async () => {
     if (!username || !password) {
       showToast('All field are required', 'error');

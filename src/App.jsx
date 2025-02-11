@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { ToastContainer } from "react-toastify";
 import AdminSignIn from './modules/admin/pages/Authentication/SignIn';
 import ParentSignIn from './modules/parents/pages/Authentication/SignIn';
 import AdminHome from './modules/admin/pages/Dashboard/Home';
@@ -14,12 +13,15 @@ import Class from './modules/admin/pages/Academics/Class';
 import Subject from './modules/admin/pages/Academics/Subject';
 import AssignSubject from './modules/admin/pages/Academics/AssignSubject';
 import Students from './modules/admin/pages/Students/Students';
-import Onboarding from './modules/onboarding/Onboarding';  // Import the Onboarding component
+import AddStudent from './modules/admin/pages/Students/AddStudent';
+import EditStudent from './modules/admin/pages/Students/EditStudent';
+import Onboarding from './modules/onboarding/onboarding';
 
 function App() {
   const [loading, setLoading] = useState(true);
   const { pathname } = useLocation();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
@@ -29,15 +31,15 @@ function App() {
   }, []);
 
   useEffect(() => {
-    // Redirect if already logged in
     const token = localStorage.getItem('token');
+    console.log('bmvkbvkbkvbk',token)
     if (token) {
-      navigate('/admin/home');
-    } else {
-      navigate('/');
-    }
-  }, []);
-
+      // Only redirect if you're not already on the home page or any other admin pages
+      if (pathname === '/' || pathname === '/admin') {
+        navigate('/admin/home');
+      }
+    } 
+  }, [pathname, navigate]);
 
   return loading ? (
     <Loader />
@@ -49,7 +51,9 @@ function App() {
       {/* Admin Section (wrapped in DefaultLayout) */}
       <Route path="/admin" element={<AdminSignIn />} />
       <Route path="/admin/home" element={<DefaultLayout><AdminHome /></DefaultLayout>} />
-      <Route path="/admin/add-student" element={<DefaultLayout><Students /></DefaultLayout>} />
+      <Route path="/admin/student" element={<DefaultLayout><Students /></DefaultLayout>} />
+      <Route path="/admin/add-student" element={<DefaultLayout><AddStudent /></DefaultLayout>} />
+      <Route path="/admin/edit-student/:id" element={<DefaultLayout><EditStudent /></DefaultLayout>} />
       <Route path="/admin/find-student" element={<DefaultLayout><FindStudent /></DefaultLayout>} />
       <Route path="/admin/fee-structure" element={<DefaultLayout><FeeStructure /></DefaultLayout>} />
       <Route path="/admin/fee-type" element={<DefaultLayout><FeeType /></DefaultLayout>} />

@@ -47,7 +47,7 @@ const Subject = () => {
     };
 
     const handleAddSubject = async () => {
-        if (!newSubjectName ) {
+        if (!newSubjectName) {
             showToast('Name is required', 'error');
             return;
         }
@@ -58,7 +58,7 @@ const Subject = () => {
         if (editMode) {
             try {
                 const response = await putService(`${apiName.subject}/${editId}`, body);
-                showToast("Subject updated successfully.",'success');
+                showToast("Subject updated successfully.", 'success');
                 getSubjectList();
             } catch (error) {
                 console.error('Error posting data:', error);
@@ -66,7 +66,7 @@ const Subject = () => {
         } else {
             try {
                 const response = await postService(apiName.subject, body);
-                showToast("Subject added successfully.",'success');
+                showToast("Subject added successfully.", 'success');
                 getSubjectList();
             } catch (error) {
                 console.error('Error posting data:', error);
@@ -102,38 +102,38 @@ const Subject = () => {
 
             {
 
-loading?<Loader/>:
-            <div className="overflow-x-auto bg-white shadow-md rounded-lg">
-                <table className="min-w-full table-auto">
-                    <thead>
-                        <tr className="bg-gray-100 text-gray-600">
-                            <th className="py-3 px-6 text-left text-sm font-semibold">Subject Name</th>
-                            <th className="py-3 px-6 text-left text-sm font-semibold">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {classList.map((classItem) => (
-                            <tr key={classItem.id} className="border-b hover:bg-gray-50 transition duration-200">
-                                <td className="py-3 px-6 text-sm text-gray-800">{classItem.name}</td>
-                                <td className="py-3 px-6 flex space-x-4">
-                                    <button
-                                        onClick={() => handleEdit(classItem)}
-                                        className="text-blue-500 hover:text-blue-700 transition duration-200"
-                                    >
-                                        <FaEdit />
-                                    </button>
-                                    <button
-                                        onClick={() => handleDelete(classItem._id)} // Pass subject ID to delete
-                                        className="text-red-500 hover:text-red-700 transition duration-200"
-                                    >
-                                        <FaTrash />
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
+                loading ? <Loader /> :
+                    <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+                        <table className="min-w-full table-auto">
+                            <thead>
+                                <tr className="bg-gray-100 text-gray-600">
+                                    <th className="py-3 px-6 text-left text-sm font-semibold">Subject Name</th>
+                                    <th className="py-3 px-6 text-left text-sm font-semibold">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {classList.map((classItem) => (
+                                    <tr key={classItem.id} className="border-b hover:bg-gray-50 transition duration-200">
+                                        <td className="py-3 px-6 text-sm text-gray-800">{classItem.name}</td>
+                                        <td className="py-3 px-6 flex space-x-4">
+                                            <button
+                                                onClick={() => handleEdit(classItem)}
+                                                className="text-blue-500 hover:text-blue-700 transition duration-200"
+                                            >
+                                                <FaEdit />
+                                            </button>
+                                            <button
+                                                onClick={() => handleDelete(classItem._id)} // Pass subject ID to delete
+                                                className="text-red-500 hover:text-red-700 transition duration-200"
+                                            >
+                                                <FaTrash />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
             }
 
             {/* Add Subject Modal */}
@@ -162,7 +162,7 @@ loading?<Loader/>:
                                 onClick={handleAddSubject}
                                 className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-200"
                             >
-                                {editMode?'Update subject':'Add subject'}
+                                {editMode ? 'Update subject' : 'Add subject'}
                             </button>
                         </div>
                     </div>

@@ -1,24 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import apiName from "../../../../constants/ApiName";
+import { getService } from "../../../../constants/Service";
 
 const AdmissionReceipt = ({ studentData, setRegistrationCompleted }) => {
   const [className, setClassName] = useState("");
   const [formattedDateOfAdmission, setFormattedDateOfAdmission] = useState("");
   const [formattedDateOfBirth, setFormattedDateOfBirth] = useState("");
 
+  const fetchClassName = async () => {
+    try {
+      const result = await getService(`${apiName.getClassById}/${studentData.class_Id}`); // Get Classes API
+      setClassName(result.name);
+    } catch (error) {
+      console.error("Error fetching class data:", error);
+    }
+  };
+
   useEffect(() => {
-    const fetchClassName = async (class_Id) => {
-      try {
-        const response = await fetch(`your-api-url/${'class/get'}/${class_Id}`);
-        const data = await response.json();
-        setClassName(data.name);
-      } catch (error) {
-        console.error("Error fetching class data:", error);
-      }
-    };
-
-    fetchClassName(studentData.class_Id);
-
+    fetchClassName()
     // Format date of admission
     const dateOfAdmission = new Date(studentData.date_Of_Admission);
     const formattedDate = `${dateOfAdmission.getDate()}-${dateOfAdmission.getMonth() + 1}-${dateOfAdmission.getFullYear()}`;
@@ -36,7 +36,7 @@ const AdmissionReceipt = ({ studentData, setRegistrationCompleted }) => {
   };
 
   return (
-    <div className="admission-receipt">
+    <div className="no-scrollbar admission-receipt">
       <div className="flex gap-4 justify-center header-to-hide">
         <Link to="/admin/add-student" reloadDocument>
           <button
@@ -85,12 +85,12 @@ const AdmissionReceipt = ({ studentData, setRegistrationCompleted }) => {
             <tr>
               <td><strong>Admission Number:</strong></td>
               <td>{studentData.admission_Number}</td>
-              <td rowSpan="7" className="student-photo-cell">
+              <td rowSpan="7" style={{}}>
                 {studentData.student_Photo && (
                   <img
+                    style={{ width: 200, height: 200, objectFit: 'cover', alignSelf: 'center' }}
                     src={studentData.student_Photo}
                     alt="Student"
-                    className="student-photo-image"
                   />
                 )}
               </td>
@@ -150,7 +150,7 @@ const AdmissionReceipt = ({ studentData, setRegistrationCompleted }) => {
           margin: 20px;
         }
         .header-to-hide {
-          margin-bottom: 20px;
+          margin-bottom: 10px;
         }
         .school-info {
           display: flex;
@@ -203,7 +203,6 @@ const AdmissionReceipt = ({ studentData, setRegistrationCompleted }) => {
           .admission-receipt {
             width: 100%;
             margin: 0;
-            padding: 20px;
             box-sizing: border-box;
           }
 
@@ -219,15 +218,6 @@ const AdmissionReceipt = ({ studentData, setRegistrationCompleted }) => {
 
           .school-logo-adm-res {
             width: 100px;
-          }
-
-          .student-photo-cell {
-            text-align: center;
-          }
-
-          .student-photo-image {
-            max-width: 150px;
-            height: auto;
           }
 
           /* Adjust font size for print */

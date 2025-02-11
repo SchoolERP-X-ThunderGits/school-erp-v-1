@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { showToast } from '../../../../components/Toast';
 import { getService } from '../../../../constants/Service';
 import apiName from '../../../../constants/ApiName';
+import { Bar } from 'react-chartjs-2';
+import { Chart as ChartJS } from 'chart.js/auto';
 
 // Example static data for dashboard
 const dashboardData = {
@@ -20,7 +22,6 @@ const dashboardData = {
 };
 
 const AdminHome = () => {
-  // You could replace static data with an API call to fetch dashboard data
   const [students, setStudents] = useState([]);
   const [classes, setClasses] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -28,36 +29,32 @@ const AdminHome = () => {
   const [payments, setPayments] = useState(dashboardData.payments);
   const [recentTransactions, setRecentTransactions] = useState(dashboardData.recentTransactions);
 
-  // For searching transactions
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredTransactions, setFilteredTransactions] = useState(recentTransactions);
 
   useEffect(() => {
-    fetchStudents()
-    getClassList()
-  }, [])
-  // Handle search filter for recent transactions
+    fetchStudents();
+    getClassList();
+  }, []);
+
   const fetchStudents = async () => {
     try {
-      const result = await getService(apiName.getStudent); // API to get fee structures
-      console.log('bvlblv',result)
-      setStudents(result?.length)
-
+      const result = await getService(apiName.getStudent);
+      setStudents(result?.length);
     } catch (error) {
-      showToast('Error fetching fee structures', 'error');
+      showToast('Error fetching students data', 'error');
     }
-  }
+  };
+
   const getClassList = async () => {
     try {
-      const result = await getService(apiName.getClassList); // API endpoint (e.g. '/posts')
-      console.log('bvbkvkbv', result)
-      setClasses(result?.length)
+      const result = await getService(apiName.getClassList);
+      setClasses(result?.length);
       let totalSections = 0;
-        result.forEach((cls) => {
-          totalSections += cls.sections.length;
-        });
-        setSections(totalSections);
-      // setClasses(result)
+      result.forEach((cls) => {
+        totalSections += cls.sections.length;
+      });
+      setSections(totalSections);
     } catch (error) {
       setLoading(false);
     }
@@ -69,7 +66,6 @@ const AdminHome = () => {
     filterTransactions(value);
   };
 
-  // Filter transactions based on search term
   const filterTransactions = (searchText) => {
     if (!searchText) {
       setFilteredTransactions(recentTransactions);
@@ -83,152 +79,95 @@ const AdminHome = () => {
     }
   };
 
-  useEffect(() => {
-    // Add any necessary useEffect logic if you want to fetch live data.
-  }, []);
+  // Chart Data for Students, Classes, and Fee Dues
+  const chartData = {
+    labels: ['Students', 'Classes', 'Fee Dues'],
+    datasets: [
+      {
+        label: 'Counts/Amounts',
+        data: [students, classes, payments],
+        backgroundColor: ['#4CAF50', '#FF9800', '#2196F3'],
+        borderColor: ['#4CAF50', '#FF9800', '#2196F3'],
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const chartOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+    },
+  };
 
   return (
-    <div className="dashboard-container">
+    <div className="p-6 bg-gray-50 min-h-screen">
       {/* Dashboard Stats */}
-      <div className="stats-grid">
-        <div className="stat-card">
-          <h3>Total Students</h3>
-          <p>{students}</p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="bg-white p-6 rounded-lg shadow-md text-center">
+          <h3 className="text-gray-700 text-lg font-semibold">Total Students</h3>
+          <p className="text-2xl font-bold text-gray-800">{students}</p>
         </div>
-        <div className="stat-card">
-          <h3>Total Classes</h3>
-          <p>{classes}</p>
+        <div className="bg-white p-6 rounded-lg shadow-md text-center">
+          <h3 className="text-gray-700 text-lg font-semibold">Total Classes</h3>
+          <p className="text-2xl font-bold text-gray-800">{classes}</p>
         </div>
-        <div className="stat-card">
-          <h3>Total Sections</h3>
-          <p>{sections}</p>
+        <div className="bg-white p-6 rounded-lg shadow-md text-center">
+          <h3 className="text-gray-700 text-lg font-semibold">Total Sections</h3>
+          <p className="text-2xl font-bold text-gray-800">{sections}</p>
         </div>
-        <div className="stat-card">
-          <h3>Total Payments</h3>
-          <p>{payments}</p>
+        <div className="bg-white p-6 rounded-lg shadow-md text-center">
+          <h3 className="text-gray-700 text-lg font-semibold">Total Payments</h3>
+          <p className="text-2xl font-bold text-gray-800">{payments}</p>
         </div>
       </div>
 
+      {/* Chart for Students, Classes, and Fee Dues */}
+      <div className="bg-white p-6 rounded-lg shadow-md mb-8">
+        <h2 className="text-xl font-semibold mb-4">Students, Classes, and Fee Dues</h2>
+        <Bar data={chartData} options={chartOptions} />
+      </div>
+
       {/* Recent Transactions */}
-      <div className="transactions-section">
-        <h2>Recent Transactions</h2>
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <h2 className="text-xl font-semibold mb-4">Recent Transactions</h2>
         <input
           type="text"
           placeholder="Search by Admission No. or Transaction ID"
           value={searchTerm}
           onChange={handleSearch}
-          className="search-input"
+          className="w-full max-w-xl p-3 border border-gray-300 rounded-lg mb-6 focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
-
-        <table className="transactions-table">
-          <thead>
-            <tr>
-              <th>Admission No.</th>
-              <th>Amount</th>
-              <th>Transaction Id</th>
-              <th>Date</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredTransactions.map((transaction, index) => (
-              <tr key={index}>
-                <td>{transaction.admissionNo}</td>
-                <td>{transaction.amount}</td>
-                <td>{transaction.transactionId}</td>
-                <td>{transaction.date}</td>
-                <td>
-                  <button className="view-details-btn">View Details</button>
-                </td>
+        
+        <div className="overflow-x-auto">
+          <table className="min-w-full table-auto">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Admission No.</th>
+                <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Amount</th>
+                <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Transaction Id</th>
+                <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Date</th>
+                <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {filteredTransactions.map((transaction, index) => (
+                <tr key={index} className="hover:bg-gray-50">
+                  <td className="px-4 py-2 text-sm text-gray-800">{transaction.admissionNo}</td>
+                  <td className="px-4 py-2 text-sm text-gray-800">{transaction.amount}</td>
+                  <td className="px-4 py-2 text-sm text-gray-800">{transaction.transactionId}</td>
+                  <td className="px-4 py-2 text-sm text-gray-800">{transaction.date}</td>
+                  <td className="px-4 py-2 text-sm text-gray-800">
+                    <button className="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600 transition">View Details</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-
-      <style jsx>{`
-        .dashboard-container {
-          padding: 20px;
-          font-family: Arial, sans-serif;
-        }
-
-        .stats-grid {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 20px;
-          margin-bottom: 40px;
-        }
-
-        .stat-card {
-          background: #fff;
-          padding: 20px;
-          border-radius: 8px;
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-          text-align: center;
-        }
-
-        .stat-card h3 {
-          font-size: 1.2rem;
-          color: #555;
-        }
-
-        .stat-card p {
-          font-size: 2rem;
-          font-weight: bold;
-          color: #2d3e50;
-        }
-
-        .transactions-section {
-          background: #fff;
-          padding: 20px;
-          border-radius: 8px;
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .transactions-section h2 {
-          font-size: 1.5rem;
-          margin-bottom: 20px;
-        }
-
-        .search-input {
-          padding: 10px;
-          margin-bottom: 20px;
-          width: 100%;
-          max-width: 400px;
-          border: 1px solid #ddd;
-          border-radius: 8px;
-        }
-
-        .transactions-table {
-          width: 100%;
-          border-collapse: collapse;
-        }
-
-        .transactions-table th,
-        .transactions-table td {
-          padding: 12px;
-          border: 1px solid #ddd;
-          text-align: left;
-        }
-
-        .transactions-table th {
-          background-color: #f4f4f4;
-        }
-
-        .view-details-btn {
-          padding: 6px 12px;
-          background-color: #007bff;
-          color: #fff;
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
-          transition: background-color 0.3s;
-        }
-
-        .view-details-btn:hover {
-          background-color: #0056b3;
-        }
-      `}</style>
     </div>
   );
 };
