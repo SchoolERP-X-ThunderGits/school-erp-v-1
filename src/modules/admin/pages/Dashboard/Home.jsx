@@ -4,6 +4,7 @@ import { getService } from '../../../../constants/Service';
 import apiName from '../../../../constants/ApiName';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS } from 'chart.js/auto';
+import Loader from '../../../../components/Loader';
 
 // Example static data for dashboard
 const dashboardData = {
@@ -24,7 +25,7 @@ const dashboardData = {
 const AdminHome = () => {
   const [students, setStudents] = useState([]);
   const [classes, setClasses] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [sections, setSections] = useState([]);
   const [payments, setPayments] = useState(dashboardData.payments);
   const [recentTransactions, setRecentTransactions] = useState(dashboardData.recentTransactions);
@@ -33,14 +34,19 @@ const AdminHome = () => {
   const [filteredTransactions, setFilteredTransactions] = useState(recentTransactions);
 
   useEffect(() => {
-    fetchStudents();
-    getClassList();
+
+    setTimeout(() => {
+      
+      fetchStudents();
+      getClassList();
+    }, 1000);
   }, []);
 
   const fetchStudents = async () => {
     try {
       const result = await getService(apiName.getStudent);
       setStudents(result?.length);
+      setLoading(false)
     } catch (error) {
       showToast('Error fetching students data', 'error');
     }
@@ -104,6 +110,10 @@ const AdminHome = () => {
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
+      {
+loading&&
+      <Loader/>
+      }
       {/* Dashboard Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <div className="bg-white p-6 rounded-lg shadow-md text-center">

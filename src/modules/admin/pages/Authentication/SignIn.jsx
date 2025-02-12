@@ -28,7 +28,7 @@ const SignIn = () => {
         localStorage.setItem("token", response.token); // Save token to localStorage
         // Redirect to admin dashboard or perform any other action
         showToast("Login successfully.", 'success');
-        navigate("/admin/home");
+          navigate("/admin/home");
         console.log("Admin Login Response:", response);
       } else {
         // Handle login error

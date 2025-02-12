@@ -134,7 +134,6 @@ const FeeStructure = () => {
         try {
             // Call delete service with the class ID
             const response = await deleteService(`${apiName.deleteFeeStructure}/${feeToDelete}`);
-            console.log('blvblvlblv', response)
             showToast('Fee structure deleted successfully', 'success');
             fetchFeeStructures(); // Refresh the class list
         } catch (error) {

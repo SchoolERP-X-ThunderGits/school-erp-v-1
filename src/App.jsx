@@ -16,6 +16,7 @@ import Students from './modules/admin/pages/Students/Students';
 import AddStudent from './modules/admin/pages/Students/AddStudent';
 import EditStudent from './modules/admin/pages/Students/EditStudent';
 import Onboarding from './modules/onboarding/onboarding';
+import Exams from './modules/admin/pages/Exams/Exams';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -32,7 +33,6 @@ function App() {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    console.log('bmvkbvkbkvbk',token)
     if (token) {
       // Only redirect if you're not already on the home page or any other admin pages
       if (pathname === '/' || pathname === '/admin') {
@@ -58,6 +58,7 @@ function App() {
       <Route path="/admin/fee-structure" element={<DefaultLayout><FeeStructure /></DefaultLayout>} />
       <Route path="/admin/fee-type" element={<DefaultLayout><FeeType /></DefaultLayout>} />
       <Route path="/admin/class" element={<DefaultLayout><Class /></DefaultLayout>} />
+      <Route path="/admin/exams" element={<DefaultLayout><Exams /></DefaultLayout>} />
       <Route path="/admin/subject" element={<DefaultLayout><Subject /></DefaultLayout>} />
       <Route path="/admin/assign-subject" element={<DefaultLayout><AssignSubject /></DefaultLayout>} />
 
