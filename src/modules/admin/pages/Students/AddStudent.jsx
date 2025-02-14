@@ -415,7 +415,7 @@ const AddStudent = () => {
                     onChange={handleInputChange}
                     className="mt-2 p-2 border border-gray-300 rounded-md w-full"
                   >
-                    <option value="">Select Section</option>
+                    <option value="">Select Session</option>
                     {sessions.map((section) => (
                       <option key={section} value={section}>
                         {section}
@@ -510,6 +510,7 @@ const AddStudent = () => {
                 <div className="mb-4">
                   <label className="block text-gray-700">Nationality :</label>
                   <input
+                  disabled
                     type="text"
                     name="nationality"
                     value={formData.nationality}

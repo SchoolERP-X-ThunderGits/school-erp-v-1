@@ -17,6 +17,9 @@ import AddStudent from './modules/admin/pages/Students/AddStudent';
 import EditStudent from './modules/admin/pages/Students/EditStudent';
 import Onboarding from './modules/onboarding/onboarding';
 import Exams from './modules/admin/pages/Exams/Exams';
+import GenerateAdmitCard from './modules/admin/pages/GenerateAdminCard/GenerateAdminCard';
+import StudentIDCard from './modules/admin/pages/Students/StudentIDCard';
+import ExamSchedule from './modules/admin/pages/Exams/ExamSchedule';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -54,11 +57,14 @@ function App() {
       <Route path="/admin/student" element={<DefaultLayout><Students /></DefaultLayout>} />
       <Route path="/admin/add-student" element={<DefaultLayout><AddStudent /></DefaultLayout>} />
       <Route path="/admin/edit-student/:id" element={<DefaultLayout><EditStudent /></DefaultLayout>} />
+      <Route path="/admin/student-id-card" element={<DefaultLayout><StudentIDCard /></DefaultLayout>} />
       <Route path="/admin/find-student" element={<DefaultLayout><FindStudent /></DefaultLayout>} />
       <Route path="/admin/fee-structure" element={<DefaultLayout><FeeStructure /></DefaultLayout>} />
       <Route path="/admin/fee-type" element={<DefaultLayout><FeeType /></DefaultLayout>} />
       <Route path="/admin/class" element={<DefaultLayout><Class /></DefaultLayout>} />
       <Route path="/admin/exams" element={<DefaultLayout><Exams /></DefaultLayout>} />
+      <Route path="/admin/exam-schedule" element={<DefaultLayout><ExamSchedule /></DefaultLayout>} />
+      <Route path="/admin/generate-admit-card" element={<DefaultLayout><GenerateAdmitCard /></DefaultLayout>} />
       <Route path="/admin/subject" element={<DefaultLayout><Subject /></DefaultLayout>} />
       <Route path="/admin/assign-subject" element={<DefaultLayout><AssignSubject /></DefaultLayout>} />
 
