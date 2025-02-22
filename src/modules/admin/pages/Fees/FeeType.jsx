@@ -16,8 +16,6 @@ const FeeType = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false); // Delete confirmation modal
     const [classToDelete, setClassToDelete] = useState(null); // Track fee to delete
 
-    const sections = ['A', 'B', 'C', 'D', 'E', 'F'];
-
     useEffect(() => {
         setLoading(true);
         getFeeTypeList();
@@ -100,7 +98,7 @@ const FeeType = () => {
             <div className="mb-6 flex justify-between items-center">
                 <h1 className="text-2xl font-semibold text-gray-800">FeeType List</h1>
                 <button
-                    onClick={() => setShowModal(true)}
+                    onClick={() => {setShowModal(true),setFeeName(''),setDescription('')}}
                     className="flex items-center px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
                 >
                     <FaPlus className="mr-2" /> Add FeeType
@@ -185,7 +183,7 @@ const FeeType = () => {
                                 onClick={handleAddClass}
                                 className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-200"
                             >
-                                {editMode?'Update fee':'Add feetype'}
+                                {editMode?'Update Fee':'Add feeType'}
                             </button>
                         </div>
                     </div>
@@ -196,7 +194,7 @@ const FeeType = () => {
             {showDeleteModal && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div className="bg-white p-8 rounded-lg shadow-lg w-96 max-w-sm">
-                        <h2 className="text-xl font-semibold text-gray-800 mb-4">Are you sure you want to delete this fee?</h2>
+                        <h2 className="text-xl font-semibold text-gray-800 mb-4">Are you sure you want to delete this feeType?</h2>
                         <div className="flex justify-end space-x-4">
                             <button
                                 onClick={() => setShowDeleteModal(false)} // Close the confirmation modal

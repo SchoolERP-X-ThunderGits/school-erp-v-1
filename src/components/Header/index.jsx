@@ -76,7 +76,7 @@ function index(props) {
             textAlign: 'center',
           }}
         >
-          Shakti Vidhya Mandir School, Jaipur
+          Vision Public School, Jaipur
         </h1>
       </div>
     </div>

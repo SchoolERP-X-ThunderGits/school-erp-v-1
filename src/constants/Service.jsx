@@ -6,11 +6,11 @@ const api = axios.create({
   baseURL: BASE_URL,
   headers: {
     'Content-Type': 'application/json',
-    "Authorization":localStorage.getItem("token"),
+    "Authorization":sessionStorage.getItem("token"),
     // Add any other common headers if needed, e.g. Authorization
   },
 });
-console.log('localStorage.getItem("token")',localStorage.getItem("token"))
+console.log('sessionStorage.getItem("token")',sessionStorage.getItem("token"))
 
 // GET Request
 export const getService = async (url, params = {}) => {

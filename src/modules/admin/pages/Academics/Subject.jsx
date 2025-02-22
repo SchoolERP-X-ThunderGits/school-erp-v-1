@@ -93,7 +93,7 @@ const Subject = () => {
             <div className="mb-6 flex justify-between items-center">
                 <h1 className="text-2xl font-semibold text-gray-800">Subject List</h1>
                 <button
-                    onClick={() => setShowModal(true)}
+                    onClick={() => {setShowModal(true),setNewSubjectName('')}}
                     className="flex items-center px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
                 >
                     <FaPlus className="mr-2" /> Add Subject

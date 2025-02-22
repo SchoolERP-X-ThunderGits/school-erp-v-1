@@ -13,31 +13,33 @@ const SignIn = () => {
 
   const handleLogin = async () => {
     if (!username || !password) {
-      showToast('All field are required', 'error');
+      showToast('All fields are required', 'error');
       return;
     }
+  
     const body = {
       username: username,
       password: password,
       role: "admin"
     };
+  
     try {
       const response = await postService(apiName.adminLogin, body);
-      console.log('response',response)
+      console.log('response:', response);  // Ensure the response has the token
+  
       if (response.token) {
-        localStorage.setItem("token", response.token); // Save token to localStorage
-        // Redirect to admin dashboard or perform any other action
+        sessionStorage.setItem("token", response.token); // Save token to sessionStorage
         showToast("Login successfully.", 'success');
-          navigate("/admin/home");
-        console.log("Admin Login Response:", response);
+        navigate("/admin/home");
       } else {
-        // Handle login error
         console.log("Admin Login Error:", response.error);
       }
     } catch (error) {
+      showToast(error.response?.data?.message, 'error');
       console.error('Error posting data:', error);
     }
   };
+  
   return (
     <div className="sign-in-container">
       <div className="sign-in-form">

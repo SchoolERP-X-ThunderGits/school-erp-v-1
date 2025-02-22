@@ -12,7 +12,6 @@ const AssignSubject = () => {
     const [selectedClass, setSelectedClass] = useState(''); // Track selected class
     const [selectedSubjects, setSelectedSubjects] = useState([]); // Track selected subjects
     const [showModal, setShowModal] = useState(false);
-    const [newSubjectName, setNewSubjectName] = useState('');
     const [editId, setEditId] = useState('');
     const [loading, setLoading] = useState(false);
     const [editMode, setEditMode] = useState(false);
@@ -131,7 +130,7 @@ const AssignSubject = () => {
             <div className="mb-6 flex justify-between items-center">
                 <h1 className="text-2xl font-semibold text-gray-800">Assign List</h1>
                 <button
-                    onClick={() => setShowModal(true)}
+                    onClick={() => {setShowModal(true),setSelectedClass(''),setSelectedSubjects([])}}
                     className="flex items-center px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
                 >
                     <FaPlus className="mr-2" /> Assign Subject

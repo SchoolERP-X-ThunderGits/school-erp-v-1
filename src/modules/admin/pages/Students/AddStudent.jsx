@@ -12,11 +12,7 @@ const AddStudent = () => {
   const [classes, setClasses] = useState([]); // Classes for dropdown
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [sections, setSections] = useState([
-    "A",
-    "B",
-    "C",
-    "D",
-    "E",
+  
   ]); // Sections for dropdown
   const [sessions, setSessions] = useState(['2024-2025', '2025-2026', '2026-2027']); // Sessions for dropdown
   const [categories, setCategories] = useState([]); // Categories for dropdown
@@ -147,6 +143,7 @@ const AddStudent = () => {
   const fetchClasses = async () => {
     try {
       const result = await getService(apiName.getClassList); // Get Classes API
+      console.log('lbvlblvbllvb',result)
       setClasses(result);
     } catch (error) {
       // showToast('Error fetching classes', 'error');
@@ -165,7 +162,7 @@ const AddStudent = () => {
         // Remove the fee structure ID if unchecked
         updatedFeeStructures = updatedFeeStructures.filter(id => id !== feeId);
       }
-      {console.log('kkm0000',updatedFeeStructures)}
+      { console.log('kkm0000', updatedFeeStructures) }
       return {
         ...prevData,
         feeStructures: updatedFeeStructures,
@@ -177,6 +174,10 @@ const AddStudent = () => {
   const handleInputChange = (e) => {
     const { name, value, type, files } = e.target;
     console.log('bvlvlblvlb', name, value)
+    if(name == 'class_Id'){
+      const filterClassData = classes.filter((classes) => classes._id === value);
+      setSections(filterClassData[0]?.sections)
+    }
     if (type === 'file') {
       if (files && files[0]) {
         setFormData((prevData) => ({
@@ -285,13 +286,15 @@ const AddStudent = () => {
 
     try {
       const response = await postService(apiName.addStudent, formData);
-            navigate('/admin/student')
+      console.log('reses222sponse',response)
+      setRegistrationCompleted(true)
+      // navigate('/admin/student')
       showToast("Student added successfully.", 'success');
     } catch (error) {
       showToast('Error submitting data', 'error');
     }
   };
- 
+
 
   const toggleFeeGroupVisibility = (feeId) => {
     setExpandedFees((prevExpandedFees) => ({
@@ -378,9 +381,8 @@ const AddStudent = () => {
                     onChange={handleInputChange}
                     className="mt-2 p-2 border border-gray-300 rounded-md w-full"
                   >
-                    {console.log('bkvkkbkvb', classes)}
                     <option value="">Select Class</option>
-                    {classes.map((cls) => (
+                    {classes?.map((cls) => (
                       <option key={cls._id} value={cls._id}>
                         {cls.name}
                       </option>
@@ -396,9 +398,10 @@ const AddStudent = () => {
                     value={formData.section}
                     onChange={handleInputChange}
                     className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                    disabled={!formData.class_Id}
                   >
                     <option value="">Select Section</option>
-                    {sections.map((section) => (
+                    {sections?.map((section) => (
                       <option key={section} value={section}>
                         {section}
                       </option>
@@ -416,7 +419,7 @@ const AddStudent = () => {
                     className="mt-2 p-2 border border-gray-300 rounded-md w-full"
                   >
                     <option value="">Select Session</option>
-                    {sessions.map((section) => (
+                    {sessions?.map((section) => (
                       <option key={section} value={section}>
                         {section}
                       </option>
@@ -510,7 +513,7 @@ const AddStudent = () => {
                 <div className="mb-4">
                   <label className="block text-gray-700">Nationality :</label>
                   <input
-                  disabled
+                    readOnly
                     type="text"
                     name="nationality"
                     value={formData.nationality}
@@ -520,15 +523,23 @@ const AddStudent = () => {
                 </div>
 
                 <div className="mb-4">
-                  <label className="block text-gray-700">Religion :</label>
-                  <input
-                    type="text"
+                  <label className="block text-gray-700">Religion:</label>
+                  <select
                     name="religion"
                     value={formData.religion}
                     onChange={handleInputChange}
                     className="mt-2 p-2 border border-gray-300 rounded-md w-full"
-                  />
+                  >
+                    <option value="">Select Religion</option>
+                    <option value="Hinduism">Hinduism</option>
+                    <option value="Islam">Islam</option>
+                    <option value="Christianity">Christianity</option>
+                    <option value="Sikhism">Sikhism</option>
+                    <option value="Buddhism">Buddhism</option>
+                    <option value="Other">Other</option>
+                  </select>
                 </div>
+
                 {/* Gender Dropdown */}
                 <div className="mb-4">
                   <label className="block text-gray-700">Calegory *:</label>

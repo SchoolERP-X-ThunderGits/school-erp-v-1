@@ -45,16 +45,19 @@ const AdminHome = () => {
   const fetchStudents = async () => {
     try {
       const result = await getService(apiName.getStudent);
+      console.log('resultkdfkg11111',result)
       setStudents(result?.length);
       setLoading(false)
     } catch (error) {
+      console.log('fetchStudents error',error)
       showToast('Error fetching students data', 'error');
     }
   };
-
+console.log('sessionStorage.getItem("token")',sessionStorage.getItem("token"))
   const getClassList = async () => {
     try {
       const result = await getService(apiName.getClassList);
+      console.log('resultkdfkg',result)
       setClasses(result?.length);
       let totalSections = 0;
       result.forEach((cls) => {
@@ -62,6 +65,7 @@ const AdminHome = () => {
       });
       setSections(totalSections);
     } catch (error) {
+      console.log('getClassList error',error)
       setLoading(false);
     }
   };

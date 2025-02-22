@@ -5,7 +5,7 @@ const Onboarding = () => {
   const navigate = useNavigate();
 
   const handleAdminLogin = () => {
-    localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
     navigate('/admin');
   };
 

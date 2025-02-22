@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { FaEdit, FaPlus, FaTrash, FaDownload } from 'react-icons/fa'; // Added Download icon
 import { deleteService, getService } from '../../../../constants/Service'; // Importing services
+import { pdf, Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
+import { saveAs } from 'file-saver';
 import apiName from '../../../../constants/ApiName'; // Importing API Names
 import { showToast } from '../../../../components/Toast'; // Show Toast Notifications
 import { useNavigate } from 'react-router-dom';
 import Loader from '../../../../components/Loader';
+import moment from 'moment';
 
 const StudentIDCard = () => {
     const [loading, setLoading] = useState(false);
@@ -107,25 +110,6 @@ const StudentIDCard = () => {
         setShowDeleteModal(false); // Close the confirmation modal
     };
 
-    // Generate student ID card PDF
-    const generateIdCardPdf = (student) => {
-        console.log('bclbclblcb',student)
-        const doc = new jsPDF();
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(20);
-        doc.text(`Student ID Card`, 20, 20);
-        doc.setFontSize(12);
-        doc.text(`Name: ${student.first_Name} ${student.last_Name}`, 20, 30);
-        doc.text(`Admission No: ${student.admission_Number}`, 20, 40);
-        doc.text(`Class: ${student.class_Id?.name}`, 20, 50);
-        doc.text(`Section: ${student.section}`, 20, 60);
-        doc.text(`DOB: ${student.date_Of_Birth}`, 20, 70);
-        doc.text(`Email: ${student.email}`, 20, 80);
-        doc.text(`Contact: ${student.contact_Number}`, 20, 90);
-        doc.save(`${student.first_Name}_${student.last_Name}_ID_Card.pdf`);
-    };
-
-    // Render the list of filtered students
     const renderStudentList = () => {
         return (
             <div className="container mx-auto p-4">
@@ -169,7 +153,157 @@ const StudentIDCard = () => {
             </div>
         );
     };
+    const generateIdCardPdf = async (student) => {
+        const blob = await pdf(<IDCardPDF student={student} />).toBlob();
+        saveAs(blob, `Student_ID_${student.admission_Number}.pdf`);
+    };
 
+    const styles = StyleSheet.create({
+        page: {
+            backgroundColor: '#f4f4f4',
+            padding: 20,
+        },
+        card: {
+            width: '100%',
+            borderRadius: 10,
+            overflow: 'hidden',
+            backgroundColor: '#ffffff',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+            padding: 20,
+            borderWidth: 2,
+            borderColor: '#0047AB',
+            height: '100%',
+        },
+        header: {
+            width:'100%',
+            borderWidth:1,
+            borderColor:'black',
+            backgroundColor: 'black',
+            paddingVertical: 10,
+            textAlign: 'center',
+            borderTopLeftRadius: 10,
+            borderTopRightRadius: 10,
+        },
+        schoolName: {
+            fontSize: 17,
+            fontWeight: 'bold',
+            color: '#fff',
+        },
+        infoContainer: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingTop: 15,
+            paddingBottom: 15,
+            borderBottom: '2px solid #f0f0f0',
+        },
+        image: {
+            width: 80,
+            height: 80,
+            borderRadius: 50,
+            borderWidth: 3,
+            borderColor: '#1c2534',
+            marginRight: 20,
+        },
+        details: {
+            flex: 1,
+        },
+        studentName: {
+            fontSize: 18,
+            fontWeight: 'bold',
+            color: '#222',
+            marginBottom: 5,
+        },
+        studentId: {
+            fontSize: 14,
+            color: '#555',
+        },
+        studentRoll: {
+            fontSize: 14,
+            color: '#555',
+        },
+        divider: {
+            height: 2,
+            width: '100%',
+            backgroundColor: '#FFD700',
+            marginVertical: 12,
+        },
+        extraInfo: {
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            paddingVertical: 6,
+            borderBottom: '1px solid #f0f0f0',
+        },
+        label: {
+            fontSize: 14,
+            fontWeight: 'bold',
+            color: '#0047AB',
+        },
+        value: {
+            fontSize: 14,
+            color: '#222',
+        },
+        footer: {
+            paddingTop: 15,
+            textAlign: 'center',
+            fontSize: 12,
+            color: '#555',
+        },
+        qrCodePlaceholder: {
+            width: 50,
+            height: 50,
+            backgroundColor: '#ddd',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginTop: 10,
+            borderRadius: 6,
+        },
+    });
+    
+    const IDCardPDF = ({ student }) => (
+        <Document>
+            <Page size="A6" style={styles.page}>
+                <View style={styles.card}>
+                    {/* Header Section */}
+                    <View style={styles.header}>
+                        <Text style={styles.schoolName}>Vision Public School</Text>
+                    </View>
+    
+                    {/* Student Photo & Info */}
+                    <View style={styles.infoContainer}>
+                        <Image src={student.student_Photo || '/default-photo.jpg'} style={styles.image} />
+                        <View style={styles.details}>
+                            <Text style={styles.studentName}>{student.first_Name} {student.last_Name}</Text>
+                            <Text style={styles.studentId}>ID: {student.admission_Number}</Text>
+                            <Text style={styles.studentRoll}>Roll No: {student.roll_Number}</Text>
+                        </View>
+                    </View>
+    
+                    {/* Stylish Divider */}
+    {console.log('student11',student)}
+                    {/* Student Additional Info */}
+                    <View style={styles.extraInfo}>
+                        <Text style={styles.label}>Class:</Text>
+                        <Text style={styles.value}>{student.class_Id?.name}</Text>
+                    </View>
+                    <View style={styles.extraInfo}>
+                        <Text style={styles.label}>Section:</Text>
+                        <Text style={styles.value}>{student.section}</Text>
+                    </View>
+                    <View style={styles.extraInfo}>
+                        <Text style={styles.label}>Address:</Text>
+                        <Text style={styles.value}>{student.permanent_Address || 'Not Available'}</Text>
+                    </View>
+                    <View style={styles.extraInfo}>
+                        <Text style={styles.label}>DOB:</Text>
+                        <Text style={styles.value}>{moment(student?.date_Of_Birth).format('DD MMMM, YYYY') || 'Not Available'}</Text>
+                    </View>
+                 <View style={styles.footer}>
+                        <Text>Valid for the Academic Year 2024-2025</Text>
+                    </View>
+                </View>
+            </Page>
+        </Document>
+    );
     return (
         <div className="container mx-auto p-4">
             {loading ? (
