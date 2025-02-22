@@ -229,7 +229,7 @@ const GenerateAdmitCard = () => {
             {loading ? (
                 <Loader />
             ) : (
-                students.length > 0 && (
+                students.length > 0 ? (
                     <div className="overflow-x-auto bg-white shadow-md rounded-lg">
                         <table className="min-w-full table-auto">
                             <thead>
@@ -246,7 +246,7 @@ const GenerateAdmitCard = () => {
                                         <td className="py-3 px-6 text-sm text-gray-800">
                                             <button
                                                 onClick={() => handleGenerateAdmitCard(student)}
-                                                className="text-green-500 hover:text-green-700 transition duration-200"
+                                              className="text-[#1c2534] hover:text-[#1c2534] transition duration-200"
                                             >
                                                 <FaDownload className="mr-2" />
                                             </button>
@@ -257,6 +257,8 @@ const GenerateAdmitCard = () => {
                         </table>
                     </div>
                 )
+                :
+                <p style={{textAlign:'center'}}>No students found</p>
             )}
         </div>
     );
