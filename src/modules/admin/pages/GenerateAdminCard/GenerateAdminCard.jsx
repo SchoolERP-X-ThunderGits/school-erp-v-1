@@ -4,6 +4,9 @@ import { getService } from '../../../../constants/Service';
 import apiName from '../../../../constants/ApiName';
 import Loader from '../../../../components/Loader';
 import { showToast } from '../../../../components/Toast';
+import { pdf, Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
+import { saveAs } from 'file-saver';
+import moment from 'moment';
 
 const GenerateAdmitCard = () => {
     const [classes, setClasses] = useState([]);
@@ -89,7 +92,7 @@ const GenerateAdmitCard = () => {
         setLoading(true);
         try {
             // Call the API to get students based on filters
-            const response = await getService(`${apiName.students}?class=${selectedClass}&section=${selectedSection}&exam=${selectedExam}&session=${selectedSession}`);
+            const response = await getService(`${apiName.getStudentByExam}/${selectedClass}/${selectedSection}`);
             setStudents(response);
         } catch (error) {
             showToast('Error fetching students', 'error');
@@ -98,10 +101,53 @@ const GenerateAdmitCard = () => {
         }
     };
 
-    const handleGenerateAdmitCard = (studentId) => {
-        // Logic to generate admit card for the student
-        showToast(`Admit card generated for student ID: ${studentId}`, 'success');
-    };
+        const handleGenerateAdmitCard = async (student) => {
+            const blob = await pdf(<StudentAdmitCardPDF student={student} />).toBlob();
+            saveAs(blob, `Student_ADMIT_CARD_${student.admission_Number}.pdf`);
+        };
+
+            const StudentAdmitCardPDF = ({ student }) => (
+                <Document>
+                    <Page size="A6" style={styles.page}>
+                        <View style={styles.card}>
+                            {/* Header Section */}
+                            <View style={styles.header}>
+                                <Text style={styles.schoolName}>Vision Public School</Text>
+                            </View>
+            
+                            {/* Student Photo & Info */}
+                            <View style={styles.infoContainer}>
+                                <Image src={student.student_Photo || '/default-photo.jpg'} style={styles.image} />
+                                <View style={styles.details}>
+                                    <Text style={styles.studentName}>{student.first_Name} {student.last_Name}</Text>
+                                    <Text style={styles.studentId}>ID: {student.admission_Number}</Text>
+                                    <Text style={styles.studentRoll}>Roll No: {student.roll_Number}</Text>
+                                </View>
+                            </View>
+            
+                            <View style={styles.extraInfo}>
+                                <Text style={styles.label}>Class:</Text>
+                                <Text style={styles.value}>{student.class_Id?.name}</Text>
+                            </View>
+                            <View style={styles.extraInfo}>
+                                <Text style={styles.label}>Section:</Text>
+                                <Text style={styles.value}>{student.section}</Text>
+                            </View>
+                            <View style={styles.extraInfo}>
+                                <Text style={styles.label}>Address:</Text>
+                                <Text style={styles.value}>{student.permanent_Address || 'Not Available'}</Text>
+                            </View>
+                            <View style={styles.extraInfo}>
+                                <Text style={styles.label}>DOB:</Text>
+                                <Text style={styles.value}>{moment(student?.date_Of_Birth).format('DD MMMM, YYYY') || 'Not Available'}</Text>
+                            </View>
+                         <View style={styles.footer}>
+                                <Text>Valid for the Academic Year 2024-2025</Text>
+                            </View>
+                        </View>
+                    </Page>
+                </Document>
+            );
 
     return (
         <div className="container mx-auto p-4">
@@ -114,13 +160,15 @@ const GenerateAdmitCard = () => {
                         <label className="block text-sm font-medium text-gray-600">Select Class</label>
                         <select
                             value={selectedClass}
-                            onChange={(e) => setSelectedClass(e.target.value)}
+                            onChange={(e) => {setSelectedClass(e.target.value),console.log('lvxvlxlvx',e.target)}}
                             className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
                             <option value="">Class</option>
-                            {classes.map((classItem) => (
-                                <option key={classItem.id} value={classItem.id}>{classItem.name}</option>
-                            ))}
+                            {classes.map((cls) => (
+                              <option key={cls._id} value={cls._id}>
+                                  {cls.name}
+                              </option>
+                          ))}
                         </select>
                     </div>
 
@@ -193,13 +241,14 @@ const GenerateAdmitCard = () => {
                             <tbody>
                                 {students.map((student) => (
                                     <tr key={student.id} className="border-b hover:bg-gray-50 transition duration-200">
-                                        <td className="py-3 px-6 text-sm text-gray-800">{student.name}</td>
+                                        <td className="py-3 px-6 text-sm text-gray-800">{student.first_Name} {student?.last_Name}</td>
+                                        {console.log('sfskfs',student)}
                                         <td className="py-3 px-6 text-sm text-gray-800">
                                             <button
-                                                onClick={() => handleGenerateAdmitCard(student.id)}
+                                                onClick={() => handleGenerateAdmitCard(student)}
                                                 className="text-green-500 hover:text-green-700 transition duration-200"
                                             >
-                                                <FaDownload className="mr-2" /> Generate Admit Card
+                                                <FaDownload className="mr-2" />
                                             </button>
                                         </td>
                                     </tr>
@@ -212,5 +261,105 @@ const GenerateAdmitCard = () => {
         </div>
     );
 };
+ const styles = StyleSheet.create({
+        page: {
+            backgroundColor: '#f4f4f4',
+            padding: 20,
+        },
+        card: {
+            width: '100%',
+            borderRadius: 10,
+            overflow: 'hidden',
+            backgroundColor: '#ffffff',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+            padding: 20,
+            borderWidth: 2,
+            borderColor: '#0047AB',
+            height: '100%',
+        },
+        header: {
+            width:'100%',
+            borderWidth:1,
+            borderColor:'black',
+            backgroundColor: 'black',
+            paddingVertical: 10,
+            textAlign: 'center',
+            borderTopLeftRadius: 10,
+            borderTopRightRadius: 10,
+        },
+        schoolName: {
+            fontSize: 17,
+            fontWeight: 'bold',
+            color: '#fff',
+        },
+        infoContainer: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingTop: 15,
+            paddingBottom: 15,
+            borderBottom: '2px solid #f0f0f0',
+        },
+        image: {
+            width: 80,
+            height: 80,
+            borderRadius: 50,
+            borderWidth: 3,
+            borderColor: '#1c2534',
+            marginRight: 20,
+        },
+        details: {
+            flex: 1,
+        },
+        studentName: {
+            fontSize: 18,
+            fontWeight: 'bold',
+            color: '#222',
+            marginBottom: 5,
+        },
+        studentId: {
+            fontSize: 14,
+            color: '#555',
+        },
+        studentRoll: {
+            fontSize: 14,
+            color: '#555',
+        },
+        divider: {
+            height: 2,
+            width: '100%',
+            backgroundColor: '#FFD700',
+            marginVertical: 12,
+        },
+        extraInfo: {
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            paddingVertical: 6,
+            borderBottom: '1px solid #f0f0f0',
+        },
+        label: {
+            fontSize: 14,
+            fontWeight: 'bold',
+            color: '#0047AB',
+        },
+        value: {
+            fontSize: 14,
+            color: '#222',
+        },
+        footer: {
+            paddingTop: 15,
+            textAlign: 'center',
+            fontSize: 12,
+            color: '#555',
+        },
+        qrCodePlaceholder: {
+            width: 50,
+            height: 50,
+            backgroundColor: '#ddd',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginTop: 10,
+            borderRadius: 6,
+        },
+    });
 
 export default GenerateAdmitCard;

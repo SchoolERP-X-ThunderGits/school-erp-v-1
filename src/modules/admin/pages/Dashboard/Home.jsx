@@ -53,7 +53,6 @@ const AdminHome = () => {
       showToast('Error fetching students data', 'error');
     }
   };
-console.log('sessionStorage.getItem("token")',sessionStorage.getItem("token"))
   const getClassList = async () => {
     try {
       const result = await getService(apiName.getClassList);

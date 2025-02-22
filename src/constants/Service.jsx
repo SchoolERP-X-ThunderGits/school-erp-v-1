@@ -10,7 +10,6 @@ const api = axios.create({
     // Add any other common headers if needed, e.g. Authorization
   },
 });
-console.log('sessionStorage.getItem("token")',sessionStorage.getItem("token"))
 
 // GET Request
 export const getService = async (url, params = {}) => {

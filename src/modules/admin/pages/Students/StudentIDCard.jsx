@@ -158,106 +158,7 @@ const StudentIDCard = () => {
         saveAs(blob, `Student_ID_${student.admission_Number}.pdf`);
     };
 
-    const styles = StyleSheet.create({
-        page: {
-            backgroundColor: '#f4f4f4',
-            padding: 20,
-        },
-        card: {
-            width: '100%',
-            borderRadius: 10,
-            overflow: 'hidden',
-            backgroundColor: '#ffffff',
-            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-            padding: 20,
-            borderWidth: 2,
-            borderColor: '#0047AB',
-            height: '100%',
-        },
-        header: {
-            width:'100%',
-            borderWidth:1,
-            borderColor:'black',
-            backgroundColor: 'black',
-            paddingVertical: 10,
-            textAlign: 'center',
-            borderTopLeftRadius: 10,
-            borderTopRightRadius: 10,
-        },
-        schoolName: {
-            fontSize: 17,
-            fontWeight: 'bold',
-            color: '#fff',
-        },
-        infoContainer: {
-            flexDirection: 'row',
-            alignItems: 'center',
-            paddingTop: 15,
-            paddingBottom: 15,
-            borderBottom: '2px solid #f0f0f0',
-        },
-        image: {
-            width: 80,
-            height: 80,
-            borderRadius: 50,
-            borderWidth: 3,
-            borderColor: '#1c2534',
-            marginRight: 20,
-        },
-        details: {
-            flex: 1,
-        },
-        studentName: {
-            fontSize: 18,
-            fontWeight: 'bold',
-            color: '#222',
-            marginBottom: 5,
-        },
-        studentId: {
-            fontSize: 14,
-            color: '#555',
-        },
-        studentRoll: {
-            fontSize: 14,
-            color: '#555',
-        },
-        divider: {
-            height: 2,
-            width: '100%',
-            backgroundColor: '#FFD700',
-            marginVertical: 12,
-        },
-        extraInfo: {
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            paddingVertical: 6,
-            borderBottom: '1px solid #f0f0f0',
-        },
-        label: {
-            fontSize: 14,
-            fontWeight: 'bold',
-            color: '#0047AB',
-        },
-        value: {
-            fontSize: 14,
-            color: '#222',
-        },
-        footer: {
-            paddingTop: 15,
-            textAlign: 'center',
-            fontSize: 12,
-            color: '#555',
-        },
-        qrCodePlaceholder: {
-            width: 50,
-            height: 50,
-            backgroundColor: '#ddd',
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginTop: 10,
-            borderRadius: 6,
-        },
-    });
+   
     
     const IDCardPDF = ({ student }) => (
         <Document>
@@ -390,5 +291,106 @@ const StudentIDCard = () => {
         </div>
     );
 };
+
+const styles = StyleSheet.create({
+    page: {
+        backgroundColor: '#f4f4f4',
+        padding: 20,
+    },
+    card: {
+        width: '100%',
+        borderRadius: 10,
+        overflow: 'hidden',
+        backgroundColor: '#ffffff',
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+        padding: 20,
+        borderWidth: 2,
+        borderColor: '#0047AB',
+        height: '100%',
+    },
+    header: {
+        width:'100%',
+        borderWidth:1,
+        borderColor:'black',
+        backgroundColor: 'black',
+        paddingVertical: 10,
+        textAlign: 'center',
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+    },
+    schoolName: {
+        fontSize: 17,
+        fontWeight: 'bold',
+        color: '#fff',
+    },
+    infoContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingTop: 15,
+        paddingBottom: 15,
+        borderBottom: '2px solid #f0f0f0',
+    },
+    image: {
+        width: 80,
+        height: 80,
+        borderRadius: 50,
+        borderWidth: 3,
+        borderColor: '#1c2534',
+        marginRight: 20,
+    },
+    details: {
+        flex: 1,
+    },
+    studentName: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#222',
+        marginBottom: 5,
+    },
+    studentId: {
+        fontSize: 14,
+        color: '#555',
+    },
+    studentRoll: {
+        fontSize: 14,
+        color: '#555',
+    },
+    divider: {
+        height: 2,
+        width: '100%',
+        backgroundColor: '#FFD700',
+        marginVertical: 12,
+    },
+    extraInfo: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingVertical: 6,
+        borderBottom: '1px solid #f0f0f0',
+    },
+    label: {
+        fontSize: 14,
+        fontWeight: 'bold',
+        color: '#0047AB',
+    },
+    value: {
+        fontSize: 14,
+        color: '#222',
+    },
+    footer: {
+        paddingTop: 15,
+        textAlign: 'center',
+        fontSize: 12,
+        color: '#555',
+    },
+    qrCodePlaceholder: {
+        width: 50,
+        height: 50,
+        backgroundColor: '#ddd',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 10,
+        borderRadius: 6,
+    },
+});
 
 export default StudentIDCard;

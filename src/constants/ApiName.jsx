@@ -26,6 +26,7 @@ const apiName = {
   addClass: 'class/add',
   updateClass: 'class/update',
   deleteClass: 'class/delete',
-  getSubjectByClass:'subject-class-mappings'
+  getSubjectByClass:'subject-class-mappings',
+  getStudentByExam:'student/byClassOrSection'
 };
 export default apiName;

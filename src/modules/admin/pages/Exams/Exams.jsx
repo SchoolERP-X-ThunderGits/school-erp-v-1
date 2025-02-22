@@ -15,7 +15,7 @@ const Exams = () => {
     const [editMode, setEditMode] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false); // Delete confirmation modal
     const [examToDelete, setExamToDelete] = useState(null); // Track exam to delete
-
+  const [sessions, setSessions] = useState(['2024-2025', '2025-2026', '2026-2027']);
     useEffect(() => {
         setLoading(true);
         getExamsList();
@@ -161,13 +161,19 @@ const Exams = () => {
                         </div>
                         <div className="mb-4">
                             <label className="block text-sm font-medium text-gray-600">Exam Session</label>
-                            <input
-                                type="text"
-                                value={examSession}
-                                onChange={(e) => setExamSession(e.target.value)}
-                                className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="Enter exam session"
-                            />
+                            <select
+                    name="session"
+                    value={examSession}
+                    onChange={(e) => setExamSession(e.target.value)}
+                    className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                  >
+                    <option value="">Select Session</option>
+                    {sessions?.map((section) => (
+                      <option key={section} value={section}>
+                        {section}
+                      </option>
+                    ))}
+                  </select>
                         </div>
                         
                         <div className="flex justify-end space-x-4">

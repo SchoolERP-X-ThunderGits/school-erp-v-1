@@ -72,7 +72,7 @@ const ExamSchedule = () => {
     };
 
     const handleScheduleExam = () => {
-        if (!selectedExam || !selectedClass || !examDetails.every((details) => details.examDate && details.startTime && details.endTime)) {
+        if (!selectedExam || !selectedClass || !examDetails?.every((details) => details.examDate && details.startTime && details.endTime)) {
             showToast('Please fill in all fields for each subject', 'error');
             return;
         }
@@ -113,6 +113,7 @@ const ExamSchedule = () => {
                         value={selectedClass}
                         onChange={handleClassChange}
                         className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm"
+                        disabled={!selectedExam}
                     >
                         <option value="">Select Class</option>
                         {classes?.map((cls) => (
@@ -123,7 +124,7 @@ const ExamSchedule = () => {
                     </select>
                 </div>
 
-                {selectedClass && (
+                {selectedClass && examDetails?.length != 0 ?
                     <div className="mb-4">
                         <label className="block text-sm font-medium text-gray-600">Subjects for Selected Class</label>
                         <div className="overflow-x-auto bg-white shadow-md rounded-lg">
@@ -170,7 +171,10 @@ const ExamSchedule = () => {
                             </table>
                         </div>
                     </div>
-                )}
+                    :
+                    selectedClass&&
+                    <p>No Subjects Found</p>
+                }
 
                 <div className="flex justify-end space-x-4">
                     <button
