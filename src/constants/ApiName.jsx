@@ -14,6 +14,7 @@ const apiName = {
   getLastAdmissionNumber:'student/getLastAdmissionNumber',
   getStudent: 'student/getStudents',
   getStudentById: 'student/getStudent',
+  getFeeByStudentId:'student/feeProfile',
   exams:'/exam-names',
   addSchedule:'/exam-schedules',
   updateStudent: 'student/updateStudent',
@@ -27,6 +28,9 @@ const apiName = {
   updateClass: 'class/update',
   deleteClass: 'class/delete',
   getSubjectByClass:'subject-class-mappings',
-  getStudentByExam:'student/byClassOrSection'
+  getStudentByExam:'student/byClassOrSection',
+  admitCardByClass:'admitcard/by-class-and-exam',
+  collectFee:'payment/collect-fee',
+  getPaymentById:'payment/get'
 };
 export default apiName;

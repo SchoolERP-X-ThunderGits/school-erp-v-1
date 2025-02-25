@@ -20,6 +20,9 @@ import Exams from './modules/admin/pages/Exams/Exams';
 import GenerateAdmitCard from './modules/admin/pages/GenerateAdminCard/GenerateAdminCard';
 import StudentIDCard from './modules/admin/pages/Students/StudentIDCard';
 import ExamSchedule from './modules/admin/pages/Exams/ExamSchedule';
+import StudentDetails from './modules/admin/pages/Students/StudentDetails';
+import FeeReceipt from './modules/admin/pages/Fees/FeesReceipt';
+import GenerateDemandSlip from './modules/admin/pages/Fees/GenerateDemandSlip';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -56,15 +59,18 @@ function App() {
       <Route path="/admin/home" element={<DefaultLayout><AdminHome /></DefaultLayout>} />
       <Route path="/admin/student" element={<DefaultLayout><Students /></DefaultLayout>} />
       <Route path="/admin/add-student" element={<DefaultLayout><AddStudent /></DefaultLayout>} />
+      <Route path="/admin/student/student-details/:studentId" element={<DefaultLayout><StudentDetails /></DefaultLayout>} />
       <Route path="/admin/edit-student/:id" element={<DefaultLayout><EditStudent /></DefaultLayout>} />
       <Route path="/admin/student-id-card" element={<DefaultLayout><StudentIDCard /></DefaultLayout>} />
       <Route path="/admin/find-student" element={<DefaultLayout><FindStudent /></DefaultLayout>} />
       <Route path="/admin/fee-structure" element={<DefaultLayout><FeeStructure /></DefaultLayout>} />
       <Route path="/admin/fee-type" element={<DefaultLayout><FeeType /></DefaultLayout>} />
+      <Route path="/admin/fee-receipt/:paymentId" element={<DefaultLayout><FeeReceipt /></DefaultLayout>} />
       <Route path="/admin/class" element={<DefaultLayout><Class /></DefaultLayout>} />
       <Route path="/admin/exams" element={<DefaultLayout><Exams /></DefaultLayout>} />
       <Route path="/admin/exam-schedule" element={<DefaultLayout><ExamSchedule /></DefaultLayout>} />
       <Route path="/admin/generate-admit-card" element={<DefaultLayout><GenerateAdmitCard /></DefaultLayout>} />
+      <Route path="/admin/generate-demand-slip" element={<DefaultLayout><GenerateDemandSlip /></DefaultLayout>} />
       <Route path="/admin/subject" element={<DefaultLayout><Subject /></DefaultLayout>} />
       <Route path="/admin/assign-subject" element={<DefaultLayout><AssignSubject /></DefaultLayout>} />
 

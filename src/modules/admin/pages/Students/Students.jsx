@@ -28,6 +28,7 @@ const Students = () => {
     const fetchStudents = async () => {
         try {
             const result = await getService(apiName.getStudent); // API to get students
+            console.log('blbvlbv', result)
             setStudents(result);
             setLoading(false);
         } catch (error) {
@@ -109,8 +110,7 @@ const Students = () => {
                             <tr className="bg-gray-100 text-gray-600">
                                 <th className="py-3 px-6 text-left text-sm font-semibold">Admission Number</th>
                                 <th className="py-3 px-6 text-left text-sm font-semibold">Roll Number</th>
-                                <th className="py-3 px-6 text-left text-sm font-semibold">First Name</th>
-                                <th className="py-3 px-6 text-left text-sm font-semibold">Last Name</th>
+                                <th className="py-3 px-6 text-left text-sm font-semibold">Name</th>
                                 <th className="py-3 px-6 text-left text-sm font-semibold">Class</th>
                                 <th className="py-3 px-6 text-left text-sm font-semibold">Section</th>
                                 <th className="py-3 px-6 text-left text-sm font-semibold">Actions</th>
@@ -121,8 +121,15 @@ const Students = () => {
                                 <tr key={student._id} className="border-b hover:bg-gray-50 transition duration-200">
                                     <td className="px-4 py-2 text-sm text-gray-800">{student?.admission_Number}</td>
                                     <td className="px-4 py-2 text-sm text-gray-800">{student?.roll_Number}</td>
-                                    <td className="px-4 py-2 text-sm text-gray-800">{student?.first_Name}</td>
-                                    <td className="px-4 py-2 text-sm text-gray-800">{student?.last_Name}</td>
+                                    <td className="px-4 py-2 text-sm text-gray-800">
+                                        <button
+                                            onClick={() => navigate(`/admin/student/student-details/${student?._id}`)} // Navigate to student details page
+                                            className="text-blue-500 hover:text-blue-700 transition duration-200"
+                                        >
+                                            {student?.first_Name} {student?.last_Name}
+                                        </button>
+                                    </td>
+
                                     <td className="px-4 py-2 text-sm text-gray-800">{student?.class_Id?.name}</td>
                                     <td className="px-4 py-2 text-sm text-gray-800">{student?.section}</td>
                                     <td className="px-4 py-2 flex space-x-4">

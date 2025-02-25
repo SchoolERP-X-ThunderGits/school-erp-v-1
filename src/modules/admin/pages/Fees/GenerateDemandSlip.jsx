@@ -1,21 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { FaEdit, FaPlus, FaTrash, FaDownload } from 'react-icons/fa'; // Added Download icon
-import { deleteService, getService } from '../../../../constants/Service'; // Importing services
+import { FaDownload } from 'react-icons/fa';
+import { getService } from '../../../../constants/Service';
 import { pdf, Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 import { saveAs } from 'file-saver';
-import apiName from '../../../../constants/ApiName'; // Importing API Names
-import { showToast } from '../../../../components/Toast'; // Show Toast Notifications
+import apiName from '../../../../constants/ApiName';
+import { showToast } from '../../../../components/Toast';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../../../../components/Loader';
 import moment from 'moment';
 
-const StudentIDCard = () => {
+const GenerateDemandSlip = () => {
     const [loading, setLoading] = useState(false);
     const [classes, setClasses] = useState([]); // Classes for dropdown
     const [sections, setSections] = useState([]); // Sections for dropdown based on selected class
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [students, setStudents] = useState([]);
-    const [studentId, setStudentId] = useState(null);
+    const [selectedStudents, setSelectedStudents] = useState([]); // For tracking selected students
     const [classFilter, setClassFilter] = useState('');
     const [sectionFilter, setSectionFilter] = useState('');
     const [searchText, setSearchText] = useState('');
@@ -25,17 +24,6 @@ const StudentIDCard = () => {
         setLoading(true);
         fetchClasses();
     }, []);
-
-    // Fetch all students
-    const fetchStudents = async () => {
-        try {
-            const result = await getService(apiName.getStudent); // API to get students
-            setStudents(result);
-            setLoading(false);
-        } catch (error) {
-            showToast('Error fetching students', 'error');
-        }
-    };
 
     // Fetch classes and their corresponding sections
     const fetchClasses = async () => {
@@ -78,8 +66,7 @@ const StudentIDCard = () => {
     const fetchFilteredStudents = async () => {
         try {
             setLoading(true);
-            // Call API or filter locally based on the filters
-            const result = await getService(`${apiName.getStudentByExam}/${classFilter}/${sectionFilter}`); // Pass filters to the API if required
+            const result = await getService(`${apiName.getStudentByExam}/${classFilter}/${sectionFilter}`);
             setStudents(result);
             setLoading(false);
         } catch (error) {
@@ -87,7 +74,61 @@ const StudentIDCard = () => {
         }
     };
 
+    // Toggle selection of a student
+    const toggleStudentSelection = (studentId) => {
+        setSelectedStudents((prevSelected) =>
+            prevSelected.includes(studentId)
+                ? prevSelected.filter((id) => id !== studentId)
+                : [...prevSelected, studentId]
+        );
+    };
 
+    // Generate PDF for all selected students
+    const generateSelectedStudentsPdf = async () => {
+        const selectedStudentData = students.filter((student) =>
+            selectedStudents.includes(student._id)
+        );
+        const blob = await pdf(
+            <Document>
+                {selectedStudentData.map((student) => (
+                    <Page key={student._id} size="A4" style={styles.page}>
+                        <View style={styles.container}>
+                            <View style={styles.header}>
+                                <Text style={styles.schoolName}>Vision Public School</Text>
+                                <Text style={styles.subHeader}>Fee Demand Slip</Text>
+                            </View>
+                            <View style={styles.detailsContainer}>
+                                <View style={styles.row}><Text style={styles.label}>SID:</Text><Text>{student.admission_Number}</Text></View>
+                                <View style={styles.row}><Text style={styles.label}>Name:</Text><Text>{student.first_Name} {student.last_Name}</Text></View>
+                                <View style={styles.row}><Text style={styles.label}>Father:</Text><Text>{student.father_Name}</Text></View>
+                                <View style={styles.row}><Text style={styles.label}>Mobile:</Text><Text>{student.mobile_Number}</Text></View>
+                                <View style={styles.row}><Text style={styles.label}>Class:</Text><Text>{student.class_Id?.name}</Text></View>
+                                <View style={styles.row}><Text style={styles.label}>Section:</Text><Text>{student.section}</Text></View>
+                                <View style={styles.row}><Text style={styles.label}>Date:</Text><Text>{moment().format('DD MMM YYYY')}</Text></View>
+                            </View>
+                            <View style={styles.feeContainer}>
+                                <Text style={styles.feeHeader}>Due Months:</Text>
+                                <Text style={styles.months}>Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec, Jan, Feb, Mar</Text>
+                                <View style={styles.feeRow}><Text style={styles.feeLabel}>Transport Fee (Kasimabad):</Text><Text>5500</Text></View>
+                                <View style={styles.feeRow}><Text style={styles.feeLabel}>Total Fee Due:</Text><Text>5500</Text></View>
+                            </View>
+                            <View style={styles.reminder}>
+                                <Text>Rs. Five Thousand, Five Hundred only</Text>
+                                <Text>Kindly pay the fee before 15th of this month</Text>
+                            </View>
+                            <View style={styles.footer}>
+                                <Image src="/school-stamp.png" style={styles.stamp} />
+                                <Text style={styles.sign}>School’s Sign & Stamp</Text>
+                            </View>
+                        </View>
+                    </Page>
+                ))}
+            </Document>
+        ).toBlob();
+        saveAs(blob, `Demand_Slips_${selectedStudentData.length}Students.pdf`);
+    };
+
+    // Render student list with checkboxes for selection
     const renderStudentList = () => {
         return (
             <div className="container mx-auto p-4">
@@ -95,34 +136,31 @@ const StudentIDCard = () => {
                     <table className="min-w-full table-auto">
                         <thead>
                             <tr className="bg-gray-100 text-gray-600">
+                                <th className="py-3 px-6 text-left text-sm font-semibold">Select</th>
                                 <th className="py-3 px-6 text-left text-sm font-semibold">Admission Number</th>
                                 <th className="py-3 px-6 text-left text-sm font-semibold">Roll Number</th>
                                 <th className="py-3 px-6 text-left text-sm font-semibold">First Name</th>
                                 <th className="py-3 px-6 text-left text-sm font-semibold">Last Name</th>
                                 <th className="py-3 px-6 text-left text-sm font-semibold">Class</th>
                                 <th className="py-3 px-6 text-left text-sm font-semibold">Section</th>
-                                <th className="py-3 px-6 text-left text-sm font-semibold">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {students.map((student) => (
                                 <tr key={student._id} className="border-b hover:bg-gray-50 transition duration-200">
+                                    <td className="px-4 py-2 text-sm text-gray-800">
+                                        <input
+                                            type="checkbox"
+                                            checked={selectedStudents.includes(student._id)}
+                                            onChange={() => toggleStudentSelection(student._id)}
+                                        />
+                                    </td>
                                     <td className="px-4 py-2 text-sm text-gray-800">{student?.admission_Number}</td>
                                     <td className="px-4 py-2 text-sm text-gray-800">{student?.roll_Number}</td>
                                     <td className="px-4 py-2 text-sm text-gray-800">{student?.first_Name}</td>
                                     <td className="px-4 py-2 text-sm text-gray-800">{student?.last_Name}</td>
                                     <td className="px-4 py-2 text-sm text-gray-800">{student?.class_Id?.name}</td>
                                     <td className="px-4 py-2 text-sm text-gray-800">{student?.section}</td>
-                                    <td className="px-4 py-2 flex space-x-4">
-                                        {console.log('lblclblcb', student)}
-                                        <button
-                                            onClick={() => generateIdCardPdf(student)}
-                                            className="text-[#1c2534] hover:text-[#1c2534] transition duration-200"
-                                        >
-                                            <FaDownload />
-                                        </button>
-
-                                    </td>
                                 </tr>
                             ))}
                         </tbody>
@@ -131,58 +169,7 @@ const StudentIDCard = () => {
             </div>
         );
     };
-    const generateIdCardPdf = async (student) => {
-        const blob = await pdf(<IDCardPDF student={student} />).toBlob();
-        saveAs(blob, `Student_ID_${student.admission_Number}.pdf`);
-    };
 
-
-
-    const IDCardPDF = ({ student }) => (
-        <Document>
-            <Page size="A6" style={styles.page}>
-                <View style={styles.card}>
-                    {/* Header Section */}
-                    <View style={styles.header}>
-                        <Text style={styles.schoolName}>Vision Public School</Text>
-                    </View>
-
-                    {/* Student Photo & Info */}
-                    <View style={styles.infoContainer}>
-                        <Image src={student.student_Photo || '/default-photo.jpg'} style={styles.image} />
-                        <View style={styles.details}>
-                            <Text style={styles.studentName}>{student.first_Name} {student.last_Name}</Text>
-                            <Text style={styles.studentId}>ID: {student.admission_Number}</Text>
-                            <Text style={styles.studentRoll}>Roll No: {student.roll_Number}</Text>
-                        </View>
-                    </View>
-
-                    {/* Stylish Divider */}
-                    {console.log('student11', student)}
-                    {/* Student Additional Info */}
-                    <View style={styles.extraInfo}>
-                        <Text style={styles.label}>Class:</Text>
-                        <Text style={styles.value}>{student.class_Id?.name}</Text>
-                    </View>
-                    <View style={styles.extraInfo}>
-                        <Text style={styles.label}>Section:</Text>
-                        <Text style={styles.value}>{student.section}</Text>
-                    </View>
-                    <View style={styles.extraInfo}>
-                        <Text style={styles.label}>Address:</Text>
-                        <Text style={styles.value}>{student.permanent_Address || 'Not Available'}</Text>
-                    </View>
-                    <View style={styles.extraInfo}>
-                        <Text style={styles.label}>DOB:</Text>
-                        <Text style={styles.value}>{moment(student?.date_Of_Birth).format('DD MMMM, YYYY') || 'Not Available'}</Text>
-                    </View>
-                    <View style={styles.footer}>
-                        <Text>Valid for the Academic Year 2024-2025</Text>
-                    </View>
-                </View>
-            </Page>
-        </Document>
-    );
     return (
         <div className="container mx-auto p-4">
             {loading ? (
@@ -190,7 +177,7 @@ const StudentIDCard = () => {
             ) : (
                 <div>
                     <div className="mb-6 flex justify-between items-center">
-                        <h1 className="text-2xl font-semibold text-gray-800">Student Registration</h1>
+                        <h1 className="text-2xl font-semibold text-gray-800">Generate Demand Slip</h1>
                     </div>
 
                     {/* Filters */}
@@ -220,13 +207,6 @@ const StudentIDCard = () => {
                                 </option>
                             ))}
                         </select>
-                        {/* <input
-                            type="text"
-                            placeholder="Search"
-                            value={searchText}
-                            onChange={(e) => setSearchText(e.target.value)}
-                            className="p-2 border rounded w-full sm:w-auto"
-                        /> */}
                         <button
                             onClick={handleSearch}
                             className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
@@ -236,116 +216,117 @@ const StudentIDCard = () => {
                     </div>
 
                     {/* Students List */}
-                    {students.length != 0 &&
+                    {students.length !== 0 && (
+                        <div className="mt-6">{renderStudentList()}</div>
+                    )}
 
-                        <div className="mt-6">{renderStudentList()}</div>}
+                    {/* Download Button */}
+                    {selectedStudents.length > 0 && (
+                        <button
+                            onClick={generateSelectedStudentsPdf}
+                            className="mt-6 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300"
+                        >
+                            Download Selected Demand Slips
+                        </button>
+                    )}
                 </div>
             )}
-
-            
         </div>
     );
 };
 
 const styles = StyleSheet.create({
     page: {
-        backgroundColor: '#f4f4f4',
-        padding: 20,
+        padding: 30,
+        backgroundColor: '#eaf1f9'
     },
-    card: {
-        width: '100%',
-        borderRadius: 10,
-        overflow: 'hidden',
-        backgroundColor: '#ffffff',
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-        padding: 20,
+    container: {
+        padding: 25,
+        backgroundColor: '#fff',
+        borderRadius: 12,
         borderWidth: 2,
-        borderColor: '#0047AB',
-        height: '100%',
+        borderColor: '#1c2534',
+        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
     },
     header: {
-        width: '100%',
-        borderWidth: 1,
-        borderColor: 'black',
-        backgroundColor: 'black',
-        paddingVertical: 10,
         textAlign: 'center',
-        borderTopLeftRadius: 10,
-        borderTopRightRadius: 10,
-    },
-    schoolName: {
-        fontSize: 17,
-        fontWeight: 'bold',
+        padding: 15,
+        backgroundColor: '#0047AB',
         color: '#fff',
+        fontSize: 22,
+        fontWeight: 'bold',
+        borderRadius: 8,
     },
-    infoContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingTop: 15,
-        paddingBottom: 15,
-        borderBottom: '2px solid #f0f0f0',
-    },
-    image: {
-        width: 80,
-        height: 80,
-        borderRadius: 50,
-        borderWidth: 3,
-        borderColor: '#1c2534',
-        marginRight: 20,
-    },
-    details: {
-        flex: 1,
-    },
-    studentName: {
+    subHeader: {
+        textAlign: 'center',
         fontSize: 18,
         fontWeight: 'bold',
-        color: '#222',
-        marginBottom: 5,
+        marginTop: 5,
+        letterSpacing: 1.2
     },
-    studentId: {
-        fontSize: 14,
-        color: '#555',
+    detailsContainer: {
+        marginVertical: 15,
+        paddingLeft: 10,
     },
-    studentRoll: {
-        fontSize: 14,
-        color: '#555',
-    },
-    divider: {
-        height: 2,
-        width: '100%',
-        backgroundColor: '#FFD700',
-        marginVertical: 12,
-    },
-    extraInfo: {
+    row: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        paddingVertical: 6,
-        borderBottom: '1px solid #f0f0f0',
+        marginBottom: 6,
+        fontSize: 16,
     },
     label: {
+        fontWeight: 'bold',
+        color: '#1c2534'
+    },
+    feeContainer: {
+        marginVertical: 15,
+        padding: 12,
+        borderWidth: 1,
+        borderColor: '#1c2534',
+        borderRadius: 8
+    },
+    feeHeader: {
+        fontWeight: 'bold',
+        fontSize: 16,
+        color: '#0047AB',
+        marginBottom: 8,
+    },
+    months: {
+        color: '#ff4f58',
+        fontSize: 14,
+        marginBottom: 10
+    },
+    feeRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 5,
+        fontSize: 16
+    },
+    feeLabel: {
+        fontWeight: 'bold',
+    },
+    reminder: {
+        marginVertical: 12,
+        textAlign: 'center',
+        fontSize: 14,
+        color: '#1c2534',
+    },
+    footer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginTop: 30,
+    },
+    stamp: {
+        width: 60,
+        height: 60,
+        objectFit: 'contain'
+    },
+    sign: {
         fontSize: 14,
         fontWeight: 'bold',
         color: '#0047AB',
-    },
-    value: {
-        fontSize: 14,
-        color: '#222',
-    },
-    footer: {
-        paddingTop: 15,
-        textAlign: 'center',
-        fontSize: 12,
-        color: '#555',
-    },
-    qrCodePlaceholder: {
-        width: 50,
-        height: 50,
-        backgroundColor: '#ddd',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: 10,
-        borderRadius: 6,
-    },
+    }
 });
 
-export default StudentIDCard;
+export default GenerateDemandSlip;
