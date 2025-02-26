@@ -32,7 +32,10 @@ const AdmissionReceipt = ({ studentData, setRegistrationCompleted }) => {
 
   // Print function
   const handlePrint = () => {
-    window.print();
+    // Adding a small timeout to ensure the content is rendered before printing
+    setTimeout(() => {
+      window.print();
+    }, 100);
   };
 
   return (
@@ -206,7 +209,6 @@ const AdmissionReceipt = ({ studentData, setRegistrationCompleted }) => {
             box-sizing: border-box;
           }
 
-         
           table {
             width: 100%;
             page-break-before: always;
@@ -223,6 +225,11 @@ const AdmissionReceipt = ({ studentData, setRegistrationCompleted }) => {
           /* Adjust font size for print */
           body {
             font-size: 12pt;
+          }
+
+          /* Ensuring all content is visible when printing */
+          .no-scrollbar {
+            visibility: visible !important;
           }
         }
       `}</style>

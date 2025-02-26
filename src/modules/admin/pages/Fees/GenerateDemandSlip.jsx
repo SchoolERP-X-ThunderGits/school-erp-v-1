@@ -213,7 +213,21 @@ const GenerateDemandSlip = () => {
                         >
                             Search
                         </button>
+
+                        {/* Clear Filter Button */}
+                        <button
+                            onClick={() => {
+                                // Reset filters
+                                setClassFilter('');   // Reset class filter
+                                setSectionFilter(''); // Reset section filter
+                                // You can reset any other related states here
+                            }}
+                            className="px-6 py-3 bg-gray-200 text-black rounded-lg hover:bg-gray-300 transition duration-300"
+                        >
+                            Clear Filters
+                        </button>
                     </div>
+
 
                     {/* Students List */}
                     {students.length !== 0 && (

@@ -17,7 +17,7 @@ import AddStudent from './modules/admin/pages/Students/AddStudent';
 import EditStudent from './modules/admin/pages/Students/EditStudent';
 import Onboarding from './modules/onboarding/onboarding';
 import Exams from './modules/admin/pages/Exams/Exams';
-import GenerateAdmitCard from './modules/admin/pages/GenerateAdminCard/GenerateAdminCard';
+import GenerateAdmitCard from './modules/admin/pages/GenerateAdmitCard/GenerateAdmitCard';
 import StudentIDCard from './modules/admin/pages/Students/StudentIDCard';
 import ExamSchedule from './modules/admin/pages/Exams/ExamSchedule';
 import StudentDetails from './modules/admin/pages/Students/StudentDetails';

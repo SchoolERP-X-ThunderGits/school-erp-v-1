@@ -12,7 +12,7 @@ const AddStudent = () => {
   const [classes, setClasses] = useState([]); // Classes for dropdown
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [sections, setSections] = useState([
-  
+
   ]); // Sections for dropdown
   const [sessions, setSessions] = useState(['2024-2025', '2025-2026', '2026-2027']); // Sessions for dropdown
   const [categories, setCategories] = useState([]); // Categories for dropdown
@@ -143,7 +143,7 @@ const AddStudent = () => {
   const fetchClasses = async () => {
     try {
       const result = await getService(apiName.getClassList); // Get Classes API
-      console.log('lbvlblvbllvb',result)
+      console.log('lbvlblvbllvb', result)
       setClasses(result);
     } catch (error) {
       // showToast('Error fetching classes', 'error');
@@ -174,7 +174,7 @@ const AddStudent = () => {
   const handleInputChange = (e) => {
     const { name, value, type, files } = e.target;
     console.log('bvlvlblvlb', name, value)
-    if(name == 'class_Id'){
+    if (name == 'class_Id') {
       const filterClassData = classes.filter((classes) => classes._id === value);
       setSections(filterClassData[0]?.sections)
     }
@@ -286,7 +286,7 @@ const AddStudent = () => {
 
     try {
       const response = await postService(apiName.addStudent, formData);
-      console.log('reses222sponse',response)
+      console.log('reses222sponse', response)
       setRegistrationCompleted(true)
       // navigate('/admin/student')
       showToast("Student added successfully.", 'success');
@@ -303,29 +303,26 @@ const AddStudent = () => {
     }));
   };
   return (
-    <div className="container">
+    <div className="container mx-auto px-4 py-6">
       {
         registrationCompleted ?
           <div className=''>
-
             <AdmissionReceipt setRegistrationCompleted={setRegistrationCompleted} studentData={formData} />
           </div>
           :
-
           <div>
 
-            {/* Add Student Modal */}
-            <h2 className="text-2xl font-semibold mb-4">Add Student</h2>
+            <h2 className="text-2xl font-semibold mb-4 text-center">Add Student</h2>
 
             {/* Scrollable container */}
-            <div className="max-h-[500px]">
+            <div className="max-h-[500px] overflow-y-auto">
+
               {/* Form Fields */}
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
 
                 {/* Admission Number */}
                 <div className="mb-4">
                   <label className="block text-gray-700">Admission Number *:</label>
-                  {console.log('formData', formData)}
                   <input
                     type="text"
                     readOnly
@@ -478,7 +475,7 @@ const AddStudent = () => {
                     className="mt-2 p-2 border border-gray-300 rounded-md w-full"
                   />
                 </div>
-                <div className="mb-4  col-span-2">
+                <div className="mb-4 col-span-2">
                   <label className="block text-gray-700">Address for Correspondence *:</label>
                   <input
                     type="text"
@@ -488,6 +485,7 @@ const AddStudent = () => {
                     className="mt-2 p-2 border border-gray-300 rounded-md w-full"
                   />
                 </div>
+
                 <div className="mb-4">
                   <label className="block text-gray-700">Alternate Contact No:</label>
                   <input
@@ -510,6 +508,8 @@ const AddStudent = () => {
                     className="mt-2 p-2 border border-gray-300 rounded-md w-full"
                   />
                 </div>
+
+                {/* Nationality */}
                 <div className="mb-4">
                   <label className="block text-gray-700">Nationality :</label>
                   <input
@@ -522,6 +522,7 @@ const AddStudent = () => {
                   />
                 </div>
 
+                {/* Religion */}
                 <div className="mb-4">
                   <label className="block text-gray-700">Religion:</label>
                   <select
@@ -540,9 +541,9 @@ const AddStudent = () => {
                   </select>
                 </div>
 
-                {/* Gender Dropdown */}
+                {/* Category */}
                 <div className="mb-4">
-                  <label className="block text-gray-700">Calegory *:</label>
+                  <label className="block text-gray-700">Category *:</label>
                   <select
                     name="category"
                     value={formData.category}
@@ -556,6 +557,8 @@ const AddStudent = () => {
                     <option value="ST">ST</option>
                   </select>
                 </div>
+
+                {/* Blood Group */}
                 <div className="mb-4">
                   <label className="block text-gray-700">Blood Group :</label>
                   <select
@@ -576,7 +579,6 @@ const AddStudent = () => {
                   </select>
                 </div>
 
-
                 {/* Father's Name */}
                 <div className="mb-4">
                   <label className="block text-gray-700">Father's Name *:</label>
@@ -588,6 +590,8 @@ const AddStudent = () => {
                     className="mt-2 p-2 border border-gray-300 rounded-md w-full"
                   />
                 </div>
+
+                {/* Father's Occupation */}
                 <div className="mb-4">
                   <label className="block text-gray-700">Father's Occupation *:</label>
                   <input
@@ -609,8 +613,9 @@ const AddStudent = () => {
                     onChange={handleInputChange}
                     className="mt-2 p-2 border border-gray-300 rounded-md w-full"
                   />
-
                 </div>
+
+                {/* Mother's Occupation */}
                 <div className="mb-4">
                   <label className="block text-gray-700">Mother's Occupation *:</label>
                   <input
@@ -621,6 +626,8 @@ const AddStudent = () => {
                     className="mt-2 p-2 border border-gray-300 rounded-md w-full"
                   />
                 </div>
+
+                {/* Due amount */}
                 <div className="mb-4">
                   <label className="block text-gray-700">Due amount :</label>
                   <input
@@ -632,9 +639,9 @@ const AddStudent = () => {
                   />
                 </div>
 
+                {/* Date of Admission */}
                 <div className="mb-4">
                   <label className="block text-gray-700">Date of Admission *:</label>
-                  {console.log('formData.date_Of_Admission', formData.date_Of_Admission)}
                   <input
                     type="date"
                     name="date_Of_Admission"
@@ -663,108 +670,42 @@ const AddStudent = () => {
                   </div>
                 </div>
 
+                {/* Student photo */}
                 {
                   !editMode &&
                   <div className="mb-4 col-span-2">
-                    <label className="block text-gray-700">Student photo *:</label>
+                    <label className="block text-gray-700">Student Photo:</label>
                     <input
                       type="file"
-                      name="student_Photo"
+                      name="image"
                       onChange={handleInputChange}
                       className="mt-2 p-2 border border-gray-300 rounded-md w-full"
                     />
                   </div>
                 }
-                {imagePreview && (
+{imagePreview && (
                   <div className="mt-4 col-span-3 flex justify-center items-center">
                     <img src={imagePreview} alt="Student Preview" className="w-30 h-30 object-cover rounded-md" />
                   </div>
                 )}
-                {
-                  !editMode &&
-
-                  <div className="mb-4 col-span-3">
-                    <label className="block text-gray-700">Fee Structure *:</label>
-                    <div className="space-y-2 max-h-102 overflow-y-auto">
-                      {console.log('feeStructures', feeStructures)}
-                      {feeStructures.map((fee) => (
-                        <div key={fee._id} className="flex flex-col mb-4">
-                          {/* Fee Structure Name */}
-                          <div className="flex items-center mb-2">
-                            <input
-                              type="checkbox"
-                              name="feeStructures"
-                              value={fee._id}
-                              checked={formData.feeStructures?.includes(fee._id)}
-                              onChange={(e) => handleFeeStructureChange(e, fee._id)}
-                              className="mr-2"
-                            />
-                            <label
-                              className="text-gray-700 font-semibold cursor-pointer"
-                              onClick={() => toggleFeeGroupVisibility(fee._id)}
-                            >
-                              {fee.name}
-                            </label>
-                          </div>
-
-                          {/* Fee Groups (conditionally rendered based on expanded state) */}
-                          {expandedFees[fee._id] && fee.feeGroups && fee.feeGroups.length > 0 && (
-                            <div className="ml-4 space-y-2">
-                              <table className="min-w-full table-auto border-collapse">
-                                <thead>
-                                  <tr className="bg-gray-200">
-                                    <th className="px-4 py-2 text-left">Fee Type</th>
-                                    <th className="px-4 py-2 text-left">Amount</th>
-                                    <th className="px-4 py-2 text-left">Due Date</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {fee.feeGroups.map((group) => (
-                                    <tr key={group._id} className="border-b">
-                                      <td className="px-4 py-2 text-gray-600">{group.feeType}</td>
-                                      <td className="px-4 py-2 text-gray-600">{group.amount}</td>
-                                      <td className="px-4 py-2 text-gray-600">
-                                        {new Date(group.dueDate).toLocaleDateString()}
-                                      </td>
-                                    </tr>
-                                  ))}
-                                </tbody>
-                              </table>
-                            </div>
-                          )}
-
-                        </div>
-                      ))}
-
-                    </div>
-
-                  </div>
-                }
-
               </div>
 
-              {/* Buttons */}
-              <div style={{ paddingBottom: 20 }} className="mb-4 flex justify-end">
-                <button
-                  onClick={handleSubmit}
-                  className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-                >
-                  {'Add Student'}
-                </button>
-                <button
-                  style={{ marginLeft: 20 }}
-                  onClick={() => { navigate('/admin/student') }}
-                  className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400"
-                >
-                  Cancel
-                </button>
-              </div>
+            </div>
+
+            {/* Submit Button */}
+            <div className="flex justify-center mt-6">
+              <button
+                onClick={handleSubmit}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md"
+              >
+                Submit
+              </button>
             </div>
 
           </div>
       }
-
     </div>
+
   );
 };
 

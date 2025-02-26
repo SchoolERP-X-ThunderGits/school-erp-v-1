@@ -16,7 +16,7 @@ const apiName = {
   getStudentById: 'student/getStudent',
   getFeeByStudentId:'student/feeProfile',
   exams:'/exam-names',
-  addSchedule:'/exam-schedules',
+  addSchedule:'/exam-schedules/',
   updateStudent: 'student/updateStudent',
   deleteStudent: 'student/deleteStudent',
   addStudent: 'student/addStudent',
