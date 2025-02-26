@@ -683,13 +683,73 @@ const AddStudent = () => {
                     />
                   </div>
                 }
-{imagePreview && (
+                {imagePreview && (
                   <div className="mt-4 col-span-3 flex justify-center items-center">
                     <img src={imagePreview} alt="Student Preview" className="w-30 h-30 object-cover rounded-md" />
                   </div>
                 )}
-              </div>
 
+              </div>
+              {
+                !editMode &&
+
+                <div className="mb-4 col-span-3">
+                  <label className="block text-gray-700">Fee Structure *:</label>
+                  <div className="space-y-2 max-h-102 overflow-y-auto">
+                    {console.log('feeStructures', feeStructures)}
+                    {feeStructures.map((fee) => (
+                      <div key={fee._id} className="flex flex-col mb-4">
+                        {/* Fee Structure Name */}
+                        <div className="flex items-center mb-2">
+                          <input
+                            type="checkbox"
+                            name="feeStructures"
+                            value={fee._id}
+                            checked={formData.feeStructures?.includes(fee._id)}
+                            onChange={(e) => handleFeeStructureChange(e, fee._id)}
+                            className="mr-2"
+                          />
+                          <label
+                            className="text-gray-700 font-semibold cursor-pointer"
+                            onClick={() => toggleFeeGroupVisibility(fee._id)}
+                          >
+                            {fee.name}
+                          </label>
+                        </div>
+
+                        {/* Fee Groups (conditionally rendered based on expanded state) */}
+                        {expandedFees[fee._id] && fee.feeGroups && fee.feeGroups.length > 0 && (
+                          <div className="ml-4 space-y-2">
+                            <table className="min-w-full table-auto border-collapse">
+                              <thead>
+                                <tr className="bg-gray-200">
+                                  <th className="px-4 py-2 text-left">Fee Type</th>
+                                  <th className="px-4 py-2 text-left">Amount</th>
+                                  <th className="px-4 py-2 text-left">Due Date</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {fee.feeGroups.map((group) => (
+                                  <tr key={group._id} className="border-b">
+                                    <td className="px-4 py-2 text-gray-600">{group.feeType}</td>
+                                    <td className="px-4 py-2 text-gray-600">{group.amount}</td>
+                                    <td className="px-4 py-2 text-gray-600">
+                                      {new Date(group.dueDate).toLocaleDateString()}
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        )}
+
+                      </div>
+                    ))}
+
+                  </div>
+
+                </div>
+              }
             </div>
 
             {/* Submit Button */}

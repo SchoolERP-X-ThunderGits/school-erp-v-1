@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FaSearch, FaDownload } from 'react-icons/fa'; 
+import { FaSearch, FaDownload } from 'react-icons/fa';
 import { getService } from '../../../../constants/Service';
 import apiName from '../../../../constants/ApiName';
 import Loader from '../../../../components/Loader';
@@ -206,83 +206,83 @@ const GenerateAdmitCard = () => {
                 <h1 className="text-2xl font-semibold text-gray-800 mb-4">Generate Admit Cards</h1>
 
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-    <div>
-        <label className="block text-sm font-medium text-gray-600">Select Class</label>
-        <select
-            value={selectedClass}
-            onChange={(e) => { setSelectedClass(e.target.value) }}
-            className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-            <option value="">Class</option>
-            {classes.map((cls) => (
-                <option key={cls._id} value={cls._id}>
-                    {cls.name}
-                </option>
-            ))}
-        </select>
-    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-600">Select Class</label>
+                        <select
+                            value={selectedClass}
+                            onChange={(e) => { setSelectedClass(e.target.value) }}
+                            className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                            <option value="">Class</option>
+                            {classes.map((cls) => (
+                                <option key={cls._id} value={cls._id}>
+                                    {cls.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
 
-    <div>
-        <label className="block text-sm font-medium text-gray-600">Section</label>
-        <select
-            value={selectedSection}
-            onChange={(e) => setSelectedSection(e.target.value)}
-            className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-            <option value="">Select Section</option>
-            {Sections.map((section) => (
-                <option key={section.id} value={section.id}>{section.section}</option>
-            ))}
-        </select>
-    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-600">Section</label>
+                        <select
+                            value={selectedSection}
+                            onChange={(e) => setSelectedSection(e.target.value)}
+                            className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                            <option value="">Select Section</option>
+                            {Sections.map((section) => (
+                                <option key={section.id} value={section.id}>{section.section}</option>
+                            ))}
+                        </select>
+                    </div>
 
-    <div>
-        <label className="block text-sm font-medium text-gray-600">Exam</label>
-        <select
-            value={selectedExam}
-            onChange={(e) => setSelectedExam(e.target.value)}
-            className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-            <option value="">Select Exam</option>
-            {exams.map((exam) => (
-                <option key={exam._id} value={exam._id}>
-                    {exam.name}
-                </option>
-            ))}
-        </select>
-    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-600">Exam</label>
+                        <select
+                            value={selectedExam}
+                            onChange={(e) => setSelectedExam(e.target.value)}
+                            className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                            <option value="">Select Exam</option>
+                            {exams.map((exam) => (
+                                <option key={exam._id} value={exam._id}>
+                                    {exam.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
 
-    <div>
-        <label className="block text-sm font-medium text-gray-600">Session</label>
-        <select
-            value={selectedSession}
-            onChange={(e) => setSelectedSession(e.target.value)}
-            className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-            <option value="">Select Session</option>
-            {sessionOptions.map((session, index) => (
-                <option key={index} value={session}>
-                    {session}
-                </option>
-            ))}
-        </select>
-    </div>
-</div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-600">Session</label>
+                        <select
+                            value={selectedSession}
+                            onChange={(e) => setSelectedSession(e.target.value)}
+                            className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                            <option value="">Select Session</option>
+                            {sessionOptions.map((session, index) => (
+                                <option key={index} value={session}>
+                                    {session}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
 
-{/* Clear Filter Button */}
-<div className="mt-4">
-    <button
-        onClick={() => {
-            setSelectedClass('');  // Reset selected class
-            setSelectedSection('');  // Reset selected section
-            setSelectedExam('');  // Reset selected exam
-            setSelectedSession('');  // Reset selected session
-        }}
-        className="px-6 py-3 bg-gray-200 text-black rounded-lg hover:bg-gray-300 transition duration-300"
-    >
-        Clear Filters
-    </button>
-</div>
+                {/* Clear Filter Button */}
+                <div className="mt-4">
+                    <button
+                        onClick={() => {
+                            setSelectedClass('');  // Reset selected class
+                            setSelectedSection('');  // Reset selected section
+                            setSelectedExam('');  // Reset selected exam
+                            setSelectedSession('');  // Reset selected session
+                        }}
+                        className="px-6 py-3 bg-gray-200 text-black rounded-lg hover:bg-gray-300 transition duration-300"
+                    >
+                        Clear Filters
+                    </button>
+                </div>
 
 
                 <button

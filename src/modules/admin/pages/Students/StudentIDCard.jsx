@@ -151,13 +151,32 @@ const StudentIDCard = () => {
     };
 
     const renderStudentList = () => {
+        const handleSelectAll = (e) => {
+            if (e.target.checked) {
+                // Select all students
+                setSelectedStudents(students.map((student) => student._id));
+            } else {
+                // Deselect all students
+                setSelectedStudents([]);
+            }
+        };
+
+        const isAllSelected = students.length > 0 && selectedStudents.length === students.length;
+
         return (
             <div className="container mx-auto p-4">
                 <div className="overflow-x-auto bg-white shadow-md rounded-lg">
                     <table className="min-w-full table-auto">
                         <thead>
                             <tr className="bg-gray-100 text-gray-600">
-                                <th className="py-3 px-6 text-left text-sm font-semibold">Select</th>
+                                <th className="py-3 px-6 text-left text-sm font-semibold">
+                                    <input
+                                        type="checkbox"
+                                        checked={isAllSelected}
+                                        onChange={handleSelectAll}
+                                        className="form-checkbox"
+                                    />
+                                </th>
                                 <th className="py-3 px-6 text-left text-sm font-semibold">Admission Number</th>
                                 <th className="py-3 px-6 text-left text-sm font-semibold">Roll Number</th>
                                 <th className="py-3 px-6 text-left text-sm font-semibold">First Name</th>
@@ -174,6 +193,7 @@ const StudentIDCard = () => {
                                             type="checkbox"
                                             checked={selectedStudents.includes(student._id)}
                                             onChange={(e) => handleStudentSelect(e, student._id)}
+                                            className="form-checkbox"
                                         />
                                     </td>
                                     <td className="px-4 py-2 text-sm text-gray-800">{student?.admission_Number}</td>
@@ -190,6 +210,7 @@ const StudentIDCard = () => {
             </div>
         );
     };
+
 
     const generateMultipleIdCardPdf = async () => {
         const selectedStudentData = students.filter(student => selectedStudents.includes(student._id));
