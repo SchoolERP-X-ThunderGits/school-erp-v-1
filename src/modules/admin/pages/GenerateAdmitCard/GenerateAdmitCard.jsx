@@ -301,8 +301,8 @@ const GenerateAdmitCard = () => {
                         <table className="min-w-full table-auto">
                             <thead>
                                 <tr className="bg-gray-100 text-gray-600">
-                                    <th className="py-3 px-6 text-left text-sm font-semibold">Student Name</th>
                                     <th className="py-3 px-6 text-left text-sm font-semibold">Select</th>
+                                    <th className="py-3 px-6 text-left text-sm font-semibold">Student Name</th>
                                 </tr>
                             </thead>
                             <tbody>

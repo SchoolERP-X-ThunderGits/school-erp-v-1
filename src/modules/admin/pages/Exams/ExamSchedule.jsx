@@ -27,6 +27,7 @@ const ExamSchedule = () => {
     };
     const fetchExamSchedules = async (examId, classId) => {
         const result = await getService(`${apiName.addSchedule}?examId=${examId}&classId=${classId}`)
+        console.log('resultresult',result)
         setExamSchedules(result)
 
     };
