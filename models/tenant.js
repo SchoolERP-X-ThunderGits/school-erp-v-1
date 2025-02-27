@@ -8,7 +8,7 @@ const tenantSchema = new mongoose.Schema({
     },
     subdomain: {
         type: String,
-        required: true,
+        
         unique: true
     },
     admin: {

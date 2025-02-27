@@ -5,8 +5,26 @@ const config = require('../config/config');
 const Tenant = require('../models/tenant');
 const qrCode = require('qrcode');
 
+
+
 exports.addUser = async (req, res) => {
-    const { username, password, email, fullName, role, subdomain, schoolName, website } = req.body;
+    const {
+        username,
+        password,
+        email,
+        fullName,
+        role,
+        subdomain,
+        schoolName,
+        website,
+        contactNumber,
+        address,
+        plan,
+        logo,
+        primaryColor,
+        secondaryColor,
+        font
+    } = req.body;
 
     if (!username || !password || !role) {
         return res.status(400).json({ message: 'Username, password, and role are required' });
@@ -34,6 +52,7 @@ exports.addUser = async (req, res) => {
         });
 
         // If user is an admin, create a new tenant
+        let newTenant = null;
         if (role === 'admin') {
             // Generate QR code if a website is provided
             let qrCodeUrl = null;
@@ -41,12 +60,21 @@ exports.addUser = async (req, res) => {
                 qrCodeUrl = await qrCode.toDataURL(website);
             }
 
-            const newTenant = new Tenant({
+            newTenant = new Tenant({
                 name: schoolName,
                 subdomain,
                 admin: newUser._id, // Assign the new user as the tenant's admin
                 website,
-                qrCodeUrl
+                qrCodeUrl,
+                contactNumber,
+                address,
+                plan: plan || "free", // Default to "free" if not provided
+                logo: logo || null,
+                themeSettings: {
+                    primaryColor: primaryColor || "#000000",
+                    secondaryColor: secondaryColor || "#ffffff",
+                    font: font || "Arial"
+                }
             });
 
             await newTenant.save();
@@ -55,12 +83,17 @@ exports.addUser = async (req, res) => {
 
         await newUser.save();
 
-        res.status(201).json({ message: 'User and Tenant created successfully', user: newUser });
+        res.status(201).json({
+            message: 'User and Tenant created successfully',
+            user: newUser,
+            tenant: newTenant
+        });
     } catch (error) {
         console.error('Error adding user:', error);
         res.status(500).json({ message: 'Server error' });
     }
 };
+
 
 exports.getUsers = async (req, res) => {
     try {
