@@ -21,50 +21,18 @@ const GenerateAdmitCard = () => {
     const [selectedStudents, setSelectedStudents] = useState([]);  // Track selected students
     const [loading, setLoading] = useState(false);
     const Sections = [
-        {
-            _id: 1,
-            section: 'A',
-        },
-        {
-            _id: 2,
-            section: 'B',
-        },
-        {
-            _id: 3,
-            section: 'C',
-        },
-        {
-            _id: 4,
-            section: 'D',
-        },
-        {
-            _id: 5,
-            section: 'E',
-        },
-        {
-            _id: 6,
-            section: 'F',
-        },
-        {
-            _id: 7,
-            section: 'G',
-        },
+        { _id: 1, section: 'A' },
+        { _id: 2, section: 'B' },
+        { _id: 3, section: 'C' },
+        { _id: 4, section: 'D' },
+        { _id: 5, section: 'E' },
+        { _id: 6, section: 'F' },
+        { _id: 7, section: 'G' },
+        { _id: 8, section: 'H' },
+        { _id: 9, section: "I" },
+        { _id: 10, section: 'J' },
+    ];
 
-        {
-            _id: 8,
-            section: 'H',
-        },
-        {
-            _id: 9,
-            section: "I",
-        },
-        {
-            _id: 10,
-            section: 'J',
-        },
-
-
-    ]
     useEffect(() => {
         fetchInitialData();
     }, []);
@@ -120,9 +88,17 @@ const GenerateAdmitCard = () => {
         });
     };
 
+    const handleSelectAllStudents = () => {
+        if (selectedStudents.length === students.length) {
+            setSelectedStudents([]);
+        } else {
+            setSelectedStudents(students.map(student => student._id));
+        }
+    };
+
     const handleGenerateAdmitCardForSelected = async () => {
         const selectedStudentData = students.filter(student => selectedStudents.includes(student._id));
-
+        console.log('selecsstedStudentDataselectedStudentData',selectedStudentData,examSchedule)
         if (selectedStudentData.length === 0) {
             showToast('No students selected', 'error');
             return;
@@ -171,7 +147,6 @@ const GenerateAdmitCard = () => {
                 <Text style={styles.label}>DOB:</Text>
                 <Text style={styles.value}>{moment(student?.date_Of_Birth).format('DD MMMM, YYYY') || 'Not Available'}</Text>
             </View>
-
             {examSchedule?.length > 0 && (
                 <View style={styles.examScheduleContainer}>
                     <Text style={styles.examScheduleHeader}>Exam Schedule:</Text>
@@ -185,7 +160,7 @@ const GenerateAdmitCard = () => {
                         {examSchedule.map((schedule, index) => (
                             <View key={index} style={styles.examTableRow}>
                                 <Text style={styles.examTableCell}>{schedule.subject.name}</Text>
-                                <Text style={styles.examTableCell}>{moment(schedule.date).format('DD MMMM, YYYY')}</Text>
+                                <Text style={styles.examTableCell}>{moment(schedule.date).format('DD/MM/YYYY')}</Text>
                                 <Text style={styles.examTableCell}>{schedule.startTime}</Text>
                                 <Text style={styles.examTableCell}>{schedule.endTime}</Text>
                             </View>
@@ -269,7 +244,6 @@ const GenerateAdmitCard = () => {
                     </div>
                 </div>
 
-                {/* Clear Filter Button */}
                 <div className="mt-4">
                     <button
                         onClick={() => {
@@ -283,7 +257,6 @@ const GenerateAdmitCard = () => {
                         Clear Filters
                     </button>
                 </div>
-
 
                 <button
                     onClick={handleSearchStudents}
@@ -301,7 +274,13 @@ const GenerateAdmitCard = () => {
                         <table className="min-w-full table-auto">
                             <thead>
                                 <tr className="bg-gray-100 text-gray-600">
-                                    <th className="py-3 px-6 text-left text-sm font-semibold">Select</th>
+                                    <th className="py-3 px-6 text-left text-sm font-semibold">
+                                        <input
+                                            type="checkbox"
+                                            checked={selectedStudents.length === students.length}
+                                            onChange={handleSelectAllStudents}
+                                        />
+                                    </th>
                                     <th className="py-3 px-6 text-left text-sm font-semibold">Student Name</th>
                                 </tr>
                             </thead>
@@ -437,24 +416,21 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
     },
     examTableHeader: {
+        flex: 1,
         fontSize: 14,
         fontWeight: 'bold',
-        color: '#0047AB',
-        flex: 1,
         textAlign: 'center',
-        paddingHorizontal: 10,
     },
     examTableCell: {
-        fontSize: 14,
-        color: '#555',
         flex: 1,
+        fontSize: 14,
         textAlign: 'center',
-        paddingHorizontal: 10,
+        paddingVertical: 6,
     },
     footer: {
-        paddingTop: 30,
+        marginTop: 30,
         textAlign: 'center',
-        fontSize: 14,
+        fontSize: 12,
         color: '#555',
     },
 });

@@ -235,7 +235,7 @@ const StudentIDCard = () => {
                                 </View>
                                 <Image style={{ width: 50, height: 50, objectFit: 'cover' }} src={'https://res.cloudinary.com/dttmlghjm/image/upload/v1715728995/ssps_scurhe.png'} />
                             </View>
-
+                            <View style={{ height: 1, backgroundColor: 'black', width: '100%', marginBottom: 10 }}></View>
                             {/* Profile and Student Details Section */}
                             <View style={styles.body}>
                                 <View style={styles.profileSection}>

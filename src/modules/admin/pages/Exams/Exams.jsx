@@ -15,7 +15,7 @@ const Exams = () => {
     const [editMode, setEditMode] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false); // Delete confirmation modal
     const [examToDelete, setExamToDelete] = useState(null); // Track exam to delete
-  const [sessions, setSessions] = useState(['2024-2025', '2025-2026', '2026-2027']);
+    const [sessions, setSessions] = useState(['2024-2025', '2025-2026', '2026-2027']);
     useEffect(() => {
         setLoading(true);
         getExamsList();
@@ -62,8 +62,8 @@ const Exams = () => {
         if (editMode) {
             try {
                 const response = await putService(`${apiName.exams}/${editId}`, body);
-                console.log('blvcbkcvkbk',response)
-                showToast("Exam updated successfully.",'success');
+                console.log('blvcbkcvkbk', response)
+                showToast("Exam updated successfully.", 'success');
                 getExamsList();
             } catch (error) {
                 console.error('Error posting data:', error);
@@ -71,8 +71,8 @@ const Exams = () => {
         } else {
             try {
                 const response = await postService(apiName.exams, body);
-                console.log('respofdfnse',response)
-                showToast("Exam added successfully.",'success');
+                console.log('respofdfnse', response)
+                showToast("Exam added successfully.", 'success');
                 getExamsList();
             } catch (error) {
                 console.error('Error posting data:', error);
@@ -104,46 +104,46 @@ const Exams = () => {
                     <FaPlus className="mr-2" /> Add Exam
                 </button>
             </div>
-{
-    loading ? <Loader/>
-    :
+            {
+                loading ? <Loader />
+                    :
 
-            <div className="overflow-x-auto bg-white shadow-md rounded-lg">
-                <table className="min-w-full table-auto">
-                    <thead>
-                        <tr className="bg-gray-100 text-gray-600">
-                            <th className="py-3 px-6 text-left text-sm font-semibold">Exam Name</th>
-                            <th className="py-3 px-6 text-left text-sm font-semibold">Session</th>
-                            <th className="py-3 px-6 text-left text-sm font-semibold">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {examsList.map((examItem) => (
-                            <tr key={examItem.id} className="border-b hover:bg-gray-50 transition duration-200">
-                                <td className="py-3 px-6 text-sm text-gray-800">{examItem.name}</td>
-                                <td className="py-3 px-6 text-sm text-gray-800">
-                                    {examItem.session}
-                                </td>
-                                <td className="py-3 px-6 flex space-x-4">
-                                    <button
-                                        onClick={() => handleEdit(examItem)}
-                                        className="text-blue-500 hover:text-blue-700 transition duration-200"
-                                    >
-                                        <FaEdit />
-                                    </button>
-                                    <button
-                                        onClick={() => handleDelete(examItem._id)} // Pass exam ID to delete
-                                        className="text-red-500 hover:text-red-700 transition duration-200"
-                                    >
-                                        <FaTrash />
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-}
+                    <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+                        <table className="min-w-full table-auto">
+                            <thead>
+                                <tr className="bg-gray-100 text-gray-600">
+                                    <th className="py-3 px-6 text-left text-sm font-semibold">Exam Name</th>
+                                    <th className="py-3 px-6 text-left text-sm font-semibold">Session</th>
+                                    <th className="py-3 px-6 text-left text-sm font-semibold">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {examsList.map((examItem) => (
+                                    <tr key={examItem.id} className="border-b hover:bg-gray-50 transition duration-200">
+                                        <td className="py-3 px-6 text-sm text-gray-800">{examItem.name}</td>
+                                        <td className="py-3 px-6 text-sm text-gray-800">
+                                            {examItem.session}
+                                        </td>
+                                        <td className="py-3 px-6 flex space-x-4">
+                                            <button
+                                                onClick={() => handleEdit(examItem)}
+                                                className="text-blue-500 hover:text-blue-700 transition duration-200"
+                                            >
+                                                <FaEdit />
+                                            </button>
+                                            <button
+                                                onClick={() => handleDelete(examItem._id)} // Pass exam ID to delete
+                                                className="text-red-500 hover:text-red-700 transition duration-200"
+                                            >
+                                                <FaTrash />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+            }
 
             {showModal && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -162,20 +162,20 @@ const Exams = () => {
                         <div className="mb-4">
                             <label className="block text-sm font-medium text-gray-600">Exam Session</label>
                             <select
-                    name="session"
-                    value={examSession}
-                    onChange={(e) => setExamSession(e.target.value)}
-                    className="mt-2 p-2 border border-gray-300 rounded-md w-full"
-                  >
-                    <option value="">Select Session</option>
-                    {sessions?.map((section) => (
-                      <option key={section} value={section}>
-                        {section}
-                      </option>
-                    ))}
-                  </select>
+                                name="session"
+                                value={examSession}
+                                onChange={(e) => setExamSession(e.target.value)}
+                                className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                            >
+                                <option value="">Select Session</option>
+                                {sessions?.map((section) => (
+                                    <option key={section} value={section}>
+                                        {section}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
-                        
+
                         <div className="flex justify-end space-x-4">
                             <button
                                 onClick={() => { setShowModal(false); setEditMode(false); setEditId(''); }}
@@ -187,7 +187,7 @@ const Exams = () => {
                                 onClick={handleAddExam}
                                 className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-200"
                             >
-                                {editMode?'Update exam':'Add exam'}
+                                {editMode ? 'Update exam' : 'Add exam'}
                             </button>
                         </div>
                     </div>

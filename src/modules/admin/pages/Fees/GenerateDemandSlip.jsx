@@ -18,6 +18,7 @@ const GenerateDemandSlip = () => {
     const [classFilter, setClassFilter] = useState('');
     const [sectionFilter, setSectionFilter] = useState('');
     const [searchText, setSearchText] = useState('');
+    const [selectAll, setSelectAll] = useState(false); // New state for "Select All" checkbox
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -83,6 +84,16 @@ const GenerateDemandSlip = () => {
         );
     };
 
+    // Toggle select all checkbox
+    const toggleSelectAll = () => {
+        if (selectAll) {
+            setSelectedStudents([]);
+        } else {
+            setSelectedStudents(students.map(student => student._id));
+        }
+        setSelectAll(!selectAll);
+    };
+
     // Generate PDF for all selected students
     const generateSelectedStudentsPdf = async () => {
         const selectedStudentData = students.filter((student) =>
@@ -136,7 +147,13 @@ const GenerateDemandSlip = () => {
                     <table className="min-w-full table-auto">
                         <thead>
                             <tr className="bg-gray-100 text-gray-600">
-                                <th className="py-3 px-6 text-left text-sm font-semibold">Select</th>
+                                <th className="py-3 px-6 text-left text-sm font-semibold">
+                                    <input
+                                        type="checkbox"
+                                        checked={selectAll}
+                                        onChange={toggleSelectAll}
+                                    />
+                                </th>
                                 <th className="py-3 px-6 text-left text-sm font-semibold">Admission Number</th>
                                 <th className="py-3 px-6 text-left text-sm font-semibold">Roll Number</th>
                                 <th className="py-3 px-6 text-left text-sm font-semibold">First Name</th>
