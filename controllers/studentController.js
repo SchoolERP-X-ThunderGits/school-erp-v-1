@@ -1,68 +1,68 @@
 const bcrypt = require('bcrypt');
 const Student = require('../models/student.js');
-const StudentFeeProfile = require("../models/fees/studentFeeProfile.js")
-
-
+const StudentFeeProfile = require("../models/fees/studentFeeProfile.js");
 
 exports.addStudent = async (req, res) => {
+    const tenantId = req.user.tenantId; // Extract tenant ID from the logged-in user
 
     const {
-        admission_Number,
-        roll_Number,
-        first_Name,
-        last_Name,
-        date_Of_Birth,
+        admissionNumber,
+        rollNumber,
+        firstName,
+        lastName,
+        dateOfBirth,
         gender,
-        permanent_Address,
-        address_For_Correspondence,
-        contact_Number,
-        alternet_Contact_Number,
+        permanentAddress,
+        addressForCorrespondence,
+        contactNumber,
+        alternateContactNumber,
         email,
         nationality,
         religion,
         category,
-        date_Of_Admission,
-        blood_Group,
-        father_Name,
-        father_Occupation,
-        mother_Name,
-        mother_Occupation,
-        student_Photo,
-        aadhar_number,
-        due_amount,
-        class_Id,
+        dateOfAdmission,
+        bloodGroup,
+        fatherName,
+        fatherOccupation,
+        motherName,
+        motherOccupation,
+        studentPhoto,
+        aadharNumber,
+        dueAmount,
+        classId,
         section,
         session,
         feeStructures
     } = req.body;
 
     try {
-        // Create a new student
+        // Create a new student with tenantId
         const newStudent = new Student({
-            admission_Number,
-            roll_Number,
-            first_Name,
-            last_Name,
-            date_Of_Birth,
+            tenantId,
+            admissionNumber,
+            rollNumber,
+            firstName,
+            lastName,
+            dateOfBirth,
             gender,
-            permanent_Address,
-            address_For_Correspondence,
-            contact_Number,
-            alternet_Contact_Number,
+            permanentAddress,
+            addressForCorrespondence,
+            contactNumber,
+            alternateContactNumber,
             email,
             nationality,
             religion,
             category,
-            date_Of_Admission,
-            blood_Group,
-            father_Name,
-            father_Occupation,
-            mother_Name,
-            mother_Occupation,
-            student_Photo,
-            aadhar_number,
-            due_amount,
-            class_Id,
+            dateOfAdmission,
+            bloodGroup,
+            fatherName,
+            fatherOccupation,
+            motherName,
+            motherOccupation,
+            studentPhoto,
+            aadharNumber,
+            dueAmount,
+            classId,
             section,
             session
         });
@@ -72,14 +72,14 @@ exports.addStudent = async (req, res) => {
         // Create a fee profile for the student and associate fee structures
         const newFeeProfile = new StudentFeeProfile({
             studentId: savedStudent._id,
-            feeStructures: feeStructures, // Associate selected fee structures
+            tenantId, // Ensure fee profiles are scoped to the tenant
+            feeStructures,
             payments: []
         });
         await newFeeProfile.save();
 
-
         res.status(201).json({
-            message: 'Student and Parent created successfully',
+            message: 'Student created successfully',
             result: savedStudent
         });
     } catch (error) {
@@ -90,8 +90,10 @@ exports.addStudent = async (req, res) => {
 
 exports.getStudents = async (req, res) => {
     try {
-        // Fetch all students
-        const students = await Student.find().populate('class_Id');
+        const tenantId = req.user.tenantId;
+        
+        // Fetch all students within the tenant
+        const students = await Student.find({ tenantId }).populate('classId');
         res.status(200).json(students);
     } catch (error) {
         console.error('Error fetching students:', error);
@@ -102,10 +104,12 @@ exports.getStudents = async (req, res) => {
 exports.getStudentById = async (req, res) => {
     const studentId = req.params.id;
     try {
-        // Fetch student by ID
-        const student = await Student.findById(studentId).populate('class_Id');;
+        const tenantId = req.user.tenantId;
+
+        // Fetch student by ID and tenantId
+        const student = await Student.findOne({ _id: studentId, tenantId }).populate('classId');
         if (!student) {
-            return res.status(404).json({ message: 'Student not found' });
+            return res.status(404).json({ message: 'Student not found or access denied' });
         }
         res.status(200).json(student);
     } catch (error) {
@@ -117,29 +121,27 @@ exports.getStudentById = async (req, res) => {
 exports.updateStudent = async (req, res) => {
     const studentId = req.params.id;
     const updateFields = req.body;
+    const tenantId = req.user.tenantId;
 
     try {
-        // Check if student exists
-        let student = await Student.findById(studentId);
+        // Find student within the tenant
+        let student = await Student.findOne({ _id: studentId, tenantId });
         if (!student) {
-            return res.status(404).json({ message: 'Student not found' });
+            return res.status(404).json({ message: 'Student not found or access denied' });
         }
 
         // Update student fields
-        for (let key in updateFields) {
-            if (updateFields.hasOwnProperty(key)) {
-                student[key] = updateFields[key];
-            }
-        }
+        Object.keys(updateFields).forEach(key => {
+            student[key] = updateFields[key];
+        });
 
-        // Save updated student
         const updatedStudent = await student.save();
 
-        // Update student fee profile if fee structures are provided
-        if (updateFields.hasOwnProperty('feeStructures')) {
-            const studentFeeProfile = await StudentFeeProfile.findOne({ studentId });
+        // Update fee profile if needed
+        if (updateFields.feeStructures) {
+            const studentFeeProfile = await StudentFeeProfile.findOne({ studentId, tenantId });
             if (studentFeeProfile) {
-                studentFeeProfile.feeStructures = updateFields['feeStructures'];
+                studentFeeProfile.feeStructures = updateFields.feeStructures;
                 await studentFeeProfile.save();
             }
         }
@@ -151,19 +153,17 @@ exports.updateStudent = async (req, res) => {
     }
 };
 
-
 exports.deleteStudent = async (req, res) => {
     const studentId = req.params.id;
+    const tenantId = req.user.tenantId;
+
     try {
-        // Check if student exists
-        const student = await Student.findById(studentId);
+        const student = await Student.findOne({ _id: studentId, tenantId });
         if (!student) {
-            return res.status(404).json({ message: 'Student not found' });
+            return res.status(404).json({ message: 'Student not found or access denied' });
         }
 
-        // Delete student
         await student.deleteOne();
-
         res.status(200).json({ message: 'Student deleted successfully' });
     } catch (error) {
         console.error('Error deleting student:', error);
@@ -171,13 +171,12 @@ exports.deleteStudent = async (req, res) => {
     }
 };
 
-
 exports.getStudentsByClass = async (req, res) => {
-    console.log("Request came");
+    const tenantId = req.user.tenantId;
     const classId = req.params.classId;
+    
     try {
-        // Fetch students by class ID
-        const students = await Student.find({ class: classId });
+        const students = await Student.find({ classId, tenantId });
         res.status(200).json(students);
     } catch (error) {
         console.error('Error fetching students by class:', error);
@@ -186,11 +185,11 @@ exports.getStudentsByClass = async (req, res) => {
 };
 
 exports.getStudentsByClassAndSection = async (req, res) => {
-    console.log("Request came");
     const { classId, section } = req.params;
+    const tenantId = req.user.tenantId;
+
     try {
-        // Fetch students by class ID and section
-        const students = await Student.find({ class: classId, section: section });
+        const students = await Student.find({ classId, section, tenantId });
         res.status(200).json(students);
     } catch (error) {
         console.error('Error fetching students by class and section:', error);
@@ -200,17 +199,10 @@ exports.getStudentsByClassAndSection = async (req, res) => {
 
 exports.getStudentsByQuery = async (req, res) => {
     const query = req.query;
+    const tenantId = req.user.tenantId;
+
     try {
-        // Convert query to case-insensitive regular expressions
-        const caseInsensitiveQuery = {};
-        for (const key in query) {
-            if (query.hasOwnProperty(key)) {
-                caseInsensitiveQuery[key] = { $regex: new RegExp(query[key], 'i') };
-            }
-        }
-        
-        // Fetch students by custom query
-        const students = await Student.find(caseInsensitiveQuery).populate('class_Id');
+        const students = await Student.find({ ...query, tenantId }).populate('classId');
         res.status(200).json(students);
     } catch (error) {
         console.error('Error fetching students by query:', error);
@@ -220,9 +212,9 @@ exports.getStudentsByQuery = async (req, res) => {
 
 exports.getStudentsByClassOrSection = async (req, res) => {
     const { classId, section } = req.params;
-
+    const tenantId = req.user.tenantId;
     try {
-        let query = { class_Id: classId };
+        let query = { class_Id: classId,tenantId };
 
         // Check if section is provided
         if (section) {
@@ -240,26 +232,18 @@ exports.getStudentsByClassOrSection = async (req, res) => {
 };
 
 
-
-
-
 exports.getLastGeneratedAdmissionNumber = async (req, res) => {
-    try {
-        // Find the last student sorted by admission number in descending order
-        const lastStudent = await Student.findOne().sort({ admission_Number: -1 });
+    const tenantId = req.user.tenantId;
 
-        // If no student found, return a default admission number
+    try {
+        const lastStudent = await Student.findOne({ tenantId }).sort({ admissionNumber: -1 });
+
         if (!lastStudent) {
-            return res.status(200).json({ lastGeneratedAdmissionNumber: "AD-1000" }); // Assuming "AD-1000" is the default admission number
+            return res.status(200).json({ lastGeneratedAdmissionNumber: "AD-1000" });
         }
 
-        // Extract the numeric part of the admission number and increment it
-        const numericPart = parseInt(lastStudent.admission_Number.split("-")[1]);
-        const nextNumericPart = numericPart + 1;
-
-        // Generate the next admission number by combining the prefix with the incremented numeric part
-        const prefix = lastStudent.admission_Number.split("-")[0];
-        const nextAdmissionNumber = `${prefix}-${nextNumericPart}`;
+        const numericPart = parseInt(lastStudent.admissionNumber.split("-")[1]);
+        const nextAdmissionNumber = `AD-${numericPart + 1}`;
 
         res.status(200).json({ lastGeneratedAdmissionNumber: nextAdmissionNumber });
     } catch (error) {

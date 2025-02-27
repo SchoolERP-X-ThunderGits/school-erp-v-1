@@ -3,21 +3,26 @@
 const mongoose = require('mongoose');
 
 // Define the schema for the Admin model
-const userSchema = new mongoose.Schema({
+const adminSchema = new mongoose.Schema({
+    tenantId: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'Tenant', // Reference to Tenant model
+        index: true // Ensures efficient queries
+    },
     username: {
         type: String,
-        required: true,
-        unique: true
+        required: true
     },
     password: {
         type: String,
         required: true
     },
     email: {
-        type: String,
+        type: String
     },
     fullName: {
-        type: String,
+        type: String
     },
     createdAt: {
         type: Date,
@@ -27,8 +32,8 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: "admin",
         enum: ["admin", "moderator"]
-    },
+    }
 });
 
 // Create and export the Admin model
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('Admin', adminSchema);

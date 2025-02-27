@@ -1,31 +1,61 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const User = require('../models/user');
+const User = require('../models/user.js'); // Updated to Admin model
 const config = require('../config/config');
+const Tenant = require('../models/tenant');
+const qrCode = require('qrcode');
 
 exports.addUser = async (req, res) => {
-    const { username, password, email, fullName, role } = req.body;
+    const { username, password, email, fullName, role, subdomain, schoolName, website } = req.body;
 
-    // Check if username, password, and role are provided
     if (!username || !password || !role) {
         return res.status(400).json({ message: 'Username, password, and role are required' });
     }
 
     try {
-        // Hash the password
+        // Check if subdomain already exists (for new tenants)
+        if (role === 'admin') {
+            const existingTenant = await Tenant.findOne({ subdomain });
+            if (existingTenant) {
+                return res.status(400).json({ message: 'Subdomain already in use' });
+            }
+        }
+
+        // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Create a new user
+        // Create a new user (Admin or Moderator)
         const newUser = new User({
             username,
             password: hashedPassword,
-            email: email || null,
-            fullName: fullName || null,
-            role: role
+            email,
+            fullName,
+            role
         });
+
+        // If user is an admin, create a new tenant
+        if (role === 'admin') {
+            // Generate QR code if a website is provided
+            let qrCodeUrl = null;
+            if (website) {
+                qrCodeUrl = await qrCode.toDataURL(website);
+            }
+
+            const newTenant = new Tenant({
+                name: schoolName,
+                subdomain,
+                admin: newUser._id, // Assign the new user as the tenant's admin
+                website,
+                qrCodeUrl
+            });
+
+            await newTenant.save();
+            newUser.tenantId = newTenant._id; // Link user to the created tenant
+        }
+
         await newUser.save();
 
-        res.status(201).json({ message: 'User created successfully', result: { username, password } });
+        res.status(201).json({ message: 'User and Tenant created successfully', user: newUser });
     } catch (error) {
         console.error('Error adding user:', error);
         res.status(500).json({ message: 'Server error' });
@@ -34,8 +64,11 @@ exports.addUser = async (req, res) => {
 
 exports.getUsers = async (req, res) => {
     try {
-        // Fetch all users
-        const users = await User.find();
+        const tenantId = req.user.tenantId;
+
+        // Fetch all users for the current tenant
+        const users = await User.find({ tenantId }).select('-password'); // Exclude password for security
+
         res.status(200).json(users);
     } catch (error) {
         console.error('Error fetching users:', error);
@@ -46,11 +79,14 @@ exports.getUsers = async (req, res) => {
 exports.getUserById = async (req, res) => {
     const userId = req.params.id;
     try {
-        // Fetch user by ID
-        const user = await User.findById(userId);
+        const tenantId = req.user.tenantId;
+
+        // Fetch user by ID and ensure they belong to the same tenant
+        const user = await User.findOne({ _id: userId, tenantId }).select('-password');
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).json({ message: 'User not found or access denied' });
         }
+
         res.status(200).json(user);
     } catch (error) {
         console.error('Error fetching user by ID:', error);
@@ -61,11 +97,14 @@ exports.getUserById = async (req, res) => {
 exports.updateUser = async (req, res) => {
     const userId = req.params.id;
     const { username, password, email, fullName, role } = req.body;
+
     try {
-        // Check if user exists
-        let user = await User.findById(userId);
+        const tenantId = req.user.tenantId;
+
+        // Check if user exists within the same tenant
+        let user = await User.findOne({ _id: userId, tenantId });
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).json({ message: 'User not found or access denied' });
         }
 
         // Update user fields
@@ -77,10 +116,8 @@ exports.updateUser = async (req, res) => {
         user.fullName = fullName || user.fullName;
         user.role = role || user.role;
 
-        // Save updated user
         await user.save();
-
-        res.status(200).json({ message: 'User updated successfully', result: user });
+        res.status(200).json({ message: 'User updated successfully', user });
     } catch (error) {
         console.error('Error updating user:', error);
         res.status(500).json({ message: 'Server error' });
@@ -89,20 +126,20 @@ exports.updateUser = async (req, res) => {
 
 exports.deleteUser = async (req, res) => {
     const userId = req.params.id;
+
     try {
-        // Check if user exists
-        const user = await User.findById(userId);
+        const tenantId = req.user.tenantId;
+
+        // Check if user exists within the same tenant
+        const user = await User.findOne({ _id: userId, tenantId });
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).json({ message: 'User not found or access denied' });
         }
 
-        // Delete user
-        await user.deleteOne(); // Use deleteOne method instead of remove
-
+        await user.deleteOne();
         res.status(200).json({ message: 'User deleted successfully' });
     } catch (error) {
         console.error('Error deleting user:', error);
         res.status(500).json({ message: 'Server error' });
     }
 };
-

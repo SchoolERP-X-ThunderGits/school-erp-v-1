@@ -1,14 +1,21 @@
 const mongoose = require('mongoose');
 
-// Define the schema for section
+// Define the schema for Section
 const sectionSchema = new mongoose.Schema({
+    tenantId: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'Tenant', // Reference to Tenant model
+        index: true // Improves query performance
+    },
     name: {
         type: String,
         required: true
     }
 });
 
-// Create a model from the schema
-const Section = mongoose.model('Section', sectionSchema);
+// Ensure section names are unique per tenant
+sectionSchema.index({ name: 1, tenantId: 1 }, { unique: true });
 
-module.exports = Section;
+// Create and export the Section model
+module.exports = mongoose.model('Section', sectionSchema);

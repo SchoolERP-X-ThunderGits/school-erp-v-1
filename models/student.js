@@ -1,37 +1,42 @@
 const mongoose = require('mongoose');
 
-// Define the schema for student
+// Define the schema for Student
 const studentSchema = new mongoose.Schema({
-  admission_Number: {
+  tenantId: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: 'Tenant', // Reference to Tenant model
+    index: true // Improves query performance
+  },
+  admissionNumber: {
     type: String,
     required: true
   },
-  roll_Number: {
+  rollNumber: {
     type: Number,
     required: true
   },
-  first_Name: {
+  firstName: {
     type: String,
     required: true
   },
-  last_Name: {
+  lastName: {
     type: String,
     required: true
   },
-  class_Id: {
+  classId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Class', // Reference to the Class model
+    ref: 'Class', // Reference to Class model
     required: true
   },
   section: {
-    type: String,
-
+    type: String
   },
   session: {
-    type: String, // Assuming session is a string, change to Date if it's a date
+    type: String, // Change to Date if required
     required: true
   },
-  date_Of_Birth: {
+  dateOfBirth: {
     type: Date,
     required: true
   },
@@ -40,79 +45,66 @@ const studentSchema = new mongoose.Schema({
     enum: ['Male', 'Female', 'Other'],
     required: true
   },
-  permanent_Address: {
+  permanentAddress: {
     type: String,
     required: true
   },
-  address_For_Correspondence: {
-    type: String,
-
+  addressForCorrespondence: {
+    type: String
   },
-  contact_Number: {
+  contactNumber: {
     type: String,
     required: true
   },
-  alternet_Contact_Number: {
-    type: String,
-
+  alternateContactNumber: {
+    type: String
   },
   email: {
-    type: String,
-
+    type: String
   },
   nationality: {
     type: String,
     required: true
   },
   religion: {
-    type: String,
-
+    type: String
   },
   category: {
     type: String,
     required: true
   },
-  date_Of_Admission: {
+  dateOfAdmission: {
     type: Date,
     required: true
   },
-  blood_Group: {
-    type: String,
-
+  bloodGroup: {
+    type: String
   },
-  father_Name: {
-    type: String,
-    required: true
-  },
-  father_Occupation: {
-    type: String,
-
-  },
-  mother_Name: {
+  fatherName: {
     type: String,
     required: true
   },
-  mother_Occupation: {
-    type: String,
-
+  fatherOccupation: {
+    type: String
   },
-  student_Photo: {
-    type: String, // Assuming binary data for the photo
+  motherName: {
+    type: String,
     required: true
   },
-  aadhar_number: {
-    type: String,
-
+  motherOccupation: {
+    type: String
   },
-  due_amount: {
-    type: Number,
-
+  studentPhoto: {
+    type: String, // Assuming URL or base64-encoded image
+    required: true
   },
-
-  // You can add more fields like attendance, grades, etc. here
+  aadharNumber: {
+    type: String
+  },
+  dueAmount: {
+    type: Number
+  }
 }, { timestamps: true });
 
-// Create a model from the schema
-const Student = mongoose.model('Student', studentSchema);
-
-module.exports = Student;
+// Create and export the Student model
+module.exports = mongoose.model('Student', studentSchema);

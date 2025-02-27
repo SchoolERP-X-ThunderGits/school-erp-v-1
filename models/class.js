@@ -1,22 +1,26 @@
 const mongoose = require('mongoose');
 
-// Define the schema for class
+// Define the schema for Class
 const classSchema = new mongoose.Schema({
+  tenantId: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: 'Tenant', // Reference to Tenant model
+    index: true // Ensures efficient tenant-based queries
+  },
   name: {
     type: String,
-    required: true,
-    unique: true // Enforces uniqueness
+    required: true
   },
   sections: [
     {
       type: String
     }
-  ],
-
-  // You can add more fields like subject, schedule, etc. here
+  ]
 }, { timestamps: true });
 
-// Create a model from the schema
-const Class = mongoose.model('Class', classSchema);
+// Ensure class names are unique per tenant
+classSchema.index({ name: 1, tenantId: 1 }, { unique: true });
 
-module.exports = Class;
+// Create and export the Class model
+module.exports = mongoose.model('Class', classSchema);
