@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { FaDownload } from 'react-icons/fa';
-import { pdf, Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
+import { pdf, Document, Page, Text, View, StyleSheet, Image, Font } from '@react-pdf/renderer';
 import { saveAs } from 'file-saver';
 import apiName from '../../../../constants/ApiName'; // Importing API Names
 import { showToast } from '../../../../components/Toast'; // Show Toast Notifications
 import Loader from '../../../../components/Loader';
 import moment from 'moment';
 import { getService } from '../../../../constants/Service';
-
+import sign from '../../../../assets/Images/sign.png'
 // Template Modal Component
 const TemplateModal = ({ open, onClose, onSelectTemplate, selectedTemplate }) => {
     return (
@@ -69,8 +69,6 @@ const TemplateModal = ({ open, onClose, onSelectTemplate, selectedTemplate }) =>
         </div>
     );
 };
-
-
 // Main StudentIDCard Component
 const StudentIDCard = () => {
     const [loading, setLoading] = useState(false);
@@ -223,10 +221,19 @@ const StudentIDCard = () => {
                         key={index}
                         style={selectedTemplate === 'portrait' ? styles.portraitPage : styles.landscapePage}
                     >
-                        <View style={styles.card}>
+                        <View style={[{ position: 'absolute', zIndex: -100, width: '100%', height: '100%' }]}>
+                            <Image style={{ width: '100%', height: '100%' }} src={'https://i2.wp.com/a.rgbimg.com/users/o/or/organza3/600/msE62kY.jpg'} />
+                        </View>
+                        <View style={[{ position: 'absolute', zIndex: -101, width: '100%', height: '100%' }]}>
                             {/* Header */}
-                            <View style={styles.header}>
-                                <Text style={styles.schoolName}>Vision Public School</Text>
+                            <View style={[styles.header, { marginTop: selectedTemplate == 'landscape' ? 10 : 0 }]}>
+                                <Image style={{ width: 50, height: 50, objectFit: 'cover' }} src={'https://res.cloudinary.com/dttmlghjm/image/upload/v1714852409/logo-removebg-preview_as5e3l.png'} />
+                                <View style={{ flexDirection: 'column', marginTop: selectedTemplate == 'landscape' ? 0 : 10 }}>
+
+                                    <Text style={[styles.schoolName, { fontSize: selectedTemplate === 'portrait' ? 18 : 28, }]}>Vision Public School</Text>
+                                    <Text style={{ fontSize: 12, fontFamily: 'RobotoRI', width: '60%', textAlign: 'center' }}>Jakhar, Samastipur, Bihar , India - 303904</Text>
+                                </View>
+                                <Image style={{ width: 50, height: 50, objectFit: 'cover' }} src={'https://res.cloudinary.com/dttmlghjm/image/upload/v1715728995/ssps_scurhe.png'} />
                             </View>
 
                             {/* Profile and Student Details Section */}
@@ -238,35 +245,47 @@ const StudentIDCard = () => {
                                     />
                                     <View style={styles.detailsSection}>
                                         <Text style={styles.studentName}>{student.first_Name} {student.last_Name}</Text>
-                                        <Text style={styles.studentId}>ID: {student.admission_Number}</Text>
-                                        <Text style={styles.studentRoll}>Roll No: {student.roll_Number}</Text>
+                                        <Text style={styles.studentId}>ID:<Text style={{ fontFamily: 'RobotoR' }}> {student.admission_Number}</Text></Text>
+                                        <Text style={styles.studentRoll}>Roll No: <Text style={{ fontFamily: 'RobotoR' }}>{student.roll_Number}</Text></Text>
                                     </View>
                                 </View>
 
                                 {/* Class, Section, Address, and DOB */}
-                                <View style={styles.extraInfo}>
+                                <View style={selectedTemplate === 'portrait' ? styles.extraInfo : styles.extraInfo2}>
                                     <View style={styles.row}>
-                                        <Text style={styles.label}>Class:</Text>
+                                        <Text style={styles.label}>Class</Text>
+                                        <Text style={[styles.label, { width: '10%' }]}>:</Text>
                                         <Text style={styles.value}>{student.class_Id?.name}</Text>
                                     </View>
                                     <View style={styles.row}>
-                                        <Text style={styles.label}>Section:</Text>
+                                        <Text style={styles.label}>Section</Text>
+                                        <Text style={[styles.label, { width: '10%' }]}>:</Text>
                                         <Text style={styles.value}>{student.section}</Text>
                                     </View>
                                     <View style={styles.row}>
-                                        <Text style={styles.label}>Address:</Text>
+                                        <Text style={styles.label}>Address</Text>
+                                        <Text style={[styles.label, { width: '10%' }]}>:</Text>
                                         <Text style={styles.value}>{student.permanent_Address || 'Not Available'}</Text>
                                     </View>
                                     <View style={styles.row}>
-                                        <Text style={styles.label}>DOB:</Text>
+                                        <Text style={styles.label}>DOB</Text>
+                                        <Text style={[styles.label, { width: '10%' }]}>:</Text>
                                         <Text style={styles.value}>{moment(student?.date_Of_Birth).format('DD MMMM, YYYY') || 'Not Available'}</Text>
                                     </View>
                                 </View>
                             </View>
 
                             {/* Footer */}
-                            <View style={styles.footer}>
-                                <Text style={styles.footerText}>Valid for the Academic Year 2024-2025</Text>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-around', position: 'relative', bottom: 10, marginTop: selectedTemplate === 'portrait' ? 30 : 0 }}>
+
+                                <View>
+                                    <Image style={{ width: 25, height: 25, objectFit: 'cover', alignSelf: 'center' }} src={sign} />
+                                    <Text style={{ fontSize: 12, marginTop: 5 }}>Principle Signature</Text>
+                                </View>
+                                <View>
+                                    <Image style={{ width: 25, height: 25, objectFit: 'cover', alignSelf: 'center' }} src={sign} />
+                                    <Text style={{ fontSize: 12, marginTop: 5 }}>Director Signature</Text>
+                                </View>
                             </View>
                         </View>
                     </Page>
@@ -378,7 +397,6 @@ const StudentIDCard = () => {
 
 const styles = StyleSheet.create({
     card: {
-        padding: 20,
         backgroundColor: '#fff',
         borderRadius: 10,
         border: '1px solid #ccc',
@@ -387,21 +405,22 @@ const styles = StyleSheet.create({
         width: '100%',
     },
     header: {
-        textAlign: 'center',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: 10,
         marginBottom: 10,
-        marginTop: 10,
     },
     schoolName: {
-        fontSize: 18,
+        fontFamily: 'RobotoBI',
+        fontSize: 22,
         fontWeight: 'bold',
-        color: '#2C3E50',
+        color: '#a27d2a',
     },
     body: {
-        marginTop: 20,
+        marginTop: 10,
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
     },
     profileSection: {
         flexDirection: 'row',
@@ -410,9 +429,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     profileImage: {
-        width: 80,
-        height: 80,
-        borderRadius: 40,
+        width: 90,
+        height: 90,
+        objectFit: 'cover',
+        borderRadius: 10,
         border: '3px solid #2C3E50',
         marginRight: 20,
         boxShadow: '0 2px 5px rgba(0, 0, 0, 0.2)',
@@ -423,60 +443,73 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
     },
     studentName: {
-        fontSize: 18,
+        fontFamily: 'RobotoB',
+        fontSize: 16,
         fontWeight: 'bold',
-        color: '#2C3E50',
+        color: 'black',
     },
     studentId: {
+        marginVertical: 5,
+        fontFamily: 'RobotoM',
         fontSize: 14,
-        color: '#7F8C8D',
+        color: 'black',
     },
     studentRoll: {
+        fontFamily: 'RobotoM',
         fontSize: 14,
-        color: '#7F8C8D',
+        color: 'black',
     },
     extraInfo: {
-        marginTop: 15,
+        marginLeft: 35,
+        marginTop: 10,
+        marginBottom: 15,
+    },
+    extraInfo2: {
+        marginLeft: 100,
+        marginTop: 10,
         marginBottom: 15,
     },
     row: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
         marginBottom: 8,
-        width: '100%',
     },
     label: {
-        fontWeight: 'bold',
-        fontSize: 14,
-        color: '#34495E',
+        width: '30%',
+        fontSize: 15,
+        fontFamily: 'RobotoM',
+        color: 'black',
     },
     value: {
+        fontFamily: 'RobotoR',
+        width: '50%',
         fontSize: 14,
-        color: '#7F8C8D',
+        color: 'black',
     },
     footer: {
         marginTop: 20,
         textAlign: 'center',
     },
+    footer2: {
+        position: 'relative',
+        bottom: 10,
+        marginTop: 10,
+        textAlign: 'center',
+    },
     footerText: {
         fontSize: 12,
-        color: '#BDC3C7',
+        color: 'black',
     },
 
-    // Styles for portrait layout
     portraitPage: {
         width: '100%',
-        padding: 10,
     },
     // Styles for landscape layout
     landscapePage: {
         width: '100%',
         flexDirection: 'row',
-        padding: 10,
         justifyContent: 'space-between',
     },
 
-    // Ensuring full width usage in landscape
     landscapeCard: {
         width: '100%',
         height: '100%',

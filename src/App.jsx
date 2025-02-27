@@ -23,7 +23,6 @@ import ExamSchedule from './modules/admin/pages/Exams/ExamSchedule';
 import StudentDetails from './modules/admin/pages/Students/StudentDetails';
 import FeeReceipt from './modules/admin/pages/Fees/FeesReceipt';
 import GenerateDemandSlip from './modules/admin/pages/Fees/GenerateDemandSlip';
-
 function App() {
   const [loading, setLoading] = useState(true);
   const { pathname } = useLocation();
