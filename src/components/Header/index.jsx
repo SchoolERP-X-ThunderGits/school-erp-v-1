@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import thunderLogo from '../../assets/Images/tunderLogo.jpeg';
+import { useUserContext } from '../../context/UserContext';
 
 function index(props) {
+  const { school} = useUserContext();
   return (
     <div
       className="header-to-hide"
@@ -59,7 +60,7 @@ function index(props) {
 
         {/* Logo */}
         <Link className="block flex-shrink-0 lg:hidden" to="/">
-          <img style={{ height: 40, width: 40,backgroundColor:'#1c2534' }} src={thunderLogo} alt="Logo" />
+          <img style={{ height: 40, width: 40,backgroundColor:'#1c2534' }} src={school?.logo} alt="Logo" />
         </Link>
 
         {/* School Name */}
@@ -76,7 +77,7 @@ function index(props) {
             textAlign: 'center',
           }}
         >
-          Vision Public School, Jaipur
+          {school?.name}
         </h1>
       </div>
     </div>

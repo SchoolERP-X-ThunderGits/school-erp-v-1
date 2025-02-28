@@ -6,15 +6,13 @@ import html2canvas from 'html2canvas';
 import { useNavigate } from 'react-router-dom';
 import { getService } from '../../../../constants/Service';
 import apiName from '../../../../constants/ApiName';
-
-
-
+import { useUserContext } from '../../../../context/UserContext';
 const FeeReceipt = () => {
     const { paymentId } = useParams(); // Assume you are using React Router for route parameters
     console.log('paymentIdkbvkbvb', paymentId)
     const [invoiceData, setInvoiceData] = useState(null);
     const history = useNavigate();
-
+    const { school} = useUserContext();
     const navigateToHome = () => {
         history('/admin/home');
     };
@@ -37,8 +35,8 @@ const FeeReceipt = () => {
 
                     },
                     payTo: {
-                        name: 'Vision Public School',
-                        address: 'Amra Talav, Sasaram ( Rohtas )',
+                        name: school?.name,
+                        address: school?.address,
                         stateCountry: 'Rohtas, India',
                         email: 'xyz@gmail.com',
                     },
@@ -104,22 +102,33 @@ const FeeReceipt = () => {
                                     paymentMethod}</p>
                             </div>
                         </div>
-                        <div className="invoice-head-top">
-                            <div className="invoice-head-top-left text-start"></div>
-                            <img
-                                src="https://vissionclasses.in/assets/vision-img/logo.jpeg"
-                                alt="School Logo"
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center',alignSelf:'center' }}>
+    {/* Left side: Logo */}
+    <div className="invoice-head-top" style={{ display: 'flex', alignItems: 'center' }}>
+        <img
+            style={{ width: 50, height: 50 }}
+            src="https://vissionclasses.in/assets/vision-img/logo.jpeg"
+            alt="School Logo"
+        />
+    </div>
 
-                            />
-                        </div>
-                        <div className="invoice-head-top">
-                            <div className="invoice-head-top-left text-start"></div>
-                            <img
-                                src="https://vissionclasses.in/assets/vision-img/logo.jpeg"
-                                alt="School QR"
+    {/* Centered Text: School Name */}
+    <p style={{ fontSize: '20px', fontFamily: 'RobotoB',fontWeight:'bold', whiteSpace: 'nowrap', flexGrow: 1, textAlign: 'center' ,marginLeft:10,marginRight:10}}>
+        Vision Public School
+    </p>
 
-                            />
-                        </div>
+    {/* Right side: QR Logo */}
+    <div className="invoice-head-top" style={{ display: 'flex', alignItems: 'center' }}>
+        <img
+            style={{ width: 50, height: 50 }}
+            src="https://vissionclasses.in/assets/vision-img/logo.jpeg"
+            alt="School QR"
+        />
+    </div>
+</div>
+
+
+
                     </div>
                     <div className="hr"></div>
                 </div>

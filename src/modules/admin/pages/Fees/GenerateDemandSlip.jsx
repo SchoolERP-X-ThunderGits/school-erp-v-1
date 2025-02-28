@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { FaDownload } from 'react-icons/fa';
 import { getService } from '../../../../constants/Service';
 import { pdf, Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 import { saveAs } from 'file-saver';
@@ -8,11 +7,13 @@ import { showToast } from '../../../../components/Toast';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../../../../components/Loader';
 import moment from 'moment';
+import { useUserContext } from '../../../../context/UserContext';
 
 const GenerateDemandSlip = () => {
     const [loading, setLoading] = useState(false);
     const [classes, setClasses] = useState([]); // Classes for dropdown
     const [sections, setSections] = useState([]); // Sections for dropdown based on selected class
+    const { school} = useUserContext();
     const [students, setStudents] = useState([]);
     const [selectedStudents, setSelectedStudents] = useState([]); // For tracking selected students
     const [classFilter, setClassFilter] = useState('');
@@ -105,7 +106,7 @@ const GenerateDemandSlip = () => {
                     <Page key={student._id} size="A4" style={styles.page}>
                         <View style={styles.container}>
                             <View style={styles.header}>
-                                <Text style={styles.schoolName}>Vision Public School</Text>
+                                <Text style={styles.schoolName}>{school?.name}</Text>
                                 <Text style={styles.subHeader}>Fee Demand Slip</Text>
                             </View>
                             <View style={styles.detailsContainer}>
@@ -144,6 +145,8 @@ const GenerateDemandSlip = () => {
         return (
             <div className="container mx-auto p-4">
                 <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+                {students.length == 0 ?
+                <p style={{ textAlign: 'center', margin: 10 }}>No students found</p> :
                     <table className="min-w-full table-auto">
                         <thead>
                             <tr className="bg-gray-100 text-gray-600">
@@ -181,7 +184,7 @@ const GenerateDemandSlip = () => {
                                 </tr>
                             ))}
                         </tbody>
-                    </table>
+                    </table>}
                 </div>
             </div>
         );
@@ -237,29 +240,29 @@ const GenerateDemandSlip = () => {
                                 // Reset filters
                                 setClassFilter('');   // Reset class filter
                                 setSectionFilter(''); // Reset section filter
+                                setStudents([])
                                 // You can reset any other related states here
                             }}
                             className="px-6 py-3 bg-gray-200 text-black rounded-lg hover:bg-gray-300 transition duration-300"
                         >
                             Clear Filters
                         </button>
+                        {selectedStudents.length > 0 && (
+                        <button
+                            onClick={generateSelectedStudentsPdf}
+                            className="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-gray-300 transition duration-300"
+                        >
+                            Download Demand Slips
+                        </button>
+                    )}
                     </div>
 
 
                     {/* Students List */}
-                    {students.length !== 0 && (
                         <div className="mt-6">{renderStudentList()}</div>
-                    )}
 
                     {/* Download Button */}
-                    {selectedStudents.length > 0 && (
-                        <button
-                            onClick={generateSelectedStudentsPdf}
-                            className="mt-6 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300"
-                        >
-                            Download Selected Demand Slips
-                        </button>
-                    )}
+                    
                 </div>
             )}
         </div>

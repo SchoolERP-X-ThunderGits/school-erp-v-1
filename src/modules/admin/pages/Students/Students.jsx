@@ -105,6 +105,8 @@ const Students = () => {
         return (
             <div className="container mx-auto ">
                 <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+                {filteredStudents.length == 0 ?
+                <p style={{ textAlign: 'center', margin: 10 }}>No students found</p> :
                     <table className="min-w-full table-auto">
                         <thead>
                             <tr className="bg-gray-100 text-gray-600">
@@ -149,7 +151,7 @@ const Students = () => {
                                 </tr>
                             ))}
                         </tbody>
-                    </table>
+                    </table>}
                 </div>
             </div>
         );
@@ -173,49 +175,49 @@ const Students = () => {
 
                     {/* Filters */}
                     <div className="mb-4 flex flex-wrap gap-4">
-    <select
-        className="p-2 border rounded w-full sm:w-auto" // Full width on small screens, auto width on medium+ screens
-        value={classFilter}
-        onChange={handleClassFilterChange}
-    >
-        <option value="">Filter by Class</option>
-        {classes.map((classItem) => (
-            <option key={classItem?._id} value={classItem.name}>
-                {classItem.name}
-            </option>
-        ))}
-    </select>
-    <select
-        className="p-2 border rounded w-full sm:w-auto" // Full width on small screens, auto width on medium+ screens
-        value={sectionFilter}
-        onChange={handleSectionFilterChange}
-        disabled={!classFilter} // Disable if no class is selected
-    >
-        <option value="">Filter by Section</option>
-        {sections.map((section) => (
-            <option key={section} value={section}>
-                {section}
-            </option>
-        ))}
-    </select>
-    <input
-        type="text"
-        placeholder="Search"
-        value={searchText}
-        onChange={(e) => setSearchText(e.target.value)}
-        className="p-2 border rounded w-full sm:w-auto" // Full width on small screens, auto width on medium+ screens
-    />
-    <button
-        onClick={() => {
-            setClassFilter('');
-            setSectionFilter('');
-            setSearchText('');
-        }}
-        className="p-2 bg-gray-200 rounded hover:bg-gray-300"
-    >
-        Clear Filters
-    </button>
-</div>
+                        <select
+                            className="p-2 border rounded w-full sm:w-auto" // Full width on small screens, auto width on medium+ screens
+                            value={classFilter}
+                            onChange={handleClassFilterChange}
+                        >
+                            <option value="">Filter by Class</option>
+                            {classes.map((classItem) => (
+                                <option key={classItem?._id} value={classItem.name}>
+                                    {classItem.name}
+                                </option>
+                            ))}
+                        </select>
+                        <select
+                            className="p-2 border rounded w-full sm:w-auto" // Full width on small screens, auto width on medium+ screens
+                            value={sectionFilter}
+                            onChange={handleSectionFilterChange}
+                            disabled={!classFilter} // Disable if no class is selected
+                        >
+                            <option value="">Filter by Section</option>
+                            {sections.map((section) => (
+                                <option key={section} value={section}>
+                                    {section}
+                                </option>
+                            ))}
+                        </select>
+                        <input
+                            type="text"
+                            placeholder="Search"
+                            value={searchText}
+                            onChange={(e) => setSearchText(e.target.value)}
+                            className="p-2 border rounded w-full sm:w-auto" // Full width on small screens, auto width on medium+ screens
+                        />
+                        <button
+                            onClick={() => {
+                                setClassFilter('');
+                                setSectionFilter('');
+                                setSearchText('');
+                            }}
+                            className="p-2 bg-gray-200 rounded hover:bg-gray-300"
+                        >
+                            Clear Filters
+                        </button>
+                    </div>
 
 
 

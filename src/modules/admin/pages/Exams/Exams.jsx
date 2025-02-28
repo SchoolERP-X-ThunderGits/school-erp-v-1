@@ -109,6 +109,8 @@ const Exams = () => {
                     :
 
                     <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+                      {  examsList.length == 0 ?
+                        <p style={{ textAlign: 'center', margin: 10 }}>No exams found</p> :
                         <table className="min-w-full table-auto">
                             <thead>
                                 <tr className="bg-gray-100 text-gray-600">
@@ -141,7 +143,7 @@ const Exams = () => {
                                     </tr>
                                 ))}
                             </tbody>
-                        </table>
+                        </table>}
                     </div>
             }
 

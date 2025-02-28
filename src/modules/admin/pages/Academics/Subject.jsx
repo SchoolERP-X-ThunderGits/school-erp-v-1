@@ -6,7 +6,7 @@ import Loader from '../../../../components/Loader';
 import { showToast } from '../../../../components/Toast';
 
 const Subject = () => {
-    const [classList, setClassList] = useState([]);
+    const [subjectList, setSubjectList] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [newSubjectName, setNewSubjectName] = useState('');
     const [editId, setEditId] = useState('');
@@ -25,7 +25,7 @@ const Subject = () => {
             const result = await getService(apiName.subject); // API endpoint (e.g. '/posts')
             setEditMode(false);
             setEditId('');
-            setClassList(result);
+            setSubjectList(result);
             setNewSubjectName('');
             setShowModal(false);
             setLoading(false);
@@ -93,7 +93,7 @@ const Subject = () => {
             <div className="mb-6 flex justify-between items-center">
                 <h1 className="text-2xl font-semibold text-gray-800">Subject List</h1>
                 <button
-                    onClick={() => {setShowModal(true),setNewSubjectName('')}}
+                    onClick={() => { setShowModal(true), setNewSubjectName('') }}
                     className="flex items-center px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
                 >
                     <FaPlus className="mr-2" /> Add Subject
@@ -104,35 +104,41 @@ const Subject = () => {
 
                 loading ? <Loader /> :
                     <div className="overflow-x-auto bg-white shadow-md rounded-lg">
-                        <table className="min-w-full table-auto">
-                            <thead>
-                                <tr className="bg-gray-100 text-gray-600">
-                                    <th className="py-3 px-6 text-left text-sm font-semibold">Subject Name</th>
-                                    <th className="py-3 px-6 text-left text-sm font-semibold">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {classList.map((classItem) => (
-                                    <tr key={classItem.id} className="border-b hover:bg-gray-50 transition duration-200">
-                                        <td className="py-3 px-6 text-sm text-gray-800">{classItem.name}</td>
-                                        <td className="py-3 px-6 flex space-x-4">
-                                            <button
-                                                onClick={() => handleEdit(classItem)}
-                                                className="text-blue-500 hover:text-blue-700 transition duration-200"
-                                            >
-                                                <FaEdit />
-                                            </button>
-                                            <button
-                                                onClick={() => handleDelete(classItem._id)} // Pass subject ID to delete
-                                                className="text-red-500 hover:text-red-700 transition duration-200"
-                                            >
-                                                <FaTrash />
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                        {
+
+                            subjectList.length == 0 ?
+                                <p style={{ textAlign: 'center', margin: 10 }}>No Subject found</p> :
+
+                                <table className="min-w-full table-auto">
+                                    <thead>
+                                        <tr className="bg-gray-100 text-gray-600">
+                                            <th className="py-3 px-6 text-left text-sm font-semibold">Subject Name</th>
+                                            <th className="py-3 px-6 text-left text-sm font-semibold">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {subjectList.map((subjectItem) => (
+                                            <tr key={subjectItem.id} className="border-b hover:bg-gray-50 transition duration-200">
+                                                <td className="py-3 px-6 text-sm text-gray-800">{subjectItem.name}</td>
+                                                <td className="py-3 px-6 flex space-x-4">
+                                                    <button
+                                                        onClick={() => handleEdit(subjectItem)}
+                                                        className="text-blue-500 hover:text-blue-700 transition duration-200"
+                                                    >
+                                                        <FaEdit />
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleDelete(subjectItem._id)} // Pass subject ID to delete
+                                                        className="text-red-500 hover:text-red-700 transition duration-200"
+                                                    >
+                                                        <FaTrash />
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                        }
                     </div>
             }
 

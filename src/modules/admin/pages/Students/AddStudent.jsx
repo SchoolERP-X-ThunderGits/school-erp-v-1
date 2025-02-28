@@ -279,7 +279,7 @@ const AddStudent = () => {
       admission_Number: lastAdmissionNumber,
       date_Of_Admission: formData.date_Of_Admission != '' ? formData.date_Of_Admission.split('T')[0] : new Date().toISOString().split('T')[0]
     }));
-    if (!formData.first_Name || !formData.last_Name) {
+    if (!formData.first_Name || !formData.last_Name || !formData?.aadhar_number || !formData?.section || !formData?.session || !formData?.roll_Number || !formData?.class_Id || !formData?.gender || !formData?.permanent_Address || !formData?.date_Of_Birth || !formData?.contact_Number || !formData?.admission_Number || !formData?.date_Of_Admission || !formData?.father_Name || !formData?.mother_Name || !formData?.student_Photo  || !formData?.category  || !formData?.feeStructures) {
       showToast("Please fill all the required fields.", 'error');
       return;
     }
@@ -291,6 +291,7 @@ const AddStudent = () => {
       // navigate('/admin/student')
       showToast("Student added successfully.", 'success');
     } catch (error) {
+      console.log('errorrrrr' ,error)
       showToast('Error submitting data', 'error');
     }
   };
@@ -593,7 +594,7 @@ const AddStudent = () => {
 
                 {/* Father's Occupation */}
                 <div className="mb-4">
-                  <label className="block text-gray-700">Father's Occupation *:</label>
+                  <label className="block text-gray-700">Father's Occupation :</label>
                   <input
                     type="text"
                     name="father_Occupation"
@@ -617,7 +618,7 @@ const AddStudent = () => {
 
                 {/* Mother's Occupation */}
                 <div className="mb-4">
-                  <label className="block text-gray-700">Mother's Occupation *:</label>
+                  <label className="block text-gray-700">Mother's Occupation :</label>
                   <input
                     type="text"
                     name="mother_Occupation"
@@ -674,7 +675,7 @@ const AddStudent = () => {
                 {
                   !editMode &&
                   <div className="mb-4 col-span-2">
-                    <label className="block text-gray-700">Student Photo:</label>
+                    <label className="block text-gray-700">Student Photo *:</label>
                     <input
                       type="file"
                       name="image"

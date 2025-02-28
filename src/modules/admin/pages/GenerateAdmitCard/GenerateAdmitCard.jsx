@@ -7,10 +7,12 @@ import { showToast } from '../../../../components/Toast';
 import { pdf, Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 import { saveAs } from 'file-saver';
 import moment from 'moment';
+import { useUserContext } from '../../../../context/UserContext';
 
 const GenerateAdmitCard = () => {
     const [classes, setClasses] = useState([]);
     const [exams, setExams] = useState([]);
+    const { school} = useUserContext();
     const sessionOptions = ["2023-2024", "2024-2025", "2025-2026"];
     const [selectedClass, setSelectedClass] = useState('');
     const [examSchedule, setExamSchedule] = useState([]);
@@ -98,7 +100,7 @@ const GenerateAdmitCard = () => {
 
     const handleGenerateAdmitCardForSelected = async () => {
         const selectedStudentData = students.filter(student => selectedStudents.includes(student._id));
-        console.log('selecsstedStudentDataselectedStudentData',selectedStudentData,examSchedule)
+        console.log('selecsstedStudentDataselectedStudentData', selectedStudentData, examSchedule)
         if (selectedStudentData.length === 0) {
             showToast('No students selected', 'error');
             return;
@@ -119,7 +121,7 @@ const GenerateAdmitCard = () => {
     const StudentAdmitCardPDF = ({ student, examSchedule }) => (
         <View style={styles.card}>
             <View style={styles.header}>
-                <Text style={styles.schoolName}>Vision Public School</Text>
+                <Text style={styles.schoolName}>{school?.name}</Text>
             </View>
 
             <View style={styles.infoContainer}>
@@ -141,7 +143,7 @@ const GenerateAdmitCard = () => {
             </View>
             <View style={styles.extraInfo}>
                 <Text style={styles.label}>Address:</Text>
-                <Text style={styles.value}>{student.permanent_Address || 'Not Available'}</Text>
+                <Text style={[styles.value, { width: '80%' }]}>{student.permanent_Address || 'Not Available'}</Text>
             </View>
             <View style={styles.extraInfo}>
                 <Text style={styles.label}>DOB:</Text>
@@ -251,11 +253,20 @@ const GenerateAdmitCard = () => {
                             setSelectedSection('');  // Reset selected section
                             setSelectedExam('');  // Reset selected exam
                             setSelectedSession('');  // Reset selected session
+                            setStudents([])
                         }}
                         className="px-6 py-3 bg-gray-200 text-black rounded-lg hover:bg-gray-300 transition duration-300"
                     >
                         Clear Filters
                     </button>
+                    {selectedStudents.length > 0 && (
+                        <button
+                            onClick={handleGenerateAdmitCardForSelected}
+                            className="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-gray-300 transition duration-300"
+                        >
+                            <FaDownload className="mr-2" /> Download Admit Cards
+                        </button>
+                    )}
                 </div>
 
                 <button
@@ -305,14 +316,7 @@ const GenerateAdmitCard = () => {
                 )
             )}
 
-            {selectedStudents.length > 0 && (
-                <button
-                    onClick={handleGenerateAdmitCardForSelected}
-                    className="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-200 mt-6"
-                >
-                    <FaDownload className="mr-2" /> Download Selected Admit Cards
-                </button>
-            )}
+
         </div>
     );
 };

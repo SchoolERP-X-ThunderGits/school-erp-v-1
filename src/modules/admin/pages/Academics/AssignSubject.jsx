@@ -52,7 +52,7 @@ const AssignSubject = () => {
         try {
             const result = await getService(apiName.subject); // API endpoint for subjects
             setSubjectList(result);
-           
+
         } catch (error) {
             setLoading(false);
         }
@@ -85,7 +85,7 @@ const AssignSubject = () => {
         if (editMode) {
             try {
                 const response = await putService(`${apiName.assignSubject}/${editId}`, body);
-                showToast("Subject updated successfully.",'success');
+                showToast("Subject updated successfully.", 'success');
                 getAssignList();
             } catch (error) {
                 console.error('Error posting data:', error);
@@ -93,8 +93,8 @@ const AssignSubject = () => {
         } else {
             try {
                 const response = await postService(apiName.assignSubject, body);
-                console.log('lbllbcbc',response,body)
-                showToast("Subject assign successfully.",'success');
+                console.log('lbllbcbc', response, body)
+                showToast("Subject assign successfully.", 'success');
                 getAssignList();
             } catch (error) {
                 console.error('Error posting data:', error);
@@ -128,9 +128,9 @@ const AssignSubject = () => {
         <div className="container mx-auto p-4">
             {/* Add Subject Button */}
             <div className="mb-6 flex justify-between items-center">
-                <h1 className="text-2xl font-semibold text-gray-800">Assign List</h1>
+                <h1 className="text-2xl font-semibold text-gray-800">Assign Subject List</h1>
                 <button
-                    onClick={() => {setShowModal(true),setSelectedClass(''),setSelectedSubjects([])}}
+                    onClick={() => { setShowModal(true), setSelectedClass(''), setSelectedSubjects([]) }}
                     className="flex items-center px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
                 >
                     <FaPlus className="mr-2" /> Assign Subject
@@ -138,41 +138,43 @@ const AssignSubject = () => {
             </div>
             {
 
-loading?<Loader/>:
-            <div className="overflow-x-auto bg-white shadow-md rounded-lg">
-                <table className="min-w-full table-auto">
-                    <thead>
-                        <tr className="bg-gray-100 text-gray-600">
-                            <th className="py-3 px-6 text-left text-sm font-semibold">Class Name</th>
-                            <th className="py-3 px-6 text-left text-sm font-semibold">Subjects Name</th>
-                            <th className="py-3 px-6 text-left text-sm font-semibold">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {assignList.map((subject) => (
-                            <tr key={subject.id} className="border-b hover:bg-gray-50 transition duration-200">
-                                <td className="py-3 px-6 text-sm text-gray-800">{subject?.class?.name}</td>
-                                <td className="py-3 px-6 text-sm text-gray-800">{subject?.subjects?.map(subject => subject.name)?.join(', ')}</td>
-                                <td className="py-3 px-6 flex space-x-4">
-                                    <button
-                                        onClick={() => handleEdit(subject)}
-                                        className="text-blue-500 hover:text-blue-700 transition duration-200"
-                                    >
-                                        <FaEdit />
-                                    </button>
-                                    <button
-                                        onClick={() => handleDelete(subject._id)} // Pass subject ID to delete
-                                        className="text-red-500 hover:text-red-700 transition duration-200"
-                                    >
-                                        <FaTrash />
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-}
+                loading ? <Loader /> :
+                    <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+                        {assignList.length == 0 ?
+                            <p style={{ textAlign: 'center', margin: 10 }}>No assign subject list found</p> :
+                            <table className="min-w-full table-auto">
+                                <thead>
+                                    <tr className="bg-gray-100 text-gray-600">
+                                        <th className="py-3 px-6 text-left text-sm font-semibold">Class Name</th>
+                                        <th className="py-3 px-6 text-left text-sm font-semibold">Subjects Name</th>
+                                        <th className="py-3 px-6 text-left text-sm font-semibold">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {assignList.map((subject) => (
+                                        <tr key={subject.id} className="border-b hover:bg-gray-50 transition duration-200">
+                                            <td className="py-3 px-6 text-sm text-gray-800">{subject?.class?.name}</td>
+                                            <td className="py-3 px-6 text-sm text-gray-800">{subject?.subjects?.map(subject => subject.name)?.join(', ')}</td>
+                                            <td className="py-3 px-6 flex space-x-4">
+                                                <button
+                                                    onClick={() => handleEdit(subject)}
+                                                    className="text-blue-500 hover:text-blue-700 transition duration-200"
+                                                >
+                                                    <FaEdit />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDelete(subject._id)} // Pass subject ID to delete
+                                                    className="text-red-500 hover:text-red-700 transition duration-200"
+                                                >
+                                                    <FaTrash />
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>}
+                    </div>
+            }
             {/* Add Subject Modal */}
             {showModal && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -187,13 +189,13 @@ loading?<Loader/>:
                             >
                                 <option value="">Select a class</option>
                                 {classList.map((classItem) => (
-                                    <option  key={classItem._id} value={classItem._id}>
+                                    <option key={classItem._id} value={classItem._id}>
                                         {classItem.name}
                                     </option>
                                 ))}
                             </select>
                         </div>
-                        
+
                         <div className="mb-4">
                             <label className="block text-sm font-medium text-gray-600">Select Subjects</label>
                             <div className="space-y-2">

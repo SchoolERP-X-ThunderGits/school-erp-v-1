@@ -109,6 +109,8 @@ const FeeType = () => {
     :
 
             <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+                {feeTypeList.length == 0 ?
+                <p style={{ textAlign: 'center', margin: 10 }}>No fee type found</p> :
                 <table className="min-w-full table-auto">
                     <thead>
                         <tr className="bg-gray-100 text-gray-600">
@@ -142,7 +144,7 @@ const FeeType = () => {
                             </tr>
                         ))}
                     </tbody>
-                </table>
+                </table>}
             </div>
 }
 

@@ -23,6 +23,7 @@ import ExamSchedule from './modules/admin/pages/Exams/ExamSchedule';
 import StudentDetails from './modules/admin/pages/Students/StudentDetails';
 import FeeReceipt from './modules/admin/pages/Fees/FeesReceipt';
 import GenerateDemandSlip from './modules/admin/pages/Fees/GenerateDemandSlip';
+import { UserProvider } from './context/UserContext';
 function App() {
   const [loading, setLoading] = useState(true);
   const { pathname } = useLocation();
@@ -43,40 +44,42 @@ function App() {
       if (pathname === '/' || pathname === '/admin') {
         navigate('/admin/home');
       }
-    } 
+    }
   }, [pathname, navigate]);
 
   return loading ? (
     <Loader />
   ) : (
-    <Routes>
-      {/* Onboarding Page (not wrapped in DefaultLayout) */}
-      <Route path="/" element={<Onboarding />} />
+    <UserProvider>
+      <Routes>
+        {/* Onboarding Page (not wrapped in DefaultLayout) */}
+        <Route path="/" element={<Onboarding />} />
 
-      {/* Admin Section (wrapped in DefaultLayout) */}
-      <Route path="/admin" element={<AdminSignIn />} />
-      <Route path="/admin/home" element={<DefaultLayout><AdminHome /></DefaultLayout>} />
-      <Route path="/admin/student" element={<DefaultLayout><Students /></DefaultLayout>} />
-      <Route path="/admin/add-student" element={<DefaultLayout><AddStudent /></DefaultLayout>} />
-      <Route path="/admin/student/student-details/:studentId" element={<DefaultLayout><StudentDetails /></DefaultLayout>} />
-      <Route path="/admin/edit-student/:id" element={<DefaultLayout><EditStudent /></DefaultLayout>} />
-      <Route path="/admin/student-id-card" element={<DefaultLayout><StudentIDCard /></DefaultLayout>} />
-      <Route path="/admin/find-student" element={<DefaultLayout><FindStudent /></DefaultLayout>} />
-      <Route path="/admin/fee-structure" element={<DefaultLayout><FeeStructure /></DefaultLayout>} />
-      <Route path="/admin/fee-type" element={<DefaultLayout><FeeType /></DefaultLayout>} />
-      <Route path="/admin/fee-receipt/:paymentId" element={<DefaultLayout><FeeReceipt /></DefaultLayout>} />
-      <Route path="/admin/class" element={<DefaultLayout><Class /></DefaultLayout>} />
-      <Route path="/admin/exams" element={<DefaultLayout><Exams /></DefaultLayout>} />
-      <Route path="/admin/exam-schedule" element={<DefaultLayout><ExamSchedule /></DefaultLayout>} />
-      <Route path="/admin/generate-admit-card" element={<DefaultLayout><GenerateAdmitCard /></DefaultLayout>} />
-      <Route path="/admin/generate-demand-slip" element={<DefaultLayout><GenerateDemandSlip /></DefaultLayout>} />
-      <Route path="/admin/subject" element={<DefaultLayout><Subject /></DefaultLayout>} />
-      <Route path="/admin/assign-subject" element={<DefaultLayout><AssignSubject /></DefaultLayout>} />
+        {/* Admin Section (wrapped in DefaultLayout) */}
+        <Route path="/admin" element={<AdminSignIn />} />
+        <Route path="/admin/home" element={<DefaultLayout><AdminHome /></DefaultLayout>} />
+        <Route path="/admin/student" element={<DefaultLayout><Students /></DefaultLayout>} />
+        <Route path="/admin/add-student" element={<DefaultLayout><AddStudent /></DefaultLayout>} />
+        <Route path="/admin/student/student-details/:studentId" element={<DefaultLayout><StudentDetails /></DefaultLayout>} />
+        <Route path="/admin/edit-student/:id" element={<DefaultLayout><EditStudent /></DefaultLayout>} />
+        <Route path="/admin/student-id-card" element={<DefaultLayout><StudentIDCard /></DefaultLayout>} />
+        <Route path="/admin/find-student" element={<DefaultLayout><FindStudent /></DefaultLayout>} />
+        <Route path="/admin/fee-structure" element={<DefaultLayout><FeeStructure /></DefaultLayout>} />
+        <Route path="/admin/fee-type" element={<DefaultLayout><FeeType /></DefaultLayout>} />
+        <Route path="/admin/fee-receipt/:paymentId" element={<DefaultLayout><FeeReceipt /></DefaultLayout>} />
+        <Route path="/admin/class" element={<DefaultLayout><Class /></DefaultLayout>} />
+        <Route path="/admin/exams" element={<DefaultLayout><Exams /></DefaultLayout>} />
+        <Route path="/admin/exam-schedule" element={<DefaultLayout><ExamSchedule /></DefaultLayout>} />
+        <Route path="/admin/generate-admit-card" element={<DefaultLayout><GenerateAdmitCard /></DefaultLayout>} />
+        <Route path="/admin/generate-demand-slip" element={<DefaultLayout><GenerateDemandSlip /></DefaultLayout>} />
+        <Route path="/admin/subject" element={<DefaultLayout><Subject /></DefaultLayout>} />
+        <Route path="/admin/assign-subject" element={<DefaultLayout><AssignSubject /></DefaultLayout>} />
 
-      {/* Parent Section (not wrapped in DefaultLayout) */}
-      <Route path="/parent" element={<ParentSignIn />} />
-      <Route path="/parent/home" element={<ParentHome />} />
-    </Routes>
+        {/* Parent Section (not wrapped in DefaultLayout) */}
+        <Route path="/parent" element={<ParentSignIn />} />
+        <Route path="/parent/home" element={<ParentHome />} />
+      </Routes>
+    </UserProvider>
   );
 }
 

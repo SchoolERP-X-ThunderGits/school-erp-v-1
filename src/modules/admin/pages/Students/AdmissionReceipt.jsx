@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import apiName from "../../../../constants/ApiName";
 import { getService } from "../../../../constants/Service";
+import { useUserContext } from "../../../../context/UserContext";
 
 const AdmissionReceipt = ({ studentData, setRegistrationCompleted }) => {
   const [className, setClassName] = useState("");
   const [formattedDateOfAdmission, setFormattedDateOfAdmission] = useState("");
   const [formattedDateOfBirth, setFormattedDateOfBirth] = useState("");
-
+  const { school} = useUserContext();
   const fetchClassName = async () => {
     try {
       const result = await getService(`${apiName.getClassById}/${studentData.class_Id}`); // Get Classes API
@@ -39,7 +40,7 @@ const AdmissionReceipt = ({ studentData, setRegistrationCompleted }) => {
   };
 
   return (
-    <div className="no-scrollbar admission-receipt">
+    <div className="admission-receipt">
       <div className="flex gap-4 justify-center header-to-hide">
         <Link to="/admin/add-student" reloadDocument>
           <button
@@ -66,9 +67,9 @@ const AdmissionReceipt = ({ studentData, setRegistrationCompleted }) => {
           className="school-logo-adm-res"
         />
         <div className="school-details">
-          <h1 className="school-name-adm-res">Vision Public School</h1>
+          <h1 className="school-name-adm-res">{school?.name}</h1>
           <div className="school-address">
-            <p>Amra Talav, Sasaram ( Rohtas )</p>
+            <p>{school?.address}</p>
           </div>
         </div>
         <img
@@ -227,10 +228,6 @@ const AdmissionReceipt = ({ studentData, setRegistrationCompleted }) => {
             font-size: 12pt;
           }
 
-          /* Ensuring all content is visible when printing */
-          .no-scrollbar {
-            visibility: visible !important;
-          }
         }
       `}</style>
     </div>

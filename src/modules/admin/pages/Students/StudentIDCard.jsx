@@ -8,6 +8,7 @@ import Loader from '../../../../components/Loader';
 import moment from 'moment';
 import { getService } from '../../../../constants/Service';
 import sign from '../../../../assets/Images/sign.png'
+import { useUserContext } from '../../../../context/UserContext';
 // Template Modal Component
 const TemplateModal = ({ open, onClose, onSelectTemplate, selectedTemplate }) => {
     return (
@@ -78,6 +79,7 @@ const StudentIDCard = () => {
     const [classFilter, setClassFilter] = useState('');
     const [sectionFilter, setSectionFilter] = useState('');
     const [selectedStudents, setSelectedStudents] = useState([]);
+    const { school} = useUserContext();
     const [searchText, setSearchText] = useState('');
     const [templateModalOpen, setTemplateModalOpen] = useState(false); // Modal visibility
     const [selectedTemplate, setSelectedTemplate] = useState(); // Default to portrait template
@@ -164,46 +166,48 @@ const StudentIDCard = () => {
         return (
             <div className="container mx-auto p-4">
                 <div className="overflow-x-auto bg-white shadow-md rounded-lg">
-                    <table className="min-w-full table-auto">
-                        <thead>
-                            <tr className="bg-gray-100 text-gray-600">
-                                <th className="py-3 px-6 text-left text-sm font-semibold">
-                                    <input
-                                        type="checkbox"
-                                        checked={isAllSelected}
-                                        onChange={handleSelectAll}
-                                        className="form-checkbox"
-                                    />
-                                </th>
-                                <th className="py-3 px-6 text-left text-sm font-semibold">Admission Number</th>
-                                <th className="py-3 px-6 text-left text-sm font-semibold">Roll Number</th>
-                                <th className="py-3 px-6 text-left text-sm font-semibold">First Name</th>
-                                <th className="py-3 px-6 text-left text-sm font-semibold">Last Name</th>
-                                <th className="py-3 px-6 text-left text-sm font-semibold">Class</th>
-                                <th className="py-3 px-6 text-left text-sm font-semibold">Section</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {students.map((student) => (
-                                <tr key={student._id} className="border-b hover:bg-gray-50 transition duration-200">
-                                    <td className="px-4 py-2 text-sm text-gray-800">
+                    {students.length == 0 ?
+                        <p style={{ textAlign: 'center', margin: 10 }}>No students found</p> :
+                        <table className="min-w-full table-auto">
+                            <thead>
+                                <tr className="bg-gray-100 text-gray-600">
+                                    <th className="py-3 px-6 text-left text-sm font-semibold">
                                         <input
                                             type="checkbox"
-                                            checked={selectedStudents.includes(student._id)}
-                                            onChange={(e) => handleStudentSelect(e, student._id)}
+                                            checked={isAllSelected}
+                                            onChange={handleSelectAll}
                                             className="form-checkbox"
                                         />
-                                    </td>
-                                    <td className="px-4 py-2 text-sm text-gray-800">{student?.admission_Number}</td>
-                                    <td className="px-4 py-2 text-sm text-gray-800">{student?.roll_Number}</td>
-                                    <td className="px-4 py-2 text-sm text-gray-800">{student?.first_Name}</td>
-                                    <td className="px-4 py-2 text-sm text-gray-800">{student?.last_Name}</td>
-                                    <td className="px-4 py-2 text-sm text-gray-800">{student?.class_Id?.name}</td>
-                                    <td className="px-4 py-2 text-sm text-gray-800">{student?.section}</td>
+                                    </th>
+                                    <th className="py-3 px-6 text-left text-sm font-semibold">Admission Number</th>
+                                    <th className="py-3 px-6 text-left text-sm font-semibold">Roll Number</th>
+                                    <th className="py-3 px-6 text-left text-sm font-semibold">First Name</th>
+                                    <th className="py-3 px-6 text-left text-sm font-semibold">Last Name</th>
+                                    <th className="py-3 px-6 text-left text-sm font-semibold">Class</th>
+                                    <th className="py-3 px-6 text-left text-sm font-semibold">Section</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {students.map((student) => (
+                                    <tr key={student._id} className="border-b hover:bg-gray-50 transition duration-200">
+                                        <td className="px-4 py-2 text-sm text-gray-800">
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedStudents.includes(student._id)}
+                                                onChange={(e) => handleStudentSelect(e, student._id)}
+                                                className="form-checkbox"
+                                            />
+                                        </td>
+                                        <td className="px-4 py-2 text-sm text-gray-800">{student?.admission_Number}</td>
+                                        <td className="px-4 py-2 text-sm text-gray-800">{student?.roll_Number}</td>
+                                        <td className="px-4 py-2 text-sm text-gray-800">{student?.first_Name}</td>
+                                        <td className="px-4 py-2 text-sm text-gray-800">{student?.last_Name}</td>
+                                        <td className="px-4 py-2 text-sm text-gray-800">{student?.class_Id?.name}</td>
+                                        <td className="px-4 py-2 text-sm text-gray-800">{student?.section}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>}
                 </div>
             </div>
         );
@@ -230,8 +234,8 @@ const StudentIDCard = () => {
                                 <Image style={{ width: 50, height: 50, objectFit: 'cover' }} src={'https://res.cloudinary.com/dttmlghjm/image/upload/v1714852409/logo-removebg-preview_as5e3l.png'} />
                                 <View style={{ flexDirection: 'column', marginTop: selectedTemplate == 'landscape' ? 0 : 10 }}>
 
-                                    <Text style={[styles.schoolName, { fontSize: selectedTemplate === 'portrait' ? 18 : 28, }]}>Vision Public School</Text>
-                                    <Text style={{ fontSize: 12, fontFamily: 'RobotoRI', width: '60%', textAlign: 'center' }}>Jakhar, Samastipur, Bihar , India - 303904</Text>
+                                    <Text style={[styles.schoolName, { fontSize: selectedTemplate === 'portrait' ? 18 : 28, }]}>{school?.name}</Text>
+                                    <Text style={{ fontSize: 12, fontFamily: 'RobotoRI', width: '60%', textAlign: 'center' }}>{school?.address}</Text>
                                 </View>
                                 <Image style={{ width: 50, height: 50, objectFit: 'cover' }} src={'https://res.cloudinary.com/dttmlghjm/image/upload/v1715728995/ssps_scurhe.png'} />
                             </View>
@@ -358,29 +362,27 @@ const StudentIDCard = () => {
                                 setClassFilter('');
                                 setSectionFilter('');
                                 setSearchText('');
+                                setStudents([])
                             }}
                             className="px-6 py-3 bg-gray-200 text-black rounded-lg hover:bg-gray-300 transition duration-300"
                         >
                             Clear Filters
                         </button>
-
+                        {selectedStudents.length > 0 && (
+                            <button
+                                onClick={generateMultipleIdCardPdf}
+                                className="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-gray-300 transition duration-300"
+                            >
+                                <FaDownload className="mr-2" /> Download ID Cards
+                            </button>
+                        )}
                         {/* Select Template Button */}
 
                     </div>
 
-                    {/* Student List */}
-                    {students.length !== 0 && (
-                        <div className="mt-6">{renderStudentList()}</div>
-                    )}
+                    <div className="mt-6">{renderStudentList()}</div>
 
-                    {selectedStudents.length > 0 && (
-                        <button
-                            onClick={generateMultipleIdCardPdf}
-                            className="px-6 py-3 mt-4 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300"
-                        >
-                            <FaDownload className="mr-2" /> Download Selected ID Cards
-                        </button>
-                    )}
+
                 </div>
             )}
 

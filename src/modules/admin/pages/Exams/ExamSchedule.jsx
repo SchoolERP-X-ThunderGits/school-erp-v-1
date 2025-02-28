@@ -238,6 +238,8 @@ const ExamSchedule = () => {
             <div className="mt-6 overflow-x-auto">
                 <h2 className="text-xl font-semibold text-gray-800">Scheduled Exams</h2>
                 <div className="overflow-x-auto bg-white shadow-md rounded-lg mt-4">
+                {examSchedules.length == 0 ?
+                <p style={{ textAlign: 'center', margin: 10 }}>No exams schedule found</p> :
                     <table className="min-w-full table-auto">
                         <thead>
                             <tr className="bg-gray-100 text-gray-600">
@@ -257,7 +259,7 @@ const ExamSchedule = () => {
                                 </tr>
                             ))}
                         </tbody>
-                    </table>
+                    </table>}
                 </div>
             </div>
         </div>

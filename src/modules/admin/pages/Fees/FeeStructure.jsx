@@ -190,6 +190,8 @@ const FeeStructure = () => {
                 <Loader /> // Show loading spinner if data is being fetched
             ) : (
                 <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+                    {feeStructures.length == 0 ?
+                    <p style={{ textAlign: 'center', margin: 10 }}>No fee structures found</p> :
                     <table className="min-w-full table-auto">
                         <thead>
                             <tr className="bg-gray-100 text-gray-600">
@@ -256,7 +258,7 @@ const FeeStructure = () => {
                             ))}
                         </tbody>
 
-                    </table>
+                    </table>}
                 </div>
             )}
 

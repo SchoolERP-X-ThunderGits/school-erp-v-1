@@ -3,14 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import apiName from '../../../../constants/ApiName';
 import { postService } from '../../../../constants/Service';
 import { showToast } from '../../../../components/Toast';
-
+import {useUserContext} from '../../../../context/UserContext'
 const SignIn = () => {
   const navigate = useNavigate();
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-
+  const { setSchoolData, logout } = useUserContext();
   const handleLogin = async () => {
     if (!username || !password) {
       showToast('All fields are required', 'error');
@@ -25,10 +25,11 @@ const SignIn = () => {
   
     try {
       const response = await postService(apiName.adminLogin, body);
-      console.log('response:', response);  // Ensure the response has the token
+      console.log('response:111', response);  // Ensure the response has the token
   
       if (response.token) {
         sessionStorage.setItem("token", response.token); // Save token to sessionStorage
+        setSchoolData(response.tenant);
         showToast("Login successfully.", 'success');
         navigate("/admin/home");
       } else {
