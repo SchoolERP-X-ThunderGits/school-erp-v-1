@@ -12,7 +12,7 @@ import { useUserContext } from '../../../../context/UserContext';
 const GenerateAdmitCard = () => {
     const [classes, setClasses] = useState([]);
     const [exams, setExams] = useState([]);
-    const { school} = useUserContext();
+    const { school } = useUserContext();
     const sessionOptions = ["2023-2024", "2024-2025", "2025-2026"];
     const [selectedClass, setSelectedClass] = useState('');
     const [examSchedule, setExamSchedule] = useState([]);
@@ -110,7 +110,52 @@ const GenerateAdmitCard = () => {
             <Document>
                 {selectedStudentData.map((student) => (
                     <Page size="A4" style={styles.page} key={student._id}>
-                        <StudentAdmitCardPDF student={student} examSchedule={examSchedule} />
+                        <View style={[styles.header, { flexDirection: 'row', justifyContent: 'space-between',borderBottomWidth:1,borderBottomColor:'black',paddingBottom:10 }]}>
+                            <View>
+                                <Image style={{ width: 50, height: 50 }} src={school?.logo} />
+                            </View>
+                            <View style={{alignItems:'center',justifyContent:'center'}}>
+
+                                <Text style={styles.title}>{school?.name}</Text>
+                                <Text style={{fontFamily:'RobotoR',fontSize:14,marginTop:5}}>{school?.address}</Text>
+                                <Text style={{fontFamily:'RobotoR',fontSize:14}}>{examSchedule[0]?.examName?.name}, {examSchedule[0]?.examName?.session}</Text>
+                            </View>
+                            <View>
+                                <Image style={{ width: 50, height: 50 }} src={school?.logo} />
+                            </View>
+                        </View>
+                        {console.log('studentstudent',student)}
+                        <View style={{flexDirection:'row',justifyContent:'space-around',marginVertical:10}}>
+                            <View>
+                                
+                            <Text style={styles.lable}>Roll Number:   <Text style={styles.bold}>{student.roll_Number}</Text></Text>
+                            <Text style={[styles.lable,{marginVertical:5}]}>Name:    <Text style={styles.bold}>{student.first_Name} {student?.last_Name}</Text></Text>
+                            <Text style={styles.lable}>Father's Name:    <Text style={styles.bold}>{student?.father_Name}</Text></Text>
+                            </View>
+                            <View>
+
+                            <Text style={styles.lable}>Admission Number:    <Text style={styles.bold}>{student.admission_Number}</Text></Text>
+                            <Text style={[styles.lable,{marginVertical:5}]}>Class:    <Text style={styles.bold}>{student.class_Id?.name}</Text></Text>
+                            <Text style={styles.lable}>D.O.B :    <Text style={styles.bold}>{moment(student.date_Of_Birth).format('DD/MM/YYYY')}</Text></Text>
+                            </View>
+                        </View>
+                        <View style={styles.table}>
+                            <View style={styles.tableRow}>
+                                <Text style={styles.tableCell}>Subject</Text>
+                                <Text style={styles.tableCell}>Date</Text>
+                                <Text style={styles.tableCell}>Start Time</Text>
+                                <Text style={styles.tableCell}>End Time</Text>
+                            </View>
+                            {examSchedule.map((exam, index) => (
+                                <View style={styles.tableRow} key={index}>
+                                    {console.log('examSchedule', exam)}
+                                    <Text style={styles.tableCell}>{exam.subject?.name}</Text>
+                                    <Text style={styles.tableCell}>{moment(exam.date).format('DD/MM/YYYY')}</Text>
+                                    <Text style={styles.tableCell}>{exam.startTime}</Text>
+                                    <Text style={styles.tableCell}>{exam.endTime}</Text>
+                                </View>
+                            ))}
+                        </View>
                     </Page>
                 ))}
             </Document>
@@ -322,121 +367,14 @@ const GenerateAdmitCard = () => {
 };
 
 const styles = StyleSheet.create({
-    page: {
-        backgroundColor: '#f4f4f4',
-        padding: 30,
-    },
-    card: {
-        width: '100%',
-        borderRadius: 10,
-        overflow: 'hidden',
-        backgroundColor: '#ffffff',
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-        padding: 30,
-        borderWidth: 2,
-        borderColor: '#0047AB',
-        height: '100%',
-    },
-    header: {
-        width: '100%',
-        backgroundColor: '#0047AB',
-        paddingVertical: 20,
-        textAlign: 'center',
-        borderTopLeftRadius: 10,
-        borderTopRightRadius: 10,
-    },
-    schoolName: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: '#fff',
-    },
-    infoContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingTop: 20,
-        paddingBottom: 20,
-        borderBottom: '2px solid #f0f0f0',
-    },
-    image: {
-        width: 100,
-        height: 100,
-        borderRadius: 50,
-        borderWidth: 4,
-        borderColor: '#1c2534',
-        marginRight: 20,
-    },
-    details: {
-        flex: 1,
-    },
-    studentName: {
-        fontSize: 22,
-        fontWeight: 'bold',
-        color: '#222',
-        marginBottom: 10,
-    },
-    studentId: {
-        fontSize: 16,
-        color: '#555',
-    },
-    studentRoll: {
-        fontSize: 16,
-        color: '#555',
-    },
-    extraInfo: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingVertical: 8,
-        borderBottom: '1px solid #f0f0f0',
-    },
-    label: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: '#0047AB',
-    },
-    value: {
-        fontSize: 16,
-        color: '#222',
-    },
-    examScheduleContainer: {
-        marginTop: 30,
-    },
-    examScheduleHeader: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: '#222',
-        marginBottom: 10,
-    },
-    examTable: {
-        width: '100%',
-        borderTopWidth: 1,
-        borderTopColor: '#ddd',
-        borderBottomWidth: 1,
-        borderBottomColor: '#ddd',
-    },
-    examTableRow: {
-        flexDirection: 'row',
-        borderBottomWidth: 1,
-        borderBottomColor: '#ddd',
-        paddingVertical: 10,
-    },
-    examTableHeader: {
-        flex: 1,
-        fontSize: 14,
-        fontWeight: 'bold',
-        textAlign: 'center',
-    },
-    examTableCell: {
-        flex: 1,
-        fontSize: 14,
-        textAlign: 'center',
-        paddingVertical: 6,
-    },
-    footer: {
-        marginTop: 30,
-        textAlign: 'center',
-        fontSize: 12,
-        color: '#555',
-    },
+    page: { padding: 20 },
+    header: { textAlign: 'center', marginBottom: 10 },
+    title: { fontSize: 18,fontFamily:'RobotoB'},
+    table: { display: 'table', width: '100%', borderStyle: 'solid', borderWidth: 1, marginTop: 10 },
+    tableRow: { flexDirection: 'row' },
+    tableCell: { flex: 1, borderWidth: 1, padding: 5, fontSize: 10 },
+    lable: {fontFamily:'RobotoR',fontSize:14 },
+    bold: {fontFamily:'RobotoB',fontSize:14 },
 });
 
 export default GenerateAdmitCard;

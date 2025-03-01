@@ -88,7 +88,7 @@ const ExamSchedule = () => {
             setSelectedExam('');
             setSubjectsList([]);
             setExamSchedules([]);
-            fetchExamSchedules('','')
+            fetchExamSchedules('', '')
             setShowModal(false);
         });
 
@@ -110,8 +110,8 @@ const ExamSchedule = () => {
             </div>
 
             {showModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg sm:max-w-md md:max-w-lg">
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+              <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg sm:max-w-md md:max-w-lg max-h-[80vh] overflow-y-auto">          
                         <div className="mb-4">
                             <label className="block text-sm font-medium text-gray-600">Select Exam</label>
                             <select
@@ -137,7 +137,7 @@ const ExamSchedule = () => {
                                 value={selectedClass}
                                 onChange={handleClassChange}
                                 className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm"
-                                disabled={!selectedExam} 
+                                disabled={!selectedExam}
                             >
                                 <option value="">Select Class</option>
                                 {classes?.map((cls) => (
@@ -238,28 +238,28 @@ const ExamSchedule = () => {
             <div className="mt-6 overflow-x-auto">
                 <h2 className="text-xl font-semibold text-gray-800">Scheduled Exams</h2>
                 <div className="overflow-x-auto bg-white shadow-md rounded-lg mt-4">
-                {examSchedules.length == 0 ?
-                <p style={{ textAlign: 'center', margin: 10 }}>No exams schedule found</p> :
-                    <table className="min-w-full table-auto">
-                        <thead>
-                            <tr className="bg-gray-100 text-gray-600">
-                                <th className="py-3 px-6 text-left text-sm font-semibold">Subject Name</th>
-                                <th className="py-3 px-6 text-left text-sm font-semibold">Exam Date</th>
-                                <th className="py-3 px-6 text-left text-sm font-semibold">Start Time</th>
-                                <th className="py-3 px-6 text-left text-sm font-semibold">End Time</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {examSchedules.map((schedule) => (
-                                <tr key={schedule._id} className="border-b hover:bg-gray-50 transition duration-200">
-                                    <td className="py-3 px-6 text-sm text-gray-800">{schedule.subject?.name}</td>
-                                    <td className="py-3 px-6">{new Date(schedule.date).toLocaleDateString()}</td>
-                                    <td className="py-3 px-6">{schedule.startTime}</td>
-                                    <td className="py-3 px-6">{schedule.endTime}</td>
+                    {examSchedules.length == 0 ?
+                        <p style={{ textAlign: 'center', margin: 10 }}>No exams schedule found</p> :
+                        <table className="min-w-full table-auto">
+                            <thead>
+                                <tr className="bg-gray-100 text-gray-600">
+                                    <th className="py-3 px-6 text-left text-sm font-semibold">Subject Name</th>
+                                    <th className="py-3 px-6 text-left text-sm font-semibold">Exam Date</th>
+                                    <th className="py-3 px-6 text-left text-sm font-semibold">Start Time</th>
+                                    <th className="py-3 px-6 text-left text-sm font-semibold">End Time</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>}
+                            </thead>
+                            <tbody>
+                                {examSchedules.map((schedule) => (
+                                    <tr key={schedule._id} className="border-b hover:bg-gray-50 transition duration-200">
+                                        <td className="py-3 px-6 text-sm text-gray-800">{schedule.subject?.name}</td>
+                                        <td className="py-3 px-6">{new Date(schedule.date).toLocaleDateString()}</td>
+                                        <td className="py-3 px-6">{schedule.startTime}</td>
+                                        <td className="py-3 px-6">{schedule.endTime}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>}
                 </div>
             </div>
         </div>
