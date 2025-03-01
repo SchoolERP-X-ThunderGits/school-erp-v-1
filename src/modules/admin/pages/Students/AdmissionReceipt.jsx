@@ -125,7 +125,6 @@ const AdmissionReceipt = ({ studentData, setRegistrationCompleted }) => {
           <tbody>
             <tr><td><strong>Permanent Address:</strong></td><td>{studentData.permanent_Address}</td></tr>
             <tr><td><strong>Email:</strong></td><td>{studentData.email}</td></tr>
-            <tr><td><strong>Religion:</strong></td><td>{studentData.religion}</td></tr>
             <tr><td><strong>Category:</strong></td><td>{studentData.category}</td></tr>
             <tr><td><strong>Blood Group:</strong></td><td>{studentData.blood_Group}</td></tr>
             <tr><td><strong>Father's Name:</strong></td><td>{studentData.father_Name}</td></tr>
