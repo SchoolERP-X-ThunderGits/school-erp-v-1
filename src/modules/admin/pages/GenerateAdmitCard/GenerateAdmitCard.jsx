@@ -310,7 +310,7 @@ const GenerateAdmitCard = () => {
                     {selectedStudents.length > 0 && (
                         <button
                             onClick={handleGenerateAdmitCardForSelected}
-                            className="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-gray-300 transition duration-300"
+                            className="ml-4 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-gray-300 transition duration-300"
                         >
                             <FaDownload className="mr-2" /> Download Admit Cards
                         </button>
