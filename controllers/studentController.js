@@ -6,29 +6,29 @@ exports.addStudent = async (req, res) => {
     const tenantId = req.user.tenantId; // Extract tenant ID from the logged-in user
 
     const {
-        admissionNumber,
-        rollNumber,
-        firstName,
-        lastName,
-        dateOfBirth,
+        admission_Number,
+        roll_Number,
+        first_Name,
+        last_Name,
+        date_Of_Birth,
         gender,
-        permanentAddress,
-        addressForCorrespondence,
-        contactNumber,
-        alternateContactNumber,
+        permanent_Address,
+        address_For_Correspondence,
+        contact_Number,
+        alternet_Contact_Number,
         email,
         nationality,
         religion,
         category,
-        dateOfAdmission,
-        bloodGroup,
-        fatherName,
-        fatherOccupation,
-        motherName,
-        motherOccupation,
-        studentPhoto,
-        aadharNumber,
-        dueAmount,
+        date_Of_Admission,
+        blood_Group,
+        father_Name,
+        father_Occupation,
+        mother_Name,
+        mother_Occupation,
+        student_Photo,
+        aadhar_number,
+        due_amount,
         class_Id,
         section,
         session,
@@ -39,29 +39,29 @@ exports.addStudent = async (req, res) => {
         // Create a new student with tenantId
         const newStudent = new Student({
             tenantId,
-            admissionNumber,
-            rollNumber,
-            firstName,
-            lastName,
-            dateOfBirth,
+            admission_Number,
+            roll_Number,
+            first_Name,
+            last_Name,
+            date_Of_Birth,
             gender,
-            permanentAddress,
-            addressForCorrespondence,
-            contactNumber,
-            alternateContactNumber,
+            permanent_Address,
+            address_For_Correspondence,
+            contact_Number,
+            alternet_Contact_Number,
             email,
             nationality,
             religion,
             category,
-            dateOfAdmission,
-            bloodGroup,
-            fatherName,
-            fatherOccupation,
-            motherName,
-            motherOccupation,
-            studentPhoto,
-            aadharNumber,
-            dueAmount,
+            date_Of_Admission,
+            blood_Group,
+            father_Name,
+            father_Occupation,
+            mother_Name,
+            mother_Occupation,
+            student_Photo,
+            aadhar_number,
+            due_amount,
             class_Id,
             section,
             session
@@ -173,10 +173,10 @@ exports.deleteStudent = async (req, res) => {
 
 exports.getStudentsByClass = async (req, res) => {
     const tenantId = req.user.tenantId;
-    const class_Id = req.params.class_Id;
+    const classId = req.params.classId;
     
     try {
-        const students = await Student.find({ class_Id, tenantId });
+        const students = await Student.find({ class_Id: classId, tenantId });
         res.status(200).json(students);
     } catch (error) {
         console.error('Error fetching students by class:', error);
@@ -185,11 +185,11 @@ exports.getStudentsByClass = async (req, res) => {
 };
 
 exports.getStudentsByClassAndSection = async (req, res) => {
-    const { class_Id, section } = req.params;
+    const { classId, section } = req.params;
     const tenantId = req.user.tenantId;
 
     try {
-        const students = await Student.find({ class_Id, section, tenantId });
+        const students = await Student.find({ class_Id: classId, section, tenantId });
         res.status(200).json(students);
     } catch (error) {
         console.error('Error fetching students by class and section:', error);
@@ -211,10 +211,10 @@ exports.getStudentsByQuery = async (req, res) => {
 };
 
 exports.getStudentsByClassOrSection = async (req, res) => {
-    const { class_Id, section } = req.params;
+    const { classId, section } = req.params;
     const tenantId = req.user.tenantId;
     try {
-        let query = { class_Id: class_Id,tenantId };
+        let query = { class_Id: classId, tenantId };
 
         // Check if section is provided
         if (section) {
@@ -222,7 +222,7 @@ exports.getStudentsByClassOrSection = async (req, res) => {
         }
 
         // Fetch students based on the constructed query
-        const students = await Student.find(query).populate('class_Id');;
+        const students = await Student.find(query).populate('class_Id');
 
         res.status(200).json(students);
     } catch (error) {
@@ -231,18 +231,17 @@ exports.getStudentsByClassOrSection = async (req, res) => {
     }
 };
 
-
 exports.getLastGeneratedAdmissionNumber = async (req, res) => {
     const tenantId = req.user.tenantId;
 
     try {
-        const lastStudent = await Student.findOne({ tenantId }).sort({ admissionNumber: -1 });
+        const lastStudent = await Student.findOne({ tenantId }).sort({ admission_Number: -1 });
 
         if (!lastStudent) {
             return res.status(200).json({ lastGeneratedAdmissionNumber: "AD-1000" });
         }
 
-        const numericPart = parseInt(lastStudent.admissionNumber.split("-")[1]);
+        const numericPart = parseInt(lastStudent.admission_Number.split("-")[1]);
         const nextAdmissionNumber = `AD-${numericPart + 1}`;
 
         res.status(200).json({ lastGeneratedAdmissionNumber: nextAdmissionNumber });
