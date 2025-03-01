@@ -286,9 +286,11 @@ const AddStudent = () => {
 
     try {
       const response = await postService(apiName.addStudent, formData);
-      console.log('reses222sponse', response)
+      console.log('reses222spon1111se', response)
       setRegistrationCompleted(true)
+
       // navigate('/admin/student')
+      resetForm()
       showToast("Student added successfully.", 'success');
     } catch (error) {
       console.log('errorrrrr' ,error)
