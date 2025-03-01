@@ -186,7 +186,7 @@ const FeeReceipt = () => {
                         <p>
                             <span className="text-bold text-center">NOTE:&nbsp;</span> This is a computer-generated bill and does not require physical signature.
                         </p>
-                        <div className="invoice-btns">
+                        <div className="invoice-btns header-to-hide">
                             <button type="button" className="button-29" onClick={() => window.print()}>
                                 <span>Print Bill</span>
                             </button>

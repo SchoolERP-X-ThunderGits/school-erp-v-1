@@ -88,6 +88,7 @@ const StudentDetails = () => {
             paymentMethod: "CASH",
             feePaid: feesData
         }
+        console.log('lvlbvlb',body)
 
         try {
             // Send the payment request to the server
