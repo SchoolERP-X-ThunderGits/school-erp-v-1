@@ -22,18 +22,7 @@ const GenerateAdmitCard = () => {
     const [students, setStudents] = useState([]);
     const [selectedStudents, setSelectedStudents] = useState([]);  // Track selected students
     const [loading, setLoading] = useState(false);
-    const Sections = [
-        { _id: 1, section: 'A' },
-        { _id: 2, section: 'B' },
-        { _id: 3, section: 'C' },
-        { _id: 4, section: 'D' },
-        { _id: 5, section: 'E' },
-        { _id: 6, section: 'F' },
-        { _id: 7, section: 'G' },
-        { _id: 8, section: 'H' },
-        { _id: 9, section: "I" },
-        { _id: 10, section: 'J' },
-    ];
+    const [sections, setSections] = useState([]);
 
     useEffect(() => {
         fetchInitialData();
@@ -95,6 +84,13 @@ const GenerateAdmitCard = () => {
             setSelectedStudents([]);
         } else {
             setSelectedStudents(students.map(student => student._id));
+        }
+    };
+
+    const fetchSectionsForClass = (classId) => {
+        const classSelected = classes.find(classItem => classItem._id === classId);
+        if (classSelected) {
+            setSections(classSelected.sections); // sections associated with the selected class
         }
     };
 
@@ -222,6 +218,8 @@ const GenerateAdmitCard = () => {
         </View>
     );
 
+
+
     return (
         <div className="container mx-auto p-4">
             <div className="mb-6">
@@ -232,7 +230,7 @@ const GenerateAdmitCard = () => {
                         <label className="block text-sm font-medium text-gray-600">Select Class</label>
                         <select
                             value={selectedClass}
-                            onChange={(e) => { setSelectedClass(e.target.value) }}
+                            onChange={(e) => { setSelectedClass(e.target.value),fetchSectionsForClass(e?.target?.value) }}
                             className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
                             <option value="">Class</option>
@@ -250,10 +248,13 @@ const GenerateAdmitCard = () => {
                             value={selectedSection}
                             onChange={(e) => setSelectedSection(e.target.value)}
                             className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            disabled={!selectedClass}
                         >
                             <option value="">Select Section</option>
-                            {Sections.map((section) => (
-                                <option key={section.id} value={section.id}>{section.section}</option>
+                            {sections.map((section) => (
+                                <option key={section} value={section}>
+                                    {section}
+                                </option>
                             ))}
                         </select>
                     </div>
@@ -264,6 +265,7 @@ const GenerateAdmitCard = () => {
                             value={selectedExam}
                             onChange={(e) => setSelectedExam(e.target.value)}
                             className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            disabled={!selectedSection}
                         >
                             <option value="">Select Exam</option>
                             {exams.map((exam) => (
@@ -280,6 +282,7 @@ const GenerateAdmitCard = () => {
                             value={selectedSession}
                             onChange={(e) => setSelectedSession(e.target.value)}
                             className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            disabled={!selectedExam}
                         >
                             <option value="">Select Session</option>
                             {sessionOptions.map((session, index) => (
