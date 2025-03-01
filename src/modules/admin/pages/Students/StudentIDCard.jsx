@@ -79,7 +79,7 @@ const StudentIDCard = () => {
     const [classFilter, setClassFilter] = useState('');
     const [sectionFilter, setSectionFilter] = useState('');
     const [selectedStudents, setSelectedStudents] = useState([]);
-    const { school} = useUserContext();
+    const { school } = useUserContext();
     const [searchText, setSearchText] = useState('');
     const [templateModalOpen, setTemplateModalOpen] = useState(false); // Modal visibility
     const [selectedTemplate, setSelectedTemplate] = useState(); // Default to portrait template
@@ -230,16 +230,22 @@ const StudentIDCard = () => {
                         </View>
                         <View style={[{ position: 'absolute', zIndex: -101, width: '100%', height: '100%' }]}>
                             {/* Header */}
-                            <View style={[styles.header, { marginTop: selectedTemplate == 'landscape' ? 10 : 0 }]}>
-                                <Image style={{ width: 50, height: 50, objectFit: 'cover' }} src={'https://res.cloudinary.com/dttmlghjm/image/upload/v1714852409/logo-removebg-preview_as5e3l.png'} />
-                                <View style={{ flexDirection: 'column', marginTop: selectedTemplate == 'landscape' ? 0 : 10 }}>
+                            <View style={{ flexDirection: 'row', marginTop: 10 }}>
+                                <View style={{ width: '20%', marginLeft: 10 }}>
 
-                                    <Text style={[styles.schoolName, { fontSize: selectedTemplate === 'portrait' ? 18 : 28, }]}>{school?.name}</Text>
-                                    <Text style={{ fontSize: 12, fontFamily: 'RobotoRI', width: '60%', textAlign: 'center' }}>{school?.address}</Text>
+                                    <Image style={{ width: 50, height: 50 }} src={school?.logo} />
                                 </View>
-                                <Image style={{ width: 50, height: 50, objectFit: 'cover' }} src={'https://res.cloudinary.com/dttmlghjm/image/upload/v1715728995/ssps_scurhe.png'} />
+                                <View style={{ justifyContent: 'center', alignItems: 'center', width: '60%' }}>
+
+                                    <Text style={styles.schoolName}>{school?.name}</Text>
+                                    <Text style={{ marginTop: 5, fontSize: 12, fontFamily: 'RobotoRI', textAlign: 'center' }}>{school?.address}</Text>
+                                </View>
+                                <View style={{ width: '20%' }}>
+
+                                    <Image style={{ width: 50, height: 50 }} src={school?.qrCodeUrl} />
+                                </View>
                             </View>
-                            <View style={{ height: 1, backgroundColor: 'black', width: '100%', marginBottom: 10 }}></View>
+                            <View style={{ height: 1, backgroundColor: 'black', width: '100%', marginTop:10 }}></View>
                             {/* Profile and Student Details Section */}
                             <View style={styles.body}>
                                 <View style={styles.profileSection}>
@@ -414,8 +420,9 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     schoolName: {
+        textAlign: 'center',
+        fontSize: 16,
         fontFamily: 'RobotoBI',
-        fontSize: 22,
         fontWeight: 'bold',
         color: '#a27d2a',
     },
