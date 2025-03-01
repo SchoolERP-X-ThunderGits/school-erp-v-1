@@ -67,6 +67,8 @@ const AddStudent = () => {
   }, []);
 
   const resetForm = () => {
+    fetchLastAdmissionNumber()
+    setImagePreview('')
     setFormData({
       admission_Number: '',
       roll_Number: '',
@@ -290,7 +292,6 @@ const AddStudent = () => {
       setRegistrationCompleted(true)
 
       // navigate('/admin/student')
-      resetForm()
       showToast("Student added successfully.", 'success');
     } catch (error) {
       console.log('errorrrrr' ,error)
@@ -310,7 +311,7 @@ const AddStudent = () => {
       {
         registrationCompleted ?
           <div className=''>
-            <AdmissionReceipt setRegistrationCompleted={setRegistrationCompleted} studentData={formData} />
+            <AdmissionReceipt resetForm={resetForm} setRegistrationCompleted={setRegistrationCompleted} studentData={formData} />
           </div>
           :
           <div>

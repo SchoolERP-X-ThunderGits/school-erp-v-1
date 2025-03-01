@@ -4,7 +4,7 @@ import apiName from "../../../../constants/ApiName";
 import { getService } from "../../../../constants/Service";
 import { useUserContext } from "../../../../context/UserContext";
 
-const AdmissionReceipt = ({ studentData, setRegistrationCompleted }) => {
+const AdmissionReceipt = ({ studentData, setRegistrationCompleted,resetForm }) => {
   const [className, setClassName] = useState("");
   const [formattedDateOfAdmission, setFormattedDateOfAdmission] = useState("");
   const [formattedDateOfBirth, setFormattedDateOfBirth] = useState("");
@@ -45,6 +45,7 @@ const AdmissionReceipt = ({ studentData, setRegistrationCompleted }) => {
         <Link to="/admin/add-student">
           <button
             onClick={() => {
+              resetForm()
               setRegistrationCompleted(false);
             }}
             className="flex items-center px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
