@@ -12,7 +12,7 @@ const FeeReceipt = () => {
     console.log('paymentIdkbvkbvb', paymentId)
     const [invoiceData, setInvoiceData] = useState(null);
     const history = useNavigate();
-    const { school} = useUserContext();
+    const { school } = useUserContext();
     const navigateToHome = () => {
         history('/admin/home');
     };
@@ -102,30 +102,30 @@ const FeeReceipt = () => {
                                     paymentMethod}</p>
                             </div>
                         </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center',alignSelf:'center' }}>
-    {/* Left side: Logo */}
-    <div className="invoice-head-top" style={{ display: 'flex', alignItems: 'center' }}>
-        <img
-            style={{ width: 50, height: 50 }}
-            src="https://vissionclasses.in/assets/vision-img/logo.jpeg"
-            alt="School Logo"
-        />
-    </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', alignSelf: 'center' }}>
+                            {/* Left side: Logo */}
+                            <div className="invoice-head-top" style={{ display: 'flex', alignItems: 'center' }}>
+                                <img
+                                    style={{ width: 50, height: 50 }}
+                                    src={school?.logo}
+                                    alt="School Logo"
+                                />
+                            </div>
 
-    {/* Centered Text: School Name */}
-    <p style={{ fontSize: '20px', fontFamily: 'RobotoB',fontWeight:'bold', whiteSpace: 'nowrap', flexGrow: 1, textAlign: 'center' ,marginLeft:10,marginRight:10}}>
-        Vision Public School
-    </p>
+                            {/* Centered Text: School Name */}
+                            <p style={{ fontSize: '20px', fontFamily: 'RobotoB', fontWeight: 'bold', whiteSpace: 'nowrap', flexGrow: 1, textAlign: 'center', marginLeft: 10, marginRight: 10 }}>
+                                {school?.name}
+                            </p>
 
-    {/* Right side: QR Logo */}
-    <div className="invoice-head-top" style={{ display: 'flex', alignItems: 'center' }}>
-        <img
-            style={{ width: 50, height: 50 }}
-            src="https://vissionclasses.in/assets/vision-img/logo.jpeg"
-            alt="School QR"
-        />
-    </div>
-</div>
+                            {/* Right side: QR Logo */}
+                            <div className="invoice-head-top" style={{ display: 'flex', alignItems: 'center' }}>
+                                <img
+                                    style={{ width: 50, height: 50 }}
+                                    src={school?.logo}
+                                    alt="School QR"
+                                />
+                            </div>
+                        </div>
 
 
 

@@ -62,18 +62,18 @@ const AdmissionReceipt = ({ studentData, setRegistrationCompleted }) => {
 
       <div className="school-info">
         <img
-          src="https://vissionclasses.in/assets/vision-img/logo.jpeg"
+          src={school?.logo}
           alt="School Logo"
           className="school-logo-adm-res"
         />
-        <div className="school-details">
+        <div style={{textAlign:'center'}}>
           <h1 className="school-name-adm-res">{school?.name}</h1>
           <div className="school-address">
             <p>{school?.address}</p>
           </div>
         </div>
         <img
-          src="https://vissionclasses.in/assets/vision-img/logo.jpeg"
+          src={school?.logo}
           alt="School QR"
           className="school-logo-adm-res"
         />
