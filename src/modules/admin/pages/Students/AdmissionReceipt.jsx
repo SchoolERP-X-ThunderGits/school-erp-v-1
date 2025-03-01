@@ -42,7 +42,7 @@ const AdmissionReceipt = ({ studentData, setRegistrationCompleted }) => {
   return (
     <div className="admission-receipt">
       <div className="flex gap-4 justify-center header-to-hide">
-        <Link to="/admin/add-student" reloadDocument>
+        <Link to="/admin/add-student">
           <button
             onClick={() => {
               setRegistrationCompleted(false);
