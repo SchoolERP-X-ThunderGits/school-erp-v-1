@@ -4,10 +4,10 @@ const router = express.Router();
 const paymentController = require('../controllers/paymentController');
 
 // ROUTE 1: Create Order API
-router.post('/order', paymentController.createOrder);
+// router.post('/order', paymentController.createOrder);
 
 // ROUTE 2: Verify Payment API
-router.post('/verify', paymentController.verifyPayment);
+// router.post('/verify', paymentController.verifyPayment);
 
 // ROUTE 3: Get Payment by ID
 router.get('/get/:id', paymentController.getPaymentById);

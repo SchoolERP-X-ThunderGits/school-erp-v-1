@@ -1,15 +1,15 @@
 // controllers/paymentController.js
-const Razorpay = require('razorpay');
+// const Razorpay = require('razorpay');
 const crypto = require('crypto');
 require('dotenv').config();
 const Payment = require("../models/payment");
 const StudentFeeProfile = require("../models/fees/studentFeeProfile");
 
 
-const razorpayInstance = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID,
-    key_secret: process.env.RAZORPAY_SECRET,
-});
+// const razorpayInstance = new Razorpay({
+//     key_id: process.env.RAZORPAY_KEY_ID,
+//     key_secret: process.env.RAZORPAY_SECRET,
+// });
 
 const handleError = (res, error, message = 'Internal Server Error', statusCode = 500) => {
     console.error(error);
