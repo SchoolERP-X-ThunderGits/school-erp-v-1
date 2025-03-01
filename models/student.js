@@ -8,23 +8,23 @@ const studentSchema = new mongoose.Schema({
     ref: 'Tenant', // Reference to Tenant model
     index: true // Improves query performance
   },
-  admissionNumber: {
+  admission_Number: {
     type: String,
     required: true
   },
-  rollNumber: {
+  roll_Number: {
     type: Number,
     required: true
   },
-  firstName: {
+  first_Name: {
     type: String,
     required: true
   },
-  lastName: {
+  last_Name: {
     type: String,
     required: true
   },
-  classId: {
+  class_Id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Class', // Reference to Class model
     required: true
@@ -36,7 +36,7 @@ const studentSchema = new mongoose.Schema({
     type: String, // Change to Date if required
     required: true
   },
-  dateOfBirth: {
+  date_Of_Birth: {
     type: Date,
     required: true
   },
@@ -45,18 +45,18 @@ const studentSchema = new mongoose.Schema({
     enum: ['Male', 'Female', 'Other'],
     required: true
   },
-  permanentAddress: {
+  permanent_Address: {
     type: String,
     required: true
   },
-  addressForCorrespondence: {
+  address_For_Correspondence: {
     type: String
   },
-  contactNumber: {
+  contact_Number: {
     type: String,
     required: true
   },
-  alternateContactNumber: {
+  alternet_Contact_Number: {
     type: String
   },
   email: {
@@ -73,35 +73,35 @@ const studentSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  dateOfAdmission: {
+  date_Of_Admission: {
     type: Date,
     required: true
   },
-  bloodGroup: {
+  blood_Group: {
     type: String
   },
-  fatherName: {
+  father_Name: {
     type: String,
     required: true
   },
-  fatherOccupation: {
+  father_Occupation: {
     type: String
   },
-  motherName: {
+  mother_Name: {
     type: String,
     required: true
   },
-  motherOccupation: {
+  mother_Occupation: {
     type: String
   },
-  studentPhoto: {
+  student_Photo: {
     type: String, // Assuming URL or base64-encoded image
     required: true
   },
-  aadharNumber: {
+  aadhar_number: {
     type: String
   },
-  dueAmount: {
+  due_amount: {
     type: Number
   }
 }, { timestamps: true });
