@@ -1,4 +1,5 @@
 const StudentFeeProfile = require('../models/fees/studentFeeProfile.js');
+const Payment = require('../models/payment.js');
 
 exports.getStudentFeeProfile = async (req, res) => {
     console.log("request received");
