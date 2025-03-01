@@ -29,7 +29,7 @@ exports.addStudent = async (req, res) => {
         studentPhoto,
         aadharNumber,
         dueAmount,
-        classId,
+        class_Id,
         section,
         session,
         feeStructures
@@ -62,7 +62,7 @@ exports.addStudent = async (req, res) => {
             studentPhoto,
             aadharNumber,
             dueAmount,
-            classId,
+            class_Id,
             section,
             session
         });
@@ -93,7 +93,7 @@ exports.getStudents = async (req, res) => {
         const tenantId = req.user.tenantId;
         
         // Fetch all students within the tenant
-        const students = await Student.find({ tenantId }).populate('classId');
+        const students = await Student.find({ tenantId }).populate('class_Id');
         res.status(200).json(students);
     } catch (error) {
         console.error('Error fetching students:', error);
@@ -107,7 +107,7 @@ exports.getStudentById = async (req, res) => {
         const tenantId = req.user.tenantId;
 
         // Fetch student by ID and tenantId
-        const student = await Student.findOne({ _id: studentId, tenantId }).populate('classId');
+        const student = await Student.findOne({ _id: studentId, tenantId }).populate('class_Id');
         if (!student) {
             return res.status(404).json({ message: 'Student not found or access denied' });
         }
@@ -173,10 +173,10 @@ exports.deleteStudent = async (req, res) => {
 
 exports.getStudentsByClass = async (req, res) => {
     const tenantId = req.user.tenantId;
-    const classId = req.params.classId;
+    const class_Id = req.params.class_Id;
     
     try {
-        const students = await Student.find({ classId, tenantId });
+        const students = await Student.find({ class_Id, tenantId });
         res.status(200).json(students);
     } catch (error) {
         console.error('Error fetching students by class:', error);
@@ -185,11 +185,11 @@ exports.getStudentsByClass = async (req, res) => {
 };
 
 exports.getStudentsByClassAndSection = async (req, res) => {
-    const { classId, section } = req.params;
+    const { class_Id, section } = req.params;
     const tenantId = req.user.tenantId;
 
     try {
-        const students = await Student.find({ classId, section, tenantId });
+        const students = await Student.find({ class_Id, section, tenantId });
         res.status(200).json(students);
     } catch (error) {
         console.error('Error fetching students by class and section:', error);
@@ -202,7 +202,7 @@ exports.getStudentsByQuery = async (req, res) => {
     const tenantId = req.user.tenantId;
 
     try {
-        const students = await Student.find({ ...query, tenantId }).populate('classId');
+        const students = await Student.find({ ...query, tenantId }).populate('class_Id');
         res.status(200).json(students);
     } catch (error) {
         console.error('Error fetching students by query:', error);
@@ -211,10 +211,10 @@ exports.getStudentsByQuery = async (req, res) => {
 };
 
 exports.getStudentsByClassOrSection = async (req, res) => {
-    const { classId, section } = req.params;
+    const { class_Id, section } = req.params;
     const tenantId = req.user.tenantId;
     try {
-        let query = { class_Id: classId,tenantId };
+        let query = { class_Id: class_Id,tenantId };
 
         // Check if section is provided
         if (section) {
