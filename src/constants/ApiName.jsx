@@ -29,6 +29,7 @@ const apiName = {
   deleteClass: 'class/delete',
   getSubjectByClass:'subject-class-mappings',
   getStudentByExam:'student/byClassOrSection',
+  getStudentFeeByClass:'student/fees/byClassOrSection',
   admitCardByClass:'admitcard/by-class-and-exam',
   collectFee:'payment/collect-fee',
   getPaymentById:'payment/get'

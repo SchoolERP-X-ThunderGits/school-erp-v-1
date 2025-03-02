@@ -13,13 +13,14 @@ const GenerateDemandSlip = () => {
     const [loading, setLoading] = useState(false);
     const [classes, setClasses] = useState([]); // Classes for dropdown
     const [sections, setSections] = useState([]); // Sections for dropdown based on selected class
-    const { school} = useUserContext();
+    const { school } = useUserContext();
     const [students, setStudents] = useState([]);
     const [selectedStudents, setSelectedStudents] = useState([]); // For tracking selected students
     const [classFilter, setClassFilter] = useState('');
     const [sectionFilter, setSectionFilter] = useState('');
     const [searchText, setSearchText] = useState('');
     const [selectAll, setSelectAll] = useState(false); // New state for "Select All" checkbox
+    const [feeDetails, setFeeDetails] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -62,6 +63,7 @@ const GenerateDemandSlip = () => {
     // Handle search button click
     const handleSearch = () => {
         fetchFilteredStudents();
+        getStudentFeeByClass()
     };
 
     // Fetch filtered students based on filters (Class, Section, and Search Text)
@@ -71,6 +73,18 @@ const GenerateDemandSlip = () => {
             const result = await getService(`${apiName.getStudentByExam}/${classFilter}/${sectionFilter}`);
             setStudents(result);
             setLoading(false);
+        } catch (error) {
+            showToast('Error fetching filtered students', 'error');
+        }
+    };
+    const getStudentFeeByClass = async () => {
+        try {
+            setLoading(true);
+            const result = await getService(`${apiName.getStudentFeeByClass}/${classFilter}/${sectionFilter}`);
+            setFeeDetails(result)
+            console.log('bckbkvkbv', result)
+            // setStudents(result);
+            // setLoading(false);
         } catch (error) {
             showToast('Error fetching filtered students', 'error');
         }
@@ -97,36 +111,48 @@ const GenerateDemandSlip = () => {
 
     // Generate PDF for all selected students
     const generateSelectedStudentsPdf = async () => {
-        const selectedStudentData = students.filter((student) =>
-            selectedStudents.includes(student._id)
+        const selectedStudentData = feeDetails.filter((student) =>
+            selectedStudents.includes(student.studentId)
         );
+
+        console.log('blvcl', selectedStudentData)
         const blob = await pdf(
             <Document>
                 {selectedStudentData.map((student) => (
-                    <Page key={student._id} size="A4" style={styles.page}>
+                    <Page key={student.studentId} size="A4" style={styles.page}>
                         <View style={styles.container}>
+                            {console.log('stfkskfskdfskudent', student)}
                             <View style={styles.header}>
                                 <Text style={styles.schoolName}>{school?.name}</Text>
                                 <Text style={styles.subHeader}>Fee Demand Slip</Text>
                             </View>
                             <View style={styles.detailsContainer}>
-                                <View style={styles.row}><Text style={styles.label}>SID:</Text><Text>{student.admission_Number}</Text></View>
-                                <View style={styles.row}><Text style={styles.label}>Name:</Text><Text>{student.first_Name} {student.last_Name}</Text></View>
-                                <View style={styles.row}><Text style={styles.label}>Father:</Text><Text>{student.father_Name}</Text></View>
-                                <View style={styles.row}><Text style={styles.label}>Mobile:</Text><Text>{student.mobile_Number}</Text></View>
-                                <View style={styles.row}><Text style={styles.label}>Class:</Text><Text>{student.class_Id?.name}</Text></View>
-                                <View style={styles.row}><Text style={styles.label}>Section:</Text><Text>{student.section}</Text></View>
-                                <View style={styles.row}><Text style={styles.label}>Date:</Text><Text>{moment().format('DD MMM YYYY')}</Text></View>
+                                <View style={styles.row}><Text style={styles.label}>SID:</Text><Text>{student.studentDetails?.admission_Number}</Text></View>
+                                <View style={styles.row}><Text style={styles.label}>Name:</Text><Text>{student?.studentDetails?.first_Name} {student?.studentDetails.last_Name}</Text></View>
+                                {
+                                    student?.studentDetails?.father_Name &&
+
+                                    <View style={styles.row}><Text style={styles.label}>Father:</Text><Text>{student?.studentDetails?.father_Name}</Text></View>
+                                }
+                                {
+                                    student?.studentDetails?.mobile_Number &&
+                                    <View style={styles.row}><Text style={styles.label}>Mobile:</Text><Text>{student?.studentDetails?.mobile_Number}</Text></View>
+                                }
+                                {
+                                    student?.studentDetails?.class_Id?.name &&
+
+                                    <View style={styles.row}><Text style={styles.label}>Class:</Text><Text>{student?.studentDetails?.class_Id?.name}</Text></View>
+                                }
+                                {
+                                    student?.studentDetails?.section &&
+
+                                    <View style={styles.row}><Text style={styles.label}>Section:</Text><Text>{student?.studentDetails?.section}</Text></View>
+                                }
                             </View>
                             <View style={styles.feeContainer}>
                                 <Text style={styles.feeHeader}>Due Months:</Text>
-                                <Text style={styles.months}>Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec, Jan, Feb, Mar</Text>
-                                <View style={styles.feeRow}><Text style={styles.feeLabel}>Transport Fee (Kasimabad):</Text><Text>5500</Text></View>
-                                <View style={styles.feeRow}><Text style={styles.feeLabel}>Total Fee Due:</Text><Text>5500</Text></View>
-                            </View>
-                            <View style={styles.reminder}>
-                                <Text>Rs. Five Thousand, Five Hundred only</Text>
-                                <Text>Kindly pay the fee before 15th of this month</Text>
+                                <Text style={styles.months}>{student?.dueMonths?.length == 0 ? 'No dues' : student?.dueMonths.join(", ")}</Text>
+                                <View style={styles.feeRow}><Text style={styles.feeLabel}>Total Fee Due:</Text><Text>{student?.totalFeesOverdue}</Text></View>
                             </View>
                             <View style={styles.footer}>
                                 <Image src="/school-stamp.png" style={styles.stamp} />
@@ -145,46 +171,46 @@ const GenerateDemandSlip = () => {
         return (
             <div className="container mx-auto p-4">
                 <div className="overflow-x-auto bg-white shadow-md rounded-lg">
-                {students.length == 0 ?
-                <p style={{ textAlign: 'center', margin: 10 }}>No students found</p> :
-                    <table className="min-w-full table-auto">
-                        <thead>
-                            <tr className="bg-gray-100 text-gray-600">
-                                <th className="py-3 px-6 text-left text-sm font-semibold">
-                                    <input
-                                        type="checkbox"
-                                        checked={selectAll}
-                                        onChange={toggleSelectAll}
-                                    />
-                                </th>
-                                <th className="py-3 px-6 text-left text-sm font-semibold">Admission Number</th>
-                                <th className="py-3 px-6 text-left text-sm font-semibold">Roll Number</th>
-                                <th className="py-3 px-6 text-left text-sm font-semibold">First Name</th>
-                                <th className="py-3 px-6 text-left text-sm font-semibold">Last Name</th>
-                                <th className="py-3 px-6 text-left text-sm font-semibold">Class</th>
-                                <th className="py-3 px-6 text-left text-sm font-semibold">Section</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {students.map((student) => (
-                                <tr key={student._id} className="border-b hover:bg-gray-50 transition duration-200">
-                                    <td className="px-4 py-2 text-sm text-gray-800">
+                    {students.length == 0 ?
+                        <p style={{ textAlign: 'center', margin: 10 }}>No students found</p> :
+                        <table className="min-w-full table-auto">
+                            <thead>
+                                <tr className="bg-gray-100 text-gray-600">
+                                    <th className="py-3 px-6 text-left text-sm font-semibold">
                                         <input
                                             type="checkbox"
-                                            checked={selectedStudents.includes(student._id)}
-                                            onChange={() => toggleStudentSelection(student._id)}
+                                            checked={selectAll}
+                                            onChange={toggleSelectAll}
                                         />
-                                    </td>
-                                    <td className="px-4 py-2 text-sm text-gray-800">{student?.admission_Number}</td>
-                                    <td className="px-4 py-2 text-sm text-gray-800">{student?.roll_Number}</td>
-                                    <td className="px-4 py-2 text-sm text-gray-800">{student?.first_Name}</td>
-                                    <td className="px-4 py-2 text-sm text-gray-800">{student?.last_Name}</td>
-                                    <td className="px-4 py-2 text-sm text-gray-800">{student?.class_Id?.name}</td>
-                                    <td className="px-4 py-2 text-sm text-gray-800">{student?.section}</td>
+                                    </th>
+                                    <th className="py-3 px-6 text-left text-sm font-semibold">Admission Number</th>
+                                    <th className="py-3 px-6 text-left text-sm font-semibold">Roll Number</th>
+                                    <th className="py-3 px-6 text-left text-sm font-semibold">First Name</th>
+                                    <th className="py-3 px-6 text-left text-sm font-semibold">Last Name</th>
+                                    <th className="py-3 px-6 text-left text-sm font-semibold">Class</th>
+                                    <th className="py-3 px-6 text-left text-sm font-semibold">Section</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>}
+                            </thead>
+                            <tbody>
+                                {students.map((student) => (
+                                    <tr key={student._id} className="border-b hover:bg-gray-50 transition duration-200">
+                                        <td className="px-4 py-2 text-sm text-gray-800">
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedStudents.includes(student._id)}
+                                                onChange={() => toggleStudentSelection(student._id)}
+                                            />
+                                        </td>
+                                        <td className="px-4 py-2 text-sm text-gray-800">{student?.admission_Number}</td>
+                                        <td className="px-4 py-2 text-sm text-gray-800">{student?.roll_Number}</td>
+                                        <td className="px-4 py-2 text-sm text-gray-800">{student?.first_Name}</td>
+                                        <td className="px-4 py-2 text-sm text-gray-800">{student?.last_Name}</td>
+                                        <td className="px-4 py-2 text-sm text-gray-800">{student?.class_Id?.name}</td>
+                                        <td className="px-4 py-2 text-sm text-gray-800">{student?.section}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>}
                 </div>
             </div>
         );
@@ -248,21 +274,21 @@ const GenerateDemandSlip = () => {
                             Clear Filters
                         </button>
                         {selectedStudents.length > 0 && (
-                        <button
-                            onClick={generateSelectedStudentsPdf}
-                            className="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-gray-300 transition duration-300"
-                        >
-                            Download Demand Slips
-                        </button>
-                    )}
+                            <button
+                                onClick={generateSelectedStudentsPdf}
+                                className="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-gray-300 transition duration-300"
+                            >
+                                Download Demand Slips
+                            </button>
+                        )}
                     </div>
 
 
                     {/* Students List */}
-                        <div className="mt-6">{renderStudentList()}</div>
+                    <div className="mt-6">{renderStudentList()}</div>
 
                     {/* Download Button */}
-                    
+
                 </div>
             )}
         </div>

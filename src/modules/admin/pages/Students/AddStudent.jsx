@@ -281,7 +281,7 @@ const AddStudent = () => {
       admission_Number: lastAdmissionNumber,
       date_Of_Admission: formData.date_Of_Admission != '' ? formData.date_Of_Admission.split('T')[0] : new Date().toISOString().split('T')[0]
     }));
-    if (!formData.first_Name || !formData.last_Name || !formData?.aadhar_number || !formData?.section || !formData?.session || !formData?.roll_Number || !formData?.class_Id || !formData?.gender || !formData?.permanent_Address || !formData?.date_Of_Birth || !formData?.contact_Number || !formData?.admission_Number || !formData?.date_Of_Admission || !formData?.father_Name || !formData?.mother_Name || !formData?.student_Photo  || !formData?.category  || !formData?.feeStructures) {
+    if (!formData.first_Name || !formData.last_Name || !formData?.aadhar_number || !formData?.section || !formData?.session || !formData?.roll_Number || !formData?.class_Id || !formData?.gender || !formData?.permanent_Address || !formData?.date_Of_Birth || !formData?.contact_Number || !formData?.admission_Number || !formData?.date_Of_Admission || !formData?.father_Name || !formData?.mother_Name || !formData?.student_Photo  || !formData?.category ) {
       showToast("Please fill all the required fields.", 'error');
       return;
     }
@@ -698,7 +698,7 @@ const AddStudent = () => {
                 !editMode &&
 
                 <div className="mb-4 col-span-3">
-                  <label className="block text-gray-700">Fee Structure *:</label>
+                  <label className="block text-gray-700">Fee Structure :</label>
                   <div className="space-y-2 max-h-102 overflow-y-auto">
                     {console.log('feeStructures', feeStructures)}
                     {feeStructures.map((fee) => (
