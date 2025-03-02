@@ -142,6 +142,10 @@ const StudentDetails = () => {
                             <td className="px-4 py-2">{student.admission_Number}</td>
                         </tr>
                         <tr>
+                            <td className="px-4 py-2 font-medium text-gray-600">Roll Number:</td>
+                            <td className="px-4 py-2">{student.roll_Number}</td>
+                        </tr>
+                        <tr>
                             <td className="px-4 py-2 font-medium text-gray-600">Date of Birth:</td>
                             <td className="px-4 py-2">{new Date(student.date_Of_Birth).toLocaleDateString()}</td>
                         </tr>
