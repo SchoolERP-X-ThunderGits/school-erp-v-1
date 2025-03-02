@@ -281,7 +281,7 @@ const AddStudent = () => {
       admission_Number: lastAdmissionNumber,
       date_Of_Admission: formData.date_Of_Admission != '' ? formData.date_Of_Admission.split('T')[0] : new Date().toISOString().split('T')[0]
     }));
-    if (!formData.first_Name || !formData.last_Name || !formData?.aadhar_number || !formData?.section || !formData?.session || !formData?.roll_Number || !formData?.class_Id || !formData?.gender || !formData?.permanent_Address || !formData?.date_Of_Birth || !formData?.contact_Number || !formData?.admission_Number || !formData?.date_Of_Admission || !formData?.father_Name || !formData?.mother_Name || !formData?.student_Photo  || !formData?.category ) {
+    if (!formData.first_Name || !formData.last_Name || !formData?.aadhar_number || !formData?.section || !formData?.session || !formData?.roll_Number || !formData?.class_Id || !formData?.gender || !formData?.permanent_Address || !formData?.date_Of_Birth || !formData?.contact_Number || !formData?.admission_Number || !formData?.date_Of_Admission || !formData?.father_Name || !formData?.mother_Name || !formData?.student_Photo || !formData?.category) {
       showToast("Please fill all the required fields.", 'error');
       return;
     }
@@ -294,7 +294,7 @@ const AddStudent = () => {
       // navigate('/admin/student')
       showToast("Student added successfully.", 'success');
     } catch (error) {
-      console.log('errorrrrr' ,error)
+      console.log('errorrrrr', error)
       showToast('Error submitting data', 'error');
     }
   };
@@ -460,6 +460,7 @@ const AddStudent = () => {
                 <div className="mb-4 col-span-2">
                   <label className="block text-gray-700">Permanent Address *:</label>
                   <input
+                    maxLength={50}
                     type="text"
                     name="permanent_Address"
                     value={formData.permanent_Address}
@@ -482,6 +483,7 @@ const AddStudent = () => {
                 <div className="mb-4 col-span-2">
                   <label className="block text-gray-700">Address for Correspondence *:</label>
                   <input
+                    maxLength={50}
                     type="text"
                     name="address_For_Correspondence"
                     value={formData.address_For_Correspondence}

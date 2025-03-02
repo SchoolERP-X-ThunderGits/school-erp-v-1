@@ -438,12 +438,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     profileImage: {
-        width: 90,
-        height: 90,
+        width: 80,
+        height: 80,
         objectFit: 'cover',
         borderRadius: 10,
         border: '3px solid #2C3E50',
-        marginRight: 20,
+        marginTop: 10,
+        marginRight:30,
         boxShadow: '0 2px 5px rgba(0, 0, 0, 0.2)',
     },
     detailsSection: {
