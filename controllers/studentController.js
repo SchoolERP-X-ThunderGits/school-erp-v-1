@@ -33,7 +33,7 @@ exports.addStudent = async (req, res) => {
         section,
         session,
         feeStructures,
-        addressForId, 
+        address_for_id 
     } = req.body;
 
     try {
