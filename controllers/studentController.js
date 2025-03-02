@@ -66,7 +66,7 @@ exports.addStudent = async (req, res) => {
             class_Id,
             section,
             session,
-            addressForId, 
+            address_for_id, 
         });
 
         const savedStudent = await newStudent.save();
