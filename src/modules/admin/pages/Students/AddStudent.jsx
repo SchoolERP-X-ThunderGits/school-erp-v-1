@@ -72,8 +72,8 @@ const AddStudent = () => {
   const resetForm = () => {
     fetchLastAdmissionNumber()
     setImagePreview('')
+    setAadharParts(["", "", ""])
     setFormData({
-      admission_Number: '',
       address_for_id: '',
       roll_Number: '',
       first_Name: '',
@@ -97,7 +97,7 @@ const AddStudent = () => {
       mother_Name: '',
       mother_Occupation: '',
       due_amount: '',
-      date_Of_Admission: '',
+      date_Of_Admission: new Date().toISOString().split('T')[0],
       student_Photo: '',
       aadhar_number: '',
       feeStructures: []
