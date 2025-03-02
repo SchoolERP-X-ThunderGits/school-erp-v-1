@@ -53,6 +53,8 @@ exports.updateStudentFeeProfile = async (req, res) => {
 
 
 
+
+
 exports.getStudentsByClassOrSection = async (req, res) => {
     const { classId, section } = req.params;
     const tenantId = req.user.tenantId;
@@ -69,38 +71,27 @@ exports.getStudentsByClassOrSection = async (req, res) => {
             const feeProfile = await StudentFeeProfile.findOne({ studentId: student._id }).populate("feeStructures").populate('payments');
             if (!feeProfile) return null;
 
-            
-
             const paidMonths = new Set();
             feeProfile.payments.forEach(payment => {
                 payment.feePaid.forEach(fee => paidMonths.add(fee.feeType));
             });
-
-            
 
             let dueMonths = [];
             let totalFeesOverdue = 0;
 
             feeProfile.feeStructures.forEach(feeStructure => {
                 feeStructure.feeGroups.forEach(feeGroup => {
-                
                     if (!paidMonths.has(feeGroup.feeType) && moment(feeGroup.dueDate).isBefore(today)) {
                         dueMonths.push(feeGroup.feeType);
                         totalFeesOverdue += feeGroup.amount;
-                        
                     }
                 });
             });
+console.log(student);
 
             return {
                 studentId: student._id,
-                studentDetails: {
-                    admission_Number: student.admission_Number,
-                    first_Name: student.first_Name,
-                    last_Name: student.last_Name,
-                    class: student.class_Id.className,
-                    section: student.section
-                },
+                studentDetails: student,
                 dueMonths,
                 totalFeesOverdue
             };
@@ -113,4 +104,6 @@ exports.getStudentsByClassOrSection = async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
+
+
 
