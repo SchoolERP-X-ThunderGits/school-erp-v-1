@@ -84,7 +84,6 @@ const AdmissionReceipt = ({ studentData, setRegistrationCompleted,resetForm }) =
 
       {/* Student Details */}
       <div className="student-details">
-        <h3>Student Details</h3>
         <table>
           <tbody>
             <tr>
