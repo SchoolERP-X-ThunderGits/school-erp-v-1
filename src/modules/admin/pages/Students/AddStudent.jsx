@@ -339,7 +339,7 @@ const AddStudent = () => {
             <div className="">
 
               {/* Form Fields */}
-              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-3 sm:grid-cols-2 md:grid-cols-3 gap-4">
 
                 {/* Admission Number */}
                 <div className="mb-4">
@@ -534,7 +534,7 @@ const AddStudent = () => {
                     className="mt-2 p-2 border border-gray-300 rounded-md w-full"
                   />
                 </div>
-                <div >
+                <div className="mb-4 col-span-2">
                   <label className="block text-gray-700">Address for Id Card*:</label>
                   <input
                     type="text"
@@ -688,7 +688,7 @@ const AddStudent = () => {
                 </div>
 
                 {/* Date of Admission */}
-                <div className="mb-4">
+                <div className="mb-4 col-span-2">
                   <label className="block text-gray-700">Date of Admission *:</label>
                   <input
                     type="date"
@@ -700,7 +700,7 @@ const AddStudent = () => {
                 </div>
 
                 {/* Aadhar Number */}
-                <div className="mb-4">
+                <div className="mb-4 col-span-3">
                   <label className="block text-gray-700">Aadhar Number *:</label>
                   <div className="flex space-x-2 mt-2">
                     {[0, 1, 2].map((index) => (
@@ -721,7 +721,7 @@ const AddStudent = () => {
                 {/* Student photo */}
                 {
                   !editMode &&
-                  <div className="mb-4 col-span-2">
+                  <div className="mb-4 col-span-3">
                     <label className="block text-gray-700">Student Photo *:</label>
                     <input
                       type="file"
