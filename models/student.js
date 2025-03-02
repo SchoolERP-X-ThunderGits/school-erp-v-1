@@ -103,6 +103,9 @@ const studentSchema = new mongoose.Schema({
   },
   due_amount: {
     type: Number
+  },
+  addressForId: {
+    type: String    
   }
 }, { timestamps: true });
 

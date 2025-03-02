@@ -32,7 +32,8 @@ exports.addStudent = async (req, res) => {
         class_Id,
         section,
         session,
-        feeStructures
+        feeStructures,
+        addressForId, 
     } = req.body;
 
     try {
@@ -64,7 +65,8 @@ exports.addStudent = async (req, res) => {
             due_amount,
             class_Id,
             section,
-            session
+            session,
+            addressForId, 
         });
 
         const savedStudent = await newStudent.save();
