@@ -334,7 +334,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                                 (isActive && '!text-white')
                               }
                             >
-                              Student
+                              Students
                             </NavLink>
                           </li>
                           <li>

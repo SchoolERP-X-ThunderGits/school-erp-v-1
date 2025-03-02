@@ -56,7 +56,7 @@ const AddStudent = () => {
     mother_Name: '',
     mother_Occupation: '',
     due_amount: '',
-    date_Of_Admission: '',
+    date_Of_Admission: new Date().toISOString().split('T')[0],
     student_Photo: '',
     aadhar_number: '',
     feeStructures: []
@@ -293,7 +293,7 @@ const AddStudent = () => {
       return;
     }
     setImageLoad(true)
-    console.log('bkdkbdb',formData)
+    console.log('bkdkbdb', formData)
     try {
       const response = await postService(apiName.addStudent, formData);
       console.log('reses222spon1111se', response)
@@ -336,10 +336,10 @@ const AddStudent = () => {
             <h2 className="text-2xl font-semibold mb-4 text-center">Add Student</h2>
 
             {/* Scrollable container */}
-            <div className="max-h-[500px] overflow-y-auto">
+            <div className="">
 
               {/* Form Fields */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4">
 
                 {/* Admission Number */}
                 <div className="mb-4">
@@ -534,7 +534,7 @@ const AddStudent = () => {
                     className="mt-2 p-2 border border-gray-300 rounded-md w-full"
                   />
                 </div>
-                <div className="mb-4 col-span-2">
+                <div >
                   <label className="block text-gray-700">Address for Id Card*:</label>
                   <input
                     type="text"
@@ -802,12 +802,54 @@ const AddStudent = () => {
 
             {/* Submit Button */}
             <div className="flex justify-center mt-6">
+              {console.log('formDataformData',formData)}
               <button
                 onClick={handleSubmit}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md"
+                className={`px-4 py-2 rounded-md text-white ${!formData.first_Name ||
+                    !formData.last_Name ||
+                    !formData?.aadhar_number ||
+                    !formData?.section ||
+                    !formData?.session ||
+                    !formData?.roll_Number ||
+                    !formData?.class_Id ||
+                    !formData?.gender ||
+                    !formData?.permanent_Address ||
+                    !formData?.date_Of_Birth ||
+                    !formData?.contact_Number ||
+                    !formData?.admission_Number ||
+                    !formData?.date_Of_Admission ||
+                    !formData?.father_Name ||
+                    !formData?.mother_Name ||
+                    !formData?.student_Photo ||
+                    !formData?.category ||
+                    !formData?.address_for_id
+                    ? 'bg-gray-400 cursor-not-allowed' // Disabled color and cursor style
+                    : 'bg-blue-600' // Enabled color
+                  }`}
+                disabled={
+                  !formData.first_Name ||
+                  !formData.last_Name ||
+                  !formData?.aadhar_number ||
+                  !formData?.section ||
+                  !formData?.session ||
+                  !formData?.roll_Number ||
+                  !formData?.class_Id ||
+                  !formData?.gender ||
+                  !formData?.permanent_Address ||
+                  !formData?.date_Of_Birth ||
+                  !formData?.contact_Number ||
+                  !formData?.admission_Number ||
+                  !formData?.date_Of_Admission ||
+                  !formData?.father_Name ||
+                  !formData?.mother_Name ||
+                  !formData?.student_Photo ||
+                  !formData?.category ||
+                  !formData?.address_for_id
+                }
               >
                 Submit
               </button>
+
             </div>
 
           </div>
