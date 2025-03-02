@@ -225,6 +225,7 @@ const StudentIDCard = () => {
                         key={index}
                         style={selectedTemplate === 'portrait' ? styles.portraitPage : styles.landscapePage}
                     >
+                        {console.log('vllvclvc',student)}
                         <View style={[{ position: 'absolute', zIndex: -100, width: '100%', height: '100%' }]}>
                             <Image style={{ width: '100%', height: '100%' }} src={'https://i2.wp.com/a.rgbimg.com/users/o/or/organza3/600/msE62kY.jpg'} />
                         </View>
@@ -275,7 +276,7 @@ const StudentIDCard = () => {
                                     <View style={styles.row}>
                                         <Text style={styles.label}>Address</Text>
                                         <Text style={[styles.label, { width: '10%' }]}>:</Text>
-                                        <Text style={styles.value}>{student.permanent_Address || 'Not Available'}</Text>
+                                        <Text style={styles.value}>{student.address_for_id || 'Not Available'}</Text>
                                     </View>
                                     <View style={styles.row}>
                                         <Text style={styles.label}>DOB</Text>

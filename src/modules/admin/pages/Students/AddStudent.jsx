@@ -4,6 +4,7 @@ import apiName from '../../../../constants/ApiName'; // Importing API Names
 import { showToast } from '../../../../components/Toast'; // Show Toast Notifications
 import AdmissionReceipt from './AdmissionReceipt';
 import { Link, useNavigate } from 'react-router-dom';
+import Loader from '../../../../components/Loader';
 const AddStudent = () => {
 
   const [feeStructures, setFeeStructures] = useState([]);
@@ -16,6 +17,7 @@ const AddStudent = () => {
   ]); // Sections for dropdown
   const [sessions, setSessions] = useState(['2024-2025', '2025-2026', '2026-2027']); // Sessions for dropdown
   const [categories, setCategories] = useState([]); // Categories for dropdown
+  const [imageLoad, setImageLoad] = useState(false);
   const [registrationCompleted, setRegistrationCompleted] = useState(false);
   const [blood_Groups, setblood_Groups] = useState([]); // Blood Groups for dropdown
   const [imagePreview, setImagePreview] = useState(null);
@@ -31,6 +33,7 @@ const AddStudent = () => {
   const [aadharParts, setAadharParts] = useState(["", "", ""]);
   const [formData, setFormData] = useState({
     admission_Number: '',
+    address_for_id: '',
     roll_Number: '',
     first_Name: '',
     last_Name: '',
@@ -71,6 +74,7 @@ const AddStudent = () => {
     setImagePreview('')
     setFormData({
       admission_Number: '',
+      address_for_id: '',
       roll_Number: '',
       first_Name: '',
       last_Name: '',
@@ -207,6 +211,7 @@ const AddStudent = () => {
   };
 
   function uploadFile(file) {
+    setImageLoad(true)
     const url = `https://api.cloudinary.com/v1_1/dcfrxghei/upload`;
     const fd = new FormData();
 
@@ -228,6 +233,7 @@ const AddStudent = () => {
           student_Photo: url,
         });
         showToast("Image Upload Successfully", 'success');
+        setImageLoad(false)
       })
       .catch((error) => {
         console.error("Error uploading the file:", error);
@@ -276,26 +282,30 @@ const AddStudent = () => {
 
 
   const handleSubmit = async () => {
+
     setFormData((prevFormData) => ({
       ...prevFormData,
       admission_Number: lastAdmissionNumber,
       date_Of_Admission: formData.date_Of_Admission != '' ? formData.date_Of_Admission.split('T')[0] : new Date().toISOString().split('T')[0]
     }));
-    if (!formData.first_Name || !formData.last_Name || !formData?.aadhar_number || !formData?.section || !formData?.session || !formData?.roll_Number || !formData?.class_Id || !formData?.gender || !formData?.permanent_Address || !formData?.date_Of_Birth || !formData?.contact_Number || !formData?.admission_Number || !formData?.date_Of_Admission || !formData?.father_Name || !formData?.mother_Name || !formData?.student_Photo || !formData?.category) {
+    if (!formData.first_Name || !formData.last_Name || !formData?.aadhar_number || !formData?.section || !formData?.session || !formData?.roll_Number || !formData?.class_Id || !formData?.gender || !formData?.permanent_Address || !formData?.date_Of_Birth || !formData?.contact_Number || !formData?.admission_Number || !formData?.date_Of_Admission || !formData?.father_Name || !formData?.mother_Name || !formData?.student_Photo || !formData?.category || !formData?.address_for_id) {
       showToast("Please fill all the required fields.", 'error');
       return;
     }
-
+    setImageLoad(true)
+    console.log('bkdkbdb',formData)
     try {
       const response = await postService(apiName.addStudent, formData);
       console.log('reses222spon1111se', response)
       setRegistrationCompleted(true)
 
       // navigate('/admin/student')
+      setImageLoad(false)
       showToast("Student added successfully.", 'success');
     } catch (error) {
       console.log('errorrrrr', error)
       showToast('Error submitting data', 'error');
+      setImageLoad(false)
     }
   };
 
@@ -308,6 +318,13 @@ const AddStudent = () => {
   };
   return (
     <div className="container mx-auto px-4 py-6">
+      {
+        imageLoad &&
+
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="h-16 w-16 animate-spin rounded-full border-4 border-solid border-primary border-t-transparent"></div>
+        </div>
+      }
       {
         registrationCompleted ?
           <div className=''>
@@ -460,7 +477,6 @@ const AddStudent = () => {
                 <div className="mb-4 col-span-2">
                   <label className="block text-gray-700">Permanent Address *:</label>
                   <input
-                    maxLength={50}
                     type="text"
                     name="permanent_Address"
                     value={formData.permanent_Address}
@@ -480,17 +496,33 @@ const AddStudent = () => {
                     className="mt-2 p-2 border border-gray-300 rounded-md w-full"
                   />
                 </div>
+
                 <div className="mb-4 col-span-2">
                   <label className="block text-gray-700">Address for Correspondence *:</label>
                   <input
-                    maxLength={50}
                     type="text"
                     name="address_For_Correspondence"
                     value={formData.address_For_Correspondence}
                     onChange={handleInputChange}
                     className="mt-2 p-2 border border-gray-300 rounded-md w-full"
                   />
+                  <input
+                    type="checkbox"
+                    id="sameAsPermanent"
+                    checked={formData.isSameAsPermanent}
+                    onChange={() => {
+                      setFormData((prev) => ({
+                        ...prev,
+                        address_For_Correspondence: prev.permanent_Address,
+                      }));
+                    }}
+                    className="mr-2"
+                  />
+                  <label htmlFor="sameAsPermanent" className="text-gray-700">
+                    Same as Permanent Address
+                  </label>
                 </div>
+
 
                 <div className="mb-4">
                   <label className="block text-gray-700">Alternate Contact No:</label>
@@ -502,7 +534,17 @@ const AddStudent = () => {
                     className="mt-2 p-2 border border-gray-300 rounded-md w-full"
                   />
                 </div>
-
+                <div className="mb-4 col-span-2">
+                  <label className="block text-gray-700">Address for Id Card*:</label>
+                  <input
+                    type="text"
+                    name="address_for_id"
+                    maxLength={45}
+                    value={formData.address_for_id}
+                    onChange={handleInputChange}
+                    className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                  />
+                </div>
                 {/* Email */}
                 <div className="mb-4">
                   <label className="block text-gray-700">Email:</label>
