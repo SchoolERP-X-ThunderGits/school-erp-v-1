@@ -15,7 +15,7 @@ const sectionSchema = new mongoose.Schema({
 });
 
 // Ensure section names are unique per tenant
-sectionSchema.index({ name: 1, tenantId: 1 }, { unique: true });
+
 
 // Create and export the Section model
 module.exports = mongoose.model('Section', sectionSchema);

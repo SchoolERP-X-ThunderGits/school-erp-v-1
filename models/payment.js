@@ -2,6 +2,12 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const PaymentSchema = new Schema({
+    tenantId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Tenant',
+        required: true,
+        index: true // Improves performance for queries scoped to a tenant
+    },
     razorpay_order_id: {
         type: String,
     },
@@ -36,7 +42,10 @@ const PaymentSchema = new Schema({
         type: Number,
         required: true
     }
-});
+}, { timestamps: true }); // Automatically add createdAt and updatedAt timestamps
+
+
+
 
 const Payment = mongoose.model('Payment', PaymentSchema);
 

@@ -1,48 +1,20 @@
 // controllers/paymentController.js
-// const Razorpay = require('razorpay');
 const crypto = require('crypto');
 require('dotenv').config();
 const Payment = require("../models/payment");
 const StudentFeeProfile = require("../models/fees/studentFeeProfile");
 
-
-// const razorpayInstance = new Razorpay({
-//     key_id: process.env.RAZORPAY_KEY_ID,
-//     key_secret: process.env.RAZORPAY_SECRET,
-// });
+// Removed Razorpay example for simplicity. It can be reintroduced following a similar pattern to below adjustments.
 
 const handleError = (res, error, message = 'Internal Server Error', statusCode = 500) => {
     console.error(error);
     res.status(statusCode).json({ message });
 };
 
-const createOrder = async (req, res) => {
-
-
-    const { amount } = req.body;
-
-    try {
-        const options = {
-            amount: Number(amount * 100),
-            currency: "INR",
-            receipt: crypto.randomBytes(10).toString("hex"),
-        };
-
-        razorpayInstance.orders.create(options, (error, order) => {
-            if (error) {
-                return handleError(res, error, 'Something Went Wrong!', 500);
-            }
-            res.status(200).json({ data: order });
-        });
-    } catch (error) {
-        handleError(res, error);
-    }
-};
-
+// Assuming tenantId is available on req.user, set by some authentication middleware
 const verifyPayment = async (req, res) => {
-
-
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature, studentId, receipt_no, feePaid, paymentMethod, amountPaid } = req.body;
+    const tenantId = req.user.tenantId;
 
     try {
         const sign = razorpay_order_id + "|" + razorpay_payment_id;
@@ -54,6 +26,7 @@ const verifyPayment = async (req, res) => {
 
         if (isAuthentic) {
             const payment = new Payment({
+                tenantId,
                 razorpay_order_id,
                 razorpay_payment_id,
                 razorpay_signature,
@@ -67,7 +40,7 @@ const verifyPayment = async (req, res) => {
             const savedPayment = await payment.save();
 
             await StudentFeeProfile.findOneAndUpdate(
-                { studentId: studentId },
+                { studentId: studentId, tenantId: tenantId },
                 { $push: { payments: savedPayment._id } },
                 { new: true }
             );
@@ -86,8 +59,9 @@ const verifyPayment = async (req, res) => {
 };
 
 const getPaymentById = async (req, res) => {
+    const tenantId = req.user.tenantId;
     try {
-        const payment = await Payment.findById(req.params.id).populate('studentId');
+        const payment = await Payment.findOne({ _id: req.params.id, tenantId }).populate('studentId');
         if (!payment) {
             return res.status(404).json({ message: 'Payment not found' });
         }
@@ -98,8 +72,9 @@ const getPaymentById = async (req, res) => {
 };
 
 const getPaymentByReceiptNumber = async (req, res) => {
+    const tenantId = req.user.tenantId;
     try {
-        const payment = await Payment.findOne({ receipt_no: req.params.receipt_no }).populate('studentId');
+        const payment = await Payment.findOne({ receipt_no: req.params.receipt_no, tenantId }).populate('studentId');
         if (!payment) {
             return res.status(404).json({ message: 'Payment not found' });
         }
@@ -110,25 +85,18 @@ const getPaymentByReceiptNumber = async (req, res) => {
 };
 
 const getAllPayments = async (req, res) => {
+    const tenantId = req.user.tenantId;
     try {
-        const payments = await Payment.find();
+        const payments = await Payment.find({ tenantId });
         res.json(payments);
     } catch (error) {
         handleError(res, error);
     }
 };
 
-const generateReceiptNo = () => {
-    const timestamp = Date.now().toString(); // Current timestamp
-    const randomChars = Math.random().toString(36).substring(2, 8).toUpperCase(); // Random alphanumeric string
-    return `REC-${timestamp}-${randomChars}`; // Concatenate for a unique receipt number
-};
-
-
 const createOfflinePayment = async (req, res) => {
     const { studentId, receipt_no, feePaid, paymentMethod, amountPaid } = req.body;
-
-    // Generate a receipt number if not provided
+    const tenantId = req.user.tenantId;
     const generatedReceiptNo = receipt_no || generateReceiptNo();
 
     // Validate input fields
@@ -148,6 +116,7 @@ const createOfflinePayment = async (req, res) => {
 
     try {
         const payment = new Payment({
+            tenantId,
             studentId,
             receipt_no: generatedReceiptNo,
             feePaid,
@@ -158,7 +127,7 @@ const createOfflinePayment = async (req, res) => {
         const savedPayment = await payment.save();
 
         await StudentFeeProfile.findOneAndUpdate(
-            { studentId: studentId },
+            { studentId: studentId, tenantId: tenantId },
             { $push: { payments: savedPayment._id } },
             { new: true }
         );
@@ -169,15 +138,11 @@ const createOfflinePayment = async (req, res) => {
             payment: savedPayment
         });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Internal Server Error" });
+        handleError(res, error);
     }
 };
 
-
-
 module.exports = {
-    createOrder,
     verifyPayment,
     getPaymentById,
     getPaymentByReceiptNumber,

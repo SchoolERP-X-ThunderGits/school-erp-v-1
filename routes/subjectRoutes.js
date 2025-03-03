@@ -4,9 +4,11 @@ const Subject = require('../models/subject');
 
 // Create a new subject
 router.post('/', async (req, res) => {
+    const { name } = req.body;
+    const tenantId = req.user.tenantId; // Assuming tenantId is set on req.user by some middleware
+
     try {
-        const { name } = req.body;
-        const subject = new Subject({ name });
+        const subject = new Subject({ name, tenantId });
         await subject.save();
         res.status(201).json(subject);
     } catch (err) {
@@ -14,20 +16,24 @@ router.post('/', async (req, res) => {
     }
 });
 
-// Get all subjects
+// Get all subjects for a tenant
 router.get('/', async (req, res) => {
+    const tenantId = req.user.tenantId;
+
     try {
-        const subjects = await Subject.find();
+        const subjects = await Subject.find({ tenantId });
         res.status(200).json(subjects);
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
 });
 
-// Get a subject by ID
+// Get a subject by ID, scoped to tenant
 router.get('/:id', async (req, res) => {
+    const tenantId = req.user.tenantId;
+
     try {
-        const subject = await Subject.findById(req.params.id);
+        const subject = await Subject.findOne({ _id: req.params.id, tenantId });
         if (!subject) {
             return res.status(404).json({ error: 'Subject not found' });
         }
@@ -37,10 +43,17 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// Update a subject
+// Update a subject, scoped to tenant
 router.put('/:id', async (req, res) => {
+    const { name } = req.body;
+    const tenantId = req.user.tenantId;
+
     try {
-        const subject = await Subject.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const subject = await Subject.findOneAndUpdate(
+            { _id: req.params.id, tenantId },
+            { name },
+            { new: true }
+        );
         if (!subject) {
             return res.status(404).json({ error: 'Subject not found' });
         }
@@ -50,10 +63,12 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-// Delete a subject
+// Delete a subject, scoped to tenant
 router.delete('/:id', async (req, res) => {
+    const tenantId = req.user.tenantId;
+
     try {
-        const subject = await Subject.findByIdAndDelete(req.params.id);
+        const subject = await Subject.findOneAndDelete({ _id: req.params.id, tenantId });
         if (!subject) {
             return res.status(404).json({ error: 'Subject not found' });
         }

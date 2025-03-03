@@ -4,9 +4,10 @@ const ExamName = require('../models/examName');
 
 // Create a new exam name
 router.post('/', async (req, res) => {
+    const { name, session } = req.body;
+    const tenantId = req.user.tenantId; // Assuming tenantId is set on req.user by some middleware
     try {
-        const { name, session } = req.body;
-        const examName = new ExamName({ name, session });
+        const examName = new ExamName({ name, session, tenantId });
         await examName.save();
         res.status(201).json(examName);
     } catch (err) {
@@ -14,20 +15,22 @@ router.post('/', async (req, res) => {
     }
 });
 
-// Get all exam names
+// Get all exam names for the tenant
 router.get('/', async (req, res) => {
+    const tenantId = req.user.tenantId; // Assuming tenantId is set on req.user by some middleware
     try {
-        const examNames = await ExamName.find();
+        const examNames = await ExamName.find({ tenantId });
         res.status(200).json(examNames);
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
 });
 
-// Get a single exam name by ID
+// Get a single exam name by ID scoped to tenant
 router.get('/:id', async (req, res) => {
+    const tenantId = req.user.tenantId;
     try {
-        const examName = await ExamName.findById(req.params.id);
+        const examName = await ExamName.findOne({ _id: req.params.id, tenantId });
 
         if (!examName) {
             return res.status(404).json({ error: 'Exam name not found' });
@@ -39,12 +42,13 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// Update an exam name by ID
+// Update an exam name by ID scoped to tenant
 router.put('/:id', async (req, res) => {
+    const { name, session } = req.body;
+    const tenantId = req.user.tenantId;
     try {
-        const { name, session } = req.body;
-        const updatedExamName = await ExamName.findByIdAndUpdate(
-            req.params.id,
+        const updatedExamName = await ExamName.findOneAndUpdate(
+            { _id: req.params.id, tenantId },
             { name, session },
             { new: true }
         );
@@ -59,10 +63,11 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-// Delete an exam name by ID
+// Delete an exam name by ID scoped to tenant
 router.delete('/:id', async (req, res) => {
+    const tenantId = req.user.tenantId;
     try {
-        const examName = await ExamName.findByIdAndDelete(req.params.id);
+        const examName = await ExamName.findOneAndDelete({ _id: req.params.id, tenantId });
 
         if (!examName) {
             return res.status(404).json({ error: 'Exam name not found' });
