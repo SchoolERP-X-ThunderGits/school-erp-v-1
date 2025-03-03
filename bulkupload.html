@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bulk Student Upload</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: auto;
+            padding: 20px;
+            text-align: center;
+        }
+        input, select, button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Bulk Student Upload</h2>
+    
+    <label for="classId">Select Class:</label>
+    <select id="classId">
+        <option value="67c62fb63714b604653a8ad2">Class 1</option>
+        <option value="60f7a6d5a3b4c0123456789b">Class 2</option>
+        <option value="60f7a6d5a3b4c0123456789c">Class 3</option>
+    </select>
+
+    <label for="section">Select Section:</label>
+    <select id="section">
+        <option value="A">Section A</option>
+        <option value="B">Section B</option>
+        <option value="C">Section C</option>
+    </select>
+
+    <label for="fileInput">Upload File (CSV or Excel):</label>
+    <input type="file" id="fileInput" accept=".csv, .xlsx">
+
+    <button onclick="uploadFile()">Upload</button>
+
+    <div id="response"></div>
+
+    <script>
+        function uploadFile() {
+            const classId = document.getElementById("classId").value;
+            const section = document.getElementById("section").value;
+            const fileInput = document.getElementById("fileInput");
+            
+            if (!fileInput.files.length) {
+                alert("Please select a file to upload.");
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const formData = new FormData();
+            formData.append("classId", classId);
+            formData.append("section", section);
+            formData.append("file", file);
+
+            fetch("http://localhost:4000/api/student/bulkAddStudents", {
+                method: "POST",
+                headers: {
+                    "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YzYyZTgwMjc4YmNkZDA4YjIzYmZjZiIsInRlbmFudElkIjoiNjdjNjJlODAyNzhiY2RkMDhiMjNiZmQwIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzQxMDQxMjg2LCJleHAiOjE3NDM2MzMyODZ9.-Te7I-hwVwEUo5pnBGZYTEY_z8lvOwjk_UPlOFkDwyM" // Replace with actual token if needed
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("response").innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            })
+            .catch(error => {
+                console.error("Error uploading file:", error);
+                document.getElementById("response").innerHTML = `<p style="color:red;">Error: ${error.message}</p>`;
+            });
+        }
+    </script>
+
+</body>
+</html>
