@@ -30,7 +30,7 @@ const subjectClassMappingSchema = new Schema({
 }, { timestamps: true }); // Automatically add createdAt and updatedAt timestamps
 
 // Ensure class and subjects combinations are unique within the same tenant
-subjectClassMappingSchema.index({ class: 1, subjects: 1, tenantId: 1 }, { unique: true });
+
 
 // Create and export the SubjectClassMapping model
 module.exports = mongoose.model('SubjectClassMapping', subjectClassMappingSchema);

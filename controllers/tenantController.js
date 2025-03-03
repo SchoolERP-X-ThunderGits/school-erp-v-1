@@ -5,14 +5,32 @@ const AdmissionNumber = require('../models/admissionNumber');
 const tenantController = {
     // Create a new tenant (Super Admin only)
     createTenant: async (req, res) => {
-        const { name, subdomain, admin, contactNumber, email, address, website, plan, prefix } = req.body;
+        const {
+            name,
+            subdomain,
+            admin,
+            contactNumber,
+            email,
+            address,
+            website,
+            plan,
+            logo,
+            primaryColor,
+            secondaryColor,
+            font,
+            directorSignature,
+            principalSignature,
+            managerSignature,
+            prefix
+        } = req.body;
+    
         try {
             // Check for existing subdomain
             const existingTenant = await Tenant.findOne({ subdomain });
             if (existingTenant) {
                 return res.status(400).json({ error: 'Subdomain already exists' });
             }
-
+    
             const newTenant = new Tenant({
                 name,
                 subdomain,
@@ -21,25 +39,35 @@ const tenantController = {
                 email,
                 address,
                 website,
-                plan
+                plan,
+                logo: logo || null,
+                directorSignature,
+                principalSignature,
+                managerSignature,
+                themeSettings: {
+                    primaryColor: primaryColor || "#000000",
+                    secondaryColor: secondaryColor || "#ffffff",
+                    font: font || "Arial"
+                }
             });
-
+    
             const savedTenant = await newTenant.save();
-
+    
             // Create AdmissionNumber entry
             const newAdmissionNumber = new AdmissionNumber({
                 tenantId: savedTenant._id,
                 prefix: prefix
             });
-
+    
             await newAdmissionNumber.save();
-
+    
             res.status(201).json({ message: 'Tenant and Admission Number created successfully', tenant: savedTenant });
         } catch (error) {
             console.error('Error creating tenant:', error);
             res.status(500).json({ error: 'Failed to create tenant' });
         }
     },
+    
 
     // Get all tenants (Super Admin only)
     getAllTenants: async (req, res) => {

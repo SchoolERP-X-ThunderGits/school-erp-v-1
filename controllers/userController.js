@@ -27,6 +27,9 @@ exports.addUser = async (req, res) => {
         primaryColor,
         secondaryColor,
         font,
+        directorSignature,
+        principalSignature,
+        managerSignature,
         prefix  // Ensure prefix is included in the received body
     } = req.body;
 
@@ -74,6 +77,9 @@ exports.addUser = async (req, res) => {
                 address,
                 plan: plan || "free", // Default to "free" if not provided
                 logo: logo || null,
+                directorSignature,
+                principalSignature,
+                managerSignature,
                 themeSettings: {
                     primaryColor: primaryColor || "#000000",
                     secondaryColor: secondaryColor || "#ffffff",

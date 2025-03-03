@@ -8,7 +8,6 @@ const tenantSchema = new mongoose.Schema({
     },
     subdomain: {
         type: String,
-        
         unique: true
     },
     admin: {
@@ -49,10 +48,22 @@ const tenantSchema = new mongoose.Schema({
         type: String, // Store URL of the QR image
         default: null
     },
+    directorSignature: {
+        type: String, // URL or base64-encoded image
+        default: null
+    },
+    principalSignature: {
+        type: String, // URL or base64-encoded image
+        default: null
+    },
+    managerSignature: {
+        type: String, // URL or base64-encoded image
+        default: null
+    },
     // Theme & Customization Settings
     themeSettings: {
-        primaryColor: { type: String, default: "#000000" }, // Default black
-        secondaryColor: { type: String, default: "#ffffff" }, // Default white
+        primaryColor: { type: String, default: "#000000" },
+        secondaryColor: { type: String, default: "#ffffff" },
         font: { type: String, default: "Arial" }
     }
 }, { timestamps: true }); // Adds createdAt & updatedAt fields automatically
