@@ -66,11 +66,9 @@ const AddStudent = () => {
     fetchClasses();
     fetchFeeStructures()
     fetchStudents()
-    fetchLastAdmissionNumber()
   }, []);
 
   const resetForm = () => {
-    fetchLastAdmissionNumber()
     setImagePreview('')
     setAadharParts(["", "", ""])
     setFormData({
@@ -104,26 +102,6 @@ const AddStudent = () => {
     })
   }
 
-  const fetchLastAdmissionNumber = async () => {
-    try {
-      const result = await getService(apiName.getLastAdmissionNumber); // API to get fee structures
-      setLastAdmissionNumber(result?.lastGeneratedAdmissionNumber)
-    } catch (error) {
-      showToast('Error fetching fee structures', 'error');
-    }
-  };
-  useEffect(() => {
-    if (lastAdmissionNumber && !formData.admission_Number) {
-      const numericPart = parseInt(lastAdmissionNumber.match(/\d+/)[0], 10);
-      console.log("numb", numericPart)
-      const newAdmissionNumber = `AD-${numericPart}`;
-      console.log('newAdmissionNumber', newAdmissionNumber)
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        admission_Number: newAdmissionNumber,
-      }));
-    }
-  }, [lastAdmissionNumber]);
   const fetchStudents = async () => {
     try {
       const result = await getService(apiName.getStudent); // API to get fee structures
@@ -285,10 +263,9 @@ const AddStudent = () => {
 
     setFormData((prevFormData) => ({
       ...prevFormData,
-      admission_Number: lastAdmissionNumber,
       date_Of_Admission: formData.date_Of_Admission != '' ? formData.date_Of_Admission.split('T')[0] : new Date().toISOString().split('T')[0]
     }));
-    if (!formData.first_Name || !formData.last_Name || !formData?.aadhar_number || !formData?.section || !formData?.session || !formData?.roll_Number || !formData?.class_Id || !formData?.gender || !formData?.permanent_Address || !formData?.date_Of_Birth || !formData?.contact_Number || !formData?.admission_Number || !formData?.date_Of_Admission || !formData?.father_Name || !formData?.mother_Name || !formData?.student_Photo || !formData?.category || !formData?.address_for_id) {
+    if (!formData.first_Name || !formData.last_Name || !formData?.aadhar_number || !formData?.section || !formData?.session || !formData?.roll_Number || !formData?.class_Id || !formData?.gender || !formData?.permanent_Address || !formData?.date_Of_Birth || !formData?.contact_Number || !formData?.date_Of_Admission || !formData?.father_Name || !formData?.mother_Name || !formData?.student_Photo || !formData?.category || !formData?.address_for_id) {
       showToast("Please fill all the required fields.", 'error');
       return;
     }
@@ -301,6 +278,10 @@ const AddStudent = () => {
 
       // navigate('/admin/student')
       setImageLoad(false)
+      setFormData({
+        ...formData,
+        admission_Number: response.result?.admission_Number,
+      });
       showToast("Student added successfully.", 'success');
     } catch (error) {
       console.log('errorrrrr', error)
@@ -339,26 +320,14 @@ const AddStudent = () => {
             <div className="">
 
               {/* Form Fields */}
-              <div className="grid grid-cols-3 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4">
 
-                {/* Admission Number */}
-                <div className="mb-4">
-                  <label className="block text-gray-700">Admission Number *:</label>
-                  <input
-                    type="text"
-                    readOnly
-                    name="admission_Number"
-                    value={formData.admission_Number ? formData?.admission_Number : lastAdmissionNumber}
-                    onChange={handleInputChange}
-                    className="mt-2 p-2 border border-gray-300 rounded-md w-full"
-                  />
-                </div>
 
                 {/* Roll Number */}
                 <div className="mb-4">
                   <label className="block text-gray-700">Roll Number :</label>
                   <input
-                    type="text"
+                    type="number"
                     name="roll_Number"
                     value={formData.roll_Number}
                     onChange={handleInputChange}
@@ -474,7 +443,7 @@ const AddStudent = () => {
                 </div>
 
                 {/* Permanent Address */}
-                <div className="mb-4 col-span-2">
+                <div className="mb-4 ">
                   <label className="block text-gray-700">Permanent Address *:</label>
                   <input
                     type="text"
@@ -497,7 +466,7 @@ const AddStudent = () => {
                   />
                 </div>
 
-                <div className="mb-4 col-span-2">
+                <div className="mb-4 ">
                   <label className="block text-gray-700">Address for Correspondence *:</label>
                   <input
                     type="text"
@@ -534,7 +503,7 @@ const AddStudent = () => {
                     className="mt-2 p-2 border border-gray-300 rounded-md w-full"
                   />
                 </div>
-                <div className="mb-4 col-span-2">
+                <div className="mb-4 ">
                   <label className="block text-gray-700">Address for Id Card*:</label>
                   <input
                     type="text"
@@ -679,7 +648,7 @@ const AddStudent = () => {
                 <div className="mb-4">
                   <label className="block text-gray-700">Due amount :</label>
                   <input
-                    type="text"
+                    type="number"
                     name="due_amount"
                     value={formData.due_amount}
                     onChange={handleInputChange}
@@ -688,7 +657,7 @@ const AddStudent = () => {
                 </div>
 
                 {/* Date of Admission */}
-                <div className="mb-4 col-span-2">
+                <div className="mb-4 ">
                   <label className="block text-gray-700">Date of Admission *:</label>
                   <input
                     type="date"
@@ -700,7 +669,7 @@ const AddStudent = () => {
                 </div>
 
                 {/* Aadhar Number */}
-                <div className="mb-4 col-span-3">
+                <div className="mb-4 ">
                   <label className="block text-gray-700">Aadhar Number *:</label>
                   <div className="flex space-x-2 mt-2">
                     {[0, 1, 2].map((index) => (
@@ -721,7 +690,7 @@ const AddStudent = () => {
                 {/* Student photo */}
                 {
                   !editMode &&
-                  <div className="mb-4 col-span-3">
+                  <div className="mb-4 ">
                     <label className="block text-gray-700">Student Photo *:</label>
                     <input
                       type="file"
@@ -732,7 +701,7 @@ const AddStudent = () => {
                   </div>
                 }
                 {imagePreview && (
-                  <div className="mt-4 col-span-3 flex justify-center items-center">
+                  <div className="mt-4 mb-6 flex justify-center items-center">
                     <img src={imagePreview} alt="Student Preview" className="w-30 h-30 object-cover rounded-md" />
                   </div>
                 )}
@@ -741,7 +710,7 @@ const AddStudent = () => {
               {
                 !editMode &&
 
-                <div className="mb-4 col-span-3">
+                <div className="mb-4 ">
                   <label className="block text-gray-700">Fee Structure :</label>
                   <div className="space-y-2 max-h-102 overflow-y-auto">
                     {console.log('feeStructures', feeStructures)}
@@ -802,29 +771,28 @@ const AddStudent = () => {
 
             {/* Submit Button */}
             <div className="flex justify-center mt-6">
-              {console.log('formDataformData',formData)}
+              {console.log('formDataformData', formData)}
               <button
                 onClick={handleSubmit}
                 className={`px-4 py-2 rounded-md text-white ${!formData.first_Name ||
-                    !formData.last_Name ||
-                    !formData?.aadhar_number ||
-                    !formData?.section ||
-                    !formData?.session ||
-                    !formData?.roll_Number ||
-                    !formData?.class_Id ||
-                    !formData?.gender ||
-                    !formData?.permanent_Address ||
-                    !formData?.date_Of_Birth ||
-                    !formData?.contact_Number ||
-                    !formData?.admission_Number ||
-                    !formData?.date_Of_Admission ||
-                    !formData?.father_Name ||
-                    !formData?.mother_Name ||
-                    !formData?.student_Photo ||
-                    !formData?.category ||
-                    !formData?.address_for_id
-                    ? 'bg-gray-400 cursor-not-allowed' // Disabled color and cursor style
-                    : 'bg-blue-600' // Enabled color
+                  !formData.last_Name ||
+                  !formData?.aadhar_number ||
+                  !formData?.section ||
+                  !formData?.session ||
+                  !formData?.roll_Number ||
+                  !formData?.class_Id ||
+                  !formData?.gender ||
+                  !formData?.permanent_Address ||
+                  !formData?.date_Of_Birth ||
+                  !formData?.contact_Number ||
+                  !formData?.date_Of_Admission ||
+                  !formData?.father_Name ||
+                  !formData?.mother_Name ||
+                  !formData?.student_Photo ||
+                  !formData?.category ||
+                  !formData?.address_for_id
+                  ? 'bg-gray-400 cursor-not-allowed' // Disabled color and cursor style
+                  : 'bg-blue-600' // Enabled color
                   }`}
                 disabled={
                   !formData.first_Name ||
@@ -838,7 +806,6 @@ const AddStudent = () => {
                   !formData?.permanent_Address ||
                   !formData?.date_Of_Birth ||
                   !formData?.contact_Number ||
-                  !formData?.admission_Number ||
                   !formData?.date_Of_Admission ||
                   !formData?.father_Name ||
                   !formData?.mother_Name ||
