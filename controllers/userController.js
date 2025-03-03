@@ -3,7 +3,10 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user.js'); // Updated to Admin model
 const config = require('../config/config');
 const Tenant = require('../models/tenant');
-const qrCode = require('qrcode');
+
+
+const qrCode = require('qrcode'); // To generate QR codes dynamically
+const AdmissionNumber = require('../models/admissionNumber');
 
 
 
@@ -23,7 +26,8 @@ exports.addUser = async (req, res) => {
         logo,
         primaryColor,
         secondaryColor,
-        font
+        font,
+        prefix  // Ensure prefix is included in the received body
     } = req.body;
 
     if (!username || !password || !role) {
@@ -78,6 +82,14 @@ exports.addUser = async (req, res) => {
             });
 
             await newTenant.save();
+
+            // Also create an AdmissionNumber record for the new tenant
+            const newAdmissionNumber = new AdmissionNumber({
+                tenantId: newTenant._id,
+                prefix  // Use the provided prefix
+            });
+            await newAdmissionNumber.save();
+
             newUser.tenantId = newTenant._id; // Link user to the created tenant
         }
 
@@ -93,6 +105,7 @@ exports.addUser = async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
+
 
 
 exports.getUsers = async (req, res) => {

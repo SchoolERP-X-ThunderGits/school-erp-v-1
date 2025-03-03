@@ -1,22 +1,16 @@
 const Tenant = require('../models/tenant');
 const qrCode = require('qrcode'); // To generate QR codes dynamically
+const AdmissionNumber = require('../models/admissionNumber');
 
 const tenantController = {
     // Create a new tenant (Super Admin only)
     createTenant: async (req, res) => {
+        const { name, subdomain, admin, contactNumber, email, address, website, plan, prefix } = req.body;
         try {
-            const { name, subdomain, admin, contactNumber, email, address, website, plan } = req.body;
-
-            // Ensure subdomain is unique
+            // Check for existing subdomain
             const existingTenant = await Tenant.findOne({ subdomain });
             if (existingTenant) {
                 return res.status(400).json({ error: 'Subdomain already exists' });
-            }
-
-            // Generate QR code for website if provided
-            let qrCodeUrl = null;
-            if (website) {
-                qrCodeUrl = await qrCode.toDataURL(website);
             }
 
             const newTenant = new Tenant({
@@ -27,12 +21,20 @@ const tenantController = {
                 email,
                 address,
                 website,
-                qrCodeUrl,
                 plan
             });
 
-            await newTenant.save();
-            res.status(201).json({ message: 'Tenant created successfully', tenant: newTenant });
+            const savedTenant = await newTenant.save();
+
+            // Create AdmissionNumber entry
+            const newAdmissionNumber = new AdmissionNumber({
+                tenantId: savedTenant._id,
+                prefix: prefix
+            });
+
+            await newAdmissionNumber.save();
+
+            res.status(201).json({ message: 'Tenant and Admission Number created successfully', tenant: savedTenant });
         } catch (error) {
             console.error('Error creating tenant:', error);
             res.status(500).json({ error: 'Failed to create tenant' });
@@ -107,14 +109,44 @@ const tenantController = {
 
     // Delete a tenant (Super Admin only)
     deleteTenant: async (req, res) => {
+        const tenantId = req.params.id;
         try {
-            const tenant = await Tenant.findById(req.params.id);
+            const tenant = await Tenant.findById(tenantId);
             if (!tenant) {
                 return res.status(404).json({ error: 'Tenant not found' });
             }
-
+            // Deleting all related data
+            await Promise.all([
+                // Delete all users associated with the tenant
+                User.deleteMany({ tenantId }),
+                // Delete all students associated with the tenant
+                Student.deleteMany({ tenantId }),
+                // Delete all admission numbers associated with the tenant
+                AdmissionNumber.deleteOne({ tenantId }),
+                // Delete all classes associated with the tenant
+                Class.deleteMany({ tenantId }),
+                // Delete all exam names associated with the tenant
+                ExamName.deleteMany({ tenantId }),
+                // Delete all exam schedules associated with the tenant
+                ExamSchedule.deleteMany({ tenantId }),
+                // Fees related deletions
+                FeeStructure.deleteMany({ tenantId }),
+                FeeType.deleteMany({ tenantId }),
+                StudentFeeProfile.deleteMany({ tenantId }),
+                // Delete all parent records associated with the tenant
+                Parent.deleteMany({ tenantId }),
+                // Delete all payments associated with the tenant
+                Payment.deleteMany({ tenantId }),
+                // Delete all sections associated with the tenant
+                Section.deleteMany({ tenantId }),
+                // Delete all subject class mappings associated with the tenant
+                SubjectClassMapping.deleteMany({ tenantId }),
+                // Delete all subjects associated with the tenant
+                Subject.deleteMany({ tenantId })
+            ]);
+            // Finally, delete the tenant
             await tenant.deleteOne();
-            res.status(200).json({ message: 'Tenant deleted successfully' });
+            res.status(200).json({ message: 'Tenant and all related data deleted successfully' });
         } catch (error) {
             console.error('Error deleting tenant:', error);
             res.status(500).json({ error: 'Failed to delete tenant' });

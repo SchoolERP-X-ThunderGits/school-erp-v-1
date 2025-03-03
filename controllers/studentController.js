@@ -1,12 +1,13 @@
 const bcrypt = require('bcrypt');
 const Student = require('../models/student.js');
 const StudentFeeProfile = require("../models/fees/studentFeeProfile.js");
+const AdmissionNumber = require('../models/admissionNumber.js');
 
 exports.addStudent = async (req, res) => {
     const tenantId = req.user.tenantId; // Extract tenant ID from the logged-in user
 
     const {
-        admission_Number,
+        
         roll_Number,
         first_Name,
         last_Name,
@@ -33,14 +34,25 @@ exports.addStudent = async (req, res) => {
         section,
         session,
         feeStructures,
-        address_for_id 
+        address_for_id
     } = req.body;
 
     try {
         // Create a new student with tenantId
+        // Retrieve the current admission number entry for the tenant
+        const admissionNumberEntry = await AdmissionNumber.findOne({ tenantId });
+        if (!admissionNumberEntry) {
+            return res.status(404).json({ message: 'Admission number configuration not found' });
+        }
+
+        // Increment and format the new admission number
+        admissionNumberEntry.currentNumber += 1;
+        await admissionNumberEntry.save();
+
+        const admissionNumber = `${admissionNumberEntry.prefix}-${admissionNumberEntry.currentNumber.toString().padStart(5, '0')}`;
         const newStudent = new Student({
             tenantId,
-            admission_Number,
+            admission_Number: admissionNumber,
             roll_Number,
             first_Name,
             last_Name,
@@ -66,7 +78,7 @@ exports.addStudent = async (req, res) => {
             class_Id,
             section,
             session,
-            address_for_id, 
+            address_for_id,
         });
 
         const savedStudent = await newStudent.save();
@@ -93,7 +105,7 @@ exports.addStudent = async (req, res) => {
 exports.getStudents = async (req, res) => {
     try {
         const tenantId = req.user.tenantId;
-        
+
         // Fetch all students within the tenant
         const students = await Student.find({ tenantId }).populate('class_Id');
         res.status(200).json(students);
@@ -176,7 +188,7 @@ exports.deleteStudent = async (req, res) => {
 exports.getStudentsByClass = async (req, res) => {
     const tenantId = req.user.tenantId;
     const classId = req.params.classId;
-    
+
     try {
         const students = await Student.find({ class_Id: classId, tenantId });
         res.status(200).json(students);
