@@ -669,7 +669,7 @@ const AddStudent = () => {
                 </div>
 
                 {/* Aadhar Number */}
-                <div className="mb-4 ">
+                <div className="mb-4 col-span-2">
                   <label className="block text-gray-700">Aadhar Number *:</label>
                   <div className="flex space-x-2 mt-2">
                     {[0, 1, 2].map((index) => (
