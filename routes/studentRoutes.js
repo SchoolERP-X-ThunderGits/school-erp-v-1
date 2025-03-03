@@ -11,7 +11,8 @@ const {
     getStudentsByClassAndSection,
     getStudentsByQuery,
     getStudentsByClassOrSection,
-    getLastGeneratedAdmissionNumber
+    getLastGeneratedAdmissionNumber,
+    bulkAddStudents
 } = require("../controllers/studentController");
 const authMiddleware = require("../middleware/auth.js");
 

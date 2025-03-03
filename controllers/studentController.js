@@ -267,33 +267,7 @@ exports.getLastGeneratedAdmissionNumber = async (req, res) => {
     }
 };
 
-exports.bulkAddStudents = async (req, res, classId, section) => {
-    try {
-        const { file } = req;
-        if (!file) {
-            return res.status(400).send('No file uploaded.');
-        }
-
-        let format = '';
-        if (file.mimetype === 'text/csv' || file.mimetype === 'application/vnd.ms-excel') {
-            format = 'csv';
-        } else if (file.mimetype.includes('spreadsheetml')) {
-            format = 'xlsx';
-        } else {
-            return res.status(400).send('Unsupported file format');
-        }
-
-        const studentsData = await parseFile(file.buffer, format);
-        const results = await Promise.all(studentsData.map(studentData => this.processStudent(studentData, req.user.tenantId, classId, section)));
-
-        res.status(201).json({ message: 'Students uploaded and added successfully', results });
-    } catch (error) {
-        console.error('Error in bulk uploading students:', error);
-        res.status(500).json({ message: 'Server error', error });
-    }
-};
-
-exports.parseFile = async (buffer, format) => {
+const parseFile = async (buffer, format) => {
     if (format === 'csv') {
         return new Promise((resolve, reject) => {
             csv.parse(buffer, { columns: true }, (error, data) => {
@@ -308,7 +282,7 @@ exports.parseFile = async (buffer, format) => {
     }
 };
 
-exports.processStudent = async (studentData, tenantId, classId, section) => {
+const processStudent = async (studentData, tenantId, classId, section) => {
     const admissionNumberEntry = await AdmissionNumber.findOne({ tenantId });
     if (!admissionNumberEntry) {
         throw new Error('Admission number configuration not found');
@@ -338,3 +312,44 @@ exports.processStudent = async (studentData, tenantId, classId, section) => {
 
     return { admissionNumber: savedStudent.admission_Number, name: savedStudent.first_Name + ' ' + savedStudent.last_Name };
 };
+exports.bulkAddStudents = async (req, res, classId, section) => {
+    try {
+        const { file } = req;
+        if (!file) {
+            return res.status(400).send('No file uploaded.');
+        }
+
+        let format = file.mimetype.includes('csv') ? 'csv' : 'xlsx';
+        const studentsData = await parseFile(file.buffer, format);
+        
+        // Get the admission number entry for the tenant **only once**
+        const tenantId = req.user.tenantId;
+        let admissionNumberEntry = await AdmissionNumber.findOne({ tenantId });
+        
+        if (!admissionNumberEntry) {
+            return res.status(404).json({ message: 'Admission number configuration not found' });
+        }
+
+        let currentAdmissionNumber = admissionNumberEntry.currentNumber; // Get last used number
+
+        const results = [];
+
+        for (const studentData of studentsData) {
+            currentAdmissionNumber++; // Increment for each student
+            const admissionNumber = `${admissionNumberEntry.prefix}-${currentAdmissionNumber.toString().padStart(5, '0')}`;
+            
+            const savedStudent = await processStudent(studentData, tenantId, classId, section, admissionNumber);
+            results.push(savedStudent);
+        }
+
+        // Update admission number in database **after processing all students**
+        admissionNumberEntry.currentNumber = currentAdmissionNumber;
+        await admissionNumberEntry.save();
+
+        res.status(201).json({ message: 'Students uploaded and added successfully', results });
+    } catch (error) {
+        console.error('Error in bulk uploading students:', error);
+        res.status(500).json({ message: 'Server error', error });
+    }
+};
+
