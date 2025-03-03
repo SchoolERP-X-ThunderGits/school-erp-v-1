@@ -1,5 +1,7 @@
 const bcrypt = require('bcrypt');
 const Student = require('../models/student.js');
+const csv = require('csv-parse');
+const { parse } = require('xlsx');
 const StudentFeeProfile = require("../models/fees/studentFeeProfile.js");
 const AdmissionNumber = require('../models/admissionNumber.js');
 
@@ -7,7 +9,7 @@ exports.addStudent = async (req, res) => {
     const tenantId = req.user.tenantId; // Extract tenant ID from the logged-in user
 
     const {
-        
+
         roll_Number,
         first_Name,
         last_Name,
@@ -263,4 +265,76 @@ exports.getLastGeneratedAdmissionNumber = async (req, res) => {
         console.error('Error fetching last generated admission number:', error);
         res.status(500).json({ message: 'Server error' });
     }
+};
+
+exports.bulkAddStudents = async (req, res, classId, section) => {
+    try {
+        const { file } = req;
+        if (!file) {
+            return res.status(400).send('No file uploaded.');
+        }
+
+        let format = '';
+        if (file.mimetype === 'text/csv' || file.mimetype === 'application/vnd.ms-excel') {
+            format = 'csv';
+        } else if (file.mimetype.includes('spreadsheetml')) {
+            format = 'xlsx';
+        } else {
+            return res.status(400).send('Unsupported file format');
+        }
+
+        const studentsData = await parseFile(file.buffer, format);
+        const results = await Promise.all(studentsData.map(studentData => this.processStudent(studentData, req.user.tenantId, classId, section)));
+
+        res.status(201).json({ message: 'Students uploaded and added successfully', results });
+    } catch (error) {
+        console.error('Error in bulk uploading students:', error);
+        res.status(500).json({ message: 'Server error', error });
+    }
+};
+
+exports.parseFile = async (buffer, format) => {
+    if (format === 'csv') {
+        return new Promise((resolve, reject) => {
+            csv.parse(buffer, { columns: true }, (error, data) => {
+                if (error) reject(error);
+                resolve(data);
+            });
+        });
+    } else if (format === 'xlsx') {
+        const workbook = parse(buffer, { type: 'buffer' });
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        return parse.utils.sheet_to_json(worksheet);
+    }
+};
+
+exports.processStudent = async (studentData, tenantId, classId, section) => {
+    const admissionNumberEntry = await AdmissionNumber.findOne({ tenantId });
+    if (!admissionNumberEntry) {
+        throw new Error('Admission number configuration not found');
+    }
+    admissionNumberEntry.currentNumber += 1;
+    await admissionNumberEntry.save();
+    const admissionNumber = `${admissionNumberEntry.prefix}-${admissionNumberEntry.currentNumber.toString().padStart(5, '0')}`;
+
+    const student = new Student({
+        tenantId,
+        class_Id: classId,
+        section: section,
+        admission_Number: admissionNumber,
+        ...studentData,
+        date_Of_Birth: new Date(studentData.date_Of_Birth),
+        date_Of_Admission: new Date(studentData.date_Of_Admission),
+    });
+    const savedStudent = await student.save();
+
+    const newFeeProfile = new StudentFeeProfile({
+        studentId: savedStudent._id,
+        tenantId,
+        feeStructures: studentData.feeStructures ? JSON.parse(studentData.feeStructures) : [],
+        payments: []
+    });
+    await newFeeProfile.save();
+
+    return { admissionNumber: savedStudent.admission_Number, name: savedStudent.first_Name + ' ' + savedStudent.last_Name };
 };

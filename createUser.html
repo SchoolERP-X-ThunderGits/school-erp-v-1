@@ -65,7 +65,26 @@
                     <label class="block text-sm font-medium text-gray-700">Website</label>
                     <input type="text" id="website" name="website" class="w-full px-3 py-2 border rounded-md">
                 </div>
+                <!-- Director Signature URL -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Director Signature URL</label>
+                    <input type="text" id="directorSignature" name="directorSignature"
+                        class="w-full px-3 py-2 border rounded-md">
+                </div>
 
+                <!-- Principal Signature URL -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Principal Signature URL</label>
+                    <input type="text" id="principalSignature" name="principalSignature"
+                        class="w-full px-3 py-2 border rounded-md">
+                </div>
+
+                <!-- Manager Signature URL -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Manager Signature URL</label>
+                    <input type="text" id="managerSignature" name="managerSignature"
+                        class="w-full px-3 py-2 border rounded-md">
+                </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Contact Number</label>
                     <input type="text" id="contactNumber" name="contactNumber"
@@ -138,7 +157,10 @@
                 address: document.getElementById("role").value === "admin" ? document.getElementById("address").value : null,
                 logo: document.getElementById("role").value === "admin" ? document.getElementById("logo").value : null,
                 qrCodeUrl: document.getElementById("role").value === "admin" ? document.getElementById("qrCodeUrl").value : null,
-                prefix: document.getElementById("role").value === "admin" ? document.getElementById("admissionPrefix").value : null
+                prefix: document.getElementById("role").value === "admin" ? document.getElementById("admissionPrefix").value : null,
+                directorSignature: document.getElementById("role").value === "admin" ? document.getElementById("directorSignature").value : null,
+                principalSignature: document.getElementById("role").value === "admin" ? document.getElementById("principalSignature").value : null,
+                managerSignature: document.getElementById("role").value === "admin" ? document.getElementById("managerSignature").value : null
             };
 
             console.log("Submitting User Data:", formData);
