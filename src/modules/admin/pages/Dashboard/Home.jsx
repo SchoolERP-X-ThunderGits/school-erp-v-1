@@ -34,9 +34,7 @@ const AdminHome = () => {
   const [filteredTransactions, setFilteredTransactions] = useState(recentTransactions);
 
   useEffect(() => {
-
     setTimeout(() => {
-      
       fetchStudents();
       getClassList();
     }, 1000);

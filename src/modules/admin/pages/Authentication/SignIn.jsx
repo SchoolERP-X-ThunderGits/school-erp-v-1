@@ -28,7 +28,7 @@ const SignIn = () => {
       console.log('response:111', response);  // Ensure the response has the token
   
       if (response.token) {
-        sessionStorage.setItem("token", response.token); // Save token to sessionStorage
+        localStorage.setItem("token", response.token); // Save token to sessionStorage
         setSchoolData(response.tenant);
         showToast("Login successfully.", 'success');
         navigate("/admin/home");

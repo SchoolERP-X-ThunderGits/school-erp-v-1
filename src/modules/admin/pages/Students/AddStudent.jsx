@@ -1,36 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import { deleteService, getService, postService, putService } from '../../../../constants/Service'; // Importing services
+import { getService, postService } from '../../../../constants/Service'; // Importing services
 import apiName from '../../../../constants/ApiName'; // Importing API Names
 import { showToast } from '../../../../components/Toast'; // Show Toast Notifications
 import AdmissionReceipt from './AdmissionReceipt';
-import { Link, useNavigate } from 'react-router-dom';
-import Loader from '../../../../components/Loader';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { BASE_URL } from '../../../../constants/Config';
 const AddStudent = () => {
 
   const [feeStructures, setFeeStructures] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [showModal, setShowModal] = useState(false); // Modal state for adding student
   const [classes, setClasses] = useState([]); // Classes for dropdown
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [sections, setSections] = useState([
-
-  ]); // Sections for dropdown
-  const [sessions, setSessions] = useState(['2024-2025', '2025-2026', '2026-2027']); // Sessions for dropdown
-  const [categories, setCategories] = useState([]); // Categories for dropdown
+  const [sections, setSections] = useState([]); // Sections for dropdown
+  const [sessions] = useState(['2024-2025', '2025-2026', '2026-2027']); // Sessions for dropdown
   const [imageLoad, setImageLoad] = useState(false);
   const [registrationCompleted, setRegistrationCompleted] = useState(false);
-  const [blood_Groups, setblood_Groups] = useState([]); // Blood Groups for dropdown
   const [imagePreview, setImagePreview] = useState(null);
-  const [students, setStudents] = useState([]);
-  const [studentId, setStudentId] = useState(null);
   const [editMode, setEditMode] = useState(false);
-  const [classFilter, setClassFilter] = useState('');
-  const [lastAdmissionNumber, setLastAdmissionNumber] = useState("");
-  const [sectionFilter, setSectionFilter] = useState('');
-  const navigate = useNavigate();
   const [expandedFees, setExpandedFees] = useState({});
-  const [searchText, setSearchText] = useState('');
   const [aadharParts, setAadharParts] = useState(["", "", ""]);
+  const [bulkStudentModal, setBulkStudentModal] = useState(false)
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     admission_Number: '',
     address_for_id: '',
@@ -61,6 +51,9 @@ const AddStudent = () => {
     aadhar_number: '',
     feeStructures: []
   });
+  const [bulkClassId, setBulkClassId] = useState('')
+  const [bulkSection, setBulkSection] = useState('')
+  const [bulkFile, setBulkFile] = useState('')
   useEffect(() => {
     setLoading(true);
     fetchClasses();
@@ -101,14 +94,44 @@ const AddStudent = () => {
       feeStructures: []
     })
   }
+  const buildStudentUpload = async () => {
+    if (!bulkFile) {
+      showToast("Please select a file to upload.", 'error');
+      return;
+    }
+    const formData = new FormData();
+    formData.append("classId", bulkClassId);
+    formData.append("section", bulkSection);
+    formData.append("file", bulkFile); // Ensure the file is appended
+
+    try {
+      const response = await fetch(`${BASE_URL}${apiName.bulkUpload}`, {
+        method: "POST",
+        headers: {
+          "Authorization": localStorage.getItem('token'),
+        },
+        body: formData,
+      });
+      const data = await response.json();
+      if (data?.results) {
+        showToast(data?.message, 'success')
+        setBulkStudentModal(false)
+        navigate('/admin/student')
+      } else {
+        showToast('Invalid file upload, please try again.', 'error')
+      }
+
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      // setResponseMessage(`Error: ${error.message}`);
+    }
+  };
 
   const fetchStudents = async () => {
     try {
       const result = await getService(apiName.getStudent); // API to get fee structures
-      setStudents(result)
       setEditMode(false)
       setLoading(false)
-      console.log('ksfkskfskfksfks', result)
     } catch (error) {
       showToast('Error fetching fee structures', 'error');
     }
@@ -127,7 +150,6 @@ const AddStudent = () => {
   const fetchClasses = async () => {
     try {
       const result = await getService(apiName.getClassList); // Get Classes API
-      console.log('lbvlblvbllvb', result)
       setClasses(result);
     } catch (error) {
       // showToast('Error fetching classes', 'error');
@@ -157,7 +179,6 @@ const AddStudent = () => {
 
   const handleInputChange = (e) => {
     const { name, value, type, files } = e.target;
-    console.log('bvlvlblvlb', name, value)
     if (name == 'class_Id') {
       const filterClassData = classes.filter((classes) => classes._id === value);
       setSections(filterClassData[0]?.sections)
@@ -228,8 +249,6 @@ const AddStudent = () => {
       const updatedParts = [...aadharParts];
       updatedParts[index] = value;
       setAadharParts(updatedParts);
-      console.log("Updated Aadhar parts: ", updatedParts);
-
       // Auto-focus to the next input if 4 digits are entered
       if (value.length === 4 && index < 3) {
         const nextInput = document.querySelector(`input[name="aadhar-${index + 1}"]`);
@@ -257,7 +276,9 @@ const AddStudent = () => {
       }
     }
   };
-
+  const handleFileChange = (event) => {
+    setBulkFile(event.target.files[0]);
+  };
 
   const handleSubmit = async () => {
 
@@ -270,10 +291,8 @@ const AddStudent = () => {
       return;
     }
     setImageLoad(true)
-    console.log('bkdkbdb', formData)
     try {
       const response = await postService(apiName.addStudent, formData);
-      console.log('reses222spon1111se', response)
       setRegistrationCompleted(true)
 
       // navigate('/admin/student')
@@ -284,7 +303,6 @@ const AddStudent = () => {
       });
       showToast("Student added successfully.", 'success');
     } catch (error) {
-      console.log('errorrrrr', error)
       showToast('Error submitting data', 'error');
       setImageLoad(false)
     }
@@ -318,6 +336,18 @@ const AddStudent = () => {
 
             {/* Scrollable container */}
             <div className="">
+              <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+                <button onClick={() => setBulkStudentModal(true)} style={{
+                  backgroundColor: "#007bff",
+                  color: "white",
+                  fontWeight: '500',
+                  padding: 10,
+                  borderRadius: 10,
+                  marginTop: 20, marginBottom: 20
+                }}>
+                  Import Student
+                </button>
+              </div>
 
               {/* Form Fields */}
               <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -689,7 +719,7 @@ const AddStudent = () => {
 
                 {/* Student photo */}
                 {
-                  !editMode &&
+                  // !editMode &&
                   <div className="mb-4 ">
                     <label className="block text-gray-700">Student Photo *:</label>
                     <input
@@ -708,7 +738,7 @@ const AddStudent = () => {
 
               </div>
               {
-                !editMode &&
+                // !editMode &&
 
                 <div className="mb-4 ">
                   <label className="block text-gray-700">Fee Structure :</label>
@@ -821,6 +851,77 @@ const AddStudent = () => {
 
           </div>
       }
+      {bulkStudentModal && <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white p-8 rounded-lg shadow-lg w-96 max-w-sm">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-6">Bulk Student Upload</h2>
+          <div className="mb-4">
+            <label className="block text-gray-700">Class *:</label>
+            <select
+              name="class_Id"
+              value={bulkClassId}
+              onChange={(e) => {
+                setBulkClassId(e.target?.value)
+                const filterClassData = classes.filter((classes) => classes._id === e.target?.value);
+                setSections(filterClassData[0]?.sections)
+              }}
+              className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+            >
+              <option value="">Select Class</option>
+              {classes?.map((cls) => (
+                <option key={cls._id} value={cls._id}>
+                  {cls.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Section Dropdown */}
+          <div className="mb-4">
+            <label className="block text-gray-700">Section *:</label>
+            <select
+              name="section"
+              value={bulkSection}
+              onChange={(e) => {
+                setBulkSection(e.target?.value)
+              }}
+              className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+              disabled={!bulkClassId}
+            >
+              <option value="">Select Section</option>
+              {sections?.map((section) => (
+                <option key={section} value={section}>
+                  {section}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-600">File</label>
+            <input
+              type="file"
+              onChange={handleFileChange}
+              accept=".csv, .xlsx"
+              className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Upload file"
+            />
+          </div>
+
+          <div className="flex justify-end space-x-4">
+            <button
+              onClick={() => { setBulkStudentModal(false) }}
+              className="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition duration-200"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={buildStudentUpload}
+              className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-200"
+            >
+              Upload
+            </button>
+          </div>
+        </div>
+      </div>}
     </div>
 
   );

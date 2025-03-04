@@ -23,12 +23,12 @@ const Subject = () => {
     const getSubjectList = async () => {
         try {
             const result = await getService(apiName.subject); // API endpoint (e.g. '/posts')
+            setLoading(false)
             setEditMode(false);
             setEditId('');
             setSubjectList(result);
             setNewSubjectName('');
             setShowModal(false);
-            setLoading(false);
         } catch (error) {
             setLoading(false);
         }

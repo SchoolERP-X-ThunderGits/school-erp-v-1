@@ -12,7 +12,7 @@ export const UserProvider = ({ children }) => {
 
   // Load school data from sessionStorage when the component mounts
   useEffect(() => {
-    const storedSchool = sessionStorage.getItem('school');
+    const storedSchool = localStorage.getItem('school');
     if (storedSchool) {
       setSchool(JSON.parse(storedSchool));  // Load the school data from sessionStorage
     }
@@ -21,13 +21,13 @@ export const UserProvider = ({ children }) => {
   // Function to update the school data
   const setSchoolData = (schoolData) => {
     setSchool(schoolData);
-    sessionStorage.setItem('school', JSON.stringify(schoolData)); // Store it in sessionStorage
+    localStorage.setItem('school', JSON.stringify(schoolData)); // Store it in sessionStorage
   };
 
   // Function to log out and clear the school data
   const logout = () => {
     setSchool(null);
-    sessionStorage.removeItem('school'); // Clear from sessionStorage
+    localStorage.removeItem('school'); // Clear from sessionStorage
   };
 
   return (

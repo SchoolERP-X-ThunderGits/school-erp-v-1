@@ -1,15 +1,28 @@
 import axios from 'axios';
-import {BASE_URL} from './Config'
-// Set up a default base URL if needed
-// Axios instance configuration (optional)
+import { BASE_URL } from './Config';
+
+// Create the Axios instance
 const api = axios.create({
   baseURL: BASE_URL,
   headers: {
     'Content-Type': 'application/json',
-    "Authorization":sessionStorage.getItem("token"),
-    // Add any other common headers if needed, e.g. Authorization
   },
 });
+
+// Add an interceptor to update the Authorization header with the latest token
+api.interceptors.request.use(
+  (config) => {
+    // Get the token from sessionStorage on every request
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers['Authorization'] = token; // Set token dynamically
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 // GET Request
 export const getService = async (url, params = {}) => {

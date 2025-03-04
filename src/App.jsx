@@ -38,7 +38,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const token = sessionStorage.getItem('token');
+    const token = localStorage.getItem('token');
     if (token) {
       // Only redirect if you're not already on the home page or any other admin pages
       if (pathname === '/' || pathname === '/admin') {

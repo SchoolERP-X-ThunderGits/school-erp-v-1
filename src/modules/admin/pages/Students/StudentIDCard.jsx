@@ -225,7 +225,7 @@ const StudentIDCard = () => {
                         key={index}
                         style={selectedTemplate === 'portrait' ? styles.portraitPage : styles.landscapePage}
                     >
-                        {console.log('vllvclvc',student)}
+                        {console.log('vllvclvc', student)}
                         <View style={[{ position: 'absolute', zIndex: -100, width: '100%', height: '100%' }]}>
                             <Image style={{ width: '100%', height: '100%' }} src={'https://i2.wp.com/a.rgbimg.com/users/o/or/organza3/600/msE62kY.jpg'} />
                         </View>
@@ -246,7 +246,7 @@ const StudentIDCard = () => {
                                     <Image style={{ width: 50, height: 50 }} src={school?.qrCodeUrl} />
                                 </View>
                             </View>
-                            <View style={{ height: 1, backgroundColor: 'black', width: '100%', marginTop:10 }}></View>
+                            <View style={{ height: 1, backgroundColor: 'black', width: '100%', marginTop: 10 }}></View>
                             {/* Profile and Student Details Section */}
                             <View style={styles.body}>
                                 <View style={styles.profileSection}>
@@ -290,11 +290,11 @@ const StudentIDCard = () => {
                             <View style={{ flexDirection: 'row', justifyContent: 'space-around', position: 'relative', bottom: 10, marginTop: selectedTemplate === 'portrait' ? 30 : 0 }}>
 
                                 <View>
-                                    <Image style={{ width: 25, height: 25, objectFit: 'cover', alignSelf: 'center' }} src={sign} />
+                                    <Image style={{ width: 25, height: 25, objectFit: 'cover', alignSelf: 'center' }} src={school?.principalSignature} />
                                     <Text style={{ fontSize: 12, marginTop: 5 }}>Principle Signature</Text>
                                 </View>
                                 <View>
-                                    <Image style={{ width: 25, height: 25, objectFit: 'cover', alignSelf: 'center' }} src={sign} />
+                                    <Image style={{ width: 25, height: 25, objectFit: 'cover', alignSelf: 'center' }} src={school?.directorSignature} />
                                     <Text style={{ fontSize: 12, marginTop: 5 }}>Director Signature</Text>
                                 </View>
                             </View>
@@ -445,7 +445,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         border: '3px solid #2C3E50',
         marginTop: 10,
-        marginRight:30,
+        marginRight: 30,
         boxShadow: '0 2px 5px rgba(0, 0, 0, 0.2)',
     },
     detailsSection: {

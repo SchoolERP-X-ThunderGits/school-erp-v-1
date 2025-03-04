@@ -25,7 +25,7 @@ const EditStudent = () => {
     const navigate = useNavigate();
     const [aadharParts, setAadharParts] = useState(["", "", ""]);
     const [formData, setFormData] = useState({
-        admission_Number: '',
+        address_for_id: '',
         roll_Number: '',
         first_Name: '',
         last_Name: '',
@@ -65,8 +65,8 @@ const EditStudent = () => {
         try {
             const studentData = await getService(`${apiName.getStudentById}/${id}`); // API to get fee structures
             setFormData({
-                admission_Number: studentData?.admission_Number,
                 roll_Number: studentData?.roll_Number,
+                address_for_id: studentData?.address_for_id,
                 first_Name: studentData?.first_Name,
                 last_Name: studentData?.last_Name,
                 class_Id: studentData?.class_Id?._id,
@@ -103,7 +103,7 @@ const EditStudent = () => {
             showToast('Error fetching fee structures', 'error');
         }
     };
-    {console.log('kvkvbkv',formData?.aadhar_number)}
+    { console.log('kvkvbkv', formData?.aadhar_number) }
     const fetchFeeStructures = async () => {
         try {
             const result = await getService(apiName.getFeeStructure); // API to get fee structures
@@ -281,30 +281,29 @@ const EditStudent = () => {
             {/* Add Student Modal */}
             <h2 className="text-2xl font-semibold mb-4">Add Student</h2>
 
-            {/* Scrollable container */}
-            <div className="max-h-[500px]">
-                {/* Form Fields */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="">
+                <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+                    <button onClick={() => setBulkStudentModal(true)} style={{
+                        backgroundColor: "#007bff",
+                        color: "white",
+                        fontWeight: '500',
+                        padding: 10,
+                        borderRadius: 10,
+                        marginTop: 20, marginBottom: 20
+                    }}>
+                        Import Student
+                    </button>
+                </div>
 
-                    {/* Admission Number */}
-                    <div className="mb-4">
-                        <label className="block text-gray-700">Admission Number *:</label>
-                        {console.log('formData', formData)}
-                        <input
-                            type="text"
-                            readOnly
-                            name="admission_Number"
-                            value={formData.admission_Number ? formData?.admission_Number : lastAdmissionNumber}
-                            onChange={handleInputChange}
-                            className="mt-2 p-2 border border-gray-300 rounded-md w-full"
-                        />
-                    </div>
+                {/* Form Fields */}
+                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4">
+
 
                     {/* Roll Number */}
                     <div className="mb-4">
                         <label className="block text-gray-700">Roll Number :</label>
                         <input
-                            type="text"
+                            type="number"
                             name="roll_Number"
                             value={formData.roll_Number}
                             onChange={handleInputChange}
@@ -345,9 +344,8 @@ const EditStudent = () => {
                             onChange={handleInputChange}
                             className="mt-2 p-2 border border-gray-300 rounded-md w-full"
                         >
-                            {console.log('bkvkkbkvb', classes)}
                             <option value="">Select Class</option>
-                            {classes.map((cls) => (
+                            {classes?.map((cls) => (
                                 <option key={cls._id} value={cls._id}>
                                     {cls.name}
                                 </option>
@@ -363,9 +361,10 @@ const EditStudent = () => {
                             value={formData.section}
                             onChange={handleInputChange}
                             className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                            disabled={!formData.class_Id}
                         >
                             <option value="">Select Section</option>
-                            {sections.map((section) => (
+                            {sections?.map((section) => (
                                 <option key={section} value={section}>
                                     {section}
                                 </option>
@@ -382,8 +381,8 @@ const EditStudent = () => {
                             onChange={handleInputChange}
                             className="mt-2 p-2 border border-gray-300 rounded-md w-full"
                         >
-                            <option value="">Select Section</option>
-                            {sessions.map((section) => (
+                            <option value="">Select Session</option>
+                            {sessions?.map((section) => (
                                 <option key={section} value={section}>
                                     {section}
                                 </option>
@@ -420,7 +419,7 @@ const EditStudent = () => {
                     </div>
 
                     {/* Permanent Address */}
-                    <div className="mb-4 col-span-2">
+                    <div className="mb-4 ">
                         <label className="block text-gray-700">Permanent Address *:</label>
                         <input
                             type="text"
@@ -442,7 +441,8 @@ const EditStudent = () => {
                             className="mt-2 p-2 border border-gray-300 rounded-md w-full"
                         />
                     </div>
-                    <div className="mb-4  col-span-2">
+
+                    <div className="mb-4 ">
                         <label className="block text-gray-700">Address for Correspondence *:</label>
                         <input
                             type="text"
@@ -451,7 +451,24 @@ const EditStudent = () => {
                             onChange={handleInputChange}
                             className="mt-2 p-2 border border-gray-300 rounded-md w-full"
                         />
+                        <input
+                            type="checkbox"
+                            id="sameAsPermanent"
+                            checked={formData.isSameAsPermanent}
+                            onChange={() => {
+                                setFormData((prev) => ({
+                                    ...prev,
+                                    address_For_Correspondence: prev.permanent_Address,
+                                }));
+                            }}
+                            className="mr-2"
+                        />
+                        <label htmlFor="sameAsPermanent" className="text-gray-700">
+                            Same as Permanent Address
+                        </label>
                     </div>
+
+
                     <div className="mb-4">
                         <label className="block text-gray-700">Alternate Contact No:</label>
                         <input
@@ -462,7 +479,17 @@ const EditStudent = () => {
                             className="mt-2 p-2 border border-gray-300 rounded-md w-full"
                         />
                     </div>
-
+                    <div className="mb-4 ">
+                        <label className="block text-gray-700">Address for Id Card*:</label>
+                        <input
+                            type="text"
+                            name="address_for_id"
+                            maxLength={45}
+                            value={formData.address_for_id}
+                            onChange={handleInputChange}
+                            className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                        />
+                    </div>
                     {/* Email */}
                     <div className="mb-4">
                         <label className="block text-gray-700">Email:</label>
@@ -474,9 +501,12 @@ const EditStudent = () => {
                             className="mt-2 p-2 border border-gray-300 rounded-md w-full"
                         />
                     </div>
+
+                    {/* Nationality */}
                     <div className="mb-4">
                         <label className="block text-gray-700">Nationality :</label>
                         <input
+                            readOnly
                             type="text"
                             name="nationality"
                             value={formData.nationality}
@@ -485,19 +515,28 @@ const EditStudent = () => {
                         />
                     </div>
 
+                    {/* Religion */}
                     <div className="mb-4">
-                        <label className="block text-gray-700">Religion :</label>
-                        <input
-                            type="text"
+                        <label className="block text-gray-700">Religion:</label>
+                        <select
                             name="religion"
                             value={formData.religion}
                             onChange={handleInputChange}
                             className="mt-2 p-2 border border-gray-300 rounded-md w-full"
-                        />
+                        >
+                            <option value="">Select Religion</option>
+                            <option value="Hinduism">Hinduism</option>
+                            <option value="Islam">Islam</option>
+                            <option value="Christianity">Christianity</option>
+                            <option value="Sikhism">Sikhism</option>
+                            <option value="Buddhism">Buddhism</option>
+                            <option value="Other">Other</option>
+                        </select>
                     </div>
-                    {/* Gender Dropdown */}
+
+                    {/* Category */}
                     <div className="mb-4">
-                        <label className="block text-gray-700">Calegory *:</label>
+                        <label className="block text-gray-700">Category *:</label>
                         <select
                             name="category"
                             value={formData.category}
@@ -511,6 +550,8 @@ const EditStudent = () => {
                             <option value="ST">ST</option>
                         </select>
                     </div>
+
+                    {/* Blood Group */}
                     <div className="mb-4">
                         <label className="block text-gray-700">Blood Group :</label>
                         <select
@@ -531,7 +572,6 @@ const EditStudent = () => {
                         </select>
                     </div>
 
-
                     {/* Father's Name */}
                     <div className="mb-4">
                         <label className="block text-gray-700">Father's Name *:</label>
@@ -543,8 +583,10 @@ const EditStudent = () => {
                             className="mt-2 p-2 border border-gray-300 rounded-md w-full"
                         />
                     </div>
+
+                    {/* Father's Occupation */}
                     <div className="mb-4">
-                        <label className="block text-gray-700">Father's Occupation *:</label>
+                        <label className="block text-gray-700">Father's Occupation :</label>
                         <input
                             type="text"
                             name="father_Occupation"
@@ -564,10 +606,11 @@ const EditStudent = () => {
                             onChange={handleInputChange}
                             className="mt-2 p-2 border border-gray-300 rounded-md w-full"
                         />
-
                     </div>
+
+                    {/* Mother's Occupation */}
                     <div className="mb-4">
-                        <label className="block text-gray-700">Mother's Occupation *:</label>
+                        <label className="block text-gray-700">Mother's Occupation :</label>
                         <input
                             type="text"
                             name="mother_Occupation"
@@ -576,10 +619,12 @@ const EditStudent = () => {
                             className="mt-2 p-2 border border-gray-300 rounded-md w-full"
                         />
                     </div>
+
+                    {/* Due amount */}
                     <div className="mb-4">
                         <label className="block text-gray-700">Due amount :</label>
                         <input
-                            type="text"
+                            type="number"
                             name="due_amount"
                             value={formData.due_amount}
                             onChange={handleInputChange}
@@ -587,9 +632,9 @@ const EditStudent = () => {
                         />
                     </div>
 
-                    <div className="mb-4">
+                    {/* Date of Admission */}
+                    <div className="mb-4 ">
                         <label className="block text-gray-700">Date of Admission *:</label>
-                        {console.log('formData.date_Of_Admission', formData.date_Of_Admission)}
                         <input
                             type="date"
                             name="date_Of_Admission"
@@ -600,7 +645,7 @@ const EditStudent = () => {
                     </div>
 
                     {/* Aadhar Number */}
-                    <div className="mb-4">
+                    <div className="mb-4 col-span-2">
                         <label className="block text-gray-700">Aadhar Number *:</label>
                         <div className="flex space-x-2 mt-2">
                             {[0, 1, 2].map((index) => (
@@ -618,24 +663,31 @@ const EditStudent = () => {
                         </div>
                     </div>
 
-                    <div className="mb-4 col-span-2">
-                        <label className="block text-gray-700">Student photo *:</label>
-                        <input
-                            type="file"
-                            name="student_Photo"
-                            onChange={handleInputChange}
-                            className="mt-2 p-2 border border-gray-300 rounded-md w-full"
-                        />
-                    </div>
+                    {/* Student photo */}
+                    {
+                        // !editMode &&
+                        <div className="mb-4 ">
+                            <label className="block text-gray-700">Student Photo *:</label>
+                            <input
+                                type="file"
+                                name="image"
+                                onChange={handleInputChange}
+                                className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                            />
+                        </div>
+                    }
                     {imagePreview && (
-                        <div className="mt-4 col-span-3 flex justify-center items-center">
+                        <div className="mt-4 mb-6 flex justify-center items-center">
                             <img src={imagePreview} alt="Student Preview" className="w-30 h-30 object-cover rounded-md" />
                         </div>
                     )}
 
+                </div>
+                {
+                    // !editMode &&
 
-                    <div className="mb-4 col-span-3">
-                        <label className="block text-gray-700">Fee Structure *:</label>
+                    <div className="mb-4 ">
+                        <label className="block text-gray-700">Fee Structure :</label>
                         <div className="space-y-2 max-h-102 overflow-y-auto">
                             {console.log('feeStructures', feeStructures)}
                             {feeStructures.map((fee) => (
@@ -690,25 +742,57 @@ const EditStudent = () => {
                         </div>
 
                     </div>
+                }
+            </div>
 
-                </div>
+            {/* Submit Button */}
+            <div className="flex justify-center mt-6">
+                {console.log('formDataformData', formData)}
+                <button
+                    onClick={handleSubmit}
+                    className={`px-4 py-2 rounded-md text-white ${!formData.first_Name ||
+                        !formData.last_Name ||
+                        !formData?.aadhar_number ||
+                        !formData?.section ||
+                        !formData?.session ||
+                        !formData?.roll_Number ||
+                        !formData?.class_Id ||
+                        !formData?.gender ||
+                        !formData?.permanent_Address ||
+                        !formData?.date_Of_Birth ||
+                        !formData?.contact_Number ||
+                        !formData?.date_Of_Admission ||
+                        !formData?.father_Name ||
+                        !formData?.mother_Name ||
+                        !formData?.student_Photo ||
+                        !formData?.category ||
+                        !formData?.address_for_id
+                        ? 'bg-gray-400 cursor-not-allowed' // Disabled color and cursor style
+                        : 'bg-blue-600' // Enabled color
+                        }`}
+                    disabled={
+                        !formData.first_Name ||
+                        !formData.last_Name ||
+                        !formData?.aadhar_number ||
+                        !formData?.section ||
+                        !formData?.session ||
+                        !formData?.roll_Number ||
+                        !formData?.class_Id ||
+                        !formData?.gender ||
+                        !formData?.permanent_Address ||
+                        !formData?.date_Of_Birth ||
+                        !formData?.contact_Number ||
+                        !formData?.date_Of_Admission ||
+                        !formData?.father_Name ||
+                        !formData?.mother_Name ||
+                        !formData?.student_Photo ||
+                        !formData?.category ||
+                        !formData?.address_for_id
+                    }
+                >
+                    Submit
+                </button>
 
-                {/* Buttons */}
-                <div style={{ paddingBottom: 20 }} className="mb-4 flex justify-end">
-                    <button
-                        onClick={handleSubmit}
-                        className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-                    >
-                        {'Update Student'}
-                    </button>
-                    <button
-                        style={{ marginLeft: 20 }}
-                        onClick={() => { navigate('/admin/student') }}
-                        className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400"
-                    >
-                        Cancel
-                    </button>
-                </div>
             </div>
 
         </div>
