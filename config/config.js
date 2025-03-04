@@ -8,7 +8,8 @@ const config = {
 
   // Database configuration
   database: {
-    url: process.env.MONGODB_URI || 'mongodb://64.227.169.28:27017/', // MongoDB connection URI
+    url: process.env.MONGODB_URI || 'mongodb+srv://thundergits:VSjOjRcjhaF8ohFP@cluster0.z23dt.mongodb.net/mydb' 
+    // 'mongodb://64.227.169.28:27017/', // MongoDB connection URI
   },
 
   // Authentication configuration
