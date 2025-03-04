@@ -2,10 +2,11 @@ const express = require('express');
 const router = express.Router();
 const SubjectClassMapping = require('../models/subjectClassMapping');
 const Class = require('../models/class');
+const authMiddleware = require("../middleware/auth.js");
 const Subject = require('../models/subject');
 
 // Create a new subject-class mapping
-router.post('/', async (req, res) => {
+router.post('/',authMiddleware(), async (req, res) => {
     const { classId, subjects } = req.body;
     const tenantId = req.user.tenantId; // Assuming tenantId is set on req.user by some middleware
 
@@ -30,7 +31,7 @@ router.post('/', async (req, res) => {
 });
 
 // Get all subject-class mappings for a tenant
-router.get('/', async (req, res) => {
+router.get('/',authMiddleware(), async (req, res) => {
     const tenantId = req.user.tenantId;
 
     try {
@@ -42,7 +43,7 @@ router.get('/', async (req, res) => {
 });
 
 // Get a subject-class mapping by ID, scoped to tenant
-router.get('/:id', async (req, res) => {
+router.get('/:id',authMiddleware(), async (req, res) => {
     const tenantId = req.user.tenantId;
 
     try {
@@ -57,7 +58,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Update a subject-class mapping, scoped to tenant
-router.put('/:id', async (req, res) => {
+router.put('/:id',authMiddleware(), async (req, res) => {
     const { classId, subjects } = req.body;
     const tenantId = req.user.tenantId;
 
@@ -90,7 +91,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // Delete a subject-class mapping, scoped to tenant
-router.delete('/:id', async (req, res) => {
+router.delete('/:id',authMiddleware(),async (req, res) => {
     const tenantId = req.user.tenantId;
 
     try {

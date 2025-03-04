@@ -4,9 +4,10 @@ const ExamSchedule = require('../models/examSchedule');
 const Subject = require('../models/subject');
 const ExamName = require('../models/examName');
 const Class = require('../models/class');
+const authMiddleware = require("../middleware/auth.js");
 
 // Create a new exam schedule
-router.post('/', async (req, res) => {
+router.post('/',authMiddleware(), async (req, res) => {
     const { examNameId, subjectId, classId, date, startTime, endTime } = req.body;
     const tenantId = req.user.tenantId; // Assuming tenantId is set on req.user by some middleware
 
@@ -39,7 +40,7 @@ router.post('/', async (req, res) => {
 });
 
 // Get all exam schedules for the tenant
-router.get('/', async (req, res) => {
+router.get('/',authMiddleware(), async (req, res) => {
     const tenantId = req.user.tenantId;
     try {
         const schedules = await ExamSchedule.find({ tenantId })
@@ -52,7 +53,7 @@ router.get('/', async (req, res) => {
 });
 
 // Get a single exam schedule by ID, scoped to tenant
-router.get('/:id', async (req, res) => {
+router.get('/:id',authMiddleware(), async (req, res) => {
     const tenantId = req.user.tenantId;
     try {
         const examSchedule = await ExamSchedule.findOne({ _id: req.params.id, tenantId })
@@ -69,7 +70,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Update an exam schedule by ID, scoped to tenant
-router.put('/:id', async (req, res) => {
+router.put('/:id',authMiddleware(), async (req, res) => {
     const { examNameId, subjectId, classId, date, startTime, endTime } = req.body;
     const tenantId = req.user.tenantId;
 
@@ -101,7 +102,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // Delete an exam schedule by ID, scoped to tenant
-router.delete('/:id', async (req, res) => {
+router.delete('/:id',authMiddleware(), async (req, res) => {
     const tenantId = req.user.tenantId;
     try {
         const examSchedule = await ExamSchedule.findOneAndDelete({ _id: req.params.id, tenantId });

@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const Subject = require('../models/subject');
+const authMiddleware = require("../middleware/auth.js");
 
 // Create a new subject
-router.post('/', async (req, res) => {
+router.post('/',authMiddleware(), async (req, res) => {
     const { name } = req.body;
     const tenantId = req.user.tenantId; // Assuming tenantId is set on req.user by some middleware
 
@@ -17,7 +18,7 @@ router.post('/', async (req, res) => {
 });
 
 // Get all subjects for a tenant
-router.get('/', async (req, res) => {
+router.get('/',authMiddleware(), async (req, res) => {
     const tenantId = req.user.tenantId;
 
     try {
@@ -29,7 +30,7 @@ router.get('/', async (req, res) => {
 });
 
 // Get a subject by ID, scoped to tenant
-router.get('/:id', async (req, res) => {
+router.get('/:id',authMiddleware(), async (req, res) => {
     const tenantId = req.user.tenantId;
 
     try {
@@ -44,7 +45,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Update a subject, scoped to tenant
-router.put('/:id', async (req, res) => {
+router.put('/:id',authMiddleware(), async (req, res) => {
     const { name } = req.body;
     const tenantId = req.user.tenantId;
 
@@ -64,7 +65,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // Delete a subject, scoped to tenant
-router.delete('/:id', async (req, res) => {
+router.delete('/:id',authMiddleware(), async (req, res) => {
     const tenantId = req.user.tenantId;
 
     try {

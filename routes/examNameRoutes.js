@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const ExamName = require('../models/examName');
+const authMiddleware = require("../middleware/auth.js");
 
 // Create a new exam name
-router.post('/', async (req, res) => {
+router.post('/',authMiddleware(), async (req, res) => {
     const { name, session } = req.body;
     const tenantId = req.user.tenantId; // Assuming tenantId is set on req.user by some middleware
     try {
@@ -16,7 +17,7 @@ router.post('/', async (req, res) => {
 });
 
 // Get all exam names for the tenant
-router.get('/', async (req, res) => {
+router.get('/',authMiddleware(), async (req, res) => {
     const tenantId = req.user.tenantId; // Assuming tenantId is set on req.user by some middleware
     try {
         const examNames = await ExamName.find({ tenantId });
@@ -27,7 +28,7 @@ router.get('/', async (req, res) => {
 });
 
 // Get a single exam name by ID scoped to tenant
-router.get('/:id', async (req, res) => {
+router.get('/:id',authMiddleware(), async (req, res) => {
     const tenantId = req.user.tenantId;
     try {
         const examName = await ExamName.findOne({ _id: req.params.id, tenantId });
@@ -43,7 +44,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Update an exam name by ID scoped to tenant
-router.put('/:id', async (req, res) => {
+router.put('/:id',authMiddleware(), async (req, res) => {
     const { name, session } = req.body;
     const tenantId = req.user.tenantId;
     try {
@@ -64,7 +65,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // Delete an exam name by ID scoped to tenant
-router.delete('/:id', async (req, res) => {
+router.delete('/:id',authMiddleware(), async (req, res) => {
     const tenantId = req.user.tenantId;
     try {
         const examName = await ExamName.findOneAndDelete({ _id: req.params.id, tenantId });

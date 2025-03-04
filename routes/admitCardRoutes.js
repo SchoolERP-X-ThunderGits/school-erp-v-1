@@ -4,8 +4,9 @@ const ExamSchedule = require('../models/examSchedule');
 const Subject = require('../models/subject');
 const ExamName = require('../models/examName');
 const Class = require('../models/class');
+const authMiddleware = require("../middleware/auth.js");
 
-router.get('/by-class-and-exam', async (req, res) => {
+router.get('/by-class-and-exam',authMiddleware(), async (req, res) => {
     try {
         const { classId, examNameId } = req.query;
         console.log(classId,examNameId);
