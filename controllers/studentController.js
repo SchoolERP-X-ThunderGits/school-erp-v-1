@@ -120,7 +120,7 @@ exports.getStudents = async (req, res) => {
 exports.getStudentById = async (req, res) => {
     const studentId = req.params.id;
     try {
-        const tenantId = req.user.tenantId;
+
 
         // Fetch student by ID and tenantId
         const student = await Student.findOne({ _id: studentId, }).populate('class_Id');
