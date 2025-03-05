@@ -247,7 +247,6 @@ const StudentIDCard = () => {
                                 </View>
                             </View>
                             <View style={{ height: 1, backgroundColor: 'black', width: '100%', marginTop: 10 }}></View>
-                            {/* Profile and Student Details Section */}
                             <View style={styles.body}>
                                 <View style={styles.profileSection}>
                                     <Image
@@ -285,19 +284,21 @@ const StudentIDCard = () => {
                                     </View>
                                 </View>
                             </View>
+                            {
+                                school?.principalSignature &&
 
-                            {/* Footer */}
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-around', position: 'relative', bottom: 10, marginTop: selectedTemplate === 'portrait' ? 30 : 0 }}>
+                                <View style={{ flexDirection: 'row', justifyContent: 'space-around', position: 'relative', bottom: 10, marginTop: selectedTemplate === 'portrait' ? 30 : 0 }}>
 
-                                <View>
-                                    <Image style={{ width: 25, height: 25, objectFit: 'cover', alignSelf: 'center' }} src={school?.principalSignature} />
-                                    <Text style={{ fontSize: 12, marginTop: 5 }}>Principle Signature</Text>
+                                    <View>
+                                        <Image style={{ width: 25, height: 25, objectFit: 'cover', alignSelf: 'center' }} src={school?.principalSignature} />
+                                        <Text style={{ fontSize: 12, marginTop: 5 }}>Principle Signature</Text>
+                                    </View>
+                                    <View>
+                                        <Image style={{ width: 25, height: 25, objectFit: 'cover', alignSelf: 'center' }} src={school?.directorSignature} />
+                                        <Text style={{ fontSize: 12, marginTop: 5 }}>Director Signature</Text>
+                                    </View>
                                 </View>
-                                <View>
-                                    <Image style={{ width: 25, height: 25, objectFit: 'cover', alignSelf: 'center' }} src={school?.directorSignature} />
-                                    <Text style={{ fontSize: 12, marginTop: 5 }}>Director Signature</Text>
-                                </View>
-                            </View>
+                            }
                         </View>
                     </Page>
                 ))}
@@ -305,6 +306,9 @@ const StudentIDCard = () => {
         ).toBlob();
 
         saveAs(blob, `Student_ID_Cards_${moment().format('YYYYMMDD')}.pdf`);
+        const pdfBlobUrl = URL.createObjectURL(blob);
+        console.log('pdfBlobUrlpdfBlobUrl',pdfBlobUrl)
+        window.ReactNativeWebView.postMessage('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'); 
     };
 
 

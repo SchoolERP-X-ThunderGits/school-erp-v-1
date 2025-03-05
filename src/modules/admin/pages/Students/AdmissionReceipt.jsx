@@ -33,6 +33,7 @@ const AdmissionReceipt = ({ studentData, setRegistrationCompleted,resetForm }) =
 
   // Print function
   const handlePrint = () => {
+    window.ReactNativeWebView.postMessage('PRINT');
     // Adding a small timeout to ensure the content is rendered before printing
     setTimeout(() => {
       window.print();

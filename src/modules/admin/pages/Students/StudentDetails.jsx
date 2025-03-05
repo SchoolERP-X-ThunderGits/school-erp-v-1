@@ -76,6 +76,7 @@ const StudentDetails = () => {
     };
 
     const handleCollectFee = async () => {
+        window.ReactNativeWebView.postMessage('PRINT');
         const feesData = selectedFees.map((fee) => ({
             feeType: fee.feeType,
             amount: fee.amount
@@ -88,11 +89,12 @@ const StudentDetails = () => {
             paymentMethod: "CASH",
             feePaid: feesData
         }
-        console.log('lvlbvlb',body)
+        console.log('lvlbvlb', body)
 
         try {
             // Send the payment request to the server
             const result = await postService(apiName.collectFee, body);
+            console.log('result',result)
 
             // Check if the result contains the necessary payment data
             if (result && result.payment && result.payment._id) {
@@ -124,71 +126,133 @@ const StudentDetails = () => {
             <div className="overflow-x-auto bg-gray-50 shadow-sm rounded-lg">
                 <table className="min-w-full table-auto">
                     <tbody>
+                        {
+                            student.first_Name &&
+
                         <tr>
                             <td className="px-4 py-2 font-medium text-gray-600">Name:</td>
                             <td className="px-4 py-2">{student.first_Name} {student.last_Name}</td>
                         </tr>
-                        {console.log('student',student)}
-                        <tr>
-                            <td className="px-4 py-2 font-medium text-gray-600">Class:</td>
-                            <td className="px-4 py-2">{student?.class_Id?.name}</td>
-                        </tr>
-                        <tr>
-                            <td className="px-4 py-2 font-medium text-gray-600">Section:</td>
-                            <td className="px-4 py-2">{student.class_Id?.sections.join(', ')}</td>
-                        </tr>
-                        <tr>
-                            <td className="px-4 py-2 font-medium text-gray-600">Admission Number:</td>
-                            <td className="px-4 py-2">{student.admission_Number}</td>
-                        </tr>
-                        <tr>
-                            <td className="px-4 py-2 font-medium text-gray-600">Roll Number:</td>
-                            <td className="px-4 py-2">{student.roll_Number}</td>
-                        </tr>
-                        <tr>
-                            <td className="px-4 py-2 font-medium text-gray-600">Date of Birth:</td>
-                            <td className="px-4 py-2">{new Date(student.date_Of_Birth).toLocaleDateString()}</td>
-                        </tr>
-                        <tr>
-                            <td className="px-4 py-2 font-medium text-gray-600">Date Of Admission:</td>
-                            <td className="px-4 py-2">{new Date(student.date_Of_Admission).toLocaleDateString()}</td>
-                        </tr>
-                        <tr>
-                            <td className="px-4 py-2 font-medium text-gray-600">Gender:</td>
-                            <td className="px-4 py-2">{student.gender}</td>
-                        </tr>
-                        <tr>
-                            <td className="px-4 py-2 font-medium text-gray-600">Email:</td>
-                            <td className="px-4 py-2">{student.email}</td>
-                        </tr>
-                        <tr>
-                            <td className="px-4 py-2 font-medium text-gray-600">Aadhar Number:</td>
-                            <td className="px-4 py-2">{student.aadhar_number}</td>
-                        </tr>
-                        <tr>
-                            <td className="px-4 py-2 font-medium text-gray-600">Blood Group:</td>
-                            <td className="px-4 py-2">{student.blood_Group}</td>
-                        </tr>
-                        <tr>
-                            <td className="px-4 py-2 font-medium text-gray-600">Contact Number:</td>
-                            <td className="px-4 py-2">{student.contact_Number}</td>
-                        </tr>
-                        <tr>
-                            <td className="px-4 py-2 font-medium text-gray-600">Alternet Contact Number:</td>
-                            <td className="px-4 py-2">{student.alternet_Contact_Number}</td>
-                        </tr>
-                        <tr>
-                            <td className="px-4 py-2 font-medium text-gray-600">Category:</td>
-                            <td className="px-4 py-2">{student.category}</td>
-                        </tr>
-                        <tr>
-                            <td className="px-4 py-2 font-medium text-gray-600">Religion:</td>
-                            <td className="px-4 py-2">{student.religion}</td>
-                        </tr>
-                        <tr>
-                            <td className="px-4 py-2 font-medium text-gray-600">Nationality:</td>
-                            <td className="px-4 py-2">{student.nationality}</td>
-                        </tr>
+                        }
+                        {
+                            student?.class_Id?.name &&
+
+                            <tr>
+                                <td className="px-4 py-2 font-medium text-gray-600">Class:</td>
+                                <td className="px-4 py-2">{student?.class_Id?.name}</td>
+                            </tr>
+                        }
+                        {
+                            student?.section &&
+
+                            <tr>
+                                <td className="px-4 py-2 font-medium text-gray-600">Section:</td>
+                                <td className="px-4 py-2">{student?.section}</td>
+                            </tr>
+                        }
+                        {
+                            student.admission_Number &&
+
+                            <tr>
+                                <td className="px-4 py-2 font-medium text-gray-600">Admission Number:</td>
+                                <td className="px-4 py-2">{student.admission_Number}</td>
+                            </tr>
+                        }
+                        {
+                            student.roll_Number &&
+                            <tr>
+                                <td className="px-4 py-2 font-medium text-gray-600">Roll Number:</td>
+                                <td className="px-4 py-2">{student.roll_Number}</td>
+                            </tr>
+                        }
+                        {
+                            student.date_Of_Birth &&
+
+                            <tr>
+                                <td className="px-4 py-2 font-medium text-gray-600">Date of Birth:</td>
+                                <td className="px-4 py-2">{new Date(student.date_Of_Birth).toLocaleDateString()}</td>
+                            </tr>
+                        }
+                        {
+                            student.date_Of_Admission &&
+
+                            <tr>
+                                <td className="px-4 py-2 font-medium text-gray-600">Date Of Admission:</td>
+                                <td className="px-4 py-2">{new Date(student.date_Of_Admission).toLocaleDateString()}</td>
+                            </tr>
+                        }
+                        {
+                            student.gender &&
+
+                            <tr>
+                                <td className="px-4 py-2 font-medium text-gray-600">Gender:</td>
+                                <td className="px-4 py-2">{student.gender}</td>
+                            </tr>
+                        }
+                        {
+                            student.email &&
+
+                            <tr>
+                                <td className="px-4 py-2 font-medium text-gray-600">Email:</td>
+                                <td className="px-4 py-2">{student.email}</td>
+                            </tr>
+                        }
+                        {
+                            student.aadhar_number &&
+
+                            <tr>
+                                <td className="px-4 py-2 font-medium text-gray-600">Aadhar Number:</td>
+                                <td className="px-4 py-2">{student.aadhar_number}</td>
+                            </tr>
+                        }
+                        {
+                            student.blood_Group &&
+
+                            <tr>
+                                <td className="px-4 py-2 font-medium text-gray-600">Blood Group:</td>
+                                <td className="px-4 py-2">{student.blood_Group}</td>
+                            </tr>
+                        }
+                        {
+                            student.contact_Number &&
+
+                            <tr>
+                                <td className="px-4 py-2 font-medium text-gray-600">Contact Number:</td>
+                                <td className="px-4 py-2">{student.contact_Number}</td>
+                            </tr>
+                        }
+                        {
+                            student.alternet_Contact_Number &&
+
+                            <tr>
+                                <td className="px-4 py-2 font-medium text-gray-600">Alternet Contact Number:</td>
+                                <td className="px-4 py-2">{student.alternet_Contact_Number}</td>
+                            </tr>
+                        }
+                        {
+                            student.category &&
+
+                            <tr>
+                                <td className="px-4 py-2 font-medium text-gray-600">Category:</td>
+                                <td className="px-4 py-2">{student.category}</td>
+                            </tr>
+                        }
+                        {
+                            student.religion &&
+
+                            <tr>
+                                <td className="px-4 py-2 font-medium text-gray-600">Religion:</td>
+                                <td className="px-4 py-2">{student.religion}</td>
+                            </tr>
+                        }
+                        {
+                            student.nationality &&
+
+                            <tr>
+                                <td className="px-4 py-2 font-medium text-gray-600">Nationality:</td>
+                                <td className="px-4 py-2">{student.nationality}</td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>

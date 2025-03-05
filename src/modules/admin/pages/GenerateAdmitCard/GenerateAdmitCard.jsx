@@ -159,65 +159,6 @@ const GenerateAdmitCard = () => {
         saveAs(blob, `Admit_Cards_${moment().format('YYYY-MM-DD')}.pdf`);
     };
 
-    const StudentAdmitCardPDF = ({ student, examSchedule }) => (
-        <View style={styles.card}>
-            <View style={styles.header}>
-                <Text style={styles.schoolName}>{school?.name}</Text>
-            </View>
-
-            <View style={styles.infoContainer}>
-                <Image src={student.student_Photo || '/default-photo.jpg'} style={styles.image} />
-                <View style={styles.details}>
-                    <Text style={styles.studentName}>{student.first_Name} {student.last_Name}</Text>
-                    <Text style={styles.studentId}>ID: {student.admission_Number}</Text>
-                    <Text style={styles.studentRoll}>Roll No: {student.roll_Number}</Text>
-                </View>
-            </View>
-
-            <View style={styles.extraInfo}>
-                <Text style={styles.label}>Class:</Text>
-                <Text style={styles.value}>{student.class_Id?.name}</Text>
-            </View>
-            <View style={styles.extraInfo}>
-                <Text style={styles.label}>Section:</Text>
-                <Text style={styles.value}>{student.section}</Text>
-            </View>
-            <View style={styles.extraInfo}>
-                <Text style={styles.label}>Address:</Text>
-                <Text style={[styles.value, { width: '80%' }]}>{student.permanent_Address || 'Not Available'}</Text>
-            </View>
-            <View style={styles.extraInfo}>
-                <Text style={styles.label}>DOB:</Text>
-                <Text style={styles.value}>{moment(student?.date_Of_Birth).format('DD MMMM, YYYY') || 'Not Available'}</Text>
-            </View>
-            {examSchedule?.length > 0 && (
-                <View style={styles.examScheduleContainer}>
-                    <Text style={styles.examScheduleHeader}>Exam Schedule:</Text>
-                    <View style={styles.examTable}>
-                        <View style={styles.examTableRow}>
-                            <Text style={styles.examTableHeader}>Subject</Text>
-                            <Text style={styles.examTableHeader}>Date</Text>
-                            <Text style={styles.examTableHeader}>Start Time</Text>
-                            <Text style={styles.examTableHeader}>End Time</Text>
-                        </View>
-                        {examSchedule.map((schedule, index) => (
-                            <View key={index} style={styles.examTableRow}>
-                                <Text style={styles.examTableCell}>{schedule.subject.name}</Text>
-                                <Text style={styles.examTableCell}>{moment(schedule.date).format('DD/MM/YYYY')}</Text>
-                                <Text style={styles.examTableCell}>{schedule.startTime}</Text>
-                                <Text style={styles.examTableCell}>{schedule.endTime}</Text>
-                            </View>
-                        ))}
-                    </View>
-                </View>
-            )}
-
-            <View style={styles.footer}>
-                <Text>Valid for the Academic Year 2024-2025</Text>
-            </View>
-        </View>
-    );
-
 
 
     return (
