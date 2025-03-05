@@ -21,6 +21,7 @@ const router = express.Router();
 // CRUD operations for students
 router.post('/addStudent', authMiddleware(["admin", "moderator"]), addStudent);
 router.get('/getStudents', authMiddleware(["admin", "moderator"]), getStudents);
+router.get('/getStudent/:id', getStudentById);
 router.get('/getStudent/:id', authMiddleware(["admin", "moderator"]), getStudentById);
 router.put('/updateStudent/:id', authMiddleware(["admin", "moderator"]), updateStudent);
 router.delete('/deleteStudent/:id', authMiddleware(["admin", "moderator"]), deleteStudent);

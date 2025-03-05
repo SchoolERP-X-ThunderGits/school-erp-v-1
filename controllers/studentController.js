@@ -123,7 +123,7 @@ exports.getStudentById = async (req, res) => {
         const tenantId = req.user.tenantId;
 
         // Fetch student by ID and tenantId
-        const student = await Student.findOne({ _id: studentId, tenantId }).populate('class_Id');
+        const student = await Student.findOne({ _id: studentId, }).populate('class_Id');
         if (!student) {
             return res.status(404).json({ message: 'Student not found or access denied' });
         }
