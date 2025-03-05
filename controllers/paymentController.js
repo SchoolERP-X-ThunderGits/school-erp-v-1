@@ -94,6 +94,13 @@ const getAllPayments = async (req, res) => {
     }
 };
 
+const generateReceiptNo = () => {
+    const timestamp = Date.now().toString(); // Current timestamp
+    const randomChars = Math.random().toString(36).substring(2, 8).toUpperCase(); // Random alphanumeric string
+    return `REC-${timestamp}-${randomChars}`; // Concatenate for a unique receipt number
+};
+
+
 const createOfflinePayment = async (req, res) => {
     const { studentId, receipt_no, feePaid, paymentMethod, amountPaid } = req.body;
     const tenantId = req.user.tenantId;
