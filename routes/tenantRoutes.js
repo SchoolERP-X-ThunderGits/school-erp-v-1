@@ -16,7 +16,7 @@ router.get('/:id', authMiddleware(['admin']), tenantController.getTenantById);
 router.get('/me', authMiddleware(['admin', 'moderator']), tenantController.getMyTenant);
 
 // Update tenant details (Tenant Admin)
-router.put('/me', authMiddleware(['admin']), tenantController.updateMyTenant);
+router.put('/:id', authMiddleware(['admin']), tenantController.updateMyTenant);
 
 // Delete a tenant (Super Admin only)
 router.delete('/:id', authMiddleware(['superadmin']), tenantController.deleteTenant);

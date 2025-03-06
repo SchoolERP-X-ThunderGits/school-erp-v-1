@@ -23,14 +23,14 @@ const tenantController = {
             managerSignature,
             prefix
         } = req.body;
-    
+
         try {
             // Check for existing subdomain
             const existingTenant = await Tenant.findOne({ subdomain });
             if (existingTenant) {
                 return res.status(400).json({ error: 'Subdomain already exists' });
             }
-    
+
             const newTenant = new Tenant({
                 name,
                 subdomain,
@@ -50,24 +50,24 @@ const tenantController = {
                     font: font || "Arial"
                 }
             });
-    
+
             const savedTenant = await newTenant.save();
-    
+
             // Create AdmissionNumber entry
             const newAdmissionNumber = new AdmissionNumber({
                 tenantId: savedTenant._id,
                 prefix: prefix
             });
-    
+
             await newAdmissionNumber.save();
-    
+
             res.status(201).json({ message: 'Tenant and Admission Number created successfully', tenant: savedTenant });
         } catch (error) {
             console.error('Error creating tenant:', error);
             res.status(500).json({ error: 'Failed to create tenant' });
         }
     },
-    
+
 
     // Get all tenants (Super Admin only)
     getAllTenants: async (req, res) => {
@@ -113,9 +113,52 @@ const tenantController = {
     updateMyTenant: async (req, res) => {
         try {
             const tenantId = req.user.tenantId;
-            const { name, contactNumber, email, address, website, plan, themeSettings } = req.body;
+            const {
+                name,
+                contactNumber,
+                email,
+                address,
+                website,
+                plan,
+                logo,
+                directorSignature,
+                principalSignature,
+                managerSignature,
+                themeSettings
+            } = req.body;
 
-            let updatedFields = { name, contactNumber, email, address, plan, themeSettings };
+            let updatedFields = {
+                name,
+                contactNumber,
+                email,
+                address,
+                plan
+            };
+
+            // Update logo if provided
+            if (logo) {
+                updatedFields.logo = logo;
+            }
+
+            // Update signatures if provided
+            if (directorSignature) {
+                updatedFields.directorSignature = directorSignature;
+            }
+            if (principalSignature) {
+                updatedFields.principalSignature = principalSignature;
+            }
+            if (managerSignature) {
+                updatedFields.managerSignature = managerSignature;
+            }
+
+            // Update theme settings if provided
+            if (themeSettings) {
+                updatedFields.themeSettings = {
+                    primaryColor: themeSettings.primaryColor || "#000000",
+                    secondaryColor: themeSettings.secondaryColor || "#ffffff",
+                    font: themeSettings.font || "Arial"
+                };
+            }
 
             // Generate QR code for website if updated
             if (website) {
@@ -123,12 +166,20 @@ const tenantController = {
                 updatedFields.qrCodeUrl = await qrCode.toDataURL(website);
             }
 
-            const updatedTenant = await Tenant.findByIdAndUpdate(tenantId, updatedFields, { new: true });
+            const updatedTenant = await Tenant.findByIdAndUpdate(
+                tenantId,
+                { $set: updatedFields },
+                { new: true }
+            );
+
             if (!updatedTenant) {
                 return res.status(404).json({ error: 'Tenant not found or access denied' });
             }
 
-            res.status(200).json({ message: 'Tenant updated successfully', tenant: updatedTenant });
+            res.status(200).json({
+                message: 'Tenant updated successfully',
+                tenant: updatedTenant
+            });
         } catch (error) {
             console.error('Error updating tenant:', error);
             res.status(500).json({ error: 'Failed to update tenant' });
