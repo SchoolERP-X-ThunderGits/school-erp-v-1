@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useUserContext } from '../../../../context/UserContext';
 import apiName from '../../../../constants/ApiName';
 import { getService, putService } from '../../../../constants/Service';
+import { showToast } from '../../../../components/Toast';
 
 const ProfileSettings = () => {
     const { school } = useUserContext();
@@ -31,14 +32,16 @@ const ProfileSettings = () => {
     };
     const updateProfileDetails = async () => {
         try {
-            const result = await putService(`${apiName.updateProfile}${school?._id}`,formData);
+            const result = await putService(`${apiName.updateProfile}${school?._id}`, formData);
             console.log('mannnnnnresult---', result,);
             console.log('mannnnnnresult---', formData,);
+            showToast('Profile update successfully', 'success')
             // setProfileData(result); // Set the fetched data to state
             // setFormData(result); // Set form data for editing
             // setLoading(false);
         } catch (error) {
             console.log('mannnnnnresult---', formData,);
+            showToast('Unable to update profile', 'error')
             setLoading(false);
         }
     };
@@ -64,10 +67,9 @@ const ProfileSettings = () => {
         <div className="container mx-auto p-4">
             {/* Profile Details */}
             {!isEditing ? (
-                <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-8">
-                    <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">Profile Details</h2>
+                <div className="max-w-3xl mx-auto bg-white shadow-2xl rounded-lg p-8">
                     <div className="flex justify-center mb-8">
-                        <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-blue-500">
+                        <div className="w-36 h-36 rounded-full overflow-hidden border-4 border-blue-500">
                             <img
                                 src={profileData?.logo || "https://static.vecteezy.com/system/resources/thumbnails/001/840/612/small/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-free-vector.jpg"}
                                 alt="Profile"
@@ -75,55 +77,54 @@ const ProfileSettings = () => {
                             />
                         </div>
                     </div>
-                    <div style={{display:'flex',flexDirection:'column',}}>
-                        {/* Display fields */}
-                        <div className="flex flex-row items-start">
-                            <strong  className="text-lg text-gray-700">School Name:</strong>
-                            <span  className="text-lg text-gray-700 ml-2">{profileData?.name}</span>
-                        </div>
-                        
-                        <div className="flex flex-row items-start">
-                            <strong className="text-lg text-gray-700">Contact Number:</strong>
-                            <span className="text-lg text-gray-700 ml-2">{profileData?.contactNumber}</span>
-                        </div>
-                        <div className="flex flex-row items-start">
-                            <strong className="text-lg text-gray-700">Website:</strong>
-                            <span className="text-lg text-gray-700 ml-2">{profileData?.website}</span>
-                        </div>
-                        <div className="flex flex-row items-start">
-                            <strong className="text-lg text-gray-700">Subdomain:</strong>
-                            <span className="text-lg text-gray-700 ml-2">{profileData?.subdomain}</span>
-                        </div>
-                        <div className="flex flex-row items-start">
-                            <strong className="text-lg text-gray-700">Plan:</strong>
-                            <span className="text-lg text-gray-700 ml-2">{profileData?.plan}</span>
-                        </div>
-                        {
-                            profileData?.email &&
 
-                            <div className="flex flex-row items-start">
-                                <strong className="text-lg text-gray-700">Email:</strong>
-                                <span className="text-lg text-gray-700 ml-2">{profileData?.email}</span>
+                    <h2 className="text-4xl font-semibold text-center mb-6 text-gray-800">{profileData?.name}</h2>
+
+                    <div style={{ height: 2, backgroundColor: '#e2e8f0', marginBottom: 24 }}></div>
+
+                    <div className="space-y-4">
+                        <div className="flex flex-row items-center">
+                            <strong className="text-lg text-gray-700 w-32">Contact Number:</strong>
+                            <span className="text-lg text-gray-800">{profileData?.contactNumber}</span>
+                        </div>
+                        <div className="flex flex-row items-center">
+                            <strong className="text-lg text-gray-700 w-32">Website:</strong>
+                            <span className="text-lg text-gray-800">{profileData?.website}</span>
+                        </div>
+                        <div className="flex flex-row items-center">
+                            <strong className="text-lg text-gray-700 w-32">Subdomain:</strong>
+                            <span className="text-lg text-gray-800">{profileData?.subdomain}</span>
+                        </div>
+                        <div className="flex flex-row items-center">
+                            <strong className="text-lg text-gray-700 w-32">Plan:</strong>
+                            <span className="text-lg text-gray-800">{profileData?.plan}</span>
+                        </div>
+                        {profileData?.email && (
+                            <div className="flex flex-row items-center">
+                                <strong className="text-lg text-gray-700 w-32">Email:</strong>
+                                <span className="text-lg text-gray-800">{profileData?.email}</span>
                             </div>
-                        }
-                        <div className="flex flex-row items-start">
-                            <strong className="text-lg text-gray-700">Address:</strong>
-                            <span className="text-lg text-gray-700 ml-2">{profileData?.address}</span>
+                        )}
+                        <div className="flex flex-row items-center">
+                            <strong className="text-lg text-gray-700 w-32">Address:</strong>
+                            <span className="text-lg text-gray-800">{profileData?.address}</span>
                         </div>
                     </div>
+
                     <div className="flex justify-center mt-8">
                         <button
-                            className="px-6 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 transition-colors"
+                            className="px-8 py-3 bg-blue-500 text-white rounded-lg shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300"
                             onClick={handleEditClick}
                         >
                             Edit Profile
                         </button>
                     </div>
                 </div>
+
             ) : (
                 // Edit Profile Form
                 <div>
-                    <h1 style={{fontSize:25}} className="text-xl font-bold mb-4">Edit Profile</h1>
+                    <h1 style={{ fontSize: 25 }} className="text-xl font-bold mb-4">Edit Profile</h1>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-1">
                         {/* School Name */}
                         <div className="mb-4">
