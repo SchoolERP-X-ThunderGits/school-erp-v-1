@@ -44,7 +44,7 @@ app.use('/api/subject-class-mappings', subjectClassMappingRoutes);
 app.use('/api/exam-schedules', examScheduleRoutes);
 app.use('/api/exam-names', examName)
 app.use('/api/admitcard', admitCartRoutes)
-app.use('./api/tenant', tenantRoutes)
+app.use('/api/tenant', tenantRoutes)
 // Import routes
 
 
