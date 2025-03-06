@@ -20,7 +20,8 @@ const subjectRoutes = require('./routes/subjectRoutes');
 const subjectClassMappingRoutes = require('./routes/subjectClassMapping');
 const examScheduleRoutes = require('./routes/examScheduleRoutes');
 const examName = require("./routes/examNameRoutes.js");
-const admitCartRoutes = require("./routes/admitCardRoutes.js")
+const admitCartRoutes = require("./routes/admitCardRoutes.js");
+const tenantRoutes = require('./routes/tenantRoutes');
 // Initialize Express app
 const app = express();
 
@@ -43,6 +44,7 @@ app.use('/api/subject-class-mappings', subjectClassMappingRoutes);
 app.use('/api/exam-schedules', examScheduleRoutes);
 app.use('/api/exam-names', examName)
 app.use('/api/admitcard', admitCartRoutes)
+app.use('./api/tenant', tenantRoutes)
 // Import routes
 
 
