@@ -24,6 +24,8 @@ import StudentDetails from './modules/admin/pages/Students/StudentDetails';
 import FeeReceipt from './modules/admin/pages/Fees/FeesReceipt';
 import GenerateDemandSlip from './modules/admin/pages/Fees/GenerateDemandSlip';
 import { UserProvider } from './context/UserContext';
+import PdfViewerPage from './components/PdfViewer/PdfViewerpage';
+import ProfileSettings from './modules/admin/pages/Settings/ProfileSettings';
 function App() {
   const [loading, setLoading] = useState(true);
   const { pathname } = useLocation();
@@ -59,6 +61,7 @@ function App() {
         <Route path="/admin" element={<AdminSignIn />} />
         <Route path="/admin/home" element={<DefaultLayout><AdminHome /></DefaultLayout>} />
         <Route path="/admin/student" element={<DefaultLayout><Students /></DefaultLayout>} />
+        <Route path="/pdf-viewer" component={PdfViewerPage} />
         <Route path="/admin/add-student" element={<DefaultLayout><AddStudent /></DefaultLayout>} />
         <Route path="/admin/student/student-details/:studentId" element={<DefaultLayout><StudentDetails /></DefaultLayout>} />
         <Route path="/admin/edit-student/:id" element={<DefaultLayout><EditStudent /></DefaultLayout>} />
@@ -74,6 +77,7 @@ function App() {
         <Route path="/admin/generate-demand-slip" element={<DefaultLayout><GenerateDemandSlip /></DefaultLayout>} />
         <Route path="/admin/subject" element={<DefaultLayout><Subject /></DefaultLayout>} />
         <Route path="/admin/assign-subject" element={<DefaultLayout><AssignSubject /></DefaultLayout>} />
+        <Route path="/admin/profile-settings" element={<DefaultLayout><ProfileSettings /></DefaultLayout>} />
 
         {/* Parent Section (not wrapped in DefaultLayout) */}
         <Route path="/parent" element={<ParentSignIn />} />

@@ -7,7 +7,6 @@ import { showToast } from '../../../../components/Toast'; // Show Toast Notifica
 import Loader from '../../../../components/Loader';
 import moment from 'moment';
 import { getService } from '../../../../constants/Service';
-import sign from '../../../../assets/Images/sign.png'
 import { useUserContext } from '../../../../context/UserContext';
 // Template Modal Component
 const TemplateModal = ({ open, onClose, onSelectTemplate, selectedTemplate }) => {
@@ -234,7 +233,7 @@ const StudentIDCard = () => {
                             <View style={{ flexDirection: 'row', marginTop: 10 }}>
                                 <View style={{ width: '20%', marginLeft: 10 }}>
 
-                                    <Image style={{ width: 50, height: 50 }} src={school?.logo} />
+                                    <Image style={{ width: 50, height: 50,objectFit:'cover'  }} src={school?.logo} />
                                 </View>
                                 <View style={{ justifyContent: 'center', alignItems: 'center', width: '60%' }}>
 
@@ -243,7 +242,7 @@ const StudentIDCard = () => {
                                 </View>
                                 <View style={{ width: '20%' }}>
 
-                                    <Image style={{ width: 50, height: 50 }} src={school?.qrCodeUrl} />
+                                    <Image style={{ width: 50, height: 50,objectFit:'cover' }} src={school?.qrCodeUrl} />
                                 </View>
                             </View>
                             <View style={{ height: 1, backgroundColor: 'black', width: '100%', marginTop: 10 }}></View>
@@ -290,11 +289,11 @@ const StudentIDCard = () => {
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-around', position: 'relative', bottom: 10, marginTop: selectedTemplate === 'portrait' ? 30 : 0 }}>
 
                                     <View>
-                                        <Image style={{ width: 25, height: 25, objectFit: 'cover', alignSelf: 'center' }} src={school?.principalSignature} />
+                                        <Image style={{ width: 45, height: 45, objectFit: 'cover', alignSelf: 'center' }} src={school?.principalSignature} />
                                         <Text style={{ fontSize: 12, marginTop: 5 }}>Principle Signature</Text>
                                     </View>
                                     <View>
-                                        <Image style={{ width: 25, height: 25, objectFit: 'cover', alignSelf: 'center' }} src={school?.directorSignature} />
+                                        <Image style={{ width: 45, height: 45, objectFit: 'cover', alignSelf: 'center' }} src={school?.directorSignature} />
                                         <Text style={{ fontSize: 12, marginTop: 5 }}>Director Signature</Text>
                                     </View>
                                 </View>

@@ -4,14 +4,17 @@ import { getService, postService } from '../../../../constants/Service';
 import apiName from '../../../../constants/ApiName';
 import { showToast } from '../../../../components/Toast';
 import Loader from '../../../../components/Loader';
-
+import { useUserContext } from '../../../../context/UserContext';
+import StudentReceiptPage from '../../../../components/StudentReceiptPage';
 const StudentDetails = () => {
+    const { school } = useUserContext();
     const [loading, setLoading] = useState(true);
     const [student, setStudent] = useState(null);
     const [activeTab, setActiveTab] = useState('profile');
     const { studentId } = useParams();
     const [feeDetails, setFeeDetails] = useState(null);
     const [selectedFees, setSelectedFees] = useState([]);
+    const [AdmissionReceptPage, setAdmissionReceptPage] = useState(false)
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -94,7 +97,7 @@ const StudentDetails = () => {
         try {
             // Send the payment request to the server
             const result = await postService(apiName.collectFee, body);
-            console.log('result',result)
+            console.log('result', result)
 
             // Check if the result contains the necessary payment data
             if (result && result.payment && result.payment._id) {
@@ -122,17 +125,27 @@ const StudentDetails = () => {
                     className="w-32 h-32 rounded-full border-4 border-gray-200"
                 />
             </div>
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">Personal Information</h2>
+            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20, alignItems: 'center' }}>
+                <h2 className="text-xl font-semibold text-gray-800 ">Personal Information</h2>
+                <button
+                    onClick={() => {
+                        setAdmissionReceptPage(true)
+                    }} // Trigger the function
+                    className="bg-blue-500 text-white py-2 px-6 rounded-md hover:bg-blue-600"
+                >
+                    Generate Admission Receipt
+                </button>
+            </div>
             <div className="overflow-x-auto bg-gray-50 shadow-sm rounded-lg">
                 <table className="min-w-full table-auto">
                     <tbody>
                         {
                             student.first_Name &&
 
-                        <tr>
-                            <td className="px-4 py-2 font-medium text-gray-600">Name:</td>
-                            <td className="px-4 py-2">{student.first_Name} {student.last_Name}</td>
-                        </tr>
+                            <tr>
+                                <td className="px-4 py-2 font-medium text-gray-600">Name:</td>
+                                <td className="px-4 py-2">{student.first_Name} {student.last_Name}</td>
+                            </tr>
                         }
                         {
                             student?.class_Id?.name &&
@@ -359,27 +372,31 @@ const StudentDetails = () => {
             {loading ? (
                 <Loader />
             ) : (
-                <div>
-                    <div className="flex justify-center mb-6">
-                        <div className="flex space-x-4">
-                            <button
-                                onClick={() => setActiveTab('profile')}
-                                className={`py-2 px-6 text-lg rounded-t-lg ${activeTab === 'profile' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}`}
-                            >
-                                Profile
-                            </button>
-                            <button
-                                onClick={() => setActiveTab('fee')}
-                                className={`py-2 px-6 text-lg rounded-t-lg ${activeTab === 'fee' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}`}
-                            >
-                                Fee Information
-                            </button>
-                        </div>
-                    </div>
+                AdmissionReceptPage ?
+                    <StudentReceiptPage student={student}school={school}setAdmissionReceptPage={setAdmissionReceptPage}/>
+                    :
 
-                    {activeTab === 'profile' && renderProfile()}
-                    {activeTab === 'fee' && renderFee()}
-                </div>
+                    <div>
+                        <div className="flex justify-center mb-6">
+                            <div className="flex space-x-4">
+                                <button
+                                    onClick={() => setActiveTab('profile')}
+                                    className={`py-2 px-6 text-lg rounded-t-lg ${activeTab === 'profile' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}`}
+                                >
+                                    Profile
+                                </button>
+                                <button
+                                    onClick={() => setActiveTab('fee')}
+                                    className={`py-2 px-6 text-lg rounded-t-lg ${activeTab === 'fee' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}`}
+                                >
+                                    Fee Information
+                                </button>
+                            </div>
+                        </div>
+
+                        {activeTab === 'profile' && renderProfile()}
+                        {activeTab === 'fee' && renderFee()}
+                    </div>
             )}
         </div>
     );

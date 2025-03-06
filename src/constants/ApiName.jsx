@@ -33,6 +33,8 @@ const apiName = {
   admitCardByClass:'admitcard/by-class-and-exam',
   collectFee:'payment/collect-fee',
   getPaymentById:'payment/get',
-  bulkUpload:'student/bulkAddStudents'
+  bulkUpload:'student/bulkAddStudents',
+  getProfile:'tenant/',
+  updateProfile:'tenants/'
 };
 export default apiName;

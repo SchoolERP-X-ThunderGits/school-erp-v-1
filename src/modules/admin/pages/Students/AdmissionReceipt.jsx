@@ -4,11 +4,10 @@ import apiName from "../../../../constants/ApiName";
 import { getService } from "../../../../constants/Service";
 import { useUserContext } from "../../../../context/UserContext";
 
-const AdmissionReceipt = ({ studentData, setRegistrationCompleted,resetForm }) => {
+const AdmissionReceipt = ({ studentData, setRegistrationCompleted, resetForm }) => {
   const [className, setClassName] = useState("");
-  const [formattedDateOfAdmission, setFormattedDateOfAdmission] = useState("");
   const [formattedDateOfBirth, setFormattedDateOfBirth] = useState("");
-  const { school} = useUserContext();
+  const { school } = useUserContext();
   const fetchClassName = async () => {
     try {
       const result = await getService(`${apiName.getClassById}/${studentData.class_Id}`); // Get Classes API
@@ -20,11 +19,6 @@ const AdmissionReceipt = ({ studentData, setRegistrationCompleted,resetForm }) =
 
   useEffect(() => {
     fetchClassName()
-    // Format date of admission
-    const dateOfAdmission = new Date(studentData.date_Of_Admission);
-    const formattedDate = `${dateOfAdmission.getDate()}-${dateOfAdmission.getMonth() + 1}-${dateOfAdmission.getFullYear()}`;
-    setFormattedDateOfAdmission(formattedDate);
-
     // Format date of birth
     const dateOfBirth = new Date(studentData.date_Of_Birth);
     const formattedDateOfBirth = `${dateOfBirth.getDate()}-${dateOfBirth.getMonth() + 1}-${dateOfBirth.getFullYear()}`;
@@ -68,7 +62,7 @@ const AdmissionReceipt = ({ studentData, setRegistrationCompleted,resetForm }) =
           alt="School Logo"
           className="school-logo-adm-res"
         />
-        <div style={{textAlign:'center'}}>
+        <div style={{ textAlign: 'center' }}>
           <h1 className="school-name-adm-res">{school?.name}</h1>
           <div className="school-address">
             <p>{school?.address}</p>
