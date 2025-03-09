@@ -22,6 +22,7 @@ const examScheduleRoutes = require('./routes/examScheduleRoutes');
 const examName = require("./routes/examNameRoutes.js");
 const admitCartRoutes = require("./routes/admitCardRoutes.js");
 const tenantRoutes = require('./routes/tenantRoutes');
+const admRec = require('./routes/admissionReceipt.js');
 // Initialize Express app
 const app = express();
 
@@ -45,6 +46,7 @@ app.use('/api/exam-schedules', examScheduleRoutes);
 app.use('/api/exam-names', examName)
 app.use('/api/admitcard', admitCartRoutes)
 app.use('/api/tenant', tenantRoutes)
+app.use('/api/admrec', admRec);
 // Import routes
 
 
