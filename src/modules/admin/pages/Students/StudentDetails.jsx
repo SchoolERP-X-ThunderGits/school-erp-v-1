@@ -79,7 +79,7 @@ const StudentDetails = () => {
     };
 
     const handleCollectFee = async () => {
-        window.ReactNativeWebView.postMessage('PRINT');
+        window.ReactNativeWebView.postMessage('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf');
         const feesData = selectedFees.map((fee) => ({
             feeType: fee.feeType,
             amount: fee.amount

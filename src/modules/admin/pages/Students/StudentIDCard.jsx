@@ -6,7 +6,7 @@ import apiName from '../../../../constants/ApiName'; // Importing API Names
 import { showToast } from '../../../../components/Toast'; // Show Toast Notifications
 import Loader from '../../../../components/Loader';
 import moment from 'moment';
-import { getService } from '../../../../constants/Service';
+import { getService, postService } from '../../../../constants/Service';
 import { useUserContext } from '../../../../context/UserContext';
 // Template Modal Component
 const TemplateModal = ({ open, onClose, onSelectTemplate, selectedTemplate }) => {
@@ -304,10 +304,25 @@ const StudentIDCard = () => {
             </Document>
         ).toBlob();
 
-        saveAs(blob, `Student_ID_Cards_${moment().format('YYYYMMDD')}.pdf`);
+        // saveAs(blob, `Student_ID_Cards_${moment().format('YYYYMMDD')}.pdf`);
+        generateUrl(blob)
         const pdfBlobUrl = URL.createObjectURL(blob);
-        console.log('pdfBlobUrlpdfBlobUrl',pdfBlobUrl)
+        console.log('pdfBlobUrlpdfBlobUrl',blob)
         window.ReactNativeWebView.postMessage('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'); 
+    };
+    const generateUrl = async (blob) => {
+        console.log('blobblob',blob)
+      
+        const formData = new FormData();
+        formData.append('blobBase64', blob, 'id-cards.pdf');
+            try {
+                const response = await postService(apiName.uploadCard, formData);
+                console.log('responseresponse',response)
+                // showToast("Class added successfully.", 'success');
+                // getClassList();
+            } catch (error) {
+                console.error('Error posting data:', error);
+            }
     };
 
 

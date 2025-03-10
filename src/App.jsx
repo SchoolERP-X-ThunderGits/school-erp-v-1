@@ -26,6 +26,7 @@ import GenerateDemandSlip from './modules/admin/pages/Fees/GenerateDemandSlip';
 import { UserProvider } from './context/UserContext';
 import PdfViewerPage from './components/PdfViewer/PdfViewerpage';
 import ProfileSettings from './modules/admin/pages/Settings/ProfileSettings';
+import PrivacyPolicy from './modules/admin/pages/Help/PrivacyPolicy';
 function App() {
   const [loading, setLoading] = useState(true);
   const { pathname } = useLocation();
@@ -78,6 +79,7 @@ function App() {
         <Route path="/admin/subject" element={<DefaultLayout><Subject /></DefaultLayout>} />
         <Route path="/admin/assign-subject" element={<DefaultLayout><AssignSubject /></DefaultLayout>} />
         <Route path="/admin/profile-settings" element={<DefaultLayout><ProfileSettings /></DefaultLayout>} />
+        <Route path="/admin/privacy-policy" element={<DefaultLayout><PrivacyPolicy /></DefaultLayout>} />
 
         {/* Parent Section (not wrapped in DefaultLayout) */}
         <Route path="/parent" element={<ParentSignIn />} />

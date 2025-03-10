@@ -10,7 +10,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const navigate = useNavigate();
   const trigger = useRef(null);
   const sidebar = useRef(null);
-
+  const [showModal, setShowModal] = useState(false);
   const storedSidebarExpanded = localStorage.getItem('sidebar-expanded');
   const [sidebarExpanded, setSidebarExpanded] = useState(
     storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true'
@@ -50,6 +50,16 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
       document.querySelector('body')?.classList.remove('sidebar-expanded');
     }
   }, [sidebarExpanded]);
+
+  const handleConfirmLogout = () => {
+    localStorage.removeItem('token');
+    setShowModal(false);
+    window.location.href = "/"; // Redirect after logout
+  };
+
+  const handleCancelLogout = () => {
+    setShowModal(false); // Close the modal if user cancels logout
+  };
 
   return (
     <aside
@@ -101,7 +111,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
       </div>
       {/* <!-- SIDEBAR HEADER --> */}
 
-      <div className="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
+      <div style={{ paddingBottom: 30 }} className="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
         {/* <!-- Sidebar Menu --> */}
         <nav style={{ marginLeft: 20, marginRight: 20 }}>
           {/* <!-- Menu Group --> */}
@@ -740,51 +750,198 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                   );
                 }}
               </SidebarLinkGroup>
+              <SidebarLinkGroup
+                activeCondition={
+                  pathname === '/Help' || pathname.includes('Help')
+                }
+              >
+                {(handleClick, open) => {
+                  return (
+                    <React.Fragment>
+                      <NavLink
+                        to="#"
+                        className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${(pathname === '/Help' ||
+                          pathname.includes('Help')) &&
+                          'bg-graydark dark:bg-meta-4'
+                          }`}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          sidebarExpanded
+                            ? handleClick()
+                            : setSidebarExpanded(true);
+                        }}
+                      >
+                        <svg
+                          className="fill-current"
+                          width="18"
+                          height="18"
+                          viewBox="0 0 18 18"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M2 4C2 3.44772 2.44772 3 3 3H15C15.5523 3 16 3.44772 16 4V14C16 14.5523 15.5523 15 15 15H3C2.44772 15 2 14.5523 2 14V4Z"
+                            stroke="currentColor"
+                            stroke-width="1.5"
+                            fill="none"
+                          />
+                          <path
+                            d="M2 6H16"
+                            stroke="currentColor"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                          />
+                          <path
+                            d="M5 10C5 9.44772 5.44772 9 6 9H12C12.5523 9 13 9.44772 13 10"
+                            stroke="currentColor"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                          />
+                          <path
+                            d="M7.5 3.5L7.5 5.5"
+                            stroke="currentColor"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                          />
+                          <path
+                            d="M10.5 3.5L10.5 5.5"
+                            stroke="currentColor"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                          />
+                          <path
+                            d="M7 12.5C7 13.3284 7.67157 14 8.5 14C9.32843 14 10 13.3284 10 12.5C10 11.6716 9.32843 11 8.5 11C7.67157 11 7 11.6716 7 12.5Z"
+                            stroke="currentColor"
+                            stroke-width="1.5"
+                            fill="none"
+                          />
+                          <path
+                            d="M8.5 12V13"
+                            stroke="currentColor"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                          />
+                        </svg>
 
-              <li>
-                <NavLink
-                  onClick={() => {
-                    localStorage.removeItem('token')
-                  }}
-                  to="/"
-                  className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname.includes('dashboard') &&
-                    'bg-graydark dark:bg-meta-4'
-                    }`}
-                >
-                  <svg
-                    className="fill-current"
-                    width="18"
-                    height="18"
-                    viewBox="0 0 18 18"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M13.5 3.5C13.5 3.22386 13.2761 3 13 3H7C6.72386 3 6.5 3.22386 6.5 3.5V14.5C6.5 14.7761 6.72386 15 7 15H13C13.2761 15 13.5 14.7761 13.5 14.5V3.5Z"
-                      stroke="currentColor"
-                      stroke-width="1.5"
-                      fill="none"
-                    />
-                    <path
-                      d="M3 9.5H11.5"
-                      stroke="currentColor"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                    />
-                    <path
-                      d="M9 6L6 9L9 12"
-                      stroke="currentColor"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                    />
-                  </svg>
+                        Help/Support
+                        <svg
+                          className={`absolute right-4 top-1/2 -translate-y-1/2 fill-current ${open && 'rotate-180'
+                            }`}
+                          width="20"
+                          height="20"
+                          viewBox="0 0 20 20"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            clipRule="evenodd"
+                            d="M4.41107 6.9107C4.73651 6.58527 5.26414 6.58527 5.58958 6.9107L10.0003 11.3214L14.4111 6.91071C14.7365 6.58527 15.2641 6.58527 15.5896 6.91071C15.915 7.23614 15.915 7.76378 15.5896 8.08922L10.5896 13.0892C10.2641 13.4147 9.73651 13.4147 9.41107 13.0892L4.41107 8.08922C4.08563 7.76378 4.08563 7.23614 4.41107 6.9107Z"
+                            fill=""
+                          />
+                        </svg>
+                      </NavLink>
+                      {/* <!-- Dropdown Menu Start --> */}
+                      <div
+                        className={`translate transform overflow-hidden ${!open && 'hidden'
+                          }`}
+                      >
+                        <ul className="mt-4 mb-5.5 flex flex-col gap-2.5 pl-6">
+                          <li>
+                            <NavLink
+                              to="/admin/privacy-policy"
+                              className={({ isActive }) =>
+                                'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
+                                (isActive && '!text-white')
+                              }
+                            >
+                              Privacy Policy
+                            </NavLink>
+                          </li>
+                          <li>
+                            <NavLink
+                              to="/admin/privacy-policy"
+                              className={({ isActive }) =>
+                                'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
+                                (isActive && '!text-white')
+                              }
+                            >
+                              Delete Account
+                            </NavLink>
+                          </li>
+                        </ul>
+                      </div>
+                      {/* <!-- Dropdown Menu End --> */}
+                    </React.Fragment>
+                  );
+                }}
+              </SidebarLinkGroup>
 
-                  Logout
-                </NavLink>
-              </li>
+
             </ul>
           </div>
         </nav>
+        <div style={{ position: 'absolute', bottom: 0, paddingBottom: 20, marginLeft: 20, marginRight: 20, backgroundColor: '#1c2534', width: '100%' }}>
+          <NavLink
+            onClick={() => {
+              setShowModal(true)
+            }}
+            // to="/"
+            className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname.includes('dashboard') &&
+              'bg-graydark dark:bg-meta-4'
+              }`}
+          >
+            <svg
+              className="fill-current"
+              width="18"
+              height="18"
+              viewBox="0 0 18 18"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M13.5 3.5C13.5 3.22386 13.2761 3 13 3H7C6.72386 3 6.5 3.22386 6.5 3.5V14.5C6.5 14.7761 6.72386 15 7 15H13C13.2761 15 13.5 14.7761 13.5 14.5V3.5Z"
+                stroke="currentColor"
+                stroke-width="1.5"
+                fill="none"
+              />
+              <path
+                d="M3 9.5H11.5"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+              />
+              <path
+                d="M9 6L6 9L9 12"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+              />
+            </svg>
+
+            Logout
+          </NavLink>
+        </div>
+        {showModal && (
+          <div style={{ backgroundColor: 'white', width: '80%', margin: 'auto', borderRadius: 8, padding: 10, position: 'absolute', bottom: 40, alignSelf: "center", display: 'flex', flexDirection: 'column' }}>
+            <h2 style={{ textAlign: 'center' }} className="text-xl font-semibold mb-4">Are you sure you want to logout?</h2>
+            <div className="flex justify-center space-x-4">
+              <button
+                onClick={handleCancelLogout}
+                className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400"
+              >
+                No
+              </button>
+              <button
+                onClick={handleConfirmLogout}
+                className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+              >
+                Yes
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* <!-- Sidebar Menu --> */}
       </div>
     </aside>
