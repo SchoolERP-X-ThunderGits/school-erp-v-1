@@ -3,6 +3,9 @@ const PDFDocument = require('pdfkit');
 const fs = require('fs');
 const multer = require('multer');
 const path = require('path');
+// Create a new router instance
+const router = express.Router();
+
 
 // Set up multer for file handling
 const storage = multer.diskStorage({
@@ -10,41 +13,28 @@ const storage = multer.diskStorage({
         cb(null, 'uploads/'); // Save to 'uploads' folder
     },
     filename: (req, file, cb) => {
-        cb(null, `pdf-${Date.now()}${path.extname(file.originalname)}`); // Use dynamic filename
+        cb(null, `id-card-${Date.now()}.pdf`); // give a unique filename
     }
 });
 
 const upload = multer({ storage: storage });
 
-// Create a new router instance
-const router = express.Router();
 
 // Handle file upload and PDF conversion
 router.post('/upload', upload.single('file'), (req, res) => {
+    console.log(req.file); // Corrected to log the actual file object from multer
+
     if (!req.file) {
         return res.status(400).send('No file uploaded');
     }
 
-    // Assume the uploaded file might not be a PDF and we convert it to PDF
-    const inputFilePath = req.file.path;
-    const outputFilePath = `uploads/output-${Date.now()}.pdf`;
-    const output = fs.createWriteStream(outputFilePath);
-    const doc = new PDFDocument();
+    // Generate URL for the uploaded file
+    const fileUrl = `https://backend.vissionclasses.in/uploads/${req.file.filename}`;
 
-    doc.pipe(output);
-    doc.image(inputFilePath, 50, 50, {width: 150}); // Adjust position and size as needed
-    doc.end();
-
-    output.on('finish', () => {
-        // Provide a link to download the PDF
-        res.json({ link: `https://backend.vissionclasses.in/api/admrec/download/${outputFilePath.split('/')[1]}` });
-    });
-
-    // Clean up the uploaded file
-    fs.unlink(inputFilePath, err => {
-        if (err) console.error("Error deleting file:", err);
-    });
+    // Send back the URL of the uploaded PDF
+    res.json({ pdfUrl: fileUrl });
 });
+
 
 // Route to download the PDF file
 router.get('/download/:filename', (req, res) => {

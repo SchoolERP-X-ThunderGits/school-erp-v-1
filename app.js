@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
 const config = require('./config/config.js');
-
+const path = require('path');
 const userRoutes = require("./routes/userRoutes.js")
 const parentRoutes = require("./routes/parentRoutes.js");
 const studentRoutes = require("./routes/studentRoutes.js");
@@ -52,7 +52,7 @@ app.use('/api/admrec', admRec);
 
 
 // Use routes
-
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Database connection
 mongoose.connect(config.database.url)
