@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import Loader from '../../../../components/Loader';
 import moment from 'moment';
 import { useUserContext } from '../../../../context/UserContext';
+import { BASE_URL } from '../../../../constants/Config';
 
 const GenerateDemandSlip = () => {
     const [loading, setLoading] = useState(false);
@@ -164,7 +165,33 @@ const GenerateDemandSlip = () => {
             </Document>
         ).toBlob();
         saveAs(blob, `Demand_Slips_${selectedStudentData.length}Students.pdf`);
+        generateUrl(blob)
     };
+    
+     const generateUrl = async (blob) => {
+            console.log('Uploading Blob', blob);
+    
+            // Prepare FormData to send the blob to the server
+            const formData = new FormData();
+            formData.append('file', blob, 'Demand_Slips.pdf');  // 'file' matches the multer field name
+    
+            try {
+                // Post the FormData to the server's /upload-pdf endpoint
+                const response = await fetch(`${BASE_URL}${apiName.uploadCard}`, {
+                    method: 'POST',
+                    body: formData,
+                });
+    
+                if (!response.ok) {
+                    throw new Error('Failed to upload PDF');
+                }
+                const responseData = await response.json();
+                window.ReactNativeWebView.postMessage(responseData.pdfUrl);
+                console.log('Uploaded successfully:', responseData);
+            } catch (error) {
+                console.error('Error uploading PDF:', error);
+            }
+        };
 
     // Render student list with checkboxes for selection
     const renderStudentList = () => {

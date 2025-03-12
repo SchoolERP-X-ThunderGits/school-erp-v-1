@@ -8,6 +8,7 @@ import { pdf, Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/r
 import { saveAs } from 'file-saver';
 import moment from 'moment';
 import { useUserContext } from '../../../../context/UserContext';
+import { BASE_URL } from '../../../../constants/Config';
 
 const GenerateAdmitCard = () => {
     const [classes, setClasses] = useState([]);
@@ -157,8 +158,33 @@ const GenerateAdmitCard = () => {
             </Document>
         ).toBlob();
         saveAs(blob, `Admit_Cards_${moment().format('YYYY-MM-DD')}.pdf`);
+        generateUrl(blob)
     };
-
+    
+     const generateUrl = async (blob) => {
+            console.log('Uploading Blob', blob);
+    
+            // Prepare FormData to send the blob to the server
+            const formData = new FormData();
+            formData.append('file', blob, 'Demand_Slips.pdf');  // 'file' matches the multer field name
+    
+            try {
+                // Post the FormData to the server's /upload-pdf endpoint
+                const response = await fetch(`${BASE_URL}${apiName.uploadCard}`, {
+                    method: 'POST',
+                    body: formData,
+                });
+    
+                if (!response.ok) {
+                    throw new Error('Failed to upload PDF');
+                }
+                const responseData = await response.json();
+                window.ReactNativeWebView.postMessage(responseData.pdfUrl);
+                console.log('Uploaded successfully:', responseData);
+            } catch (error) {
+                console.error('Error uploading PDF:', error);
+            }
+        };
 
 
     return (
