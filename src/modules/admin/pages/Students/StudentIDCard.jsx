@@ -8,6 +8,7 @@ import Loader from '../../../../components/Loader';
 import moment from 'moment';
 import { getService, postService } from '../../../../constants/Service';
 import { useUserContext } from '../../../../context/UserContext';
+import { BASE_URL } from '../../../../constants/Config';
 // Template Modal Component
 const TemplateModal = ({ open, onClose, onSelectTemplate, selectedTemplate }) => {
     return (
@@ -233,7 +234,7 @@ const StudentIDCard = () => {
                             <View style={{ flexDirection: 'row', marginTop: 10 }}>
                                 <View style={{ width: '20%', marginLeft: 10 }}>
 
-                                    <Image style={{ width: 50, height: 50,objectFit:'cover'  }} src={school?.logo} />
+                                    <Image style={{ width: 50, height: 50, objectFit: 'cover' }} src={school?.logo} />
                                 </View>
                                 <View style={{ justifyContent: 'center', alignItems: 'center', width: '60%' }}>
 
@@ -242,7 +243,7 @@ const StudentIDCard = () => {
                                 </View>
                                 <View style={{ width: '20%' }}>
 
-                                    <Image style={{ width: 50, height: 50,objectFit:'cover' }} src={school?.qrCodeUrl} />
+                                    <Image style={{ width: 50, height: 50, objectFit: 'cover' }} src={school?.qrCodeUrl} />
                                 </View>
                             </View>
                             <View style={{ height: 1, backgroundColor: 'black', width: '100%', marginTop: 10 }}></View>
@@ -303,26 +304,33 @@ const StudentIDCard = () => {
                 ))}
             </Document>
         ).toBlob();
-
-        // saveAs(blob, `Student_ID_Cards_${moment().format('YYYYMMDD')}.pdf`);
+        saveAs(blob, `Student_ID_Cards_${moment().format('YYYYMMDD')}.pdf`);
         generateUrl(blob)
-        const pdfBlobUrl = URL.createObjectURL(blob);
-        console.log('pdfBlobUrlpdfBlobUrl',blob)
-        window.ReactNativeWebView.postMessage('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'); 
     };
     const generateUrl = async (blob) => {
-        console.log('blobblob',blob)
-      
+        console.log('Uploading Blob', blob);
+
+        // Prepare FormData to send the blob to the server
         const formData = new FormData();
-        formData.append('blobBase64', blob, 'id-cards.pdf');
-            try {
-                const response = await postService(apiName.uploadCard, formData);
-                console.log('responseresponse',response)
-                // showToast("Class added successfully.", 'success');
-                // getClassList();
-            } catch (error) {
-                console.error('Error posting data:', error);
+        formData.append('file', blob, 'id-cards.pdf');  // 'file' matches the multer field name
+
+        try {
+            // Post the FormData to the server's /upload-pdf endpoint
+            const response = await fetch(`${BASE_URL}${apiName.uploadCard}`, {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to upload PDF');
             }
+            const responseData = await response.json();
+            setSelectedStudents([])
+            window.ReactNativeWebView.postMessage(responseData.pdfUrl);
+            console.log('Uploaded successfully:', responseData);
+        } catch (error) {
+            console.error('Error uploading PDF:', error);
+        }
     };
 
 

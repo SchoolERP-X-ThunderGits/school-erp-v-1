@@ -3,17 +3,16 @@ import { useUserContext } from '../../../../context/UserContext';
 import apiName from '../../../../constants/ApiName';
 import { getService, putService } from '../../../../constants/Service';
 import { showToast } from '../../../../components/Toast';
+import { UploadFile } from '../../../../components/UploadFile';
 
 const ProfileSettings = () => {
     const { school } = useUserContext();
-    console.log('school', school);
-
     // States for profile and form data
     const [profileData, setProfileData] = useState();
     const [loading, setLoading] = useState(true);
     const [formData, setFormData] = useState();
     const [isEditing, setIsEditing] = useState(false);
-
+    const { setSchoolData } = useUserContext();
     // Fetch profile details
     useEffect(() => {
         getProfileDetails();
@@ -32,23 +31,43 @@ const ProfileSettings = () => {
     };
     const updateProfileDetails = async () => {
         try {
-            const result = await putService(`${apiName.updateProfile}${school?._id}`, formData);
-            console.log('mannnnnnresult---', result,);
-            console.log('mannnnnnresult---', formData,);
+            const result = await putService(`${apiName.getProfile}${school?._id}`, formData);
+            setSchoolData(result?.tenant)
             showToast('Profile update successfully', 'success')
-            // setProfileData(result); // Set the fetched data to state
-            // setFormData(result); // Set form data for editing
-            // setLoading(false);
         } catch (error) {
-            console.log('mannnnnnresult---', formData,);
             showToast('Unable to update profile', 'error')
             setLoading(false);
         }
     };
     // Handling input changes
     const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        const { name, value, files, type } = e.target;
+        if (type === 'file') {
+            if (files && files[0]) {
+                setFormData((prevData) => ({
+                    ...prevData,
+                    [name]: files[0] // Store the file object directly in the state
+                }));
+                if (files[0]) {
+                    UploadFile(files[0])
+                        .then((url) => {
+                            // Successfully uploaded, use the URL
+                            setFormData({
+                                ...formData,
+                                [name]: url, // Set the URL in your form data
+                            });
+                        })
+                        .catch((error) => {
+                            // Handle error
+                            console.error(error);
+                            showToast(error, "error");
+                        });
+                }
+            }
+        } else {
+
+            setFormData({ ...formData, [name]: value });
+        }
     };
 
     // Handle Edit button click
@@ -187,9 +206,8 @@ const ProfileSettings = () => {
                         <div className="mb-4">
                             <label className="block text-gray-700">logo *:</label>
                             <input
-                                type="text"
+                                type="file"
                                 name="logo"
-                                value={formData?.logo}
                                 onChange={handleInputChange}
                                 className="mt-2 p-2 border border-gray-300 rounded-md w-full"
                             />
@@ -212,9 +230,8 @@ const ProfileSettings = () => {
                         <div className="mb-4">
                             <label className="block text-gray-700">Director Signature URL *:</label>
                             <input
-                                type="text"
+                                type="file"
                                 name="directorSignature"
-                                value={formData?.directorSignature}
                                 onChange={handleInputChange}
                                 className="mt-2 p-2 border border-gray-300 rounded-md w-full"
                             />
@@ -222,9 +239,8 @@ const ProfileSettings = () => {
                         <div className="mb-4">
                             <label className="block text-gray-700">Principal Signature URL *:</label>
                             <input
-                                type="text"
+                                type="file"
                                 name="principalSignature"
-                                value={formData?.principalSignature}
                                 onChange={handleInputChange}
                                 className="mt-2 p-2 border border-gray-300 rounded-md w-full"
                             />
@@ -232,9 +248,8 @@ const ProfileSettings = () => {
                         <div className="mb-4">
                             <label className="block text-gray-700">Manager Signature URL *:</label>
                             <input
-                                type="text"
+                                type="file"
                                 name="managerSignature"
-                                value={formData?.managerSignature}
                                 onChange={handleInputChange}
                                 className="mt-2 p-2 border border-gray-300 rounded-md w-full"
                             />

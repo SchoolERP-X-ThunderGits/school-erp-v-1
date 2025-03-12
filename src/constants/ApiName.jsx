@@ -35,7 +35,6 @@ const apiName = {
   getPaymentById:'payment/get',
   bulkUpload:'student/bulkAddStudents',
   getProfile:'tenant/',
-  updateProfile:'tenants/',
-  uploadCard:'admrec/blob-to-pdf',
+  uploadCard:'admrec/upload',
 };
 export default apiName;

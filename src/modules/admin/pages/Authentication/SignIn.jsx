@@ -10,7 +10,7 @@ const SignIn = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const { setSchoolData, logout } = useUserContext();
+  const { setSchoolData } = useUserContext();
   const handleLogin = async () => {
     if (!username || !password) {
       showToast('All fields are required', 'error');
