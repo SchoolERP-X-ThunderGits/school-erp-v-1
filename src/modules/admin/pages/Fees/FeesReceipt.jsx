@@ -71,13 +71,39 @@ const FeeReceipt = () => {
         html2canvas(printArea).then(canvas => {
             const imgData = canvas.toDataURL('image/png');
             const pdf = new jsPDF('p', 'mm', 'a4');
-            const imgProps = pdf.getImageProperties(imgData);
+    
+            // Get the PDF page size
             const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+            const pdfHeight = pdf.internal.pageSize.getHeight();
+    
+            // Get the image properties
+            const imgProps = pdf.getImageProperties(imgData);
+            const imgWidth = imgProps.width;
+            const imgHeight = imgProps.height;
+    
+            // Scale to fit content while preserving aspect ratio
+            const scaleWidth = pdfWidth / imgWidth;
+            const scaleHeight = pdfHeight / imgHeight;
+    
+            // Choose the smaller scale factor to ensure the image fits on the page
+            const scale = Math.min(scaleWidth, scaleHeight);
+    
+            // Calculate the new image width and height after scaling
+            const scaledWidth = imgWidth * scale;
+            const scaledHeight = imgHeight * scale;
+    
+            // Center the image if needed (optional)
+            const xOffset = (pdfWidth - scaledWidth) / 2;
+            const yOffset = (pdfHeight - scaledHeight) / 2;
+    
+            // Add the image to the PDF
+            pdf.addImage(imgData, 'PNG', xOffset, yOffset, scaledWidth, scaledHeight);
+    
+            // Save the PDF
             pdf.save('invoice.pdf');
         });
     };
+    
 
 
     if (!invoiceData) {
