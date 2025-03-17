@@ -114,7 +114,7 @@ const AdmissionReceipt = ({ studentData, setRegistrationCompleted, resetForm }) 
       </Document>
     ).toBlob();
     // saveAs(blob, `Student_ID_Cards_${moment().format('YYYYMMDD')}.pdf`);
-    generateUrl(blob)
+      generateUrl(blob)
   };
   const generateUrl = async (blob) => {
 
@@ -125,8 +125,11 @@ const AdmissionReceipt = ({ studentData, setRegistrationCompleted, resetForm }) 
 
       try {
         // Post the FormData to the server's /upload-pdf endpoint using axios
-        const response = await axios.post(`${BASE_URL}${apiName.uploadCard}`, formData);
-      
+        const response = await fetch(`${BASE_URL}${apiName.uploadCard}`, {
+          method: 'POST',
+          body: formData,
+        });
+      alert('helo')
         if (response.status !== 200) {
           throw new Error('Failed to upload PDF');
         }
@@ -134,7 +137,8 @@ const AdmissionReceipt = ({ studentData, setRegistrationCompleted, resetForm }) 
         console.log('Uploaded successfully:', response.data?.pdfUrl);
         window.ReactNativeWebView?.postMessage(`PRINT${response.data.pdfUrl}`);
       } catch (error) {
-        window.ReactNativeWebView?.postMessage(error.message);
+        alert(error)
+        window.ReactNativeWebView?.postMessage(JSON.stringify(error));
         console.error('Error uploading PDF:', error);
       }}
   };
