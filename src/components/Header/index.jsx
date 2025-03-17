@@ -78,7 +78,7 @@ function index(props) {
             textAlign: 'center',
           }}
         >
-          {school?.name}name
+          {school?.name}
         </h1>
       </div>
     </div>
