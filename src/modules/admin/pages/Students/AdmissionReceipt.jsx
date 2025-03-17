@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import apiName from "../../../../constants/ApiName";
 import { getService } from "../../../../constants/Service";
 import { useUserContext } from "../../../../context/UserContext";
+import { pdf, Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
+import { BASE_URL } from '../../../../constants/Config';
+import apiName from "../../../../constants/ApiName";
+import axios from "axios";
 
 const AdmissionReceipt = ({ studentData, setRegistrationCompleted, resetForm }) => {
   const [className, setClassName] = useState("");
@@ -25,10 +28,119 @@ const AdmissionReceipt = ({ studentData, setRegistrationCompleted, resetForm }) 
     setFormattedDateOfBirth(formattedDateOfBirth);
   }, [studentData.class_Id, studentData.date_Of_Admission, studentData.date_Of_Birth]);
 
+  const generateStudentReceipt = async () => {
+    const blob = await pdf(
+      <Document>
+        <Page size="A4" style={styles.page} key={studentData._id}>
+          <View style={styles.container}>
+            <View style={styles.headerContainer}>
+              <Image source={school?.logo} style={styles.logo} />
+
+              <View style={{ justifyContent: 'center', alignItems: 'center', width: '80%' }}>
+                <Text style={styles.schoolName}>{school?.name}</Text>
+                <Text style={styles.location}>{school?.address}</Text>
+              </View>
+
+              <Image source={school?.logo} style={styles.logo} />
+            </View>
+
+            <View style={styles.sectionContainer}>
+              <View style={styles.rowContainer}>
+                <View style={styles.leftColumn}>
+                  <Text style={[styles.label, { borderTopWidth: 0 }]}>Admission Number:</Text>
+                  <Text style={styles.label}>Roll Number:</Text>
+                  <Text style={styles.label}>Name:</Text>
+                  <Text style={styles.label}>Date of Birth:</Text>
+                  <Text style={styles.label}>Contact Number:</Text>
+                </View>
+                <View style={styles.leftColumn}>
+                  <Text style={[styles.value, { borderTopWidth: 0, }]}>{studentData?.admission_Number}</Text>
+                  <Text style={styles.value}>{studentData?.roll_Number}</Text>
+                  <Text style={styles.value}>{studentData?.first_Name} {studentData?.last_Name}</Text>
+                  <Text style={styles.value}>{studentData?.date_Of_Birth}</Text>
+                  <Text style={styles.value}>{studentData?.contact_Number}</Text>
+                </View>
+                <Image source={{ uri: studentData.student_Photo }} style={styles.profileImage} />
+              </View>
+            </View>
+
+            <Text style={[styles.sectionTitle, { marginVertical: 20 }]}>Academic Details</Text>
+            <View style={[{ flexDirection: 'row', justifyContent: 'space-between', borderTopWidth: 0.7, borderLeftWidth: 0.7, borderBottomWidth: 0.7 }]}>
+
+              <View style={{ width: '50%' }}>
+                <Text style={[styles.label, { borderTopWidth: 0 }]}>Class:</Text>
+                <Text style={styles.label}>Section:</Text>
+              </View>
+
+              <View style={{ width: '50%' }}>
+                <Text style={[styles.value, { borderTopWidth: 0 }]}>{studentData?.class_Id?.name}</Text>
+                <Text style={styles.value}>{studentData?.section}</Text>
+              </View>
+
+            </View>
+
+            <Text style={[styles.sectionTitle, { marginVertical: 20 }]}>Additional Details</Text>
+            <View style={[{ flexDirection: 'row', justifyContent: 'space-between', borderTopWidth: 0.7, borderLeftWidth: 0.7, borderBottomWidth: 0.7 }]}>
+
+              <View style={{ width: '50%' }}>
+                <Text style={[styles.label, { borderTopWidth: 0 }]}>Permanent Address:</Text>
+                <Text style={styles.label}>Email:</Text>
+                <Text style={styles.label}>Category:</Text>
+                <Text style={styles.label}>Blood Group:</Text>
+                <Text style={styles.label}>Father's Name:</Text>
+                <Text style={styles.label}>Mother's Name:</Text>
+                <Text style={styles.label}>Aadhar Number:</Text>
+                <Text style={styles.label}>Due Amount:</Text>
+              </View>
+
+              <View style={{ width: '50%' }}>
+                <Text style={[styles.value, { borderTopWidth: 0 }]}>{studentData?.permanent_Address}</Text>
+                <Text style={styles.value}>{studentData?.email}</Text>
+                <Text style={styles.value}>{studentData?.category}</Text>
+                <Text style={styles.value}>{studentData?.blood_Group}</Text>
+                <Text style={styles.value}>{studentData?.father_Name}</Text>
+                <Text style={styles.value}>{studentData?.mother_Name}</Text>
+                <Text style={styles.value}>{studentData?.aadhar_number}</Text>
+                <Text style={styles.value}>{studentData?.due_amount}</Text>
+              </View>
+            </View>
+
+            <View style={styles.signatureContainer}>
+              <Text style={styles.signatureText}>Parent Signature</Text>
+              <Text style={styles.signatureText}>Admission Incharge Signature</Text>
+            </View>
+          </View>
+        </Page>
+      </Document>
+    ).toBlob();
+    // saveAs(blob, `Student_ID_Cards_${moment().format('YYYYMMDD')}.pdf`);
+    generateUrl(blob)
+  };
+  const generateUrl = async (blob) => {
+
+    // Prepare FormData to send the blob to the server
+    const formData = new FormData();
+    formData.append('file', blob, 'id-cards.pdf');  // 'file' matches the multer field name
+    if(blob){
+
+      try {
+        // Post the FormData to the server's /upload-pdf endpoint using axios
+        const response = await axios.post(`${BASE_URL}${apiName.uploadCard}`, formData);
+      
+        if (response.status !== 200) {
+          throw new Error('Failed to upload PDF');
+        }
+      
+        console.log('Uploaded successfully:', response.data?.pdfUrl);
+        window.ReactNativeWebView?.postMessage(`PRINT${response.data.pdfUrl}`);
+      } catch (error) {
+        window.ReactNativeWebView?.postMessage(error.message);
+        console.error('Error uploading PDF:', error);
+      }}
+  };
   // Print function
   const handlePrint = () => {
-    window.ReactNativeWebView.postMessage('PRINT');
-    // Adding a small timeout to ensure the content is rendered before printing
+    generateStudentReceipt()
     setTimeout(() => {
       window.print();
     }, 100);
@@ -37,7 +149,7 @@ const AdmissionReceipt = ({ studentData, setRegistrationCompleted, resetForm }) 
   return (
     <div className="admission-receipt">
       <div className="flex gap-4 justify-center header-to-hide">
-        <Link to="/admin/add-student">
+        <Link to="/admin/add-studentData">
           <button
             onClick={() => {
               resetForm()
@@ -50,7 +162,9 @@ const AdmissionReceipt = ({ studentData, setRegistrationCompleted, resetForm }) 
         </Link>
         <button
           className="flex items-center px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
-          onClick={handlePrint}
+          onClick={()=>{
+            handlePrint()
+          }}
         >
           Print
         </button>
@@ -78,7 +192,7 @@ const AdmissionReceipt = ({ studentData, setRegistrationCompleted, resetForm }) 
       <hr className="divider" />
 
       {/* Student Details */}
-      <div className="student-details">
+      <div className="studentData-details">
         <table>
           <tbody>
             <tr>
@@ -168,7 +282,7 @@ const AdmissionReceipt = ({ studentData, setRegistrationCompleted, resetForm }) 
           margin-top: 20px;
           margin-bottom: 20px;
         }
-        .student-details, .academic-details, .additional-details {
+        .studentData-details, .academic-details, .additional-details {
           margin-bottom: 20px;
         }
         table {
@@ -209,7 +323,7 @@ const AdmissionReceipt = ({ studentData, setRegistrationCompleted, resetForm }) 
             page-break-before: always;
           }
 
-          .school-info, .student-details, .academic-details, .additional-details {
+          .school-info, .studentData-details, .academic-details, .additional-details {
             page-break-inside: avoid;
           }
 
@@ -227,5 +341,21 @@ const AdmissionReceipt = ({ studentData, setRegistrationCompleted, resetForm }) 
     </div>
   );
 };
+const styles = StyleSheet.create({
+  container: { flex: 1, padding: 20, backgroundColor: "#fff" },
+  headerContainer: { marginBottom: 20, flexDirection: 'row', textAlign: 'center', borderBottomWidth: 0.7 },
+  logo: { width: 80, height: 80, resizeMode: "contain" },
+  schoolName: { fontSize: 18, fontWeight: "bold", color: "#000", textAlign: 'center' },
+  location: { fontSize: 14, color: "gray", textAlign: 'center', marginTop: 5 },
+  sectionContainer: { backgroundColor: "#fff", },
+  sectionTitle: { fontSize: 15, fontFamily: 'RobotoB', fontWeight: "bold", marginBottom: 10, marginTop: 10 },
+  rowContainer: { flexDirection: "row", borderWidth: 0.7 },
+  leftColumn: { flex: 1 },
+  label: { fontSize: 14, color: "#333", borderTopWidth: 0.5, borderRightWidth: 0.5, fontFamily: 'RobotoB', height: 35, padding: 8 },
+  value: { fontSize: 14, borderTopWidth: 0.7, borderRightWidth: 0.7, height: 35, padding: 8 },
+  profileImage: { width: 150, height: 150, padding: 10, alignSelf: 'center' },
+  signatureContainer: { flexDirection: "row", justifyContent: 'space-evenly', marginTop: 30 },
+  signatureText: { fontSize: 14, fontWeight: "bold", color: "#555" }
+});
 
 export default AdmissionReceipt;
