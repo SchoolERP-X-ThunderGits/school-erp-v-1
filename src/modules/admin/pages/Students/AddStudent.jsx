@@ -705,7 +705,7 @@ const AddStudent = () => {
                     {[0, 1, 2].map((index) => (
                       <input
                         key={index}
-                        type="text"
+                        type="number"
                         name={`aadhar-${index}`}
                         value={aadharParts[index]}
                         onChange={(e) => handleAadharChange(e, index)}

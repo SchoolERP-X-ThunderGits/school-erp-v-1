@@ -98,7 +98,7 @@ function StudentReceiptPage({ student, school, setAdmissionReceptPage }) {
 
     // Prepare FormData to send the blob to the server
     const formData = new FormData();
-    formData.append('file', blob, 'id-cards.pdf');  // 'file' matches the multer field name
+    formData.append('file', blob, 'student-receipt.pdf');  // 'file' matches the multer field name
 
     try {
       // Post the FormData to the server's /upload-pdf endpoint

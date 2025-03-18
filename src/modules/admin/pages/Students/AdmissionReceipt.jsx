@@ -114,14 +114,14 @@ const AdmissionReceipt = ({ studentData, setRegistrationCompleted, resetForm }) 
       </Document>
     ).toBlob();
     // saveAs(blob, `Student_ID_Cards_${moment().format('YYYYMMDD')}.pdf`);
-      generateUrl(blob)
+    generateUrl(blob)
   };
   const generateUrl = async (blob) => {
 
     // Prepare FormData to send the blob to the server
     const formData = new FormData();
-    formData.append('file', blob, 'id-cards.pdf');  // 'file' matches the multer field name
-    if(blob){
+    formData.append('file', blob, 'admission-receipt.pdf');  // 'file' matches the multer field name
+    if (blob) {
 
       try {
         // Post the FormData to the server's /upload-pdf endpoint using axios
@@ -129,18 +129,19 @@ const AdmissionReceipt = ({ studentData, setRegistrationCompleted, resetForm }) 
           method: 'POST',
           body: formData,
         });
-      alert('helo')
+        alert('helo')
         if (response.status !== 200) {
           throw new Error('Failed to upload PDF');
         }
-      
+
         console.log('Uploaded successfully:', response.data?.pdfUrl);
         window.ReactNativeWebView?.postMessage(`PRINT${response.data.pdfUrl}`);
       } catch (error) {
         alert(error)
         window.ReactNativeWebView?.postMessage(JSON.stringify(error));
         console.error('Error uploading PDF:', error);
-      }}
+      }
+    }
   };
   // Print function
   const handlePrint = () => {
@@ -166,7 +167,7 @@ const AdmissionReceipt = ({ studentData, setRegistrationCompleted, resetForm }) 
         </Link>
         <button
           className="flex items-center px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
-          onClick={()=>{
+          onClick={() => {
             handlePrint()
           }}
         >

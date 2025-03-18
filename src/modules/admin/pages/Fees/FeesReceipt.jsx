@@ -65,58 +65,60 @@ const FeeReceipt = () => {
 
 
     const handlePrint = () => {
-        generateStudentReceipt()
+        generateFeeReceipt()
         setTimeout(() => {
-            // window.print();
+            window.print();
         }, 100);
     };
 
-    const generateStudentReceipt = async () => {
+    const generateFeeReceipt = async (forDownload) => {
         const blob = await pdf(
             <Document>
                 <Page size="A4" style={styles.page} key={invoiceData._id}>
                     <View style={styles.container}>
                         <Text style={styles.header}>Fee Invoice</Text>
-                        <View style={{alignItems:'center'}}>
-                        <Text style={styles.date}>Date: <Text style={{fontFamily:'RobotoR',marginLeft:5}}>17/03/2025</Text></Text>
-                        <Text style={styles.invoiceNumber}>Invoice No: <Text style={{fontFamily:'RobotoR',marginLeft:5}}>REC-1742195251685-IOQZK</Text></Text>
-                        <Text style={styles.paymentMode}>Payment Mode: <Text style={{fontFamily:'RobotoR',marginLeft:5}}>CASH</Text></Text>
+                        <View style={{ alignItems: 'center' }}>
+                            <Text style={styles.date}>Date: <Text style={{ fontFamily: 'RobotoR', marginLeft: 5 }}>{invoiceData.date}</Text></Text>
+                            <Text style={styles.invoiceNumber}>Invoice No: <Text style={{ fontFamily: 'RobotoR', marginLeft: 5 }}>{invoiceData.receipt_no}</Text></Text>
+                            <Text style={styles.paymentMode}>Payment Mode: <Text style={{ fontFamily: 'RobotoR', marginLeft: 5 }}>{invoiceData?.paymentMethod}</Text></Text>
                         </View>
 
                         <View style={styles.schoolInfo}>
                             <Image source={school?.logo} style={styles.logo} />
-                            <Text style={styles.schoolName}>SJS Public School</Text>
+                            <Text style={styles.schoolName}>{school?.name}</Text>
                             <Image source={school?.logo} style={styles.logo} />
                         </View>
-
                         <View style={styles.infoBox}>
                             <Text style={styles.label}>Invoice To:</Text>
-                            <Text style={{fontFamily:'RobotoR',fontSize:14}}>Name: Jsjdsj Jdjj</Text>
-                            <Text style={{fontFamily:'RobotoR',fontSize:14}}>Roll No: 646565</Text>
-                            <Text style={{fontFamily:'RobotoR',fontSize:14}}>Father: Jdffj</Text>
-                            <Text style={{fontFamily:'RobotoR',fontSize:14}}>Ph: 225565565</Text>
-                            <Text style={{fontFamily:'RobotoR',fontSize:14}}>Email: xyz@gmail.com</Text>
+                            <Text style={{ fontFamily: 'RobotoR', fontSize: 14 }}>Name: {invoiceData.invoiceTo.name}</Text>
+                            <Text style={{ fontFamily: 'RobotoR', fontSize: 14 }}>Roll No: {invoiceData.invoiceTo.roll_no}</Text>
+                            <Text style={{ fontFamily: 'RobotoR', fontSize: 14 }}>Father: {invoiceData.invoiceTo.father}</Text>
+                            <Text style={{ fontFamily: 'RobotoR', fontSize: 14 }}>Ph: {invoiceData.invoiceTo.contact}</Text>
                         </View>
 
                         <View style={styles.paymentDetails}>
                             <Text style={styles.label}>Pay To:</Text>
-                            <Text>SJS Public School</Text>
-                            <Text>Faridabad, Rohtas, India</Text>
+                            <Text style={{ fontFamily: 'RobotoR', fontSize: 14 }}>{invoiceData.payTo.name}</Text>
+                            <Text style={{ fontFamily: 'RobotoR', fontSize: 14 }}>{invoiceData.payTo.address}</Text>
+                            <Text style={{ fontFamily: 'RobotoR', fontSize: 14 }}>{invoiceData.payTo.stateCountry}</Text>
+                            <Text style={{ fontFamily: 'RobotoR', fontSize: 14 }}>{invoiceData.payTo.email}</Text>
                         </View>
+                        <View style={{ flexDirection: 'row', borderWidth: 0.7 }}>
 
-                        <View style={styles.fees}>
-                            <Text style={styles.feeHeader}>Fees Type</Text>
-                            <Text style={styles.feeHeader}>Fees Amount</Text>
-                        </View>
-                        <View style={styles.feeRow}>
-                            <Text>April Fee</Text>
-                            <Text>₹500</Text>
+                            <View style={styles.fees}>
+                                <Text style={styles.feeHeader}>Fees Type</Text>
+                                <Text style={[styles.feeHeader, { borderBottomWidth: 0 }]}>Fees Amount</Text>
+                            </View>
+                            <View style={styles.feeRow}>
+                                <Text style={{ fontFamily: 'RobotoR', fontSize: 14, borderBottomWidth: 0.7, padding: 5 }}>April Fee</Text>
+                                <Text style={{ fontFamily: 'RobotoR', fontSize: 14, padding: 5 }}>₹500</Text>
+                            </View>
                         </View>
 
                         <View style={styles.totalContainer}>
-                            <Text style={styles.total}>Total Fee: ₹500</Text>
-                            <Text style={styles.total}>Tax: ₹0</Text>
-                            <Text style={styles.total}>Total Payable: ₹500</Text>
+                            <Text style={styles.total}>Total Fee: <Text style={{ fontFamily: 'RobotoR', marginLeft: 5 }}> ₹500</Text></Text>
+                            <Text style={styles.total}>Tax: <Text style={{ fontFamily: 'RobotoR', marginLeft: 5 }}> ₹0</Text></Text>
+                            <Text style={styles.total}>Total Payable: <Text style={{ fontFamily: 'RobotoR', marginLeft: 5 }}> ₹500</Text></Text>
                         </View>
 
                         <Text style={styles.footer}>
@@ -127,14 +129,14 @@ const FeeReceipt = () => {
             </Document>
         ).toBlob();
         // saveAs(blob, `Student_ID_Cards_${moment().format('YYYYMMDD')}.pdf`);
-        generateUrl(blob)
+        generateUrl(blob, forDownload)
     };
-    const generateUrl = async (blob) => {
+    const generateUrl = async (blob, forDownload) => {
         console.log('Uploading Blob', blob);
 
         // Prepare FormData to send the blob to the server
         const formData = new FormData();
-        formData.append('file', blob, 'id-cards.pdf');  // 'file' matches the multer field name
+        formData.append('file', blob, 'fee-receipt.pdf');  // 'file' matches the multer field name
 
         try {
             // Post the FormData to the server's /upload-pdf endpoint
@@ -148,7 +150,13 @@ const FeeReceipt = () => {
             }
             const responseData = await response.json();
             console.log('Uploaded successfully:', responseData?.pdfUrl);
-            window.ReactNativeWebView.postMessage(`PRINT${responseData.pdfUrl}`);
+            if (forDownload) {
+
+                window.ReactNativeWebView.postMessage(responseData.pdfUrl);
+            } else {
+
+                window.ReactNativeWebView.postMessage(`PRINT${responseData.pdfUrl}`);
+            }
         } catch (error) {
             console.error('Error uploading PDF:', error);
         }
@@ -190,6 +198,7 @@ const FeeReceipt = () => {
             // Save the PDF
             pdf.save('invoice.pdf');
         });
+        generateFeeReceipt(true)
     };
 
 
@@ -331,28 +340,28 @@ const styles = StyleSheet.create({
     },
     logo: { width: 80, height: 80, resizeMode: "contain" },
     date: {
-        fontFamily:'RobotoB',
+        fontFamily: 'RobotoB',
         fontSize: 14,
         marginBottom: 8,
     },
     invoiceNumber: {
-        fontFamily:'RobotoB',
+        fontFamily: 'RobotoB',
         fontSize: 14,
         marginBottom: 8,
     },
     paymentMode: {
-        fontFamily:'RobotoB',
+        fontFamily: 'RobotoB',
         fontSize: 14,
         marginBottom: 16,
     },
     schoolInfo: {
-        flexDirection:'row',
+        flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 20,
     },
     schoolName: {
-        width:'80%',
-        textAlign:'center',
+        width: '80%',
+        textAlign: 'center',
         fontSize: 20,
         fontWeight: 'bold',
     },
@@ -360,34 +369,36 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     label: {
-        fontWeight: 'bold',
+        fontSize: 16,
+        fontFamily: 'RobotoB',
         marginBottom: 4,
     },
     paymentDetails: {
         marginBottom: 20,
     },
     fees: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        borderBottomWidth: 1,
-        borderBottomColor: '#000',
-        paddingBottom: 8,
-        marginBottom: 8,
+        width: '50%'
     },
     feeHeader: {
+        padding: 5,
+        borderRightWidth: 0.7,
+        borderBottomWidth: 0.7,
+        fontFamily: 'RobotoB',
+        fontSize: 14,
         fontWeight: 'bold',
     },
     feeRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginBottom: 8,
+        width: '50%'
     },
     totalContainer: {
+        justifyContent: 'flex-end',
+        alignItems: 'flex-end',
         marginTop: 16,
         marginBottom: 16,
     },
     total: {
-        fontWeight: 'bold',
+        fontSize: 14,
+        fontFamily: 'RobotoB',
         marginBottom: 4,
     },
     footer: {
