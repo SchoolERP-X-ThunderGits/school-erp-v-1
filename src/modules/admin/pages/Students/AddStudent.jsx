@@ -49,7 +49,9 @@ const AddStudent = () => {
     date_Of_Admission: new Date().toISOString().split('T')[0],
     student_Photo: '',
     aadhar_number: '',
-    feeStructures: []
+    feeStructures: [],
+    select_tranport: '',
+    transport_address: '',
   });
   const [bulkClassId, setBulkClassId] = useState('')
   const [bulkSection, setBulkSection] = useState('')
@@ -624,6 +626,30 @@ const AddStudent = () => {
                     <option value="AB+">AB+</option>
                     <option value="AB-">AB-</option>
                   </select>
+                </div>
+                <div className="mb-4">
+                  <label className="block text-gray-700">Transportation:</label>
+                  <select
+                    name="select_tranport"
+                    value={formData.select_tranport}
+                    onChange={handleInputChange}
+                    className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                  >
+                    <option value="">Select Transportation</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                  </select>
+                </div>
+                <div className="mb-4 ">
+                  <label className="block text-gray-700">Transportation Address*:</label>
+                  <input
+                    type="text"
+                    name="transport_address"
+                    maxLength={45}
+                    value={formData.transport_address}
+                    onChange={handleInputChange}
+                    className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                  />
                 </div>
 
                 {/* Father's Name */}

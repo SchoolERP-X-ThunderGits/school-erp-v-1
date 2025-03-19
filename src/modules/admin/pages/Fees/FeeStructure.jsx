@@ -82,7 +82,7 @@ const FeeStructure = () => {
         // If editing, call PUT service to update the fee structure
         if (editMode) {
             try {
-                const response = await putService(`${apiName.updateClass}/${feeToDelete}`, formData);
+                const response = await putService(`${apiName.updateFeeStructure}/${feeToDelete}`, formData);
                 showToast("Fee structure updated successfully.", 'success');
                 fetchFeeStructures();
             } catch (error) {
@@ -330,6 +330,7 @@ const FeeStructure = () => {
                                       className="p-2 border border-gray-300 rounded-md w-full sm:w-1/3"
                                   />
                                   <button
+                                  disabled={formData.feeGroups.length ==1}
                                       type="button"
                                       onClick={() => handleDeleteFeeGroup(index)}
                                       className="text-red-500 hover:text-red-700 mt-2 sm:mt-0"

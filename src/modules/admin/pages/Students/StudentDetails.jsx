@@ -349,35 +349,21 @@ const StudentDetails = () => {
             <table className="min-w-full table-auto bg-gray-50 shadow-sm rounded-lg">
                 <thead className="bg-blue-100">
                     <tr>
-                        {!feeDetails.feeStructures.every(feeStructure =>
-                            feeStructure.feeGroups.every(feeGroup =>
-                                isSelected(feeGroup) || feeDetails.payments.some(payment =>
-                                    payment.feePaid.some(feePaid => feePaid.feeType === feeGroup.feeType)
-                                )
-                            )
-                        ) && <th className="px-4 py-2">
+                        <th className="px-4 py-2">
 
-                                <input
-                                    type="checkbox"
-                                    checked={feeDetails.feeStructures.every(feeStructure =>
-                                        feeStructure.feeGroups.every(feeGroup =>
-                                            isSelected(feeGroup) || feeDetails.payments.some(payment =>
-                                                payment.feePaid.some(feePaid => feePaid.feeType === feeGroup.feeType)
-                                            )
+                            <input
+                                type="checkbox"
+                                checked={feeDetails.feeStructures.every(feeStructure =>
+                                    feeStructure.feeGroups.every(feeGroup =>
+                                        isSelected(feeGroup) || feeDetails.payments.some(payment =>
+                                            payment.feePaid.some(feePaid => feePaid.feeType === feeGroup.feeType)
                                         )
-                                    )}
-                                    style={{
-                                        opacity: feeDetails.feeStructures.every(feeStructure =>
-                                            feeStructure.feeGroups.every(feeGroup =>
-                                                isSelected(feeGroup) || feeDetails.payments.some(payment =>
-                                                    payment.feePaid.some(feePaid => feePaid.feeType === feeGroup.feeType)
-                                                )
-                                            )
-                                        ) ? 0 : 1
-                                    }}
-                                    onChange={handleMasterCheckboxChange}
-                                />
-                            </th>}
+                                    )
+                                )}
+
+                                onChange={handleMasterCheckboxChange}
+                            />
+                        </th>
                         <th className="px-4 py-2">Fees Structure</th>
                         <th className="px-4 py-2">Fees Type</th>
                         <th className="px-4 py-2">Due Date</th>
@@ -391,13 +377,7 @@ const StudentDetails = () => {
                     {feeDetails && feeDetails.feeStructures?.map((feeStructure) => (
                         feeStructure.feeGroups?.map((feeGroup) => (
                             <tr key={feeGroup._id} className="hover:bg-gray-100">
-                                {!feeDetails.feeStructures.every(feeStructure =>
-                                        feeStructure.feeGroups.every(feeGroup =>
-                                            isSelected(feeGroup) || feeDetails.payments.some(payment =>
-                                                payment.feePaid.some(feePaid => feePaid.feeType === feeGroup.feeType)
-                                            )
-                                        )
-                                    ) &&<td className="px-4 py-2">
+                                <td className="px-4 py-2">
                                     <input
                                         disabled={feeDetails.payments.some((payment) =>
                                             payment.feePaid.some((feePaid) => feePaid.feeType === feeGroup.feeType)
@@ -413,7 +393,7 @@ const StudentDetails = () => {
                                     />
 
 
-                                </td>}
+                                </td>
                                 <td className="px-4 py-2">{feeStructure.name}</td>
                                 <td className="px-4 py-2">{feeGroup.feeType}</td>
                                 <td className="px-4 py-2">{new Date(feeGroup.dueDate).toLocaleDateString()}</td>
