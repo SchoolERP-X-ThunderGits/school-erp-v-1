@@ -37,7 +37,7 @@ function StudentReceiptPage({ student, school, setAdmissionReceptPage }) {
                   <Text style={styles.value}>{student?.date_Of_Birth}</Text>
                   <Text style={styles.value}>{student?.contact_Number}</Text>
                 </View>
-                <Image source={{ uri: student.student_Photo }} style={styles.profileImage} />
+                <Image source={student?.student_Photo} style={styles.profileImage} />
               </View>
             </View>
 

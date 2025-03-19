@@ -4,7 +4,7 @@ import apiName from '../../../../constants/ApiName'; // Importing API Names
 import { showToast } from '../../../../components/Toast'; // Show Toast Notifications
 import AdmissionReceipt from './AdmissionReceipt';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { json, useNavigate } from 'react-router-dom';
 import { BASE_URL } from '../../../../constants/Config';
 const AddStudent = () => {
 

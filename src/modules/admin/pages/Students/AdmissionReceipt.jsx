@@ -28,128 +28,129 @@ const AdmissionReceipt = ({ studentData, setRegistrationCompleted, resetForm }) 
     setFormattedDateOfBirth(formattedDateOfBirth);
   }, [studentData.class_Id, studentData.date_Of_Admission, studentData.date_Of_Birth]);
 
-  const generateStudentReceipt = async () => {
+  const handlePrint = () => {
+    generateFeeReceipt()
+    setTimeout(() => {
+        window.print();
+    }, 100);
+};
+
+const generateFeeReceipt = async (forDownload) => {
     const blob = await pdf(
       <Document>
-        <Page size="A4" style={styles.page} key={studentData._id}>
-          <View style={styles.container}>
-            <View style={styles.headerContainer}>
-              <Image source={school?.logo} style={styles.logo} />
+      <Page size="A4" style={styles.page} >
+        <View style={styles.container}>
+          <View style={styles.headerContainer}>
+            <Image source={school?.logo} style={styles.logo} />
 
-              <View style={{ justifyContent: 'center', alignItems: 'center', width: '80%' }}>
-                <Text style={styles.schoolName}>{school?.name}</Text>
-                <Text style={styles.location}>{school?.address}</Text>
-              </View>
-
-              <Image source={school?.logo} style={styles.logo} />
+            <View style={{ justifyContent: 'center', alignItems: 'center', width: '80%' }}>
+              <Text style={styles.schoolName}>{school?.name}</Text>
+              <Text style={styles.location}>{school?.address}</Text>
             </View>
+            <Image source={school?.logo} style={styles.logo} />
+          </View>
 
-            <View style={styles.sectionContainer}>
-              <View style={styles.rowContainer}>
-                <View style={styles.leftColumn}>
-                  <Text style={[styles.label, { borderTopWidth: 0 }]}>Admission Number:</Text>
-                  <Text style={styles.label}>Roll Number:</Text>
-                  <Text style={styles.label}>Name:</Text>
-                  <Text style={styles.label}>Date of Birth:</Text>
-                  <Text style={styles.label}>Contact Number:</Text>
-                </View>
-                <View style={styles.leftColumn}>
-                  <Text style={[styles.value, { borderTopWidth: 0, }]}>{studentData?.admission_Number}</Text>
-                  <Text style={styles.value}>{studentData?.roll_Number}</Text>
-                  <Text style={styles.value}>{studentData?.first_Name} {studentData?.last_Name}</Text>
-                  <Text style={styles.value}>{studentData?.date_Of_Birth}</Text>
-                  <Text style={styles.value}>{studentData?.contact_Number}</Text>
-                </View>
-                <Image source={{ uri: studentData.student_Photo }} style={styles.profileImage} />
+          <View style={styles.sectionContainer}>
+            <View style={styles.rowContainer}>
+              <View style={styles.leftColumn}>
+                <Text style={[styles.label, { borderTopWidth: 0 }]}>Admission Number:</Text>
+                <Text style={styles.label}>Roll Number:</Text>
+                <Text style={styles.label}>Name:</Text>
+                <Text style={styles.label}>Date of Birth:</Text>
+                <Text style={styles.label}>Contact Number:</Text>
               </View>
-            </View>
-
-            <Text style={[styles.sectionTitle, { marginVertical: 20 }]}>Academic Details</Text>
-            <View style={[{ flexDirection: 'row', justifyContent: 'space-between', borderTopWidth: 0.7, borderLeftWidth: 0.7, borderBottomWidth: 0.7 }]}>
-
-              <View style={{ width: '50%' }}>
-                <Text style={[styles.label, { borderTopWidth: 0 }]}>Class:</Text>
-                <Text style={styles.label}>Section:</Text>
+              <View style={styles.leftColumn}>
+                <Text style={[styles.value, { borderTopWidth: 0, }]}>{studentData?.admission_Number}</Text>
+                <Text style={styles.value}>{studentData?.roll_Number}</Text>
+                <Text style={styles.value}>{studentData?.first_Name} {studentData?.last_Name}</Text>
+                <Text style={styles.value}>{studentData?.date_Of_Birth}</Text>
+                <Text style={styles.value}>{studentData?.contact_Number}</Text>
               </View>
-
-              <View style={{ width: '50%' }}>
-                <Text style={[styles.value, { borderTopWidth: 0 }]}>{studentData?.class_Id?.name}</Text>
-                <Text style={styles.value}>{studentData?.section}</Text>
-              </View>
-
-            </View>
-
-            <Text style={[styles.sectionTitle, { marginVertical: 20 }]}>Additional Details</Text>
-            <View style={[{ flexDirection: 'row', justifyContent: 'space-between', borderTopWidth: 0.7, borderLeftWidth: 0.7, borderBottomWidth: 0.7 }]}>
-
-              <View style={{ width: '50%' }}>
-                <Text style={[styles.label, { borderTopWidth: 0 }]}>Permanent Address:</Text>
-                <Text style={styles.label}>Email:</Text>
-                <Text style={styles.label}>Category:</Text>
-                <Text style={styles.label}>Blood Group:</Text>
-                <Text style={styles.label}>Father's Name:</Text>
-                <Text style={styles.label}>Mother's Name:</Text>
-                <Text style={styles.label}>Aadhar Number:</Text>
-                <Text style={styles.label}>Due Amount:</Text>
-              </View>
-
-              <View style={{ width: '50%' }}>
-                <Text style={[styles.value, { borderTopWidth: 0 }]}>{studentData?.permanent_Address}</Text>
-                <Text style={styles.value}>{studentData?.email}</Text>
-                <Text style={styles.value}>{studentData?.category}</Text>
-                <Text style={styles.value}>{studentData?.blood_Group}</Text>
-                <Text style={styles.value}>{studentData?.father_Name}</Text>
-                <Text style={styles.value}>{studentData?.mother_Name}</Text>
-                <Text style={styles.value}>{studentData?.aadhar_number}</Text>
-                <Text style={styles.value}>{studentData?.due_amount}</Text>
-              </View>
-            </View>
-
-            <View style={styles.signatureContainer}>
-              <Text style={styles.signatureText}>Parent Signature</Text>
-              <Text style={styles.signatureText}>Admission Incharge Signature</Text>
+              <Image source={studentData?.student_Photo} style={styles.profileImage} />
             </View>
           </View>
-        </Page>
-      </Document>
+          <Text style={[styles.sectionTitle, { marginVertical: 20 }]}>Academic Details</Text>
+          <View style={[{ flexDirection: 'row', justifyContent: 'space-between', borderTopWidth: 0.7, borderLeftWidth: 0.7, borderBottomWidth: 0.7 }]}>
+
+            <View style={{ width: '50%' }}>
+              <Text style={[styles.label, { borderTopWidth: 0 }]}>Class:</Text>
+              <Text style={styles.label}>Section:</Text>
+            </View>
+
+            <View style={{ width: '50%' }}>
+              <Text style={[styles.value, { borderTopWidth: 0 }]}>{studentData?.class_Id?.name}</Text>
+              <Text style={styles.value}>{studentData?.section}</Text>
+            </View>
+
+          </View>
+
+          <Text style={[styles.sectionTitle, { marginVertical: 20 }]}>Additional Details</Text>
+          <View style={[{ flexDirection: 'row', justifyContent: 'space-between', borderTopWidth: 0.7, borderLeftWidth: 0.7, borderBottomWidth: 0.7 }]}>
+
+            <View style={{ width: '50%' }}>
+              <Text style={[styles.label, { borderTopWidth: 0 }]}>Permanent Address:</Text>
+              <Text style={styles.label}>Email:</Text>
+              <Text style={styles.label}>Category:</Text>
+              <Text style={styles.label}>Blood Group:</Text>
+              <Text style={styles.label}>Father's Name:</Text>
+              <Text style={styles.label}>Mother's Name:</Text>
+              <Text style={styles.label}>Aadhar Number:</Text>
+              <Text style={styles.label}>Due Amount:</Text>
+            </View>
+
+            <View style={{ width: '50%' }}>
+              <Text style={[styles.value, { borderTopWidth: 0 }]}>{studentData?.permanent_Address}</Text>
+              <Text style={styles.value}>{studentData?.email}</Text>
+              <Text style={styles.value}>{studentData?.category}</Text>
+              <Text style={styles.value}>{studentData?.blood_Group}</Text>
+              <Text style={styles.value}>{studentData?.father_Name}</Text>
+              <Text style={styles.value}>{studentData?.mother_Name}</Text>
+              <Text style={styles.value}>{studentData?.aadhar_number}</Text>
+              <Text style={styles.value}>{studentData?.due_amount}</Text>
+            </View>
+          </View>
+
+          <View style={styles.signatureContainer}>
+            <Text style={styles.signatureText}>Parent Signature</Text>
+            <Text style={styles.signatureText}>Admission Incharge Signature</Text>
+          </View>
+        </View>
+      </Page>
+    </Document>
     ).toBlob();
     // saveAs(blob, `Student_ID_Cards_${moment().format('YYYYMMDD')}.pdf`);
-    generateUrl(blob)
-  };
-  const generateUrl = async (blob) => {
-
+    generateUrl(blob, forDownload)
+};
+const generateUrl = async (blob, forDownload) => {
+    console.log('Uploading Blob', blob);
     // Prepare FormData to send the blob to the server
     const formData = new FormData();
-    formData.append('file', blob, 'admission-receipt.pdf');  // 'file' matches the multer field name
-    if (blob) {
+    formData.append('file', blob, 'fee-receipt.pdf');  // 'file' matches the multer field name
 
-      try {
-        // Post the FormData to the server's /upload-pdf endpoint using axios
+    try {
+        // Post the FormData to the server's /upload-pdf endpoint
         const response = await fetch(`${BASE_URL}${apiName.uploadCard}`, {
-          method: 'POST',
-          body: formData,
+            method: 'POST',
+            body: formData,
         });
-        alert('helo')
-        if (response.status !== 200) {
-          throw new Error('Failed to upload PDF');
-        }
 
-        console.log('Uploaded successfully:', response.data?.pdfUrl);
-        window.ReactNativeWebView?.postMessage(`PRINT${response.data.pdfUrl}`);
-      } catch (error) {
-        alert(error)
-        window.ReactNativeWebView?.postMessage(JSON.stringify(error));
+        if (!response.ok) {
+            throw new Error('Failed to upload PDF');
+        }
+        const responseData = await response.json();
+        console.log('Uploaded successfully:', responseData?.pdfUrl);
+        if (forDownload) {
+
+            window.ReactNativeWebView.postMessage(responseData.pdfUrl);
+        } else {
+
+            window.ReactNativeWebView.postMessage(`PRINT${responseData.pdfUrl}`);
+          }
+        } catch (error) {
+      window.ReactNativeWebView.postMessage(studentData?.student_Photo);
         console.error('Error uploading PDF:', error);
-      }
     }
-  };
-  // Print function
-  const handlePrint = () => {
-    generateStudentReceipt()
-    setTimeout(() => {
-      window.print();
-    }, 100);
-  };
+};
 
   return (
     <div className="admission-receipt">

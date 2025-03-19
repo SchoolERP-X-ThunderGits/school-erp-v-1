@@ -11,7 +11,6 @@ import { useUserContext } from '../../../../context/UserContext';
 import { BASE_URL } from '../../../../constants/Config';
 const FeeReceipt = () => {
     const { paymentId } = useParams(); // Assume you are using React Router for route parameters
-    console.log('paymentIdkbvkbvb', paymentId)
     const [invoiceData, setInvoiceData] = useState(null);
     const history = useNavigate();
     const { school } = useUserContext();
@@ -24,8 +23,6 @@ const FeeReceipt = () => {
         const fetchPaymentData = async () => {
             try {
                 const data = await getService(`${apiName?.getPaymentById}/${paymentId}`)
-                console.log('vbkvkbkvkbkvb', data)
-
                 const processedData = {
                     date: new Date(data.date).toLocaleDateString(),
                     receipt_no: data.receipt_no,

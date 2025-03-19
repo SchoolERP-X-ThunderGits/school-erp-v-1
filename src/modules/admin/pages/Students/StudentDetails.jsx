@@ -21,10 +21,6 @@ const StudentDetails = () => {
         fetchStudentDetails();
     }, [studentId]);
 
-    const isSelected = (feeGroup) => {
-        return selectedFees.some((fee) => fee._id === feeGroup._id);
-    };
-
     const fetchStudentDetails = async () => {
         try {
             const student = await getService(`${apiName.getStudentById}/${studentId}`);
@@ -38,31 +34,56 @@ const StudentDetails = () => {
     };
 
     const handleFeeSelection = (feeGroup) => {
+        // Check if the fee group is already paid
+        const isFeePaid = feeDetails.payments.some(payment =>
+            payment.feePaid.some(feePaid => feePaid.feeType === feeGroup.feeType)
+        );
+
+        // If the fee is paid, do not allow selection
+        if (isFeePaid) {
+            return;
+        }
+
+        // If fee is not already selected, add it to the selectedFees array
         if (!isSelected(feeGroup)) {
-            setSelectedFees([...selectedFees, feeGroup]);
+            setSelectedFees(prevSelectedFees => [...prevSelectedFees, feeGroup]);
         } else {
-            setSelectedFees(selectedFees.filter((fee) => fee !== feeGroup));
+            // If it's already selected, remove it from the selectedFees array
+            setSelectedFees(prevSelectedFees => prevSelectedFees.filter(fee => fee._id !== feeGroup._id));
         }
     };
 
+    // Helper function to check if the feeGroup is already selected
+    const isSelected = (feeGroup) => {
+        return selectedFees.some(fee => fee._id === feeGroup._id);
+    };
     const handleMasterCheckboxChange = (event) => {
         if (event.target.checked) {
-            const allFeeIds = feeDetails.feeStructures.reduce((acc, feeStructure) => {
+            // Select all feeGroups that are not paid
+            const allFeeGroups = feeDetails.feeStructures.reduce((acc, feeStructure) => {
                 return [
                     ...acc,
-                    ...feeStructure.feeGroups.map((feeGroup) => feeGroup._id),
+                    ...feeStructure.feeGroups.filter(feeGroup => {
+                        // Only select unpaid fees (not already paid)
+                        return !feeDetails.payments.some(payment =>
+                            payment.feePaid.some(feePaid => feePaid.feeType === feeGroup.feeType)
+                        );
+                    })
                 ];
             }, []);
-            setSelectedFees(allFeeIds);
+            setSelectedFees(allFeeGroups);
         } else {
+            // Deselect all fees
             setSelectedFees([]);
         }
     };
+
 
     const setStatusForFeeGroups = (feeType, dueDat, payments) => {
         const paymentForFeeType = payments.find((payment) => {
             return payment.feePaid.some((feePaid) => feePaid.feeType === feeType);
         });
+        console.log('paymentForFeeType', paymentForFeeType)
 
         const currentDate = new Date();
         const dueDate = new Date(dueDat);
@@ -79,7 +100,6 @@ const StudentDetails = () => {
     };
 
     const handleCollectFee = async () => {
-        // window.ReactNativeWebView.postMessage('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf');
         const feesData = selectedFees.map((fee) => ({
             feeType: fee.feeType,
             amount: fee.amount
@@ -92,7 +112,6 @@ const StudentDetails = () => {
             paymentMethod: "CASH",
             feePaid: feesData
         }
-        console.log('lvlbvlb', body)
 
         try {
             // Send the payment request to the server
@@ -316,22 +335,49 @@ const StudentDetails = () => {
         <div className="bg-white shadow-md rounded-lg p-6 mt-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">Fee Information</h2>
             <div className="flex justify-between mb-4">
-                <button
-                    onClick={handleCollectFee}
-                    className="bg-green-500 text-white py-2 px-6 rounded-md hover:bg-green-600"
-                >
-                    Collect Fee
-                </button>
+                {
+                    selectedFees.length != 0 &&
+
+                    <button
+                        onClick={handleCollectFee}
+                        className="bg-green-500 text-white py-2 px-6 rounded-md hover:bg-green-600"
+                    >
+                        Collect Fee
+                    </button>
+                }
             </div>
             <table className="min-w-full table-auto bg-gray-50 shadow-sm rounded-lg">
                 <thead className="bg-blue-100">
                     <tr>
-                        <th className="px-4 py-2">
-                            <input
-                                type="checkbox"
-                                onChange={handleMasterCheckboxChange}
-                            />
-                        </th>
+                        {!feeDetails.feeStructures.every(feeStructure =>
+                            feeStructure.feeGroups.every(feeGroup =>
+                                isSelected(feeGroup) || feeDetails.payments.some(payment =>
+                                    payment.feePaid.some(feePaid => feePaid.feeType === feeGroup.feeType)
+                                )
+                            )
+                        ) && <th className="px-4 py-2">
+
+                                <input
+                                    type="checkbox"
+                                    checked={feeDetails.feeStructures.every(feeStructure =>
+                                        feeStructure.feeGroups.every(feeGroup =>
+                                            isSelected(feeGroup) || feeDetails.payments.some(payment =>
+                                                payment.feePaid.some(feePaid => feePaid.feeType === feeGroup.feeType)
+                                            )
+                                        )
+                                    )}
+                                    style={{
+                                        opacity: feeDetails.feeStructures.every(feeStructure =>
+                                            feeStructure.feeGroups.every(feeGroup =>
+                                                isSelected(feeGroup) || feeDetails.payments.some(payment =>
+                                                    payment.feePaid.some(feePaid => feePaid.feeType === feeGroup.feeType)
+                                                )
+                                            )
+                                        ) ? 0 : 1
+                                    }}
+                                    onChange={handleMasterCheckboxChange}
+                                />
+                            </th>}
                         <th className="px-4 py-2">Fees Structure</th>
                         <th className="px-4 py-2">Fees Type</th>
                         <th className="px-4 py-2">Due Date</th>
@@ -345,13 +391,29 @@ const StudentDetails = () => {
                     {feeDetails && feeDetails.feeStructures?.map((feeStructure) => (
                         feeStructure.feeGroups?.map((feeGroup) => (
                             <tr key={feeGroup._id} className="hover:bg-gray-100">
-                                <td className="px-4 py-2">
+                                {!feeDetails.feeStructures.every(feeStructure =>
+                                        feeStructure.feeGroups.every(feeGroup =>
+                                            isSelected(feeGroup) || feeDetails.payments.some(payment =>
+                                                payment.feePaid.some(feePaid => feePaid.feeType === feeGroup.feeType)
+                                            )
+                                        )
+                                    ) &&<td className="px-4 py-2">
                                     <input
+                                        disabled={feeDetails.payments.some((payment) =>
+                                            payment.feePaid.some((feePaid) => feePaid.feeType === feeGroup.feeType)
+                                        )}
+                                        style={{
+                                            opacity: feeDetails.payments.some((payment) =>
+                                                payment.feePaid.some((feePaid) => feePaid.feeType === feeGroup.feeType)
+                                            ) ? 0 : 1
+                                        }}
                                         type="checkbox"
-                                        checked={isSelected(feeGroup)}
-                                        onChange={() => handleFeeSelection(feeGroup)}
+                                        checked={isSelected(feeGroup)}  // This reflects the "selected" state
+                                        onChange={() => handleFeeSelection(feeGroup)}  // This allows toggling the checkbox
                                     />
-                                </td>
+
+
+                                </td>}
                                 <td className="px-4 py-2">{feeStructure.name}</td>
                                 <td className="px-4 py-2">{feeGroup.feeType}</td>
                                 <td className="px-4 py-2">{new Date(feeGroup.dueDate).toLocaleDateString()}</td>
@@ -373,7 +435,7 @@ const StudentDetails = () => {
                 <Loader />
             ) : (
                 AdmissionReceptPage ?
-                    <StudentReceiptPage student={student}school={school}setAdmissionReceptPage={setAdmissionReceptPage}/>
+                    <StudentReceiptPage student={student} school={school} setAdmissionReceptPage={setAdmissionReceptPage} />
                     :
 
                     <div>
