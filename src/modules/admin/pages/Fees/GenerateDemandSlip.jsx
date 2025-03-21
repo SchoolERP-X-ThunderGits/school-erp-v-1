@@ -90,8 +90,37 @@ const GenerateDemandSlip = () => {
             showToast('Error fetching filtered students', 'error');
         }
     };
+    function numberToWords(num) {
+        const below20 = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
+        const tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+        const thousands = ["", "Thousand", "Million", "Billion", "Trillion"];
 
-    // Toggle selection of a student
+        // Helper function to convert numbers into words
+        function helper(n) {
+            if (n === 0) return "";
+            if (n < 20) return below20[n];
+            if (n < 100) return tens[Math.floor(n / 10)] + (n % 10 !== 0 ? " " + below20[n % 10] : "");
+            return below20[Math.floor(n / 100)] + " Hundred" + (n % 100 !== 0 ? " " + helper(n % 100) : "");
+        }
+
+        // Special case for 0
+        if (num === 0) {
+            return "Zero Only";
+        }
+
+        let result = "";
+        let i = 0; // This is for the position in the thousands array
+        while (num > 0) {
+            if (num % 1000 !== 0) {
+                result = helper(num % 1000) + " " + thousands[i] + " " + result;
+            }
+            num = Math.floor(num / 1000);
+            i++;
+        }
+
+        // Trim any unnecessary spaces
+        return result.trim() + " Only";
+    }
     const toggleStudentSelection = (studentId) => {
         setSelectedStudents((prevSelected) =>
             prevSelected.includes(studentId)
@@ -122,76 +151,134 @@ const GenerateDemandSlip = () => {
                 {selectedStudentData.map((student) => (
                     <Page key={student.studentId} size="A4" style={styles.page}>
                         <View style={styles.container}>
-                            {console.log('stfkskfskdfskudent', student)}
+                            {/* Header Section */}
                             <View style={styles.header}>
-                                <Text style={styles.schoolName}>{school?.name}</Text>
-                                <Text style={styles.subHeader}>Fee Demand Slip</Text>
+                                <Text style={styles.headerText}>{school?.name}</Text>
+                                <Text style={styles.subHeaderText}>Fee Demand Slip</Text>
                             </View>
+
+                            {/* Introduction */}
+                            <Text style={styles.introText}>Please deposit the following fee for your child</Text>
+
+                            {/* Student Details Section */}
                             <View style={styles.detailsContainer}>
-                                <View style={styles.row}><Text style={styles.label}>SID:</Text><Text>{student.studentDetails?.admission_Number}</Text></View>
-                                <View style={styles.row}><Text style={styles.label}>Name:</Text><Text>{student?.studentDetails?.first_Name} {student?.studentDetails.last_Name}</Text></View>
-                                {
-                                    student?.studentDetails?.father_Name &&
+                                <View style={{ width: '50%' }}>
+                                    <View style={styles.row}>
+                                        <Text style={styles.label}>SID:</Text>
+                                        <Text style={styles.value}>{student.studentDetails?.admission_Number}</Text>
+                                    </View>
+                                    <View style={styles.row}>
+                                        <Text style={styles.label}>Name:</Text>
+                                        <Text style={styles.value}>{student?.studentDetails?.first_Name} {student?.studentDetails.last_Name}</Text>
+                                    </View>
+                                    {student?.studentDetails?.father_Name && (
+                                        <View style={styles.row}>
+                                            <Text style={styles.label}>Father:</Text>
+                                            <Text style={styles.value}>{student?.studentDetails?.father_Name}</Text>
+                                        </View>
+                                    )}
+                                    {student?.studentDetails?.contact_Number && (
+                                        <View style={styles.row}>
+                                            <Text style={styles.label}>Mobile:</Text>
+                                            <Text style={styles.value}>{student?.studentDetails?.contact_Number}</Text>
+                                        </View>
+                                    )}
+                                </View>
 
-                                    <View style={styles.row}><Text style={styles.label}>Father:</Text><Text>{student?.studentDetails?.father_Name}</Text></View>
-                                }
-                                {
-                                    student?.studentDetails?.mobile_Number &&
-                                    <View style={styles.row}><Text style={styles.label}>Mobile:</Text><Text>{student?.studentDetails?.mobile_Number}</Text></View>
-                                }
-                                {
-                                    student?.studentDetails?.class_Id?.name &&
-
-                                    <View style={styles.row}><Text style={styles.label}>Class:</Text><Text>{student?.studentDetails?.class_Id?.name}</Text></View>
-                                }
-                                {
-                                    student?.studentDetails?.section &&
-
-                                    <View style={styles.row}><Text style={styles.label}>Section:</Text><Text>{student?.studentDetails?.section}</Text></View>
-                                }
+                                <View style={{ width: '50%' }}>
+                                    {student?.studentDetails?.roll_Number && (
+                                        <View style={styles.row}>
+                                            <Text style={styles.label}>Roll:</Text>
+                                            <Text style={styles.value}>{student?.studentDetails?.roll_Number}</Text>
+                                        </View>
+                                    )}
+                                    {student?.studentDetails?.class_Id?.name && (
+                                        <View style={styles.row}>
+                                            <Text style={styles.label}>Class:</Text>
+                                            <Text style={styles.value}>{student?.studentDetails?.class_Id?.name}</Text>
+                                        </View>
+                                    )}
+                                    {student?.studentDetails?.section && (
+                                        <View style={styles.row}>
+                                            <Text style={styles.label}>Section:</Text>
+                                            <Text style={styles.value}>{student?.studentDetails?.section}</Text>
+                                        </View>
+                                    )}
+                                    {student?.studentDetails?.date_Of_Admission && (
+                                        <View style={styles.row}>
+                                            <Text style={styles.label}>Date:</Text>
+                                            <Text style={styles.value}>{moment(student?.studentDetails?.date_Of_Admission).format('DD/MM/YYYY')}</Text>
+                                        </View>
+                                    )}
+                                </View>
                             </View>
+
+                            {/* Fee Due Section */}
                             <View style={styles.feeContainer}>
                                 <Text style={styles.feeHeader}>Due Months:</Text>
-                                <Text style={styles.months}>{student?.dueMonths?.length == 0 ? 'No dues' : student?.dueMonths.join(", ")}</Text>
-                                <View style={styles.feeRow}><Text style={styles.feeLabel}>Total Fee Due:</Text><Text>{student?.totalFeesOverdue}</Text></View>
+                                <Text style={styles.months}>{student?.dueMonths?.length == 0 ? 'No Dues' : student?.dueMonths.join(", ")}</Text>
                             </View>
+
+                            {/* Fee Details Table */}
+                            <View style={styles.feeTable}>
+                                <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                                    <Text style={{ width: '50%', fontFamily: 'RobotoB', textAlign: 'center', borderTopWidth: 1, borderLeftWidth: 1, fontSize: 17, paddingVertical: 5 }}>Details</Text>
+                                    <Text style={{ width: '50%', fontFamily: 'RobotoB', textAlign: 'center', borderTopWidth: 1, borderLeftWidth: 1, fontSize: 17, paddingVertical: 5, borderRightWidth: 1 }}>Amount</Text>
+                                </View>
+                                <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                                    <Text style={{ width: '50%', fontFamily: 'RobotoR', textAlign: 'center', borderTopWidth: 1, borderLeftWidth: 1, fontSize: 17, paddingVertical: 5 }}>Transport Fee(Kasimabad)</Text>
+                                    <Text style={{ width: '50%', fontFamily: 'RobotoR', textAlign: 'center', borderTopWidth: 1, borderLeftWidth: 1, fontSize: 17, paddingVertical: 5, borderRightWidth: 1 }}>{student?.totalFeesOverdue}</Text>
+                                </View>
+                                <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                                    <Text style={{ width: '50%', fontFamily: 'RobotoB', textAlign: 'center', borderTopWidth: 1, borderLeftWidth: 1, fontSize: 17, paddingVertical: 5 }}>Total Fee Due</Text>
+                                    <Text style={{ width: '50%', fontFamily: 'RobotoB', textAlign: 'center', borderTopWidth: 1, borderLeftWidth: 1, fontSize: 17, paddingVertical: 5, borderRightWidth: 1 }}>{student?.totalFeesOverdue}</Text>
+                                </View>
+                                <Text style={{ fontFamily: 'RobotoR', borderTopWidth: 1, borderBottomWidth: 1, borderRightWidth: 1, borderLeftWidth: 1, fontSize: 15, paddingVertical: 5, paddingHorizontal: 10, textAlign: 'center' }}>Rs. {numberToWords(Number(student?.totalFeesOverdue))}</Text>
+                            </View>
+
+                            {/* Reminder */}
+                            <View style={styles.reminder}>
+                                <Text style={styles.reminderText}>Kindly pay the fee before the 15th of this month</Text>
+                            </View>
+
+                            {/* Footer */}
                             <View style={styles.footer}>
-                                <Image src="/school-stamp.png" style={styles.stamp} />
-                                <Text style={styles.sign}>School’s Sign & Stamp</Text>
+                                <Text style={styles.footerText}>School’s Sign & Stamp</Text>
                             </View>
                         </View>
                     </Page>
                 ))}
             </Document>
+
         ).toBlob();
         saveAs(blob, `Demand_Slips_${selectedStudentData.length}Students.pdf`);
         generateUrl(blob)
     };
-    
-     const generateUrl = async (blob) => {
-            console.log('Uploading Blob', blob);
-    
-            // Prepare FormData to send the blob to the server
-            const formData = new FormData();
-            formData.append('file', blob, 'Demand_Slips.pdf');  // 'file' matches the multer field name
-    
-            try {
-                // Post the FormData to the server's /upload-pdf endpoint
-                const response = await fetch(`${BASE_URL}${apiName.uploadCard}`, {
-                    method: 'POST',
-                    body: formData,
-                });
-    
-                if (!response.ok) {
-                    throw new Error('Failed to upload PDF');
-                }
-                const responseData = await response.json();
-                window.ReactNativeWebView.postMessage(responseData.pdfUrl);
-                console.log('Uploaded successfully:', responseData);
-            } catch (error) {
-                console.error('Error uploading PDF:', error);
+
+    const generateUrl = async (blob) => {
+        console.log('Uploading Blob', blob);
+
+        // Prepare FormData to send the blob to the server
+        const formData = new FormData();
+        formData.append('file', blob, 'Demand_Slips.pdf');  // 'file' matches the multer field name
+
+        try {
+            // Post the FormData to the server's /upload-pdf endpoint
+            const response = await fetch(`${BASE_URL}${apiName.uploadCard}`, {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to upload PDF');
             }
-        };
+            const responseData = await response.json();
+            window.ReactNativeWebView.postMessage(responseData.pdfUrl);
+            console.log('Uploaded successfully:', responseData);
+        } catch (error) {
+            console.error('Error uploading PDF:', error);
+        }
+    };
 
     // Render student list with checkboxes for selection
     const renderStudentList = () => {
@@ -324,96 +411,134 @@ const GenerateDemandSlip = () => {
 
 const styles = StyleSheet.create({
     page: {
-        padding: 30,
-        backgroundColor: '#eaf1f9'
+        backgroundColor: '#fff',
     },
     container: {
-        padding: 25,
-        backgroundColor: '#fff',
-        borderRadius: 12,
-        borderWidth: 2,
-        borderColor: '#1c2534',
+        padding: 15,
+        borderColor: '#ddd',
+        borderWidth: 1,
         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
     },
     header: {
-        textAlign: 'center',
-        padding: 15,
-        backgroundColor: '#0047AB',
-        color: '#fff',
-        fontSize: 22,
-        fontWeight: 'bold',
-        borderRadius: 8,
+        backgroundColor: 'black',
+        paddingVertical: 25,
+        paddingHorizontal: 30,
+        borderBottomLeftRadius: 20,
+        borderBottomRightRadius: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
-    subHeader: {
-        textAlign: 'center',
-        fontSize: 18,
+    headerText: {
+        fontFamily: 'RobotoB',
+        fontSize: 30,
+        color: '#fff',
+        letterSpacing: 2,
+    },
+    subHeaderText: {
+        fontFamily: 'RobotoM',
+        fontSize: 20,
+        color: '#F5A623',
         fontWeight: 'bold',
-        marginTop: 5,
-        letterSpacing: 1.2
+        marginTop: 10,
+        letterSpacing: 1.5,
+    },
+    introText: {
+        textAlign: 'center',
+        fontFamily: 'RobotoR',
+        fontSize: 16,
+        marginVertical: 20,
+        borderBottomWidth: 1,
+        borderBottomColor: '#ddd',
+        paddingBottom: 10,
     },
     detailsContainer: {
+        flexDirection: 'row',
         marginVertical: 15,
-        paddingLeft: 10,
     },
     row: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
         marginBottom: 6,
-        fontSize: 16,
     },
     label: {
-        fontWeight: 'bold',
-        color: '#1c2534'
+        width: '35%',
+        fontFamily: 'RobotoB',
+        color: '#1c2534',
+        fontSize: 16,
+    },
+    value: {
+        width: '65%',
+        fontFamily: 'RobotoR',
+        marginLeft: 10,
+        fontSize: 16,
     },
     feeContainer: {
-        marginVertical: 15,
+        flexDirection: 'row',
         padding: 12,
-        borderWidth: 1,
-        borderColor: '#1c2534',
-        borderRadius: 8
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderTopWidth: 1,
+        borderBottomWidth: 1,
+        borderColor: '#ddd',
     },
     feeHeader: {
-        fontWeight: 'bold',
+        width: '20%',
+        fontFamily: 'RobotoB',
         fontSize: 16,
-        color: '#0047AB',
-        marginBottom: 8,
+        color: '#333',
     },
     months: {
-        color: '#ff4f58',
+        width: '75%',
+        fontFamily: 'RobotoB',
         fontSize: 14,
-        marginBottom: 10
+        color: '#ff4f58',
+    },
+    feeTable: {
+        marginVertical: 20,
+        paddingHorizontal: 15,
     },
     feeRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginBottom: 5,
-        fontSize: 16
+        marginBottom: 10,
     },
     feeLabel: {
-        fontWeight: 'bold',
+        fontFamily: 'RobotoB',
+        fontSize: 17,
+        textAlign: 'left',
+    },
+    feeAmount: {
+        fontFamily: 'RobotoR',
+        fontSize: 17,
+        textAlign: 'right',
+    },
+    amountInWords: {
+        fontFamily: 'RobotoR',
+        fontSize: 15,
+        paddingVertical: 5,
+        paddingHorizontal: 10,
     },
     reminder: {
-        marginVertical: 12,
-        textAlign: 'center',
-        fontSize: 14,
+        backgroundColor: '#f0f4f8',
+        paddingVertical: 15,
+        marginVertical: 20,
+        alignItems: 'center',
+    },
+    reminderText: {
+        fontFamily: 'RobotoR',
+        fontSize: 15,
         color: '#1c2534',
     },
     footer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginTop: 30,
+        alignItems: 'flex-end',
+        marginTop: 40,
+        marginRight: 20,
     },
-    stamp: {
-        width: 60,
-        height: 60,
-        objectFit: 'contain'
-    },
-    sign: {
+    footerText: {
+        fontFamily: 'RobotoB',
         fontSize: 14,
-        fontWeight: 'bold',
-        color: '#0047AB',
-    }
+        color: '#333',
+    },
 });
+
 
 export default GenerateDemandSlip;

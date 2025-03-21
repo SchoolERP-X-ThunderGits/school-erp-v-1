@@ -28,7 +28,6 @@ const Students = () => {
     const fetchStudents = async () => {
         try {
             const result = await getService(apiName.getStudent); // API to get students
-            console.log('blbvlbv', result)
             setStudents(result);
             setLoading(false);
         } catch (error) {

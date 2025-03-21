@@ -4,7 +4,6 @@ import { useUserContext } from '../../context/UserContext';
 
 function index(props) {
   const { school} = useUserContext();
-  console.log('schoo111l',school)
   return (
     <div
       className="header-to-hide"

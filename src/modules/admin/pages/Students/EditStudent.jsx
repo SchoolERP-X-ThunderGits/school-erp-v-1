@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { deleteService, getService, postService, putService } from '../../../../constants/Service'; // Importing services
+import { getService, putService } from '../../../../constants/Service'; // Importing services
 import apiName from '../../../../constants/ApiName'; // Importing API Names
 import { showToast } from '../../../../components/Toast'; // Show Toast Notifications
 import { useNavigate, useParams } from 'react-router-dom';
+import Loader from '../../../../components/Loader';
 const EditStudent = () => {
     const { id } = useParams();
     const [feeStructures, setFeeStructures] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [showModal, setShowModal] = useState(false); // Modal state for adding student
     const [classes, setClasses] = useState([]); // Classes for dropdown
     const [sections] = useState([
         "A",
@@ -18,9 +18,7 @@ const EditStudent = () => {
     ]); // Sections for dropdown
     const [sessions] = useState(['2024-2025', '2025-2026', '2026-2027']); // Sessions for dropdown
     const [imagePreview, setImagePreview] = useState(null);
-    const [students, setStudents] = useState([]);
     const [editMode, setEditMode] = useState(false);
-    const [lastAdmissionNumber, setLastAdmissionNumber] = useState("");
     const [expandedFees, setExpandedFees] = useState({});
     const navigate = useNavigate();
     const [aadharParts, setAadharParts] = useState(["", "", ""]);
@@ -64,50 +62,59 @@ const EditStudent = () => {
     const fetchStudents = async () => {
         try {
             const studentData = await getService(`${apiName.getStudentById}/${id}`); // API to get fee structures
-            setFormData({
-                roll_Number: studentData?.roll_Number,
-                address_for_id: studentData?.address_for_id,
-                first_Name: studentData?.first_Name,
-                last_Name: studentData?.last_Name,
-                class_Id: studentData?.class_Id?._id,
-                section: studentData?.section,
-                session: studentData?.session,
-                date_Of_Birth: studentData?.date_Of_Birth,
-                gender: studentData?.gender,
-                permanent_Address: studentData?.permanent_Address,
-                address_For_Correspondence: studentData?.address_For_Correspondence,
-                contact_Number: studentData?.contact_Number,
-                alternet_Contact_Number: studentData?.alternet_Contact_Number,
-                email: studentData?.email,
-                nationality: studentData?.nationality,
-                religion: studentData?.religion,
-                category: studentData?.category,
-                blood_Group: studentData?.blood_Group,
-                father_Name: studentData?.father_Name,
-                father_Occupation: studentData?.father_Occupation,
-                mother_Name: studentData?.mother_Name,
-                mother_Occupation: studentData?.mother_Occupation,
-                due_amount: studentData?.due_amount,
-                date_Of_Admission: studentData?.date_Of_Admission,
-                student_Photo: studentData?.student_Photo,
-                aadhar_number: studentData?.aadhar_number,
-            })
+            console.log('studentDatastudentData',studentData)
+            if (studentData) {
+                setTimeout(() => {
+                    
+                    setFormData(prevFormData => ({
+                        ...prevFormData,
+                        roll_Number: studentData?.roll_Number,
+                        address_for_id: studentData?.address_for_id,
+                        first_Name: studentData?.first_Name,
+                        last_Name: studentData?.last_Name,
+                        class_Id: studentData?.class_Id?._id,
+                        section: studentData?.section,
+                        session: studentData?.session,
+                        date_Of_Birth: studentData?.date_Of_Birth,
+                        gender: studentData?.gender,
+                        permanent_Address: studentData?.permanent_Address,
+                        address_For_Correspondence: studentData?.address_For_Correspondence,
+                        contact_Number: studentData?.contact_Number,
+                        alternet_Contact_Number: studentData?.alternet_Contact_Number,
+                        email: studentData?.email,
+                        nationality: studentData?.nationality,
+                        religion: studentData?.religion,
+                        category: studentData?.category,
+                        blood_Group: studentData?.blood_Group,
+                        father_Name: studentData?.father_Name,
+                        father_Occupation: studentData?.father_Occupation,
+                        mother_Name: studentData?.mother_Name,
+                        mother_Occupation: studentData?.mother_Occupation,
+                        due_amount: studentData?.due_amount,
+                        date_Of_Admission: studentData?.date_Of_Admission,
+                        student_Photo: studentData?.student_Photo,
+                        aadhar_number: studentData?.aadhar_number,
+                    }));
+                }, 500);
+            }
+            console.log('bvcbkcbk',formData)
             if (studentData?.aadhar_number) {
                 const aadharPartsArray = studentData.aadhar_number.match(/.{1,4}/g) || [];
                 setAadharParts(aadharPartsArray); // Set the parts of the Aadhar number
             }
             setImagePreview(studentData?.student_Photo)
             setEditMode(false)
-            setLoading(false)
+            setTimeout(() => {
+                
+                setLoading(false)
+            }, 1000);
         } catch (error) {
             showToast('Error fetching fee structures', 'error');
         }
     };
-    { console.log('kvkvbkv', formData?.aadhar_number) }
     const fetchFeeStructures = async () => {
         try {
             const result = await getService(apiName.getFeeStructure); // API to get fee structures
-            console.log('result', result)
             setFeeStructures(result); // Save fee structures
         } catch (error) {
             showToast('Error fetching fee structures', 'error');
@@ -120,8 +127,6 @@ const EditStudent = () => {
                 ...formData,
                 feeStructures: result.feeStructures.map(i => i?._id),
             });
-            console.log('manish-------', result.feeStructures.map(i => i?._id))
-            // setFeeStructures(result); // Save fee structures
         } catch (error) {
             showToast('Error fetching fee structures', 'error');
         }
@@ -276,11 +281,14 @@ const EditStudent = () => {
             [feeId]: !prevExpandedFees[feeId], // Toggle the current fee's visibility
         }));
     };
+    if(loading){
+        return  <Loader />
+    }
     return (
         <div className="container">
             {/* Add Student Modal */}
             <h2 className="text-2xl font-semibold mb-4">Add Student</h2>
-
+{console.log('formDataformData',formData)}
             <div className="">
                 <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
                     <button onClick={() => setBulkStudentModal(true)} style={{
@@ -296,6 +304,9 @@ const EditStudent = () => {
                 </div>
 
                 {/* Form Fields */}
+                {
+                    formData.roll_Number &&
+
                 <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4">
 
 
@@ -683,13 +694,13 @@ const EditStudent = () => {
                     )}
 
                 </div>
+                }
                 {
                     // !editMode &&
 
                     <div className="mb-4 ">
                         <label className="block text-gray-700">Fee Structure :</label>
                         <div className="space-y-2 max-h-102 overflow-y-auto">
-                            {console.log('feeStructures', feeStructures)}
                             {feeStructures.map((fee) => (
                                 <div key={fee._id} className="flex flex-col mb-4">
                                     {/* Fee Structure Name */}
@@ -747,7 +758,6 @@ const EditStudent = () => {
 
             {/* Submit Button */}
             <div className="flex justify-center mt-6">
-                {console.log('formDataformData', formData)}
                 <button
                     onClick={handleSubmit}
                     className={`px-4 py-2 rounded-md text-white ${!formData.first_Name ||
