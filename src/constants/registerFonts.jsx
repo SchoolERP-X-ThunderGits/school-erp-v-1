@@ -26,5 +26,9 @@ Font.register({
     family: 'RobotoRI',
     src: '/assets/fonts/Roboto-Italic.ttf',  // Replace with actual URL
 });
+Font.register({
+    family: 'ImpactB',
+    src: '/assets/fonts/impact.ttf',  // Replace with actual URL
+});
 
 

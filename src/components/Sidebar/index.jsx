@@ -268,6 +268,28 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                               Assign Subject
                             </NavLink>
                           </li>
+                          <li>
+                            <NavLink
+                              to="/admin/upgrade-class"
+                              className={({ isActive }) =>
+                                'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
+                                (isActive && '!text-white')
+                              }
+                            >
+                              Upgrade Class
+                            </NavLink>
+                          </li>
+                          <li>
+                            <NavLink
+                              to="/admin/Upgrade-RollNo"
+                              className={({ isActive }) =>
+                                'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
+                                (isActive && '!text-white')
+                              }
+                            >
+                              Upgrade Roll No.
+                            </NavLink>
+                          </li>
                         </ul>
                       </div>
                       {/* <!-- Dropdown Menu End --> */}

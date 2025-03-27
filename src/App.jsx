@@ -10,6 +10,7 @@ import FeeStructure from './modules/admin/pages/Fees/FeeStructure';
 import Loader from './components/Loader/index';
 import DefaultLayout from './Layout/DefaultLayout';
 import Class from './modules/admin/pages/Academics/Class';
+import UpgradeClass from './modules/admin/pages/Academics/UpgradeClass';
 import Subject from './modules/admin/pages/Academics/Subject';
 import AssignSubject from './modules/admin/pages/Academics/AssignSubject';
 import Students from './modules/admin/pages/Students/Students';
@@ -26,6 +27,7 @@ import GenerateDemandSlip from './modules/admin/pages/Fees/GenerateDemandSlip';
 import { UserProvider } from './context/UserContext';
 import ProfileSettings from './modules/admin/pages/Settings/ProfileSettings';
 import PrivacyPolicy from './modules/admin/pages/Help/PrivacyPolicy';
+import UpgradeRollNo from './modules/admin/pages/Academics/UpgradeRollNo';
 function App() {
   const [loading, setLoading] = useState(true);
   const { pathname } = useLocation();
@@ -70,6 +72,8 @@ function App() {
         <Route path="/admin/fee-type" element={<DefaultLayout><FeeType /></DefaultLayout>} />
         <Route path="/admin/fee-receipt/:paymentId" element={<DefaultLayout><FeeReceipt /></DefaultLayout>} />
         <Route path="/admin/class" element={<DefaultLayout><Class /></DefaultLayout>} />
+        <Route path="/admin/upgrade-class" element={<DefaultLayout><UpgradeClass /></DefaultLayout>} />
+        <Route path="/admin/Upgrade-RollNo" element={<DefaultLayout><UpgradeRollNo /></DefaultLayout>} />
         <Route path="/admin/exams" element={<DefaultLayout><Exams /></DefaultLayout>} />
         <Route path="/admin/exam-schedule" element={<DefaultLayout><ExamSchedule /></DefaultLayout>} />
         <Route path="/admin/generate-admit-card" element={<DefaultLayout><GenerateAdmitCard /></DefaultLayout>} />

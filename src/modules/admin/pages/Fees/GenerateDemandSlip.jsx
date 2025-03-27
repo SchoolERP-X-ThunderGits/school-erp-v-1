@@ -9,7 +9,7 @@ import Loader from '../../../../components/Loader';
 import moment from 'moment';
 import { useUserContext } from '../../../../context/UserContext';
 import { BASE_URL } from '../../../../constants/Config';
-
+import { below20, months, tens, thousands } from '../../../../constants/GlobalConstants'
 const GenerateDemandSlip = () => {
     const [loading, setLoading] = useState(false);
     const [classes, setClasses] = useState([]); // Classes for dropdown
@@ -20,6 +20,8 @@ const GenerateDemandSlip = () => {
     const [classFilter, setClassFilter] = useState('');
     const [sectionFilter, setSectionFilter] = useState('');
     const [searchText, setSearchText] = useState('');
+    const [startMonth, setStartMonth] = useState('');
+    const [endMonth, setEndMonth] = useState('');
     const [selectAll, setSelectAll] = useState(false); // New state for "Select All" checkbox
     const [feeDetails, setFeeDetails] = useState([]);
     const navigate = useNavigate();
@@ -63,6 +65,10 @@ const GenerateDemandSlip = () => {
 
     // Handle search button click
     const handleSearch = () => {
+        if (!classFilter || !sectionFilter || !startMonth || !endMonth) {
+            showToast('Please select all fields', 'error')
+            return
+        }
         fetchFilteredStudents();
         getStudentFeeByClass()
     };
@@ -83,18 +89,11 @@ const GenerateDemandSlip = () => {
             setLoading(true);
             const result = await getService(`${apiName.getStudentFeeByClass}/${classFilter}/${sectionFilter}`);
             setFeeDetails(result)
-            console.log('bckbkvkbv', result)
-            // setStudents(result);
-            // setLoading(false);
         } catch (error) {
             showToast('Error fetching filtered students', 'error');
         }
     };
     function numberToWords(num) {
-        const below20 = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
-        const tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
-        const thousands = ["", "Thousand", "Million", "Billion", "Trillion"];
-
         // Helper function to convert numbers into words
         function helper(n) {
             if (n === 0) return "";
@@ -212,13 +211,12 @@ const GenerateDemandSlip = () => {
                                     )}
                                 </View>
                             </View>
-
                             {/* Fee Due Section */}
                             <View style={styles.feeContainer}>
                                 <Text style={styles.feeHeader}>Due Months:</Text>
-                                <Text style={styles.months}>{student?.dueMonths?.length == 0 ? 'No Dues' : student?.dueMonths.join(", ")}</Text>
+                                <Text style={styles.months}>{student?.dueMonths?.length == 0 ? 'No Dues' : months.slice(months.indexOf(startMonth), months.indexOf(endMonth) + 1)?.join(', ')}</Text>
+                                {/* <Text style={styles.months}>{student?.dueMonths?.length == 0 ? 'No Dues' : student?.dueMonths.join(", ")}</Text> */}
                             </View>
-
                             {/* Fee Details Table */}
                             <View style={styles.feeTable}>
                                 <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
@@ -367,6 +365,32 @@ const GenerateDemandSlip = () => {
                                 </option>
                             ))}
                         </select>
+                        <select
+                            className="p-2 border rounded w-full sm:w-auto"
+                            disabled={!sectionFilter}
+                            value={startMonth}
+                            onChange={(e) => setStartMonth(e.target.value)}
+                        >
+                            <option value="">Start Month</option>
+                            {months.map((month, index) => (
+                                <option key={index} value={month}>
+                                    {month}
+                                </option>
+                            ))}
+                        </select>
+                        <select
+                            className="p-2 border rounded w-full sm:w-auto"
+                            value={endMonth}
+                            disabled={!startMonth}
+                            onChange={(e) => setEndMonth(e.target.value)}
+                        >
+                            <option value="">End Month</option>
+                            {months.slice(months.indexOf(startMonth)).map((month, index) => (
+                                <option key={index} value={month}>
+                                    {month}
+                                </option>
+                            ))}
+                        </select>
                         <button
                             onClick={handleSearch}
                             className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
@@ -381,6 +405,8 @@ const GenerateDemandSlip = () => {
                                 setClassFilter('');   // Reset class filter
                                 setSectionFilter(''); // Reset section filter
                                 setStudents([])
+                                setStartMonth('')
+                                setEndMonth('')
                                 // You can reset any other related states here
                             }}
                             className="px-6 py-3 bg-gray-200 text-black rounded-lg hover:bg-gray-300 transition duration-300"
