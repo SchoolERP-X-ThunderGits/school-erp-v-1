@@ -38,7 +38,7 @@ router.post('/bulkAddStudents', authMiddleware(["admin", "moderator"]), upload.s
 router.get('/byClass/:classId', authMiddleware(["admin", "moderator"]), getStudentsByClass);
 router.get('/byClassAndSection/:classId/:section', authMiddleware(["admin", "moderator"]), getStudentsByClassAndSection);
 router.get('/students/query', authMiddleware(["admin", "moderator"]), getStudentsByQuery);
-router.get('/byClassOrSection/:classId/:section?', authMiddleware(["admin", "moderator"]), getStudentsByClassOrSection);
+router.get('/byClassOrSection/:classId/:section/:session?', authMiddleware(["admin", "moderator"]), getStudentsByClassOrSection);
 router.get('/getLastAdmissionNumber', authMiddleware(["admin", "moderator"]), getLastGeneratedAdmissionNumber);
 
 
