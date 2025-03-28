@@ -227,8 +227,9 @@ exports.getStudentsByQuery = async (req, res) => {
 };
 
 exports.getStudentsByClassOrSection = async (req, res) => {
-    const { classId, section } = req.params;
+    const { classId, section, session } = req.params; // Include session in the destructured parameters
     const tenantId = req.user.tenantId;
+    
     try {
         let query = { class_Id: classId, tenantId };
 
@@ -237,15 +238,21 @@ exports.getStudentsByClassOrSection = async (req, res) => {
             query.section = section;
         }
 
+        // Check if session is provided and add it to the query
+        if (session) {
+            query.session = session;
+        }
+
         // Fetch students based on the constructed query
         const students = await Student.find(query).populate('class_Id');
 
         res.status(200).json(students);
     } catch (error) {
-        console.error('Error fetching students by class or section:', error);
+        console.error('Error fetching students by class, section, or session:', error);
         res.status(500).json({ message: 'Server error' });
     }
 };
+
 
 exports.getLastGeneratedAdmissionNumber = async (req, res) => {
     const tenantId = req.user.tenantId;
@@ -321,11 +328,11 @@ exports.bulkAddStudents = async (req, res, classId, section) => {
 
         let format = file.mimetype.includes('csv') ? 'csv' : 'xlsx';
         const studentsData = await parseFile(file.buffer, format);
-        
+
         // Get the admission number entry for the tenant **only once**
         const tenantId = req.user.tenantId;
         let admissionNumberEntry = await AdmissionNumber.findOne({ tenantId });
-        
+
         if (!admissionNumberEntry) {
             return res.status(404).json({ message: 'Admission number configuration not found' });
         }
@@ -337,7 +344,7 @@ exports.bulkAddStudents = async (req, res, classId, section) => {
         for (const studentData of studentsData) {
             currentAdmissionNumber++; // Increment for each student
             const admissionNumber = `${admissionNumberEntry.prefix}-${currentAdmissionNumber.toString().padStart(5, '0')}`;
-            
+
             const savedStudent = await processStudent(studentData, tenantId, classId, section, admissionNumber);
             results.push(savedStudent);
         }
@@ -352,4 +359,24 @@ exports.bulkAddStudents = async (req, res, classId, section) => {
         res.status(500).json({ message: 'Server error', error });
     }
 };
+
+exports.bulkUpdateRollNumbers = async (req, res) => {
+    const updates = req.body; // Expecting an array of objects with _id and new roll_Number
+
+    try {
+        // Perform the updates
+        await Promise.all(updates.map(update => {
+            return Student.updateOne(
+                { _id: update._id }, // Using MongoDB ObjectId for matching the student
+                { $set: { roll_Number: update.roll_Number } }
+            );
+        }));
+
+        res.status(200).json({ message: 'Roll numbers updated successfully' });
+    } catch (error) {
+        console.error('Error updating roll numbers:', error);
+        res.status(500).json({ message: 'Failed to update roll numbers' });
+    }
+};
+
 
