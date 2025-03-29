@@ -191,188 +191,187 @@ const FeeStructure = () => {
             ) : (
                 <div className="overflow-x-auto bg-white shadow-md rounded-lg">
                     {feeStructures.length == 0 ?
-                    <p style={{ textAlign: 'center', margin: 10 }}>No fee structures found</p> :
-                    <table className="min-w-full table-auto">
-                        <thead>
-                            <tr className="bg-gray-100 text-gray-600">
-                                <th className="py-3 px-6 text-left text-sm font-semibold">Name</th>
-                                <th className="py-3 px-6 text-left text-sm font-semibold">Class</th>
-                                <th className="py-3 px-6 text-left text-sm font-semibold">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {feeStructures.map((structure) => (
-                                <React.Fragment key={structure._id}>
-                                    <tr
-                                        className="border-b hover:bg-gray-50 transition duration-200 cursor-pointer"
-                                        onClick={() => toggleExpandFeeStructure(structure._id)} // Toggle expansion on row click
-                                    >
-                                        <td className="py-3 px-6 text-sm text-gray-800">{structure.name}</td>
-                                        <td className="py-3 px-6 text-sm text-gray-800">
-                                            {structure.class ? structure.class.name : 'No Class Assigned'}
-                                        </td>
-                                        <td className="py-3 px-6 flex space-x-4">
-                                            <button
-                                                onClick={() => handleEditFeeStructure(structure)}
-                                                className="text-blue-500 hover:text-blue-700 transition duration-200"
-                                            >
-                                                <FaEdit />
-                                            </button>
-                                            <button
-                                                onClick={() => handleDeleteFeeStructure(structure?._id)}
-                                                className="text-red-500 hover:text-red-700 transition duration-200"
-                                            >
-                                                <FaTrash />
-                                            </button>
-                                        </td>
-                                    </tr>
-
-                                    {/* Conditionally render fee groups for the expanded row */}
-                                    {expandedFees[structure._id] && structure.feeGroups && structure.feeGroups.length > 0 && (
-                                        <tr>
-                                            <td colSpan="3" className="px-6 py-4">
-                                                <div className="space-y-2">
-                                                    {structure.feeGroups.map((group) => (
-                                                        <div key={group._id} className="flex flex-col bg-gray-100 p-3 rounded-md">
-                                                            <div className="flex justify-between">
-                                                                <span className="font-semibold text-gray-700">Fee Type:</span>
-                                                                <span className="text-gray-600">{group.feeType}</span>
-                                                            </div>
-                                                            <div className="flex justify-between">
-                                                                <span className="font-semibold text-gray-700">Amount:</span>
-                                                                <span className="text-gray-600">{group.amount}</span>
-                                                            </div>
-                                                            <div className="flex justify-between">
-                                                                <span className="font-semibold text-gray-700">Due Date:</span>
-                                                                <span className="text-gray-600">
-                                                                    {new Date(group.dueDate).toLocaleDateString()}
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                    ))}
-                                                </div>
+                        <p style={{ textAlign: 'center', margin: 10 }}>No fee structures found</p> :
+                        <table className="min-w-full table-auto">
+                            <thead>
+                                <tr className="bg-gray-100 text-gray-600">
+                                    <th className="py-3 px-6 text-left text-sm font-semibold">Name</th>
+                                    <th className="py-3 px-6 text-left text-sm font-semibold">Class</th>
+                                    <th className="py-3 px-6 text-left text-sm font-semibold">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {feeStructures.map((structure) => (
+                                    <React.Fragment key={structure._id}>
+                                        <tr
+                                            className="border-b hover:bg-gray-50 transition duration-200 cursor-pointer"
+                                            onClick={() => toggleExpandFeeStructure(structure._id)} // Toggle expansion on row click
+                                        >
+                                            <td className="py-3 px-6 text-sm text-gray-800">{structure.name}</td>
+                                            <td className="py-3 px-6 text-sm text-gray-800">
+                                                {structure.class ? structure.class.name : 'No Class Assigned'}
+                                            </td>
+                                            <td className="py-3 px-6 flex space-x-4">
+                                                <button
+                                                    onClick={() => handleEditFeeStructure(structure)}
+                                                    className="text-blue-500 hover:text-blue-700 transition duration-200"
+                                                >
+                                                    <FaEdit />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDeleteFeeStructure(structure?._id)}
+                                                    className="text-red-500 hover:text-red-700 transition duration-200"
+                                                >
+                                                    <FaTrash />
+                                                </button>
                                             </td>
                                         </tr>
-                                    )}
-                                </React.Fragment>
-                            ))}
-                        </tbody>
 
-                    </table>}
+                                        {/* Conditionally render fee groups for the expanded row */}
+                                        {expandedFees[structure._id] && structure.feeGroups && structure.feeGroups.length > 0 && (
+                                            <tr>
+                                                <td colSpan="3" className="px-6 py-4">
+                                                    <table className="min-w-full table-auto bg-gray-50">
+                                                        <thead>
+                                                            <tr>
+                                                                <th className="px-4 py-2 text-left font-semibold text-gray-700">Fee Type</th>
+                                                                <th className="px-4 py-2 text-left font-semibold text-gray-700">Amount</th>
+                                                                <th className="px-4 py-2 text-left font-semibold text-gray-700">Due Date</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {structure.feeGroups.map((group) => (
+                                                                <tr key={group._id} className="bg-white">
+                                                                    <td className="px-4 py-2 text-gray-600">{group.feeType}</td>
+                                                                    <td className="px-4 py-2 text-gray-600">{group.amount}</td>
+                                                                    <td className="px-4 py-2 text-gray-600">{new Date(group.dueDate).toLocaleDateString()}</td>
+                                                                </tr>
+                                                            ))}
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        )}
+
+                                    </React.Fragment>
+                                ))}
+                            </tbody>
+
+                        </table>}
                 </div>
             )}
 
             {/* Fee Structure Modal */}
             {showModal && (
-              <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center">
-              <div className="bg-white p-6 rounded-lg shadow-lg w-full sm:w-3/4 md:w-2/3 lg:w-1/2 max-h-[85vh] overflow-y-auto">
-                  <h2 className="text-2xl font-semibold mb-4">Create Fee Structure</h2>
-          
-                  <div className="mb-4">
-                      <label className="block text-gray-700">Name:</label>
-                      <input
-                          type="text"
-                          name="name"
-                          value={formData.name}
-                          onChange={handleInputChange}
-                          className="mt-2 p-2 border border-gray-300 rounded-md w-full"
-                      />
-                  </div>
-          
-                  <div className="mb-4">
-                      <label className="block text-gray-700">Class:</label>
-                      <select
-                          name="class"
-                          value={formData.class}
-                          onChange={handleInputChange}
-                          className="mt-2 p-2 border border-gray-300 rounded-md w-full"
-                      >
-                          <option value="">Select Class</option>
-                          {classes.map((cls) => (
-                              <option key={cls._id} value={cls._id}>
-                                  {cls.name}
-                              </option>
-                          ))}
-                      </select>
-                  </div>
-          
-                  <div className="mb-4">
-                      <label className="block text-gray-700">Fee Types:</label>
-                      {formData.feeGroups.map((feeGroup, index) => (
-                          <div key={index} className="mb-4">
-                              <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
-                                  <select
-                                      name="feeType"
-                                      value={feeGroup.feeType}
-                                      onChange={(e) => handleFeeGroupChange(e, index)}
-                                      className="p-2 border border-gray-300 rounded-md w-full sm:w-1/3"
-                                  >
-                                      <option value="">Select Fee Type</option>
-                                      {feeTypes.map((fee) => (
-                                          <option key={fee._id} value={fee.name}>
-                                              {fee.name}
-                                          </option>
-                                      ))}
-                                  </select>
-                                  <input
-                                      type="number"
-                                      name="amount"
-                                      value={feeGroup.amount}
-                                      onChange={(e) => handleFeeGroupChange(e, index)}
-                                      placeholder="Amount"
-                                      className="p-2 border border-gray-300 rounded-md w-full sm:w-1/3"
-                                  />
-                                  <input
-                                      type="date"
-                                      name="dueDate"
-                                      value={feeGroup.dueDate}
-                                      onChange={(e) => handleFeeGroupChange(e, index)}
-                                      className="p-2 border border-gray-300 rounded-md w-full sm:w-1/3"
-                                  />
-                                  <button
-                                  disabled={formData.feeGroups.length ==1}
-                                      type="button"
-                                      onClick={() => handleDeleteFeeGroup(index)}
-                                      className="text-red-500 hover:text-red-700 mt-2 sm:mt-0"
-                                  >
-                                      <FaTrash />
-                                  </button>
-                              </div>
-                          </div>
-                      ))}
-          
-                      <button
-                          onClick={handleAddFeeGroup}
-                          className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 mt-4"
-                      >
-                          Add Fee Type
-                      </button>
-                  </div>
-          
-                  <div className="flex flex-col sm:flex-row justify-between mt-4">
-                      <button
-                          onClick={() => {
-                              setShowModal(false);
-                              setFormData({
-                                  name: '',
-                                  class: '',
-                                  feeGroups: [{ feeType: '', amount: '', dueDate: '' }]
-                              });
-                          }}
-                          className="px-6 py-3 bg-gray-500 text-white rounded-lg w-full sm:w-auto sm:mr-4 mb-4 sm:mb-0"
-                      >
-                          Cancel
-                      </button>
-                      <button
-                          onClick={handleAddFeeStructure}
-                          className="px-6 py-3 bg-blue-500 text-white rounded-lg w-full sm:w-auto"
-                      >
-                          Save
-                      </button>
-                  </div>
-              </div>
-          </div>
-          
+                <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center">
+                    <div className="bg-white p-6 rounded-lg shadow-lg w-full sm:w-3/4 md:w-2/3 lg:w-1/2 max-h-[85vh] overflow-y-auto">
+                        <h2 className="text-2xl font-semibold mb-4">Create Fee Structure</h2>
+
+                        <div className="mb-4">
+                            <label className="block text-gray-700">Name:</label>
+                            <input
+                                type="text"
+                                name="name"
+                                value={formData.name}
+                                onChange={handleInputChange}
+                                className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                            />
+                        </div>
+
+                        <div className="mb-4">
+                            <label className="block text-gray-700">Class:</label>
+                            <select
+                                name="class"
+                                value={formData.class}
+                                onChange={handleInputChange}
+                                className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                            >
+                                <option value="">Select Class</option>
+                                {classes.map((cls) => (
+                                    <option key={cls._id} value={cls._id}>
+                                        {cls.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="mb-4">
+                            <label className="block text-gray-700">Fee Types:</label>
+                            {formData.feeGroups.map((feeGroup, index) => (
+                                <div key={index} className="mb-4">
+                                    <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
+                                        <select
+                                            name="feeType"
+                                            value={feeGroup.feeType}
+                                            onChange={(e) => handleFeeGroupChange(e, index)}
+                                            className="p-2 border border-gray-300 rounded-md w-full sm:w-1/3"
+                                        >
+                                            <option value="">Select Fee Type</option>
+                                            {feeTypes.map((fee) => (
+                                                <option key={fee._id} value={fee.name}>
+                                                    {fee.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <input
+                                            type="number"
+                                            name="amount"
+                                            value={feeGroup.amount}
+                                            onChange={(e) => handleFeeGroupChange(e, index)}
+                                            placeholder="Amount"
+                                            className="p-2 border border-gray-300 rounded-md w-full sm:w-1/3"
+                                        />
+                                        <input
+                                            type="date"
+                                            name="dueDate"
+                                            value={feeGroup.dueDate}
+                                            onChange={(e) => handleFeeGroupChange(e, index)}
+                                            className="p-2 border border-gray-300 rounded-md w-full sm:w-1/3"
+                                        />
+                                        <button
+                                            disabled={formData.feeGroups.length == 1}
+                                            type="button"
+                                            onClick={() => handleDeleteFeeGroup(index)}
+                                            className="text-red-500 hover:text-red-700 mt-2 sm:mt-0"
+                                        >
+                                            <FaTrash />
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+
+                            <button
+                                onClick={handleAddFeeGroup}
+                                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 mt-4"
+                            >
+                                Add Fee Type
+                            </button>
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row justify-between mt-4">
+                            <button
+                                onClick={() => {
+                                    setShowModal(false);
+                                    setFormData({
+                                        name: '',
+                                        class: '',
+                                        feeGroups: [{ feeType: '', amount: '', dueDate: '' }]
+                                    });
+                                }}
+                                className="px-6 py-3 bg-gray-500 text-white rounded-lg w-full sm:w-auto sm:mr-4 mb-4 sm:mb-0"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleAddFeeStructure}
+                                className="px-6 py-3 bg-blue-500 text-white rounded-lg w-full sm:w-auto"
+                            >
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
             )}
             {/* Fee Type Modal (Edit/Delete) */}
             {showFeeGroupModal && selectedFeeGroup && (

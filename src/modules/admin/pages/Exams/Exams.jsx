@@ -4,6 +4,7 @@ import { getService, postService, putService, deleteService } from '../../../../
 import apiName from '../../../../constants/ApiName';
 import Loader from '../../../../components/Loader';
 import { showToast } from '../../../../components/Toast';
+import { sessionsArray } from '../../../../constants/GlobalConstants';
 
 const Exams = () => {
     const [examsList, setExamsList] = useState([]);
@@ -15,7 +16,6 @@ const Exams = () => {
     const [editMode, setEditMode] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false); // Delete confirmation modal
     const [examToDelete, setExamToDelete] = useState(null); // Track exam to delete
-    const [sessions, setSessions] = useState(['2024-2025', '2025-2026', '2026-2027']);
     useEffect(() => {
         setLoading(true);
         getExamsList();
@@ -170,7 +170,7 @@ const Exams = () => {
                                 className="mt-2 p-2 border border-gray-300 rounded-md w-full"
                             >
                                 <option value="">Select Session</option>
-                                {sessions?.map((section) => (
+                                {sessionsArray?.map((section) => (
                                     <option key={section} value={section}>
                                         {section}
                                     </option>

@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { FaPlus } from 'react-icons/fa'; // FontAwesome icon for Add
 import { getService, postService } from '../../../../constants/Service';
 import apiName from '../../../../constants/ApiName';
-import Loader from '../../../../components/Loader';
 import { showToast } from '../../../../components/Toast';
+import { sectionArray, sessionsArray } from '../../../../constants/GlobalConstants';
 
 const AddStudent = () => {
     const [classList, setClassList] = useState([]);
@@ -39,12 +39,7 @@ const AddStudent = () => {
         feesDetails: ''
     });
 
-    const sections = ['A', 'B', 'C', 'D', 'E', 'F'];
     const genders = ['Male', 'Female', 'Other'];
-    const religions = ['Hindu', 'Muslim', 'Christian', 'Other'];
-    const categories = ['General', 'OBC', 'SC', 'ST', 'Other'];
-    const bloodGroups = ['A+', 'B+', 'O+', 'AB+', 'A-', 'B-', 'O-', 'AB-', 'Other'];
-    const sessions = ['2025-26', '2026-27', '2027-28']; // Example session options
 
     useEffect(() => {
         getClassList();
@@ -193,7 +188,7 @@ const AddStudent = () => {
                                     className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md"
                                 >
                                     <option value="">Select Section</option>
-                                    {sections.map((section) => (
+                                    {sectionArray.map((section) => (
                                         <option key={section} value={section}>
                                             {section}
                                         </option>
@@ -210,7 +205,7 @@ const AddStudent = () => {
                                     className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md"
                                 >
                                     <option value="">Select Session</option>
-                                    {sessions.map((session) => (
+                                    {sessionsArray.map((session) => (
                                         <option key={session} value={session}>
                                             {session}
                                         </option>

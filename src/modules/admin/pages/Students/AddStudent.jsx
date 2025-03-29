@@ -3,16 +3,15 @@ import { getService, postService } from '../../../../constants/Service'; // Impo
 import apiName from '../../../../constants/ApiName'; // Importing API Names
 import { showToast } from '../../../../components/Toast'; // Show Toast Notifications
 import AdmissionReceipt from './AdmissionReceipt';
-import axios from 'axios';
-import { json, useNavigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 import { BASE_URL } from '../../../../constants/Config';
+import { sessionsArray } from '../../../../constants/GlobalConstants';
 const AddStudent = () => {
 
   const [feeStructures, setFeeStructures] = useState([]);
   const [loading, setLoading] = useState(false);
   const [classes, setClasses] = useState([]); // Classes for dropdown
   const [sections, setSections] = useState([]); // Sections for dropdown
-  const [sessions] = useState(['2024-2025', '2025-2026', '2026-2027']); // Sessions for dropdown
   const [imageLoad, setImageLoad] = useState(false);
   const [registrationCompleted, setRegistrationCompleted] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
@@ -438,7 +437,7 @@ const AddStudent = () => {
                     className="mt-2 p-2 border border-gray-300 rounded-md w-full"
                   >
                     <option value="">Select Session</option>
-                    {sessions?.map((section) => (
+                    {sessionsArray?.map((section) => (
                       <option key={section} value={section}>
                         {section}
                       </option>

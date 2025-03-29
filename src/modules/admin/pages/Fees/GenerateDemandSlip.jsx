@@ -20,8 +20,8 @@ const GenerateDemandSlip = () => {
     const [classFilter, setClassFilter] = useState('');
     const [sectionFilter, setSectionFilter] = useState('');
     const [searchText, setSearchText] = useState('');
-    const [startMonth, setStartMonth] = useState('');
-    const [endMonth, setEndMonth] = useState('');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
     const [selectAll, setSelectAll] = useState(false); // New state for "Select All" checkbox
     const [feeDetails, setFeeDetails] = useState([]);
     const navigate = useNavigate();
@@ -49,7 +49,6 @@ const GenerateDemandSlip = () => {
             setSections(classSelected.sections); // sections associated with the selected class
         }
     };
-
     // Handle class selection to update sections list
     const handleClassFilterChange = (e) => {
         const selectedClass = e.target.value;
@@ -65,14 +64,29 @@ const GenerateDemandSlip = () => {
 
     // Handle search button click
     const handleSearch = () => {
-        if (!classFilter || !sectionFilter || !startMonth || !endMonth) {
+        console.log('startDate', startDate)
+        console.log('startDate111', endDate)
+        if (!classFilter || !sectionFilter || !startDate || !endDate) {
             showToast('Please select all fields', 'error')
             return
         }
         fetchFilteredStudents();
         getStudentFeeByClass()
     };
+    const handleStartDateChange = (e) => {
+        const newStartDate = e.target.value;
+        setStartDate(newStartDate);
 
+        // If the new start date is later than the current end date, reset the end date
+        if (endDate && newStartDate > endDate) {
+            setEndDate('');
+        }
+    };
+
+    const handleEndDateChange = (e) => {
+        const newEndDate = e.target.value;
+        setEndDate(newEndDate);
+    };
     // Fetch filtered students based on filters (Class, Section, and Search Text)
     const fetchFilteredStudents = async () => {
         try {
@@ -212,11 +226,10 @@ const GenerateDemandSlip = () => {
                                 </View>
                             </View>
                             {/* Fee Due Section */}
-                            <View style={styles.feeContainer}>
+                            {/* <View style={styles.feeContainer}>
                                 <Text style={styles.feeHeader}>Due Months:</Text>
-                                <Text style={styles.months}>{student?.dueMonths?.length == 0 ? 'No Dues' : months.slice(months.indexOf(startMonth), months.indexOf(endMonth) + 1)?.join(', ')}</Text>
-                                {/* <Text style={styles.months}>{student?.dueMonths?.length == 0 ? 'No Dues' : student?.dueMonths.join(", ")}</Text> */}
-                            </View>
+                                <Text style={styles.months}>{student?.dueMonths?.length == 0 ? 'No Dues' : student?.dueMonths.join(", ")}</Text>
+                            </View> */}
                             {/* Fee Details Table */}
                             <View style={styles.feeTable}>
                                 <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
@@ -365,32 +378,22 @@ const GenerateDemandSlip = () => {
                                 </option>
                             ))}
                         </select>
-                        <select
+                        <input
+                            type="date"
+                            id="startDate"
                             className="p-2 border rounded w-full sm:w-auto"
-                            disabled={!sectionFilter}
-                            value={startMonth}
-                            onChange={(e) => setStartMonth(e.target.value)}
-                        >
-                            <option value="">Start Month</option>
-                            {months.map((month, index) => (
-                                <option key={index} value={month}>
-                                    {month}
-                                </option>
-                            ))}
-                        </select>
-                        <select
+                            value={startDate}
+                            onChange={handleStartDateChange}
+                        />
+                        <input
+                            type="date"
+                            id="endDate"
                             className="p-2 border rounded w-full sm:w-auto"
-                            value={endMonth}
-                            disabled={!startMonth}
-                            onChange={(e) => setEndMonth(e.target.value)}
-                        >
-                            <option value="">End Month</option>
-                            {months.slice(months.indexOf(startMonth)).map((month, index) => (
-                                <option key={index} value={month}>
-                                    {month}
-                                </option>
-                            ))}
-                        </select>
+                            value={endDate}
+                            onChange={handleEndDateChange}
+                            min={startDate}  // Prevents selecting end date before start date
+                            disabled={!startDate} // Disables the end date input if the start date isn't selected
+                        />
                         <button
                             onClick={handleSearch}
                             className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
@@ -405,8 +408,8 @@ const GenerateDemandSlip = () => {
                                 setClassFilter('');   // Reset class filter
                                 setSectionFilter(''); // Reset section filter
                                 setStudents([])
-                                setStartMonth('')
-                                setEndMonth('')
+                                setStartDate('')
+                                setEndDate('')
                                 // You can reset any other related states here
                             }}
                             className="px-6 py-3 bg-gray-200 text-black rounded-lg hover:bg-gray-300 transition duration-300"
@@ -446,7 +449,9 @@ const styles = StyleSheet.create({
         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
     },
     header: {
-        backgroundColor: 'black',
+        backgroundColor: 'white',
+        borderWidth: 3,
+        borderColor: 'black',
         paddingVertical: 25,
         paddingHorizontal: 30,
         borderBottomLeftRadius: 20,
@@ -457,7 +462,7 @@ const styles = StyleSheet.create({
     headerText: {
         fontFamily: 'RobotoB',
         fontSize: 30,
-        color: '#fff',
+        color: 'black',
         letterSpacing: 2,
     },
     subHeaderText: {

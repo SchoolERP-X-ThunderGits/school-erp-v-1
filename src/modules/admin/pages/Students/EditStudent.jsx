@@ -4,6 +4,7 @@ import apiName from '../../../../constants/ApiName'; // Importing API Names
 import { showToast } from '../../../../components/Toast'; // Show Toast Notifications
 import { useNavigate, useParams } from 'react-router-dom';
 import Loader from '../../../../components/Loader';
+import { sessionsArray } from '../../../../constants/GlobalConstants';
 const EditStudent = () => {
     const { id } = useParams();
     const [feeStructures, setFeeStructures] = useState([]);
@@ -16,7 +17,6 @@ const EditStudent = () => {
         "D",
         "E",
     ]); // Sections for dropdown
-    const [sessions] = useState(['2024-2025', '2025-2026', '2026-2027']); // Sessions for dropdown
     const [imagePreview, setImagePreview] = useState(null);
     const [editMode, setEditMode] = useState(false);
     const [expandedFees, setExpandedFees] = useState({});
@@ -393,7 +393,7 @@ const EditStudent = () => {
                             className="mt-2 p-2 border border-gray-300 rounded-md w-full"
                         >
                             <option value="">Select Session</option>
-                            {sessions?.map((section) => (
+                            {sessionsArray?.map((section) => (
                                 <option key={section} value={section}>
                                     {section}
                                 </option>

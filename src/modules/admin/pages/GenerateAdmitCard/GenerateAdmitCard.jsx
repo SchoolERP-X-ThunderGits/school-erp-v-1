@@ -9,12 +9,12 @@ import { saveAs } from 'file-saver';
 import moment from 'moment';
 import { useUserContext } from '../../../../context/UserContext';
 import { BASE_URL } from '../../../../constants/Config';
+import { sessionsArray } from '../../../../constants/GlobalConstants';
 
 const GenerateAdmitCard = () => {
     const [classes, setClasses] = useState([]);
     const [exams, setExams] = useState([]);
     const { school } = useUserContext();
-    const sessionOptions = ["2023-2024", "2024-2025", "2025-2026"];
     const [selectedClass, setSelectedClass] = useState('');
     const [examSchedule, setExamSchedule] = useState([]);
     const [selectedSection, setSelectedSection] = useState('');
@@ -61,9 +61,11 @@ const GenerateAdmitCard = () => {
 
         setLoading(true);
         try {
-            const response = await getService(`${apiName.getStudentByExam}/${selectedClass}/${selectedSection}`);
+            const response = await getService(`${apiName.getStudentByExam}/${selectedClass}/${selectedSection}/${selectedSession}`);
+            console.log('responsemvmbmvbmvmb', response)
             setStudents(response);
         } catch (error) {
+            console.log('lbvlbvlb', error)
             showToast('Error fetching students', 'error');
         } finally {
             setLoading(false);
@@ -107,33 +109,33 @@ const GenerateAdmitCard = () => {
             <Document>
                 {selectedStudentData.map((student) => (
                     <Page size="A4" style={styles.page} key={student._id}>
-                        <View style={[styles.header, { flexDirection: 'row', justifyContent: 'space-between',borderBottomWidth:1,borderBottomColor:'black',paddingBottom:10 }]}>
+                        <View style={[styles.header, { flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: 'black', paddingBottom: 10 }]}>
                             <View>
                                 <Image style={{ width: 50, height: 50 }} src={school?.logo} />
                             </View>
-                            <View style={{alignItems:'center',justifyContent:'center'}}>
+                            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
 
                                 <Text style={styles.title}>{school?.name}</Text>
-                                <Text style={{fontFamily:'RobotoR',fontSize:14,marginTop:5}}>{school?.address}</Text>
-                                <Text style={{fontFamily:'RobotoR',fontSize:14}}>{examSchedule[0]?.examName?.name}, {examSchedule[0]?.examName?.session}</Text>
+                                <Text style={{ fontFamily: 'RobotoR', fontSize: 14, marginTop: 5 }}>{school?.address}</Text>
+                                <Text style={{ fontFamily: 'RobotoR', fontSize: 14 }}>{examSchedule[0]?.examName?.name}, {examSchedule[0]?.examName?.session}</Text>
                             </View>
                             <View>
                                 <Image style={{ width: 50, height: 50 }} src={school?.logo} />
                             </View>
                         </View>
-                        {console.log('studentstudent',student)}
-                        <View style={{flexDirection:'row',justifyContent:'space-around',marginVertical:10}}>
+                        {console.log('studentstudent', student)}
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginVertical: 10 }}>
                             <View>
-                                
-                            <Text style={styles.lable}>Roll Number:   <Text style={styles.bold}>{student.roll_Number}</Text></Text>
-                            <Text style={[styles.lable,{marginVertical:5}]}>Name:    <Text style={styles.bold}>{student.first_Name} {student?.last_Name}</Text></Text>
-                            <Text style={styles.lable}>Father's Name:    <Text style={styles.bold}>{student?.father_Name}</Text></Text>
+
+                                <Text style={styles.lable}>Roll Number:   <Text style={styles.bold}>{student.roll_Number}</Text></Text>
+                                <Text style={[styles.lable, { marginVertical: 5 }]}>Name:    <Text style={styles.bold}>{student.first_Name} {student?.last_Name}</Text></Text>
+                                <Text style={styles.lable}>Father's Name:    <Text style={styles.bold}>{student?.father_Name}</Text></Text>
                             </View>
                             <View>
 
-                            <Text style={styles.lable}>Admission Number:    <Text style={styles.bold}>{student.admission_Number}</Text></Text>
-                            <Text style={[styles.lable,{marginVertical:5}]}>Class:    <Text style={styles.bold}>{student.class_Id?.name}</Text></Text>
-                            <Text style={styles.lable}>D.O.B :    <Text style={styles.bold}>{moment(student.date_Of_Birth).format('DD/MM/YYYY')}</Text></Text>
+                                <Text style={styles.lable}>Admission Number:    <Text style={styles.bold}>{student.admission_Number}</Text></Text>
+                                <Text style={[styles.lable, { marginVertical: 5 }]}>Class:    <Text style={styles.bold}>{student.class_Id?.name}</Text></Text>
+                                <Text style={styles.lable}>D.O.B :    <Text style={styles.bold}>{moment(student.date_Of_Birth).format('DD/MM/YYYY')}</Text></Text>
                             </View>
                         </View>
                         <View style={styles.table}>
@@ -160,31 +162,31 @@ const GenerateAdmitCard = () => {
         saveAs(blob, `Admit_Cards_${moment().format('YYYY-MM-DD')}.pdf`);
         generateUrl(blob)
     };
-    
-     const generateUrl = async (blob) => {
-            console.log('Uploading Blob', blob);
-    
-            // Prepare FormData to send the blob to the server
-            const formData = new FormData();
-            formData.append('file', blob, 'Demand_Slips.pdf');  // 'file' matches the multer field name
-    
-            try {
-                // Post the FormData to the server's /upload-pdf endpoint
-                const response = await fetch(`${BASE_URL}${apiName.uploadCard}`, {
-                    method: 'POST',
-                    body: formData,
-                });
-    
-                if (!response.ok) {
-                    throw new Error('Failed to upload PDF');
-                }
-                const responseData = await response.json();
-                window.ReactNativeWebView.postMessage(responseData.pdfUrl);
-                console.log('Uploaded successfully:', responseData);
-            } catch (error) {
-                console.error('Error uploading PDF:', error);
+
+    const generateUrl = async (blob) => {
+        console.log('Uploading Blob', blob);
+
+        // Prepare FormData to send the blob to the server
+        const formData = new FormData();
+        formData.append('file', blob, 'Demand_Slips.pdf');  // 'file' matches the multer field name
+
+        try {
+            // Post the FormData to the server's /upload-pdf endpoint
+            const response = await fetch(`${BASE_URL}${apiName.uploadCard}`, {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to upload PDF');
             }
-        };
+            const responseData = await response.json();
+            window.ReactNativeWebView.postMessage(responseData.pdfUrl);
+            console.log('Uploaded successfully:', responseData);
+        } catch (error) {
+            console.error('Error uploading PDF:', error);
+        }
+    };
 
 
     return (
@@ -197,7 +199,7 @@ const GenerateAdmitCard = () => {
                         <label className="block text-sm font-medium text-gray-600">Select Class</label>
                         <select
                             value={selectedClass}
-                            onChange={(e) => { setSelectedClass(e.target.value),fetchSectionsForClass(e?.target?.value) }}
+                            onChange={(e) => { setSelectedClass(e.target.value), fetchSectionsForClass(e?.target?.value) }}
                             className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
                             <option value="">Class</option>
@@ -252,7 +254,7 @@ const GenerateAdmitCard = () => {
                             disabled={!selectedExam}
                         >
                             <option value="">Select Session</option>
-                            {sessionOptions.map((session, index) => (
+                            {sessionsArray.map((session, index) => (
                                 <option key={index} value={session}>
                                     {session}
                                 </option>
@@ -339,12 +341,12 @@ const GenerateAdmitCard = () => {
 const styles = StyleSheet.create({
     page: { padding: 20 },
     header: { textAlign: 'center', marginBottom: 10 },
-    title: { fontSize: 18,fontFamily:'RobotoB'},
+    title: { fontSize: 18, fontFamily: 'RobotoB' },
     table: { display: 'table', width: '100%', borderStyle: 'solid', borderWidth: 1, marginTop: 10 },
     tableRow: { flexDirection: 'row' },
     tableCell: { flex: 1, borderWidth: 1, padding: 5, fontSize: 10 },
-    lable: {fontFamily:'RobotoR',fontSize:14 },
-    bold: {fontFamily:'RobotoB',fontSize:14 },
+    lable: { fontFamily: 'RobotoR', fontSize: 14 },
+    bold: { fontFamily: 'RobotoB', fontSize: 14 },
 });
 
 export default GenerateAdmitCard;

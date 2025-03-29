@@ -4,6 +4,7 @@ import { getService, postService, putService, deleteService } from '../../../../
 import apiName from '../../../../constants/ApiName';
 import Loader from '../../../../components/Loader';
 import { showToast } from '../../../../components/Toast';
+import { sectionArray } from '../../../../constants/GlobalConstants';
 
 const Class = () => {
     const [classList, setClassList] = useState([]);
@@ -15,9 +16,6 @@ const Class = () => {
     const [editMode, setEditMode] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false); // Delete confirmation modal
     const [classToDelete, setClassToDelete] = useState(null); // Track class to delete
-
-    const sections = ['A', 'B', 'C', 'D', 'E', 'F'];
-
     useEffect(() => {
         setLoading(true);
         getClassList();
@@ -177,7 +175,7 @@ const Class = () => {
                         <div className="mb-6">
                             <label className="block text-sm font-medium text-gray-600">Sections</label>
                             <div className="mt-2 flex flex-wrap gap-4">
-                                {sections.map((section) => (
+                                {sectionArray.map((section) => (
                                     <div key={section} className="flex items-center">
                                         <input
                                             type="checkbox"
