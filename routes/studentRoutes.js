@@ -42,7 +42,7 @@ router.get('/students/query', authMiddleware(["admin", "moderator"]), getStudent
 router.get('/byClassOrSection/:classId/:section/:session?', authMiddleware(["admin", "moderator"]), getStudentsByClassOrSection);
 router.get('/getLastAdmissionNumber', authMiddleware(["admin", "moderator"]), getLastGeneratedAdmissionNumber);
 // Using Express.js
-app.post('/update-class-section-session', bulkUpdateClassSectionSession);
+router.post('/update-class-section-session', bulkUpdateClassSectionSession);
 
 
 module.exports = router;
