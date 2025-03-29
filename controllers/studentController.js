@@ -379,4 +379,28 @@ exports.bulkUpdateRollNumbers = async (req, res) => {
     }
 };
 
+exports.bulkUpdateClassSectionSession = async (req, res) => {
+    const updates = req.body; // Expecting an array of objects with _id, class_Id, section, and session
+
+    try {
+        // Perform the updates
+        await Promise.all(updates.map(update => {
+            return Student.updateOne(
+                { _id: update._id }, // Using MongoDB ObjectId to match the student
+                { $set: {
+                    class_Id: update.class_Id,
+                    section: update.section,
+                    session: update.session
+                }}
+            );
+        }));
+
+        res.status(200).json({ message: 'Class, section, and session updated successfully' });
+    } catch (error) {
+        console.error('Error updating class, section, and session:', error);
+        res.status(500).json({ message: 'Failed to update class, section, and session' });
+    }
+};
+
+
 

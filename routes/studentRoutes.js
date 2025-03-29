@@ -12,7 +12,8 @@ const {
     getStudentsByQuery,
     getStudentsByClassOrSection,
     getLastGeneratedAdmissionNumber,
-    bulkAddStudents
+    bulkAddStudents,
+    bulkUpdateClassSectionSession
 } = require("../controllers/studentController");
 const authMiddleware = require("../middleware/auth.js");
 
@@ -40,6 +41,8 @@ router.get('/byClassAndSection/:classId/:section', authMiddleware(["admin", "mod
 router.get('/students/query', authMiddleware(["admin", "moderator"]), getStudentsByQuery);
 router.get('/byClassOrSection/:classId/:section/:session?', authMiddleware(["admin", "moderator"]), getStudentsByClassOrSection);
 router.get('/getLastAdmissionNumber', authMiddleware(["admin", "moderator"]), getLastGeneratedAdmissionNumber);
+// Using Express.js
+app.post('/update-class-section-session', bulkUpdateClassSectionSession);
 
 
 module.exports = router;

@@ -2,7 +2,8 @@ const express = require('express');
 const {
     getStudentFeeProfile,
     updateStudentFeeProfile,
-    getStudentsByClassOrSection
+    getStudentsByClassOrSection,
+    getStudentsFeesByClassOrSection
 } = require("../controllers/studentFeeProfile.js");
 const authMiddleware = require("../middleware/auth.js");
 
@@ -15,5 +16,6 @@ router.get('/feeProfile/:studentId', authMiddleware(), getStudentFeeProfile);
 router.put('/feeProfile/:studentId', authMiddleware(), updateStudentFeeProfile);
 
 router.get('/fees/byClassOrSection/:classId/:section?', authMiddleware(["admin", "moderator"]), getStudentsByClassOrSection);
+router.get('/fees/byClassOrSection/:classId/:section/:dueData?', authMiddleware(["admin", "moderator"]), getStudentsFeesByClassOrSection);
 
 module.exports = router;

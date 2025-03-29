@@ -35,7 +35,7 @@ const classController = {
     getAllClasses: async (req, res) => {
         try {
             const tenantId = req.user.tenantId;
-            
+
             // Retrieve all classes belonging to the tenant
             const classes = await Class.find({ tenantId });
             res.status(200).json(classes);
@@ -116,7 +116,10 @@ const classController = {
             console.error('Error deleting class by ID:', error);
             res.status(500).json({ error: 'Failed to delete class' });
         }
-    }
+    },
+
+
+
 };
 
 // Export the controller

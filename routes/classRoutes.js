@@ -12,6 +12,8 @@ router.get('/getAll', authMiddleware(["admin", "moderator"]), classController.ge
 router.get('/get/:id', authMiddleware(["admin", "moderator"]), classController.getClassById);
 router.put('/update/:id', authMiddleware(["admin", "moderator"]), classController.updateClassById);
 router.delete('/delete/:id', authMiddleware(["admin", "moderator"]), classController.deleteClassById);
+// Using Express.js
+
 
 // Export the router
 module.exports = router;
