@@ -16,6 +16,6 @@ router.get('/feeProfile/:studentId', authMiddleware(), getStudentFeeProfile);
 router.put('/feeProfile/:studentId', authMiddleware(), updateStudentFeeProfile);
 
 router.get('/fees/byClassOrSection/:classId/:section?', authMiddleware(["admin", "moderator"]), getStudentsByClassOrSection);
-router.get('/due-fees/byClassOrSection/:classId/:section/:dueData?', authMiddleware(["admin", "moderator"]), getStudentsFeesByClassOrSection);
+router.get('/due-fees/byClassOrSection/:classId/:section/:dueDate?', authMiddleware(["admin", "moderator"]), getStudentsFeesByClassOrSection);
 
 module.exports = router;

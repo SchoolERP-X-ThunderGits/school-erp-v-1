@@ -229,7 +229,7 @@ exports.getStudentsByQuery = async (req, res) => {
 exports.getStudentsByClassOrSection = async (req, res) => {
     const { classId, section, session } = req.params; // Include session in the destructured parameters
     const tenantId = req.user.tenantId;
-    
+
     try {
         let query = { class_Id: classId, tenantId };
 
@@ -361,23 +361,47 @@ exports.bulkAddStudents = async (req, res, classId, section) => {
 };
 
 exports.bulkUpdateRollNumbers = async (req, res) => {
-    const updates = req.body; // Expecting an array of objects with _id and new roll_Number
+    const { type, updates, classId, section, startingRollNumber } = req.body;
 
     try {
-        // Perform the updates
-        await Promise.all(updates.map(update => {
-            return Student.updateOne(
-                { _id: update._id }, // Using MongoDB ObjectId for matching the student
-                { $set: { roll_Number: update.roll_Number } }
-            );
-        }));
+        let responseDetails = [];
 
-        res.status(200).json({ message: 'Roll numbers updated successfully' });
+        if (type === 'manual') {
+            // Manual updates with explicit roll numbers for each student
+            await Promise.all(updates.map(async update => {
+                const result = await Student.updateOne(
+                    { _id: update._id },
+                    { $set: { roll_Number: update.roll_Number } } // Ensure roll_Number is an integer
+                );
+                if (result.nModified > 0) {
+                    const student = await Student.findById(update._id);
+                    responseDetails.push({ name: student.first_Name + ' ' + student.last_Name, roll_Number: student.roll_Number });
+                }
+            }));
+        } else if (type === 'auto') {
+            // Automatic roll number assignment based on class and section
+            const students = await Student.find({ class_Id: classId, section }).sort({ first_Name: 1 });
+            await Promise.all(students.map(async (student, index) => {
+                const newRollNumber = startingRollNumber + index; // No prefix, purely numeric
+                const result = await Student.updateOne(
+                    { _id: student._id },
+                    { $set: { roll_Number: newRollNumber } }
+                );
+                if (result.nModified > 0) {
+                    responseDetails.push({ name: student.first_Name + ' ' + student.last_Name, roll_Number: newRollNumber });
+                }
+            }));
+        }
+
+        res.status(200).json({ message: 'Roll numbers updated successfully', updatedStudents: responseDetails });
     } catch (error) {
         console.error('Error updating roll numbers:', error);
-        res.status(500).json({ message: 'Failed to update roll numbers' });
+        res.status(500).json({ message: 'Failed to update roll numbers', error: error });
     }
 };
+
+
+
 
 exports.bulkUpdateClassSectionSession = async (req, res) => {
     const updates = req.body; // Expecting an array of objects with _id, class_Id, section, and session
@@ -387,11 +411,13 @@ exports.bulkUpdateClassSectionSession = async (req, res) => {
         await Promise.all(updates._id.map(update => {
             return Student.updateOne(
                 { _id: update }, // Using MongoDB ObjectId to match the student
-                { $set: {
-                    class_Id: updates.class_Id,
-                    section: updates.section,
-                    session: updates.session
-                }}
+                {
+                    $set: {
+                        class_Id: updates.class_Id,
+                        section: updates.section,
+                        session: updates.session
+                    }
+                }
             );
         }));
 

@@ -55,10 +55,10 @@ exports.updateStudentFeeProfile = async (req, res) => {
 
 
 exports.getStudentsByClassOrSection = async (req, res) => {
-    const { classId, section, dueDate } = req.params;
+    const { classId, section } = req.params;
     const tenantId = req.user.tenantId;
-    const cutoffDate = moment(dueDate).endOf('day');
-
+    const today = moment().startOf('day');
+console.log(classId, section);
     try {
         let query = { class_Id: classId, tenantId };
         if (section) {
@@ -66,48 +66,53 @@ exports.getStudentsByClassOrSection = async (req, res) => {
         }
 
         const students = await Student.find(query).populate('class_Id');
+        console.log(students);
+        
         const studentDetails = await Promise.all(students.map(async (student) => {
-            const feeProfile = await StudentFeeProfile.findOne({ studentId: student._id })
-                .populate({
-                    path: "feeStructures",
-                    populate: { path: "feeGroups" }
-                })
-                .populate('payments');
-
+            const feeProfile = await StudentFeeProfile.findOne({ studentId: student._id }).populate("feeStructures").populate('payments');
             if (!feeProfile) return null;
 
-            const paidFeeTypes = new Set();
+            
+
+            const paidMonths = new Set();
             feeProfile.payments.forEach(payment => {
-                payment.feePaid.forEach(fee => paidFeeTypes.add(fee.feeType));
+                payment.feePaid.forEach(fee => paidMonths.add(fee.feeType));
             });
 
-            let dueFees = [];
+            
+
+            let dueMonths = [];
+            let totalFeesOverdue = 0;
 
             feeProfile.feeStructures.forEach(feeStructure => {
                 feeStructure.feeGroups.forEach(feeGroup => {
-                    if (!paidFeeTypes.has(feeGroup.feeType) && moment(feeGroup.dueDate).isBefore(cutoffDate)) {
-                        dueFees.push({
-                            feeType: feeGroup.feeType,
-                            amountDue: feeGroup.amount,
-                            dueDate: feeGroup.dueDate
-                        });
+                
+                    if (!paidMonths.has(feeGroup.feeType) && moment(feeGroup.dueDate).isBefore(today)) {
+                        dueMonths.push(feeGroup.feeType);
+                        totalFeesOverdue += feeGroup.amount;
+                        
                     }
                 });
             });
 
-            console.log(student);
-
             return {
                 studentId: student._id,
-                studentDetails: student,
-                dueFees
+                studentDetails: {
+                    admission_Number: student.admission_Number,
+                    first_Name: student.first_Name,
+                    last_Name: student.last_Name,
+                    class: student.class_Id.className,
+                    section: student.section
+                },
+                dueMonths,
+                totalFeesOverdue
             };
         }));
 
         const filteredStudentDetails = studentDetails.filter(details => details !== null);
         res.status(200).json(filteredStudentDetails);
     } catch (error) {
-        console.error('Error fetching students by class or section with date:', error);
+        console.error('Error fetching students by class or section:', error);
         res.status(500).json({ message: 'Server error' });
     }
 };
@@ -125,6 +130,8 @@ exports.getStudentsFeesByClassOrSection = async (req, res) => {
         }
 
         const students = await Student.find(query).populate('class_Id');
+        console.log(students);
+        
         const studentDetails = await Promise.all(students.map(async (student) => {
             const feeProfile = await StudentFeeProfile.findOne({ studentId: student._id })
                 .populate({
@@ -134,6 +141,7 @@ exports.getStudentsFeesByClassOrSection = async (req, res) => {
                 .populate('payments');
 
             if (!feeProfile) return null;
+            console.log(feeProfile);
 
             const paidFeeTypes = new Set();
             feeProfile.payments.forEach(payment => {
