@@ -384,13 +384,13 @@ exports.bulkUpdateClassSectionSession = async (req, res) => {
 
     try {
         // Perform the updates
-        await Promise.all(updates.map(update => {
+        await Promise.all(updates._id.map(update => {
             return Student.updateOne(
-                { _id: update._id }, // Using MongoDB ObjectId to match the student
+                { _id: update }, // Using MongoDB ObjectId to match the student
                 { $set: {
-                    class_Id: update.class_Id,
-                    section: update.section,
-                    session: update.session
+                    class_Id: updates.class_Id,
+                    section: updates.section,
+                    session: updates.session
                 }}
             );
         }));
