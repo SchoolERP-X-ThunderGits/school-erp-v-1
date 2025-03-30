@@ -157,7 +157,12 @@ const UpgradeClass = () => {
         try {
             const response = await postService(apiName.upgradeStudentSessionSectionClass, JSON.stringify(body));
             console.log('responseresponse', response)
-            showToast("Details Upgraded successfully", 'success');
+            setClassFilter('')
+            setSectionFilter('')
+            setSessionFilter('')
+            setStudents([])
+            setSelectedStudentsId([])
+            showToast("Details updated successfully", 'success');
             setModalOpen(false);
         } catch (error) {
             console.error('Error posting data:', error);

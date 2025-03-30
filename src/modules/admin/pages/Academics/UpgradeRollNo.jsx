@@ -3,7 +3,7 @@ import { FaDownload, FaTimes } from 'react-icons/fa';
 import apiName from '../../../../constants/ApiName';
 import { showToast } from '../../../../components/Toast';
 import Loader from '../../../../components/Loader';
-import { getService } from '../../../../constants/Service';
+import { getService, postService } from '../../../../constants/Service';
 import { sessionsArray } from '../../../../constants/GlobalConstants';
 
 const UpgradeRollNo = () => {
@@ -14,17 +14,15 @@ const UpgradeRollNo = () => {
     const [classFilter, setClassFilter] = useState('');
     const [sectionFilter, setSectionFilter] = useState('');
     const [sessionFilter, setSessionFilter] = useState('');
-    const [selectedStudentsId, setSelectedStudentsId] = useState([]);
-    const [newClass, setNewClass] = useState('');
+    const [newRollNo, setNewRollNo] = useState('');
+    const [studentRollArray, setStudentRollArray] = useState([])
+    const [studentOldRollArray, setStudentOldRollArray] = useState([]);
     const [modalOpen, setModalOpen] = useState(false);
-    const [editingStudent, setEditingStudent] = useState(null); // To track which student is being edited
-    const [editedRollNumber, setEditedRollNumber] = useState("");
 
     useEffect(() => {
         setLoading(true);
         fetchClasses();
     }, []);
-
     const fetchClasses = async () => {
         try {
             const result = await getService(apiName.getClassList);
@@ -66,6 +64,18 @@ const UpgradeRollNo = () => {
         try {
             setLoading(true);
             const result = await getService(`${apiName.getStudentByExam}/${classFilter}/${sectionFilter}/${sessionFilter}`);
+            setStudentRollArray(result.map(i => {
+                return {
+                    id: i._id,
+                    roll_no: i.roll_Number
+                }
+            }))
+            setStudentOldRollArray(result.map(i => {
+                return {
+                    id: i._id,
+                    roll_no: i.roll_Number
+                }
+            }))
             setStudents(result);
             setLoading(false);
         } catch (error) {
@@ -74,39 +84,8 @@ const UpgradeRollNo = () => {
         }
     };
 
-    const handleStudentSelect = (e, studentId) => {
-        if (e.target.checked) {
-            setSelectedStudentsId([...selectedStudentsId, studentId]);
-        } else {
-            setSelectedStudentsId(selectedStudentsId.filter(id => id !== studentId));
-        }
-    };
-
-    const handleEditClick = (student) => {
-        setEditingStudent(student._id);
-        setEditedRollNumber(student.roll_Number); // Set current roll number to edit
-    };
-
-    const handleSave = (studentId) => {
-        // You should add your API call or state upgrade to save the edited roll number here
-        // Example: saveEditedRollNumber(studentId, editedRollNumber);
-        setEditingStudent(null); // Exit editing mode
-    };
-
-    const handleCancel = () => {
-        setEditingStudent(null); // Exit editing mode without saving
-    };
 
     const renderStudentList = () => {
-        const handleSelectAll = (e) => {
-            if (e.target.checked) {
-                setSelectedStudentsId(students.map((student) => student._id));
-            } else {
-                setSelectedStudentsId([]);
-            }
-        };
-
-        const isAllSelected = students.length > 0 && selectedStudentsId.length === students.length;
 
         return (
             <div className="container mx-auto p-4">
@@ -117,14 +96,6 @@ const UpgradeRollNo = () => {
                         <table className="min-w-full table-auto">
                             <thead>
                                 <tr className="bg-gray-100 text-gray-600">
-                                    <th className="py-3 px-6 text-left text-sm font-semibold">
-                                        <input
-                                            type="checkbox"
-                                            checked={isAllSelected}
-                                            onChange={handleSelectAll}
-                                            className="form-checkbox"
-                                        />
-                                    </th>
                                     <th className="py-3 px-6 text-left text-sm font-semibold">Admission Number</th>
                                     <th className="py-3 px-6 text-left text-sm font-semibold">Roll Number</th>
                                     <th className="py-3 px-6 text-left text-sm font-semibold">First Name</th>
@@ -136,46 +107,30 @@ const UpgradeRollNo = () => {
                             <tbody>
                                 {students.map((student) => (
                                     <tr key={student._id} className="border-b hover:bg-gray-50 transition duration-200">
-                                        <td className="px-4 py-2 text-sm text-gray-800">
-                                            <input
-                                                type="checkbox"
-                                                checked={selectedStudentsId.includes(student._id)}
-                                                onChange={(e) => handleStudentSelect(e, student._id)}
-                                                className="form-checkbox"
-                                            />
-                                        </td>
                                         <td className="px-4 py-2 text-sm text-gray-800">{student?.admission_Number}</td>
                                         <td className="px-4 py-2 text-sm text-gray-800">
-                                            {editingStudent === student._id ? (
-                                                <div className="flex items-center space-x-2">
-                                                    <input
-                                                        type="text"
-                                                        value={editedRollNumber}
-                                                        onChange={(e) => setEditedRollNumber(e.target.value)}
-                                                        className="border px-2 py-1"
-                                                    />
-                                                    <button onClick={() => handleSave(student._id)} className="text-green-600">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-5 h-5">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12l5 5L19 7" />
-                                                        </svg>
-                                                    </button>
-                                                    <button onClick={handleCancel} className="text-red-600">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-5 h-5">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                                        </svg>
-                                                    </button>
-                                                </div>
-                                            ) : (
-                                                <div style={{ display: 'flex' }}>
-                                                    {student?.roll_Number}
-                                                    <button onClick={() => handleEditClick(student)} className="text-blue-600 ml-2">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-5 h-5">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 3l4 4m0 0l-9 9H8v-4l9-9m0 0L14 6" />
-                                                        </svg>
+                                            <div className="flex items-center space-x-2">
+                                                <input
+                                                    type="number"
+                                                    value={(() => {
+                                                        const studentObj = studentRollArray.find(obj => obj.id == student?._id);
+                                                        return studentObj ? studentObj.roll_no : '';
+                                                    })()}
+                                                    onChange={(e) => {
+                                                        const updatedArray = studentRollArray.map(obj => {
+                                                            if (obj.id == student?._id) {
+                                                                return { ...obj, roll_no: Number(e.target.value) };
+                                                            }
+                                                            return obj;
+                                                        });
+                                                        setStudentRollArray(updatedArray);
+                                                    }}
+                                                    className="border px-0.5 py-1"
+                                                    style={{ borderWidth: 0.5, borderColor: 'gray' }}
+                                                />
 
-                                                    </button>
-                                                </div>
-                                            )}
+                                            </div>
+
                                         </td>
                                         <td className="px-4 py-2 text-sm text-gray-800">{student?.first_Name}</td>
                                         <td className="px-4 py-2 text-sm text-gray-800">{student?.last_Name}</td>
@@ -191,16 +146,25 @@ const UpgradeRollNo = () => {
         );
     };
 
-    const handleUpgradeStudent = async () => {
+    const handleUpgradeStudent = async (mode) => {
         const body = {
-            _id: selectedStudentsId,
-            class_Id: newClass,
-            // session: newSession,
+            updates: studentRollArray,
+            type: mode,
+        };
+        const body2 = {
+            classId: classFilter,
+            section:sectionFilter,
+            startingRollNumber:newRollNo,
+            type: mode,
         };
         try {
-            const response = await postService(apiName.upgradeStudentSessionSectionClass, JSON.stringify(body));
+            const response = await postService(apiName.upgradeStudentRollNo, mode == 'auto'?JSON.stringify(body2):JSON.stringify(body));
             console.log('responseresponse', response)
-            showToast("Details Upgraded successfully", 'success');
+            setClassFilter('')
+            setSectionFilter('')
+            setSessionFilter('')
+            setStudents('')
+            showToast("Roll No Update Successfully", 'success');
             setModalOpen(false);
         } catch (error) {
             console.error('Error posting data:', error);
@@ -247,7 +211,7 @@ const UpgradeRollNo = () => {
                         <select
                             value={sessionFilter}
                             onChange={(e) => setSessionFilter(e.target.value)}
-                            className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="p-2 border rounded w-full sm:w-auto"
                             disabled={!sectionFilter}
                         >
                             <option value="">Select Session</option>
@@ -274,14 +238,26 @@ const UpgradeRollNo = () => {
                         >
                             Clear Filters
                         </button>
-                        {selectedStudentsId.length > 0 && (
+                        {
+                            students.length != 0 &&
+
                             <button
                                 onClick={() => setModalOpen(true)}
                                 className="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300"
                             >
-                                <FaDownload className="mr-2" /> Upgrade Roll No.
+                                <FaDownload className="mr-2" /> Upgrade All Students Roll No.
                             </button>
-                        )}
+                        }
+                        {
+                            JSON.stringify(studentRollArray) != JSON.stringify(studentOldRollArray) &&
+
+                            <button
+                                onClick={() => handleUpgradeStudent('manual')}
+                                className="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300"
+                            >
+                                <FaDownload className="mr-2" /> Save Changes
+                            </button>
+                        }
                     </div>
 
                     <div className="mt-6">{renderStudentList()}</div>
@@ -291,30 +267,28 @@ const UpgradeRollNo = () => {
                         <div className="fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50">
                             <div className="bg-white p-6 rounded-lg w-full sm:w-4/5 md:w-1/3 lg:w-1/3 xl:w-1/4">
                                 <div className="flex justify-between mb-4">
-                                    <h2 className="text-xl font-semibold">Upgrade Roll Number</h2>
+                                    <h2 className="text-xl font-semibold">Starting Roll Number</h2>
                                     <button onClick={() => setModalOpen(false)} className="text-red-500">
                                         <FaTimes />
                                     </button>
                                 </div>
 
-                                <select
+                                <input
+                                    type="number"
                                     className="p-2 border rounded w-full mb-4"
-                                    value={newClass}
-                                    onChange={(e) => setNewClass(e.target.value)}
-                                >
-                                    <option value="">Select New Roll No.</option>
-                                    {classes.map((classItem) => (
-                                        <option key={classItem._id} value={classItem._id}>
-                                            {classItem.name}
-                                        </option>
-                                    ))}
-                                </select>
+                                    value={newRollNo}
+                                    onChange={(e) => setNewRollNo(e.target.value)}
+                                    placeholder="Enter New Starting roll number"
+                                />
+
 
                                 <button
-                                    onClick={handleUpgradeStudent}
+                                    onClick={() => {
+                                        handleUpgradeStudent('auto')
+                                    }}
                                     className="px-6 py-3 bg-green-500 text-white rounded-lg w-full hover:bg-green-600 flex items-center justify-center"
                                 >
-                                    <FaDownload className="mr-2" /> Save
+                                    <FaDownload className="mr-2" /> Update
                                 </button>
 
                             </div>
