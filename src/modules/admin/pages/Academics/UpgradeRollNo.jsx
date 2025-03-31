@@ -66,14 +66,14 @@ const UpgradeRollNo = () => {
             const result = await getService(`${apiName.getStudentByExam}/${classFilter}/${sectionFilter}/${sessionFilter}`);
             setStudentRollArray(result.map(i => {
                 return {
-                    id: i._id,
-                    roll_no: i.roll_Number
+                    _id: i._id,
+                    roll_Number: i.roll_Number
                 }
             }))
             setStudentOldRollArray(result.map(i => {
                 return {
-                    id: i._id,
-                    roll_no: i.roll_Number
+                    _id: i._id,
+                    roll_Number: i.roll_Number
                 }
             }))
             setStudents(result);
@@ -84,6 +84,32 @@ const UpgradeRollNo = () => {
         }
     };
 
+    const handleUpgradeStudent = async (mode) => {
+        const body = {
+            updates: studentRollArray,
+            type: mode,
+        };
+        const body2 = {
+            classId: classFilter,
+            section: sectionFilter,
+            startingRollNumber: newRollNo,
+            type: mode,
+        };
+        try {
+            const response = await postService(apiName.upgradeStudentRollNo, mode == 'auto' ? JSON.stringify(body2) : JSON.stringify(body));
+            console.log('responseresponse', response)
+            setClassFilter('')
+            setSectionFilter('')
+            setSessionFilter('')
+            setStudents('')
+            setStudentOldRollArray([])
+            setStudentRollArray([])
+            showToast("Roll No Update Successfully", 'success');
+            setModalOpen(false);
+        } catch (error) {
+            console.error('Error posting data:', error);
+        }
+    };
 
     const renderStudentList = () => {
 
@@ -113,13 +139,13 @@ const UpgradeRollNo = () => {
                                                 <input
                                                     type="number"
                                                     value={(() => {
-                                                        const studentObj = studentRollArray.find(obj => obj.id == student?._id);
-                                                        return studentObj ? studentObj.roll_no : '';
+                                                        const studentObj = studentRollArray.find(obj => obj._id == student?._id);
+                                                        return studentObj ? studentObj.roll_Number : '';
                                                     })()}
                                                     onChange={(e) => {
                                                         const updatedArray = studentRollArray.map(obj => {
-                                                            if (obj.id == student?._id) {
-                                                                return { ...obj, roll_no: Number(e.target.value) };
+                                                            if (obj._id == student?._id) {
+                                                                return { ...obj, roll_Number: Number(e.target.value) };
                                                             }
                                                             return obj;
                                                         });
@@ -146,32 +172,7 @@ const UpgradeRollNo = () => {
         );
     };
 
-    const handleUpgradeStudent = async (mode) => {
-        const body = {
-            updates: studentRollArray,
-            type: mode,
-        };
-        const body2 = {
-            classId: classFilter,
-            section:sectionFilter,
-            startingRollNumber:newRollNo,
-            type: mode,
-        };
-        try {
-            const response = await postService(apiName.upgradeStudentRollNo, mode == 'auto'?JSON.stringify(body2):JSON.stringify(body));
-            console.log('responseresponse', response)
-            setClassFilter('')
-            setSectionFilter('')
-            setSessionFilter('')
-            setStudents('')
-            setStudentOldRollArray([])
-            setStudentRollArray([])
-            showToast("Roll No Update Successfully", 'success');
-            setModalOpen(false);
-        } catch (error) {
-            console.error('Error posting data:', error);
-        }
-    };
+
 
     return (
         <div className="container mx-auto p-4">

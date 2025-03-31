@@ -258,7 +258,12 @@ const UpgradeClass = () => {
                             <div className="bg-white p-6 rounded-lg w-full sm:w-4/5 md:w-1/3 lg:w-1/3 xl:w-1/4">
                                 <div className="flex justify-between mb-4">
                                     <h2 className="text-xl font-semibold">Upgrade Class & Section</h2>
-                                    <button onClick={() => setModalOpen(false)} className="text-red-500">
+                                    <button onClick={() => {
+                                        setModalOpen(false)
+                                        setNewClass('')
+                                        setNewSection('')
+                                        setNewSession('')
+                                    }} className="text-red-500">
                                         <FaTimes />
                                     </button>
                                 </div>
@@ -266,7 +271,11 @@ const UpgradeClass = () => {
                                 <select
                                     className="p-2 border rounded w-full mb-4"
                                     value={newClass}
-                                    onChange={(e) => setNewClass(e.target.value)}
+                                    onChange={(e) => {
+                                        setNewClass(e.target.value)
+                                        fetchSectionsForClass(e.target.value)
+                                    }}
+                                  
                                 >
                                     <option value="">Select New Class</option>
                                     {classes.filter(i => i._id != classFilter).map((classItem) => (
