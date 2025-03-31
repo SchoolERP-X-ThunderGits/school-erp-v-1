@@ -30,6 +30,7 @@ const apiName = {
   getSubjectByClass: 'subject-class-mappings',
   getStudentByExam: 'student/byClassOrSection',
   getStudentFeeByClass: 'student/fees/byClassOrSection',
+  dueFees: 'student/due-fees/byClassOrSection',
   upgradeStudentRollNo: 'student/bulk-update-roll-numbers',
   upgradeStudentSessionSectionClass: 'student/update-class-section-session',
   admitCardByClass: 'admitcard/by-class-and-exam',

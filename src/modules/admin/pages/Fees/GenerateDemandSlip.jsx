@@ -101,7 +101,8 @@ const GenerateDemandSlip = () => {
     const getStudentFeeByClass = async () => {
         try {
             setLoading(true);
-            const result = await getService(`${apiName.getStudentFeeByClass}/${classFilter}/${sectionFilter}`);
+            const result = await getService(`${apiName.dueFees}/${classFilter}/${sectionFilter}/${endDate}`);
+            console.log('bckvbkcbc',result)
             setFeeDetails(result)
         } catch (error) {
             showToast('Error fetching filtered students', 'error');
@@ -158,7 +159,6 @@ const GenerateDemandSlip = () => {
             selectedStudents.includes(student.studentId)
         );
 
-        console.log('blvcl', selectedStudentData)
         const blob = await pdf(
             <Document>
                 {selectedStudentData.map((student) => (
