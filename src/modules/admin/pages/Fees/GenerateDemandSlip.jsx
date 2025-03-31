@@ -102,7 +102,7 @@ const GenerateDemandSlip = () => {
         try {
             setLoading(true);
             const result = await getService(`${apiName.dueFees}/${classFilter}/${sectionFilter}/${endDate}`);
-            console.log('bckvbkcbc',result)
+            console.log('bckvbkcbc', result)
             setFeeDetails(result)
         } catch (error) {
             showToast('Error fetching filtered students', 'error');
@@ -225,27 +225,48 @@ const GenerateDemandSlip = () => {
                                     )}
                                 </View>
                             </View>
-                            {/* Fee Due Section */}
-                            {/* <View style={styles.feeContainer}>
-                                <Text style={styles.feeHeader}>Due Months:</Text>
-                                <Text style={styles.months}>{student?.dueMonths?.length == 0 ? 'No Dues' : student?.dueMonths.join(", ")}</Text>
-                            </View> */}
+
                             {/* Fee Details Table */}
                             <View style={styles.feeTable}>
+                                {/* Table Header */}
                                 <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                                    <Text style={{ width: '50%', fontFamily: 'RobotoB', textAlign: 'center', borderTopWidth: 1, borderLeftWidth: 1, fontSize: 17, paddingVertical: 5 }}>Details</Text>
-                                    <Text style={{ width: '50%', fontFamily: 'RobotoB', textAlign: 'center', borderTopWidth: 1, borderLeftWidth: 1, fontSize: 17, paddingVertical: 5, borderRightWidth: 1 }}>Amount</Text>
+                                    <Text style={{ width: '50%', fontFamily: 'RobotoB', textAlign: 'center', borderTopWidth: 1, borderLeftWidth: 1, fontSize: 17, paddingVertical: 5, borderBottomWidth: 1, }}>
+                                        Details
+                                    </Text>
+                                    <Text style={{ width: '50%', fontFamily: 'RobotoB', textAlign: 'center', borderTopWidth: 1, borderLeftWidth: 1, fontSize: 17, paddingVertical: 5, borderBottomWidth: 1, borderRightWidth: 1 }}>
+                                        Amount
+                                    </Text>
                                 </View>
-                                <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                                    <Text style={{ width: '50%', fontFamily: 'RobotoR', textAlign: 'center', borderTopWidth: 1, borderLeftWidth: 1, fontSize: 17, paddingVertical: 5 }}>Transport Fee(Kasimabad)</Text>
-                                    <Text style={{ width: '50%', fontFamily: 'RobotoR', textAlign: 'center', borderTopWidth: 1, borderLeftWidth: 1, fontSize: 17, paddingVertical: 5, borderRightWidth: 1 }}>{student?.totalFeesOverdue}</Text>
+                                {console.log('feeDetails?.dueFees', student)}
+                                {/* Table Rows */}
+                                {
+                                    student?.dueFees?.length == 0 ?
+
+                                        <View style={{ width: '100%', fontFamily: 'RobotoR', textAlign: 'center', borderLeftWidth: 1, borderBottomWidth: 1, borderRightWidth: 1, fontSize: 15, paddingVertical: 5 }}>
+                                            <Text>No dues</Text>
+                                        </View>
+                                        :
+                                        student?.dueFees?.map((item, index) => (
+                                            <View key={index} style={{ flexDirection: 'row' }}>
+                                                <Text style={{ width: '50%', fontFamily: 'RobotoR', textAlign: 'center', borderLeftWidth: 1, borderBottomWidth: 1, fontSize: 15, paddingVertical: 5 }}>
+                                                    {item.feeType}
+                                                </Text>
+                                                <Text style={{ width: '50%', fontFamily: 'RobotoR', textAlign: 'center', borderLeftWidth: 1, borderRightWidth: 1, borderBottomWidth: 1, fontSize: 15, paddingVertical: 5 }}>
+                                                    Rs. {item.amountDue}
+                                                </Text>
+                                            </View>
+                                        ))
+                                }
+                                <View style={{ flexDirection: 'row' }}>
+                                    <Text style={{ width: '50%', fontFamily: 'RobotoR', textAlign: 'center', borderLeftWidth: 1, borderBottomWidth: 1, fontSize: 15, paddingVertical: 5 }}>
+                                        Total Fee Due
+                                    </Text>
+                                    <Text style={{ width: '50%', fontFamily: 'RobotoR', textAlign: 'center', borderLeftWidth: 1, borderRightWidth: 1, borderBottomWidth: 1, fontSize: 15, paddingVertical: 5 }}>
+                                        Rs. {student?.totalDue}
+                                    </Text>
                                 </View>
-                                <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                                    <Text style={{ width: '50%', fontFamily: 'RobotoB', textAlign: 'center', borderTopWidth: 1, borderLeftWidth: 1, fontSize: 17, paddingVertical: 5 }}>Total Fee Due</Text>
-                                    <Text style={{ width: '50%', fontFamily: 'RobotoB', textAlign: 'center', borderTopWidth: 1, borderLeftWidth: 1, fontSize: 17, paddingVertical: 5, borderRightWidth: 1 }}>{student?.totalFeesOverdue}</Text>
-                                </View>
-                                <Text style={{ fontFamily: 'RobotoR', borderTopWidth: 1, borderBottomWidth: 1, borderRightWidth: 1, borderLeftWidth: 1, fontSize: 15, paddingVertical: 5, paddingHorizontal: 10, textAlign: 'center' }}>Rs. {numberToWords(Number(student?.totalFeesOverdue))}</Text>
                             </View>
+
 
                             {/* Reminder */}
                             <View style={styles.reminder}>
