@@ -359,6 +359,18 @@ exports.bulkAddStudents = async (req, res, classId, section) => {
         res.status(500).json({ message: 'Server error', error });
     }
 };
+function ensureNumber(value) {
+    if (typeof value === "number") {
+        return value;
+    }
+
+    if (!isNaN(value) && value.trim() !== "") {
+        return Number(value);
+    }
+
+    return NaN; // Return NaN if conversion fails
+}
+
 
 exports.bulkUpdateRollNumbers = async (req, res) => {
     const { type, updates, classId, section, startingRollNumber } = req.body;
@@ -381,8 +393,22 @@ exports.bulkUpdateRollNumbers = async (req, res) => {
         } else if (type === 'auto') {
             // Automatic roll number assignment based on class and section
             const students = await Student.find({ class_Id: classId, section }).sort({ first_Name: 1 });
+
+            // Ensure startingRollNumber is a valid number
+            let rollNumberBase = isNaN(startingRollNumber) || startingRollNumber === ""
+                ? NaN
+                : Number(startingRollNumber);
+
+            if (isNaN(rollNumberBase)) {
+                throw new Error("Invalid starting roll number. It must be a numeric value.");
+            }
+
             await Promise.all(students.map(async (student, index) => {
-                const newRollNumber = startingRollNumber + index; // No prefix, purely numeric
+                console.log(typeof rollNumberBase, rollNumberBase);
+
+                const newRollNumber = rollNumberBase + index; // No prefix, purely numeric
+                console.log('New Roll Number:', newRollNumber);
+
                 const result = await Student.updateOne(
                     { _id: student._id },
                     { $set: { roll_Number: newRollNumber } }
@@ -392,7 +418,6 @@ exports.bulkUpdateRollNumbers = async (req, res) => {
                 }
             }));
         }
-
         res.status(200).json({ message: 'Roll numbers updated successfully', updatedStudents: responseDetails });
     } catch (error) {
         console.error('Error updating roll numbers:', error);
