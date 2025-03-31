@@ -162,6 +162,9 @@ const UpgradeClass = () => {
             setSessionFilter('')
             setStudents([])
             setSelectedStudentsId([])
+            setNewClass('')
+            setNewSection('')
+            setNewSession('')
             showToast("Details updated successfully", 'success');
             setModalOpen(false);
         } catch (error) {
@@ -209,7 +212,7 @@ const UpgradeClass = () => {
                         <select
                             value={sessionFilter}
                             onChange={(e) => setSessionFilter(e.target.value)}
-                            className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="p-2 border rounded w-full sm:w-auto"
                             disabled={!sectionFilter}
                         >
                             <option value="">Select Session</option>

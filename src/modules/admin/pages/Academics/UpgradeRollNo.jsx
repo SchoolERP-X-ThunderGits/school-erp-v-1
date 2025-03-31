@@ -164,6 +164,8 @@ const UpgradeRollNo = () => {
             setSectionFilter('')
             setSessionFilter('')
             setStudents('')
+            setStudentOldRollArray([])
+            setStudentRollArray([])
             showToast("Roll No Update Successfully", 'success');
             setModalOpen(false);
         } catch (error) {
