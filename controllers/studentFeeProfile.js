@@ -58,7 +58,7 @@ exports.getStudentsByClassOrSection = async (req, res) => {
     const { classId, section } = req.params;
     const tenantId = req.user.tenantId;
     const today = moment().startOf('day');
-console.log(classId, section);
+    console.log(classId, section);
     try {
         let query = { class_Id: classId, tenantId };
         if (section) {
@@ -67,30 +67,30 @@ console.log(classId, section);
 
         const students = await Student.find(query).populate('class_Id');
         console.log(students);
-        
+
         const studentDetails = await Promise.all(students.map(async (student) => {
             const feeProfile = await StudentFeeProfile.findOne({ studentId: student._id }).populate("feeStructures").populate('payments');
             if (!feeProfile) return null;
 
-            
+
 
             const paidMonths = new Set();
             feeProfile.payments.forEach(payment => {
                 payment.feePaid.forEach(fee => paidMonths.add(fee.feeType));
             });
 
-            
+
 
             let dueMonths = [];
             let totalFeesOverdue = 0;
 
             feeProfile.feeStructures.forEach(feeStructure => {
                 feeStructure.feeGroups.forEach(feeGroup => {
-                
+
                     if (!paidMonths.has(feeGroup.feeType) && moment(feeGroup.dueDate).isBefore(today)) {
                         dueMonths.push(feeGroup.feeType);
                         totalFeesOverdue += feeGroup.amount;
-                        
+
                     }
                 });
             });
@@ -131,7 +131,7 @@ exports.getStudentsFeesByClassOrSection = async (req, res) => {
 
         const students = await Student.find(query).populate('class_Id');
         console.log(students);
-        
+
         const studentDetails = await Promise.all(students.map(async (student) => {
             const feeProfile = await StudentFeeProfile.findOne({ studentId: student._id })
                 .populate({
@@ -149,6 +149,7 @@ exports.getStudentsFeesByClassOrSection = async (req, res) => {
             });
 
             let dueFees = [];
+            let totalDue = 0;
 
             feeProfile.feeStructures.forEach(feeStructure => {
                 feeStructure.feeGroups.forEach(feeGroup => {
@@ -158,6 +159,7 @@ exports.getStudentsFeesByClassOrSection = async (req, res) => {
                             amountDue: feeGroup.amount,
                             dueDate: feeGroup.dueDate
                         });
+                        totalDue += dueAmount;
                     }
                 });
             });
@@ -167,7 +169,8 @@ exports.getStudentsFeesByClassOrSection = async (req, res) => {
             return {
                 studentId: student._id,
                 studentDetails: student,
-                dueFees
+                dueFees,
+                totalDue // Add total due to the result
             };
         }));
 
