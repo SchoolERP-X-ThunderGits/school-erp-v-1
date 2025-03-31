@@ -159,7 +159,7 @@ exports.getStudentsFeesByClassOrSection = async (req, res) => {
                             amountDue: feeGroup.amount,
                             dueDate: feeGroup.dueDate
                         });
-                        totalDue += dueAmount;
+                        totalDue += feeGroup.amount;
                     }
                 });
             });
