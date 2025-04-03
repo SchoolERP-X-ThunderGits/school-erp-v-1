@@ -258,10 +258,10 @@ const GenerateDemandSlip = () => {
                                         ))
                                 }
                                 <View style={{ flexDirection: 'row' }}>
-                                    <Text style={{ width: '50%', fontFamily: 'RobotoR', textAlign: 'center', borderLeftWidth: 1, borderBottomWidth: 1, fontSize: 15, paddingVertical: 5 }}>
+                                    <Text style={{ width: '50%', fontFamily: 'RobotoB', textAlign: 'center', borderLeftWidth: 1, borderBottomWidth: 1, fontSize: 15, paddingVertical: 5 }}>
                                         Total Fee Due
                                     </Text>
-                                    <Text style={{ width: '50%', fontFamily: 'RobotoR', textAlign: 'center', borderLeftWidth: 1, borderRightWidth: 1, borderBottomWidth: 1, fontSize: 15, paddingVertical: 5 }}>
+                                    <Text style={{ width: '50%', fontFamily: 'RobotoB', textAlign: 'center', borderLeftWidth: 1, borderRightWidth: 1, borderBottomWidth: 1, fontSize: 15, paddingVertical: 5 }}>
                                         Rs. {student?.totalDue}
                                     </Text>
                                 </View>
@@ -331,8 +331,7 @@ const GenerateDemandSlip = () => {
                                     </th>
                                     <th className="py-3 px-6 text-left text-sm font-semibold">Admission Number</th>
                                     <th className="py-3 px-6 text-left text-sm font-semibold">Roll Number</th>
-                                    <th className="py-3 px-6 text-left text-sm font-semibold">First Name</th>
-                                    <th className="py-3 px-6 text-left text-sm font-semibold">Last Name</th>
+                                    <th className="py-3 px-6 text-left text-sm font-semibold">Name</th>
                                     <th className="py-3 px-6 text-left text-sm font-semibold">Class</th>
                                     <th className="py-3 px-6 text-left text-sm font-semibold">Section</th>
                                 </tr>
@@ -349,8 +348,14 @@ const GenerateDemandSlip = () => {
                                         </td>
                                         <td className="px-4 py-2 text-sm text-gray-800">{student?.admission_Number}</td>
                                         <td className="px-4 py-2 text-sm text-gray-800">{student?.roll_Number}</td>
-                                        <td className="px-4 py-2 text-sm text-gray-800">{student?.first_Name}</td>
-                                        <td className="px-4 py-2 text-sm text-gray-800">{student?.last_Name}</td>
+                                        <td className="px-4 py-2 text-sm text-gray-800">
+                                            <button
+                                                onClick={() => navigate(`/admin/student/student-details/${student?._id}`)} // Navigate to student details page
+                                                className="text-blue-500 hover:text-blue-700 transition duration-200"
+                                            >
+                                                {student?.first_Name} {student?.last_Name}
+                                            </button>
+                                        </td>
                                         <td className="px-4 py-2 text-sm text-gray-800">{student?.class_Id?.name}</td>
                                         <td className="px-4 py-2 text-sm text-gray-800">{student?.section}</td>
                                     </tr>

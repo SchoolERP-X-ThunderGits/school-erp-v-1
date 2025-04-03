@@ -69,6 +69,7 @@ const UpgradeClass = () => {
             setLoading(true);
             const result = await getService(`${apiName.getStudentByExam}/${classFilter}/${sectionFilter}/${sessionFilter}`);
             setStudents(result);
+            setSelectedStudentsId([])
             setLoading(false);
         } catch (error) {
             showToast('Error fetching filtered students', 'error');
@@ -275,10 +276,10 @@ const UpgradeClass = () => {
                                         setNewClass(e.target.value)
                                         fetchSectionsForClass(e.target.value)
                                     }}
-                                  
+
                                 >
                                     <option value="">Select New Class</option>
-                                    {classes.filter(i => i._id != classFilter).map((classItem) => (
+                                    {classes.map((classItem) => (
                                         <option key={classItem._id} value={classItem._id}>
                                             {classItem.name}
                                         </option>
@@ -292,7 +293,7 @@ const UpgradeClass = () => {
                                     disabled={!newClass}
                                 >
                                     <option value="">Select New Section</option>
-                                    {sections.map((section) => (
+                                    {sections.filter(i=>i != sectionFilter).map((section) => (
                                         <option key={section} value={section}>
                                             {section}
                                         </option>

@@ -50,6 +50,7 @@ const UpgradeRollNo = () => {
 
     const handleSectionFilterChange = (e) => {
         setSectionFilter(e.target.value);
+        setSessionFilter('')
     };
 
     const handleSearch = () => {
@@ -97,13 +98,7 @@ const UpgradeRollNo = () => {
         };
         try {
             const response = await postService(apiName.upgradeStudentRollNo, mode == 'auto' ? JSON.stringify(body2) : JSON.stringify(body));
-            console.log('responseresponse', response)
-            setClassFilter('')
-            setSectionFilter('')
-            setSessionFilter('')
-            setStudents('')
-            setStudentOldRollArray([])
-            setStudentRollArray([])
+          fetchFilteredStudents()
             showToast("Roll No Update Successfully", 'success');
             setModalOpen(false);
         } catch (error) {
@@ -235,6 +230,7 @@ const UpgradeRollNo = () => {
                             onClick={() => {
                                 setClassFilter('');
                                 setSectionFilter('');
+                                setSessionFilter('')
                                 setStudents([]);
                             }}
                             className="px-6 py-3 bg-gray-200 text-black rounded-lg hover:bg-gray-300 transition duration-300"
@@ -271,7 +267,7 @@ const UpgradeRollNo = () => {
                             <div className="bg-white p-6 rounded-lg w-full sm:w-4/5 md:w-1/3 lg:w-1/3 xl:w-1/4">
                                 <div className="flex justify-between mb-4">
                                     <h2 className="text-xl font-semibold">Starting Roll Number</h2>
-                                    <button onClick={() => setModalOpen(false)} className="text-red-500">
+                                    <button onClick={() => {setModalOpen(false),setNewRollNo('')}} className="text-red-500">
                                         <FaTimes />
                                     </button>
                                 </div>
@@ -289,6 +285,8 @@ const UpgradeRollNo = () => {
                                     onClick={() => {
                                         handleUpgradeStudent('auto')
                                     }}
+                                    disabled={!newRollNo}
+                                    style={{backgroundColor:!newRollNo?'gray':'green'}}
                                     className="px-6 py-3 bg-green-500 text-white rounded-lg w-full hover:bg-green-600 flex items-center justify-center"
                                 >
                                     <FaDownload className="mr-2" /> Update

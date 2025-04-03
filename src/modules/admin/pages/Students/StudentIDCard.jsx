@@ -10,6 +10,7 @@ import { getService, postService } from '../../../../constants/Service';
 import { useUserContext } from '../../../../context/UserContext';
 import { BASE_URL } from '../../../../constants/Config';
 import images from '../../../../constants/Images';
+import { useNavigate } from 'react-router-dom';
 // Template Modal Component
 const TemplateModal = ({ open, onClose, onSelectTemplate, selectedTemplate }) => {
     return (
@@ -46,12 +47,13 @@ const TemplateModal = ({ open, onClose, onSelectTemplate, selectedTemplate }) =>
                         className="flex flex-col items-center cursor-pointer hover:scale-105 transition transform"
                     >
                         <img
-                            src="https://i.pinimg.com/736x/6a/ed/d0/6aedd06a7fb902f163d3c0ae1ccb6a29.jpg"
+                            src={images.sspsPortrait}
+                            style={{ objectFit: 'contain' }}
                             alt="Portrait Template"
-                            className="w-40 h-60 object-cover rounded-lg shadow-md transition-transform duration-300"
+                            className="rounded-lg shadow-md transition-transform duration-300"
                         />
                         {selectedTemplate == 'portrait' && <div style={{ backgroundColor: 'green', width: 30, height: 30, borderRadius: 100 }}></div>}
-                        <p className="mt-2 text-sm font-semibold text-gray-700">SSPL Portrait  Template</p>
+                        <p className="mt-2 text-sm font-semibold text-gray-700" style={{ textAlign: 'center' }}>SSPS Portrait  Template</p>
                     </div>
 
                     <div
@@ -59,24 +61,26 @@ const TemplateModal = ({ open, onClose, onSelectTemplate, selectedTemplate }) =>
                         className="flex flex-col items-center cursor-pointer hover:scale-105 transition transform"
                     >
                         <img
-                            src="https://www.shutterstock.com/image-vector/yellow-identity-id-card-design-260nw-2523030265.jpg"
+                            src={images.sspsLandScape}
+                            style={{ objectFit: 'contain' }}
                             alt="Landscape Template"
-                            className="w-60 h-40 object-cover rounded-lg shadow-md transition-transform duration-300"
+                            className="object-cover rounded-lg shadow-md transition-transform duration-300"
                         />
                         {selectedTemplate == 'landscape' && <div style={{ backgroundColor: 'green', width: 30, height: 30, borderRadius: 100 }}></div>}
-                        <p className="mt-2 text-sm font-semibold text-gray-700">SSPL Landscape Template</p>
+                        <p className="mt-2 text-sm font-semibold text-gray-700" style={{ textAlign: 'center' }}>SSPS Landscape Template</p>
                     </div>
                     <div
                         onClick={() => onSelectTemplate('visionSchool')}
                         className="flex flex-col items-center cursor-pointer hover:scale-105 transition transform"
                     >
                         <img
+                            style={{ objectFit: 'cover' }}
                             src={images.VisionSchool}
                             alt="vision school Template"
-                            className="w-60 h-40 object-cover rounded-lg shadow-md transition-transform duration-300"
+                            className="w-100 h-50 object-cover rounded-lg shadow-md transition-transform duration-300"
                         />
                         {selectedTemplate == 'visionSchool' && <div style={{ backgroundColor: 'green', width: 30, height: 30, borderRadius: 100 }}></div>}
-                        <p className="mt-2 text-sm font-semibold text-gray-700">VS Template</p>
+                        <p style={{ textAlign: 'center' }} className="mt-2 text-sm font-semibold text-gray-700">VS Template</p>
                     </div>
                 </div>
             </div>
@@ -96,7 +100,7 @@ const StudentIDCard = () => {
     const [searchText, setSearchText] = useState('');
     const [templateModalOpen, setTemplateModalOpen] = useState(false); // Modal visibility
     const [selectedTemplate, setSelectedTemplate] = useState(); // Default to portrait template
-
+    const navigate = useNavigate()
     useEffect(() => {
         setLoading(true);
         fetchClasses();
@@ -148,6 +152,7 @@ const StudentIDCard = () => {
             setLoading(true);
             const result = await getService(`${apiName.getStudentByExam}/${classFilter}/${sectionFilter}`);
             setStudents(result);
+            setSelectedStudents([])
             setLoading(false);
         } catch (error) {
             showToast('Error fetching filtered students', 'error');
@@ -194,8 +199,8 @@ const StudentIDCard = () => {
                                     </th>
                                     <th className="py-3 px-6 text-left text-sm font-semibold">Admission Number</th>
                                     <th className="py-3 px-6 text-left text-sm font-semibold">Roll Number</th>
-                                    <th className="py-3 px-6 text-left text-sm font-semibold">First Name</th>
-                                    <th className="py-3 px-6 text-left text-sm font-semibold">Last Name</th>
+                                    <th className="py-3 px-6 text-left text-sm font-semibold">Name</th>
+
                                     <th className="py-3 px-6 text-left text-sm font-semibold">Class</th>
                                     <th className="py-3 px-6 text-left text-sm font-semibold">Section</th>
                                 </tr>
@@ -213,8 +218,14 @@ const StudentIDCard = () => {
                                         </td>
                                         <td className="px-4 py-2 text-sm text-gray-800">{student?.admission_Number}</td>
                                         <td className="px-4 py-2 text-sm text-gray-800">{student?.roll_Number}</td>
-                                        <td className="px-4 py-2 text-sm text-gray-800">{student?.first_Name}</td>
-                                        <td className="px-4 py-2 text-sm text-gray-800">{student?.last_Name}</td>
+                                        <td className="px-4 py-2 text-sm text-gray-800">
+                                            <button
+                                                onClick={() => navigate(`/admin/student/student-details/${student?._id}`)} // Navigate to student details page
+                                                className="text-blue-500 hover:text-blue-700 transition duration-200"
+                                            >
+                                                {student?.first_Name} {student?.last_Name}
+                                            </button>
+                                        </td>
                                         <td className="px-4 py-2 text-sm text-gray-800">{student?.class_Id?.name}</td>
                                         <td className="px-4 py-2 text-sm text-gray-800">{student?.section}</td>
                                     </tr>
@@ -509,6 +520,7 @@ const StudentIDCard = () => {
                                 setSectionFilter('');
                                 setSearchText('');
                                 setStudents([])
+                                setSelectedStudents([])
                             }}
                             className="px-6 py-3 bg-gray-200 text-black rounded-lg hover:bg-gray-300 transition duration-300"
                         >

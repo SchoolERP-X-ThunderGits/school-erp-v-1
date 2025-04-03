@@ -84,8 +84,15 @@ const FeeStructure = () => {
             try {
                 const response = await putService(`${apiName.updateFeeStructure}/${feeToDelete}`, formData);
                 showToast("Fee structure updated successfully.", 'success');
+                setShowModal(false);
+                setFormData({
+                    name: '',
+                    class: '',
+                    feeGroups: [{ feeType: '', amount: '', dueDate: '' }]
+                });
                 fetchFeeStructures();
             } catch (error) {
+                showToast(error?.response?.data?.error,'error')
                 console.error('Error posting data:', error);
             }
         } else {
@@ -93,12 +100,19 @@ const FeeStructure = () => {
                 const response = await postService(apiName.addFeeStructure, formData);
                 showToast("Fee structure added successfully.", 'success');
                 fetchFeeStructures();
+                setShowModal(false);
+                setFormData({
+                    name: '',
+                    class: '',
+                    feeGroups: [{ feeType: '', amount: '', dueDate: '' }]
+                });
             } catch (error) {
+                showToast(error?.response?.data?.error,'error')
                 console.error('Error posting data:', error);
             }
         }
 
-        setShowModal(false);
+        
     };
 
     const handleEditFeeStructure = (feeData) => {

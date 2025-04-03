@@ -73,6 +73,7 @@ const Class = () => {
                 showToast("Class updated successfully.", 'success');
                 getClassList();
             } catch (error) {
+                showToast(error?.response?.data?.error,'error')
                 console.error('Error posting data:', error);
             }
         } else {
@@ -81,6 +82,7 @@ const Class = () => {
                 showToast("Class added successfully.", 'success');
                 getClassList();
             } catch (error) {
+                showToast(error?.response?.data?.error,'error')
                 console.error('Error posting data:', error);
             }
         }

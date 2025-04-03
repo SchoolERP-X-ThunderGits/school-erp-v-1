@@ -10,6 +10,7 @@ import moment from 'moment';
 import { useUserContext } from '../../../../context/UserContext';
 import { BASE_URL } from '../../../../constants/Config';
 import { sessionsArray } from '../../../../constants/GlobalConstants';
+import { useNavigate } from 'react-router-dom';
 
 const GenerateAdmitCard = () => {
     const [classes, setClasses] = useState([]);
@@ -24,7 +25,7 @@ const GenerateAdmitCard = () => {
     const [selectedStudents, setSelectedStudents] = useState([]);  // Track selected students
     const [loading, setLoading] = useState(false);
     const [sections, setSections] = useState([]);
-
+    const navigate = useNavigate()
     useEffect(() => {
         fetchInitialData();
     }, []);
@@ -322,7 +323,14 @@ const GenerateAdmitCard = () => {
                                                 onChange={() => handleSelectStudent(student._id)}
                                             />
                                         </td>
-                                        <td className="py-3 px-6 text-sm text-gray-800">{student.first_Name} {student?.last_Name}</td>
+                                        <td className="px-4 py-2 text-sm text-gray-800">
+                                            <button
+                                                onClick={() => navigate(`/admin/student/student-details/${student?._id}`)} // Navigate to student details page
+                                                className="text-blue-500 hover:text-blue-700 transition duration-200"
+                                            >
+                                                {student?.first_Name} {student?.last_Name}
+                                            </button>
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>

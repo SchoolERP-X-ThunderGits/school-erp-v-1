@@ -61,6 +61,7 @@ const Subject = () => {
                 showToast("Subject updated successfully.", 'success');
                 getSubjectList();
             } catch (error) {
+                showToast(error?.response?.data?.error,'error')
                 console.error('Error posting data:', error);
             }
         } else {
@@ -69,6 +70,7 @@ const Subject = () => {
                 showToast("Subject added successfully.", 'success');
                 getSubjectList();
             } catch (error) {
+                showToast(error?.response?.data?.error,'error')
                 console.error('Error posting data:', error);
             }
         }

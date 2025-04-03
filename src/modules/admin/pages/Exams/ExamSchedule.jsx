@@ -75,27 +75,34 @@ const ExamSchedule = () => {
         getSubjectsByClass(event.target.value);
     };
 
-    const handleScheduleExam = () => {
+    const handleScheduleExam = async () => {
         if (!selectedExam || !selectedClass) {
             showToast('Please fill in all fields for each subject', 'error');
             return;
         }
-
-        examSchedules.forEach(async (schedule) => {
-            const result = await postService(apiName.addSchedule, schedule);
-            console.log('resuit ----', result);
+    
+        try {
+            for (const schedule of examSchedules) {
+                const result = await postService(apiName.addSchedule, schedule);
+                console.log('result ----', result);
+            }
+            
             setSelectedClass('');
             setSelectedExam('');
             setSubjectsList([]);
             setExamSchedules([]);
-            fetchExamSchedules('', '')
+            fetchExamSchedules('', '');
             setShowModal(false);
-        });
-
-        setTimeout(() => {
-            showToast('Exam scheduled successfully!', 'success');
-        }, 1000);
+    
+            setTimeout(() => {
+                showToast('Exam scheduled successfully!', 'success');
+            }, 1000);
+        } catch (error) {
+            console.error('Error scheduling exam:', error);
+            showToast(error?.response?.data?.error,'error')
+        }
     };
+    
 
     return (
         <div className="container mx-auto p-4">
@@ -110,8 +117,8 @@ const ExamSchedule = () => {
             </div>
 
             {showModal && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-              <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg sm:max-w-md md:max-w-lg max-h-[80vh] overflow-y-auto">          
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg sm:max-w-md md:max-w-lg max-h-[80vh] overflow-y-auto">
                         <div className="mb-4">
                             <label className="block text-sm font-medium text-gray-600">Select Exam</label>
                             <select
@@ -217,7 +224,13 @@ const ExamSchedule = () => {
 
                         <div className="flex justify-end space-x-4">
                             <button
-                                onClick={() => { setShowModal(false) }}
+                                onClick={() => {
+                                    setShowModal(false), setSelectedClass('');
+                                    setSelectedExam('');
+                                    setSubjectsList([]);
+                                    setExamSchedules([]);
+                                    fetchExamSchedules('', '')
+                                }}
                                 className="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition duration-200"
                             >
                                 Cancel
