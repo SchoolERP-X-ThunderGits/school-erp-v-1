@@ -3,22 +3,29 @@ const router = express.Router();
 const Subject = require('../models/subject');
 const authMiddleware = require("../middleware/auth.js");
 
-// Create a new subject
-router.post('/',authMiddleware(), async (req, res) => {
+router.post('/', authMiddleware(), async (req, res) => {
     const { name } = req.body;
     const tenantId = req.user.tenantId; // Assuming tenantId is set on req.user by some middleware
 
     try {
+        // Check if the subject already exists in the tenant
+        const existingSubject = await Subject.findOne({ name, tenantId });
+        if (existingSubject) {
+            return res.status(409).json({ error: 'A subject with this name already exists for your tenant.' });
+        }
+
         const subject = new Subject({ name, tenantId });
         await subject.save();
         res.status(201).json(subject);
     } catch (err) {
+        // Catch any other errors, possibly from the database
         res.status(400).json({ error: err.message });
     }
 });
 
+
 // Get all subjects for a tenant
-router.get('/',authMiddleware(), async (req, res) => {
+router.get('/', authMiddleware(), async (req, res) => {
     const tenantId = req.user.tenantId;
 
     try {
@@ -30,7 +37,7 @@ router.get('/',authMiddleware(), async (req, res) => {
 });
 
 // Get a subject by ID, scoped to tenant
-router.get('/:id',authMiddleware(), async (req, res) => {
+router.get('/:id', authMiddleware(), async (req, res) => {
     const tenantId = req.user.tenantId;
 
     try {
@@ -45,7 +52,7 @@ router.get('/:id',authMiddleware(), async (req, res) => {
 });
 
 // Update a subject, scoped to tenant
-router.put('/:id',authMiddleware(), async (req, res) => {
+router.put('/:id', authMiddleware(), async (req, res) => {
     const { name } = req.body;
     const tenantId = req.user.tenantId;
 
@@ -65,7 +72,7 @@ router.put('/:id',authMiddleware(), async (req, res) => {
 });
 
 // Delete a subject, scoped to tenant
-router.delete('/:id',authMiddleware(), async (req, res) => {
+router.delete('/:id', authMiddleware(), async (req, res) => {
     const tenantId = req.user.tenantId;
 
     try {
