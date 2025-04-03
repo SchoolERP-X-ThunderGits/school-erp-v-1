@@ -379,17 +379,29 @@ exports.bulkUpdateRollNumbers = async (req, res) => {
         let responseDetails = [];
 
         if (type === 'manual') {
-            // Manual updates with explicit roll numbers for each student
-            await Promise.all(updates.map(async update => {
+            for (const update of updates) {
+                // Check if the roll number already exists in the class and section
+                const existingStudent = await Student.findOne({
+                    class_Id: classId,
+                    section: section,
+                    roll_Number: update.roll_Number
+                });
+
+                if (existingStudent) {
+                    responseDetails.push({ error: `Roll number ${update.roll_Number} is already assigned in the class and section.` });
+                    continue;
+                }
+
                 const result = await Student.updateOne(
                     { _id: update._id },
-                    { $set: { roll_Number: update.roll_Number } } // Ensure roll_Number is an integer
+                    { $set: { roll_Number: update.roll_Number } }
                 );
+
                 if (result.nModified > 0) {
                     const student = await Student.findById(update._id);
                     responseDetails.push({ name: student.first_Name + ' ' + student.last_Name, roll_Number: student.roll_Number });
                 }
-            }));
+            }
         } else if (type === 'auto') {
             // Automatic roll number assignment based on class and section
             const students = await Student.find({ class_Id: classId, section }).sort({ first_Name: 1 });

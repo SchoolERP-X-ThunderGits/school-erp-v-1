@@ -109,5 +109,9 @@ const studentSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
+
+studentSchema.index({ class_Id: 1, section: 1, roll_Number: 1 }, { unique: true });
+
+
 // Create and export the Student model
 module.exports = mongoose.model('Student', studentSchema);
