@@ -11,7 +11,7 @@ router.post('/', authMiddleware(), async (req, res) => {
         // Check if the subject already exists in the tenant
         const existingSubject = await Subject.findOne({ name, tenantId });
         if (existingSubject) {
-            return res.status(409).json({ error: 'A subject with this name already exists for your tenant.' });
+            return res.status(409).json({ error: 'A subject with this name already exists for your School.' });
         }
 
         const subject = new Subject({ name, tenantId });
