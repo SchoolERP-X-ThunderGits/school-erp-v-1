@@ -6,11 +6,16 @@ const authMiddleware = require("../middleware/auth.js");
 const Subject = require('../models/subject');
 
 // Create a new subject-class mapping
-router.post('/',authMiddleware(), async (req, res) => {
+router.post('/', authMiddleware(), async (req, res) => {
     const { classId, subjects } = req.body;
     const tenantId = req.user.tenantId; // Assuming tenantId is set on req.user by some middleware
 
     try {
+        const existingMapping = await SubjectClassMapping.findOne({ class: classId, tenantId });
+        if (existingMapping) {
+            return res.status(409).json({ message: 'Mapping for this class already exists. Please update the current one.' });
+        }
+
         const classDoc = await Class.findOne({ _id: classId, tenantId });
         if (!classDoc) {
             return res.status(404).json({ error: 'Class not found' });
@@ -29,6 +34,7 @@ router.post('/',authMiddleware(), async (req, res) => {
         res.status(400).json({ error: err.message });
     }
 });
+
 
 // Get all subject-class mappings for a tenant
 router.get('/',authMiddleware(), async (req, res) => {
