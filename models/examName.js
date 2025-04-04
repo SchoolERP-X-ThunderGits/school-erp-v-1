@@ -23,7 +23,8 @@ const examNameSchema = new mongoose.Schema({
 });
 
 // Ensure exam names are unique within the same tenant
-
+// Unique index for name and tenantId
+examNameSchema.index({ name: 1, tenantId: 1 }, { unique: true });
 
 // Create and export the ExamName model
 module.exports = mongoose.model('ExamName', examNameSchema);

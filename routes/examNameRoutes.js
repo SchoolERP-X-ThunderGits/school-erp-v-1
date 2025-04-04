@@ -3,8 +3,7 @@ const router = express.Router();
 const ExamName = require('../models/examName');
 const authMiddleware = require("../middleware/auth.js");
 
-// Create a new exam name
-router.post('/',authMiddleware(), async (req, res) => {
+router.post('/', authMiddleware(), async (req, res) => {
     const { name, session } = req.body;
     const tenantId = req.user.tenantId; // Assuming tenantId is set on req.user by some middleware
     try {
@@ -12,12 +11,16 @@ router.post('/',authMiddleware(), async (req, res) => {
         await examName.save();
         res.status(201).json(examName);
     } catch (err) {
-        res.status(400).json({ error: err.message });
+        if (err.code === 11000) {
+            res.status(400).json({ error: 'An exam with this name already exists in your tenant.' });
+        } else {
+            res.status(400).json({ error: err.message });
+        }
     }
 });
 
 // Get all exam names for the tenant
-router.get('/',authMiddleware(), async (req, res) => {
+router.get('/', authMiddleware(), async (req, res) => {
     const tenantId = req.user.tenantId; // Assuming tenantId is set on req.user by some middleware
     try {
         const examNames = await ExamName.find({ tenantId });
@@ -28,7 +31,7 @@ router.get('/',authMiddleware(), async (req, res) => {
 });
 
 // Get a single exam name by ID scoped to tenant
-router.get('/:id',authMiddleware(), async (req, res) => {
+router.get('/:id', authMiddleware(), async (req, res) => {
     const tenantId = req.user.tenantId;
     try {
         const examName = await ExamName.findOne({ _id: req.params.id, tenantId });
@@ -44,7 +47,7 @@ router.get('/:id',authMiddleware(), async (req, res) => {
 });
 
 // Update an exam name by ID scoped to tenant
-router.put('/:id',authMiddleware(), async (req, res) => {
+router.put('/:id', authMiddleware(), async (req, res) => {
     const { name, session } = req.body;
     const tenantId = req.user.tenantId;
     try {
@@ -65,7 +68,7 @@ router.put('/:id',authMiddleware(), async (req, res) => {
 });
 
 // Delete an exam name by ID scoped to tenant
-router.delete('/:id',authMiddleware(), async (req, res) => {
+router.delete('/:id', authMiddleware(), async (req, res) => {
     const tenantId = req.user.tenantId;
     try {
         const examName = await ExamName.findOneAndDelete({ _id: req.params.id, tenantId });
