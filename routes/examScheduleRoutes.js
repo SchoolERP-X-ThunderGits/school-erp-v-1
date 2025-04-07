@@ -17,7 +17,7 @@ router.post('/', authMiddleware(), async (req, res) => {
         const classDoc = await Class.findOne({ _id: classId, tenantId });
 
         if (!examName || !subject || !classDoc) {
-            return res.status(400).json({ error: 'Invalid exam name, subject, or class' });
+            return res.status(400).json({ error: 'This exam is already scheduled for that subject and class' });
         }
 
         // Check for duplicate exam schedule
