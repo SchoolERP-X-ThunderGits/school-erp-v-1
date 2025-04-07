@@ -6,10 +6,9 @@ const ExamName = require('../models/examName');
 const Class = require('../models/class');
 const authMiddleware = require("../middleware/auth.js");
 
-// Create a new exam schedule
-router.post('/',authMiddleware(), async (req, res) => {
-    const { examNameId, subjectId, classId, date, startTime, endTime } = req.body;
-    const tenantId = req.user.tenantId; // Assuming tenantId is set on req.user by some middleware
+router.post('/', authMiddleware(), async (req, res) => {
+    const { examNameId, subjectId, classId, date, startTime, endTime, session } = req.body;
+    const tenantId = req.user.tenantId;
 
     try {
         // Validate references
@@ -21,12 +20,25 @@ router.post('/',authMiddleware(), async (req, res) => {
             return res.status(400).json({ error: 'Invalid exam name, subject, or class' });
         }
 
-        // Create the new exam schedule
+        // Check for duplicate exam schedule
+        const existingSchedule = await ExamSchedule.findOne({
+            tenantId,
+            class: classId,
+            examName: examNameId,
+            session
+        });
+
+        if (existingSchedule) {
+            return res.status(400).json({ error: 'Exam schedule already exists for this class, exam name, and session.' });
+        }
+
+        // Create new schedule
         const examSchedule = new ExamSchedule({
             tenantId,
             examName: examName._id,
             subject: subject._id,
             class: classDoc._id,
+            session,
             date,
             startTime,
             endTime
@@ -39,8 +51,9 @@ router.post('/',authMiddleware(), async (req, res) => {
     }
 });
 
+
 // Get all exam schedules for the tenant
-router.get('/',authMiddleware(), async (req, res) => {
+router.get('/', authMiddleware(), async (req, res) => {
     const tenantId = req.user.tenantId;
     try {
         const schedules = await ExamSchedule.find({ tenantId })
@@ -53,7 +66,7 @@ router.get('/',authMiddleware(), async (req, res) => {
 });
 
 // Get a single exam schedule by ID, scoped to tenant
-router.get('/:id',authMiddleware(), async (req, res) => {
+router.get('/:id', authMiddleware(), async (req, res) => {
     const tenantId = req.user.tenantId;
     try {
         const examSchedule = await ExamSchedule.findOne({ _id: req.params.id, tenantId })
@@ -70,7 +83,7 @@ router.get('/:id',authMiddleware(), async (req, res) => {
 });
 
 // Update an exam schedule by ID, scoped to tenant
-router.put('/:id',authMiddleware(), async (req, res) => {
+router.put('/:id', authMiddleware(), async (req, res) => {
     const { examNameId, subjectId, classId, date, startTime, endTime } = req.body;
     const tenantId = req.user.tenantId;
 
@@ -102,7 +115,7 @@ router.put('/:id',authMiddleware(), async (req, res) => {
 });
 
 // Delete an exam schedule by ID, scoped to tenant
-router.delete('/:id',authMiddleware(), async (req, res) => {
+router.delete('/:id', authMiddleware(), async (req, res) => {
     const tenantId = req.user.tenantId;
     try {
         const examSchedule = await ExamSchedule.findOneAndDelete({ _id: req.params.id, tenantId });
