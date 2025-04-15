@@ -1,16 +1,12 @@
-import { useRef, useState } from "react";
-
-import { useNavigate } from "react-router";
+import { useState } from "react";
 import { useSidebar } from "../context/SidebarContext";
+import { ThemeToggleButton } from "../components/common/ThemeToggleButton";
+import NotificationDropdown from "../components/Header/NotificationDropdown";
+import UserDropdown from "../components/Header/UserDropdown";
 import { Link } from "react-router-dom";
-import logo1 from '../assets/Images/logo/ThunderGits_Logos/1.png'
-import logo2 from '../assets/Images/logo/ThunderGits_Logos/2.png'
 import { useUserContext } from '../context/UserContext';
-// import NotificationDropdown from "../components/header/NotificationDropdown";
-
 const AppHeader: React.FC = () => {
   const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
-  const navigate = useNavigate();
   const { school } = useUserContext();
   const { isMobileOpen, toggleSidebar, toggleMobileSidebar } = useSidebar();
 
@@ -26,7 +22,6 @@ const AppHeader: React.FC = () => {
     setApplicationMenuOpen(!isApplicationMenuOpen);
   };
 
-  const inputRef = useRef<HTMLInputElement>(null);
 
   return (
     <header className="sticky top-0 flex w-full bg-white border-gray-200 z-80 dark:border-gray-800 dark:bg-gray-900 lg:border-b">
@@ -97,7 +92,7 @@ const AppHeader: React.FC = () => {
           </Link>
 
           <button
-            // onClick={toggleApplicationMenu}
+            onClick={toggleApplicationMenu}
             className="flex items-center justify-center w-10 h-10 text-gray-700 rounded-lg z-99999 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 lg:hidden"
           >
             <svg
@@ -121,8 +116,14 @@ const AppHeader: React.FC = () => {
             } items-center justify-between w-full gap-4 px-5 py-4 lg:flex shadow-theme-md lg:justify-end lg:px-0 lg:shadow-none`}
         >
           <div className="flex items-center gap-2 2xsm:gap-3">
-            {/* <NotificationDropdown /> */}
+            {/* <!-- Dark Mode Toggler --> */}
+            {/* <ThemeToggleButton /> */}
+            {/* <!-- Dark Mode Toggler --> */}
+            <NotificationDropdown />
+            {/* <!-- Notification Menu Area --> */}
           </div>
+          {/* <!-- User Area --> */}
+          <UserDropdown />
         </div>
       </div>
     </header>

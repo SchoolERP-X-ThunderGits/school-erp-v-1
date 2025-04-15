@@ -59,7 +59,7 @@ const FeeType = () => {
 
     const handleAddClass = async (e) => {
         e.preventDefault()
-        if (!feeName || !description) {
+        if (!feeName ) {
             setErrorMessage('All fields are required');
             return;
         }
@@ -79,10 +79,11 @@ const FeeType = () => {
         } else {
             try {
                 const response = await postService(apiName.addFee, body);
-                console.log('respofdfnse', response)
                 showToast("Fee added successfully.", 'success');
                 getFeeTypeList();
             } catch (error) {
+                // showToast(error.response.data?.error, 'error');
+                setErrorMessage(error.response.data?.error)
                 console.error('Error posting data:', error);
             }
         }
@@ -131,7 +132,7 @@ const FeeType = () => {
                                     {feeTypeList?.map((feeItem) => (
                                         <TableRow className='border-gray-200 dark:border-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800' key={feeItem._id}>
                                             <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{feeItem?.name}</TableCell>
-                                            <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{feeItem.description}</TableCell>
+                                            <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{feeItem.description?feeItem.description:'N/A'}</TableCell>
                                             <TableCell className="px-5 py-4">
                                                 <div className='flex gap-3 justify-start items-center'>
                                                     <Link onClick={() => handleEdit(feeItem)}>

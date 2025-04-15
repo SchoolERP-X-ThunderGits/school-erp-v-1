@@ -9,7 +9,6 @@ import FeeType from './modules/admin/pages/Fees/FeeType';
 import FeeStructure from './modules/admin/pages/Fees/FeeStructure';
 import Loader from './components/Loader/index';
 import AppLayout from './Layout/AppLayout';
-import DefaultLayout from './Layout/DefaultLayout';
 import Class from './modules/admin/pages/Academics/Class';
 import UpgradeClass from './modules/admin/pages/Academics/UpgradeClass';
 import Subject from './modules/admin/pages/Academics/Subject';
@@ -29,6 +28,7 @@ import { UserProvider } from './context/UserContext';
 import ProfileSettings from './modules/admin/pages/Settings/ProfileSettings';
 import PrivacyPolicy from './modules/admin/pages/Help/PrivacyPolicy';
 import UpgradeRollNo from './modules/admin/pages/Academics/UpgradeRollNo';
+import Support from './Help/Support';
 import "flatpickr/dist/themes/material_green.css";
 function App() {
   const [loading, setLoading] = useState(true);
@@ -85,6 +85,7 @@ function App() {
         <Route path="/admin/assign-subject" element={<AssignSubject />} />
         <Route path="/admin/profile-settings" element={<ProfileSettings />} />
         <Route path="/admin/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/admin/Support" element={<Support />} />
      </Route>
         {/* Parent Section (not wrapped in DefaultLayout) */}
         <Route path="/parent" element={<ParentSignIn />} />
