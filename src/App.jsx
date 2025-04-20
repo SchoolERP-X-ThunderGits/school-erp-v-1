@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import AdminSignIn from './modules/admin/pages/Authentication/SignIn';
 import ParentSignIn from './modules/parents/pages/Authentication/SignIn';
 import AdminHome from './modules/admin/pages/Dashboard/Home';
@@ -9,6 +9,7 @@ import FeeType from './modules/admin/pages/Fees/FeeType';
 import FeeStructure from './modules/admin/pages/Fees/FeeStructure';
 import Loader from './components/Loader/index';
 import AppLayout from './Layout/AppLayout';
+import ProtectedRoute from './Layout/ProtectedRoute';
 import Class from './modules/admin/pages/Academics/Class';
 import UpgradeClass from './modules/admin/pages/Academics/UpgradeClass';
 import Subject from './modules/admin/pages/Academics/Subject';
@@ -30,6 +31,8 @@ import PrivacyPolicy from './modules/admin/pages/Help/PrivacyPolicy';
 import UpgradeRollNo from './modules/admin/pages/Academics/UpgradeRollNo';
 import Support from './Help/Support';
 import "flatpickr/dist/themes/material_green.css";
+import SubscriptionPlans from './modules/admin/pages/Subscription/SubscriptionPlans';
+
 function App() {
   const [loading, setLoading] = useState(true);
   const { pathname } = useLocation();
@@ -40,53 +43,216 @@ function App() {
   }, [pathname]);
 
   useEffect(() => {
-    setTimeout(() => setLoading(false), 1000);
+    setTimeout(() => setLoading(false), 1000); // Simulate loading time
   }, []);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      // Only redirect if you're not already on the home page or any other admin pages
       if (pathname === '/' || pathname === '/admin') {
         navigate('/admin/home');
       }
     }
   }, [pathname, navigate]);
 
-  return loading ? (
-    <Loader />
-  ) : (
+  if (loading) return <Loader />; // Show loader while loading
+
+  return (
     <UserProvider>
       <Routes>
         {/* Onboarding Page (not wrapped in DefaultLayout) */}
         <Route path="/" element={<Onboarding />} />
 
-        {/* Admin Section (wrapped in DefaultLayout) */}
+        {/* Admin Section (not wrapped in DefaultLayout) */}
         <Route path="/admin" element={<AdminSignIn />} />
+
+        {/* AppLayout wrapper for admin routes */}
         <Route element={<AppLayout />}>
-        <Route path="/admin/home" element={<AdminHome />} />
-        <Route path="/admin/student" element={<Students />} />
-        <Route path="/admin/add-student" element={<AddStudent />} />
-        <Route path="/admin/student/student-details/:studentId" element={<StudentDetails />} />
-        <Route path="/admin/edit-student/:id" element={<EditStudent />} />
-        <Route path="/admin/student-id-card" element={<StudentIDCard />} />
-        <Route path="/admin/find-student" element={<FindStudent />} />
-        <Route path="/admin/fee-structure" element={<FeeStructure />} />
-        <Route path="/admin/fee-type" element={<FeeType />} />
-        <Route path="/admin/fee-receipt/:paymentId" element={<FeeReceipt />} />
-        <Route path="/admin/class" element={<Class />} />
-        <Route path="/admin/upgrade-class" element={<UpgradeClass />} />
-        <Route path="/admin/Upgrade-RollNo" element={<UpgradeRollNo />} />
-        <Route path="/admin/exams" element={<Exams />} />
-        <Route path="/admin/exam-schedule" element={<ExamSchedule />} />
-        <Route path="/admin/generate-admit-card" element={<GenerateAdmitCard />} />
-        <Route path="/admin/generate-demand-slip" element={<GenerateDemandSlip />} />
-        <Route path="/admin/subject" element={<Subject />} />
-        <Route path="/admin/assign-subject" element={<AssignSubject />} />
-        <Route path="/admin/profile-settings" element={<ProfileSettings />} />
-        <Route path="/admin/privacy-policy" element={<PrivacyPolicy />} />
-        <Route path="/admin/Support" element={<Support />} />
-     </Route>
+          {/* Protected Routes */}
+          <Route
+            path="/admin/home"
+            element={
+              <AdminHome />
+            }
+          />
+          <Route
+            path="/admin/student"
+            element={
+              <ProtectedRoute>
+                <Students />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/add-student"
+            element={
+              <ProtectedRoute>
+                <AddStudent />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/student/student-details/:studentId"
+            element={
+              <ProtectedRoute>
+                <StudentDetails />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/edit-student/:id"
+            element={
+              <ProtectedRoute>
+                <EditStudent />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/student-id-card"
+            element={
+              <ProtectedRoute>
+                <StudentIDCard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/find-student"
+            element={
+              <ProtectedRoute>
+                <FindStudent />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/fee-structure"
+            element={
+              <ProtectedRoute>
+                <FeeStructure />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/fee-type"
+            element={
+              <ProtectedRoute>
+                <FeeType />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/fee-receipt/:paymentId"
+            element={
+              <ProtectedRoute>
+                <FeeReceipt />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/class"
+            element={
+              <ProtectedRoute>
+                <Class />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/upgrade-class"
+            element={
+              <ProtectedRoute>
+                <UpgradeClass />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/Upgrade-RollNo"
+            element={
+              <ProtectedRoute>
+                <UpgradeRollNo />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/exams"
+            element={
+              <ProtectedRoute>
+                <Exams />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/exam-schedule"
+            element={
+              <ProtectedRoute>
+                <ExamSchedule />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/generate-admit-card"
+            element={
+              <ProtectedRoute>
+                <GenerateAdmitCard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/generate-demand-slip"
+            element={
+              <ProtectedRoute>
+                <GenerateDemandSlip />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/subject"
+            element={
+              <ProtectedRoute>
+                <Subject />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/assign-subject"
+            element={
+              <ProtectedRoute>
+                <AssignSubject />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/profile-settings"
+            element={
+              <ProtectedRoute>
+                <ProfileSettings />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/privacy-policy"
+            element={
+              <ProtectedRoute>
+                <PrivacyPolicy />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/Support"
+            element={
+              <ProtectedRoute>
+                <Support />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/subscriptions"
+            element={
+              <ProtectedRoute>
+                <SubscriptionPlans />
+              </ProtectedRoute>
+            }
+          />
+        </Route>
+
         {/* Parent Section (not wrapped in DefaultLayout) */}
         <Route path="/parent" element={<ParentSignIn />} />
         <Route path="/parent/home" element={<ParentHome />} />

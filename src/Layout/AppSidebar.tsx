@@ -5,14 +5,19 @@ import { useSidebar } from "../context/SidebarContext";
 import { FaBox } from "react-icons/fa";
 import { FiChevronDown } from "react-icons/fi"
 import { HiMiniAcademicCap } from "react-icons/hi2";
-import {PiExam , PiStudentFill } from "react-icons/pi";
+import { PiExam, PiStudentFill } from "react-icons/pi";
 import { RxDashboard } from "react-icons/rx";
 import { LiaMoneyCheckSolid } from "react-icons/lia";
 import { CiSettings } from "react-icons/ci";
+import { MdOutlineLockOpen } from "react-icons/md";  // Lock Icon import
 import logo1 from '../assets/Images/logo/ThunderGits_Logos/1.png'
 import logo2 from '../assets/Images/logo/ThunderGits_Logos/2.png'
 import logo3 from '../assets/Images/logo/ThunderGits_Logos/3.png'
 import logo4 from '../assets/Images/logo/ThunderGits_Logos/4.png'
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../redux/store";
+import { fetchSubscriptionStatus } from "../redux/slices/subscriptionSlice";
+
 type NavItem = {
   name: string;
   icon: React.ReactNode;
@@ -46,7 +51,7 @@ const navItems: NavItem[] = [
     ],
   },
   {
-    icon: <PiExam  />,
+    icon: <PiExam />,
     name: "Exam",
     subItems: [
       { name: "Exam", path: "/admin/exams", pro: false },
@@ -68,11 +73,9 @@ const navItems: NavItem[] = [
     name: "Settings",
     subItems: [
       { name: "Profile Settings", path: "/admin/profile-settings", pro: false },
-     
+      { name: "Subscription", path: "/admin/subscriptions", pro: false },
     ],
   },
-
-
 ];
 
 const othersItems: NavItem[] = [
@@ -117,6 +120,15 @@ const AppSidebar: React.FC = () => {
   const [subMenuHeight, setSubMenuHeight] = useState<Record<string, number>>(
     {}
   );
+  const dispatch = useDispatch();
+  const subscription = useSelector((state: RootState) => state.subscription);
+
+  useEffect(() => {
+    if (!subscription.status) {
+      dispatch(fetchSubscriptionStatus()); // Dispatch action to fetch subscription status
+    }
+  }, [dispatch, subscription.status]);
+
   const subMenuRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   // const isActive = (path: string) => location.pathname === path;
@@ -213,7 +225,7 @@ const AppSidebar: React.FC = () => {
           ) : (
             nav.path && (
               <Link
-                to={nav.path}
+                to={(subscription.status === "active" || nav.name == 'Home') ? nav.path : "/admin/subscriptions"}
                 className={`menu-item group ${isActive(nav.path) ? "menu-item-active" : "menu-item-inactive"
                   }`}
               >
@@ -227,6 +239,9 @@ const AppSidebar: React.FC = () => {
                 </span>
                 {(isExpanded || isHovered || isMobileOpen) && (
                   <span className="menu-item-text">{nav.name}</span>
+                )}
+                {(subscription.status !== "active" && nav.name != 'Home') && (
+                  <MdOutlineLockOpen className="ml-2 text-gray-400" />
                 )}
               </Link>
             )
@@ -248,35 +263,16 @@ const AppSidebar: React.FC = () => {
                 {nav.subItems.map((subItem) => (
                   <li key={subItem.name}>
                     <Link
-                      to={subItem.path}
+                      to={(subscription.status === "active" || subItem?.name == 'Dashboard') ? subItem.path : "/admin/subscriptions"}
                       className={`menu-dropdown-item ${isActive(subItem.path)
                         ? "menu-dropdown-item-active"
                         : "menu-dropdown-item-inactive"
                         }`}
                     >
                       {subItem.name}
-                      <span className="flex items-center gap-1 ml-auto">
-                        {subItem.new && (
-                          <span
-                            className={`ml-auto ${isActive(subItem.path)
-                              ? "menu-dropdown-badge-active"
-                              : "menu-dropdown-badge-inactive"
-                              } menu-dropdown-badge`}
-                          >
-                            new
-                          </span>
-                        )}
-                        {subItem.pro && (
-                          <span
-                            className={`ml-auto ${isActive(subItem.path)
-                              ? "menu-dropdown-badge-active"
-                              : "menu-dropdown-badge-inactive"
-                              } menu-dropdown-badge`}
-                          >
-                            pro
-                          </span>
-                        )}
-                      </span>
+                      {(subscription.status !== "active" && subItem?.name !== 'Dashboard') && (
+                        <MdOutlineLockOpen className="ml-2 text-gray-400" />
+                      )}
                     </Link>
                   </li>
                 ))}

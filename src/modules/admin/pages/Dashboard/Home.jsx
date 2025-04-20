@@ -223,7 +223,7 @@ const AdminHome = () => {
       </div>
 
       {/* Chart for Students, Classes, and Fee Dues */}
-      <div className="bg-white p-6 rounded-lg shadow-md mb-8">
+      <div className="bg-white p-6 rounded-lg shadow-md mb-8 mt-10">
         <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
           Enrollment Overview and Fee Status
         </h3>

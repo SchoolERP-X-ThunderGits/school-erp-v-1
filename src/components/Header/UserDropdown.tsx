@@ -4,7 +4,9 @@ import { Dropdown } from "../ui/dropdown/Dropdown";
 import { useUserContext } from '../../context/UserContext';
 import { Modal } from "../ui/modal";
 import Button from "../ui/button/Button";
-export default function UserDropdown() {
+import { MdOutlineLockOpen } from "react-icons/md";
+export default function UserDropdown({subscription}:any) {
+  console.log('subscriptionsubscription',subscription)
   const [isOpen, setIsOpen] = useState(false);
   const [logoutModal, setLogoutModal] = useState(false)
   const { logout, school } = useUserContext();
@@ -60,7 +62,7 @@ export default function UserDropdown() {
             <DropdownItem
               onItemClick={closeDropdown}
               tag="a"
-              to="admin/profile-settings"
+               to={subscription?.status !='active'?"/admin/subscriptions":"admin/profile-settings"}
               className="flex items-center gap-3 px-3 py-2 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
             >
               <svg
@@ -78,14 +80,14 @@ export default function UserDropdown() {
                   fill=""
                 />
               </svg>
-              Edit profile
+              Edit profile    <MdOutlineLockOpen className="ml-2 text-gray-400" />
             </DropdownItem>
           </li>
           <li>
             <DropdownItem
               onItemClick={closeDropdown}
               tag="a"
-              to="/admin/Support"
+              to={subscription?.status !='active'?"/admin/subscriptions":"/admin/Support"}
               className="flex items-center gap-3 px-3 py-2 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
             >
               <svg
@@ -103,7 +105,7 @@ export default function UserDropdown() {
                   fill=""
                 />
               </svg>
-              Support
+              Support  {subscription?.status !='active' && <MdOutlineLockOpen className="ml-2 text-gray-400" />}
             </DropdownItem>
           </li>
         </ul>

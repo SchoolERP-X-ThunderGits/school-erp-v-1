@@ -1,14 +1,25 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSidebar } from "../context/SidebarContext";
 import { ThemeToggleButton } from "../components/common/ThemeToggleButton";
 import NotificationDropdown from "../components/Header/NotificationDropdown";
 import UserDropdown from "../components/Header/UserDropdown";
 import { Link } from "react-router-dom";
 import { useUserContext } from '../context/UserContext';
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../redux/store";
+import { fetchSubscriptionStatus } from "../redux/slices/subscriptionSlice";
 const AppHeader: React.FC = () => {
   const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
   const { school } = useUserContext();
   const { isMobileOpen, toggleSidebar, toggleMobileSidebar } = useSidebar();
+  const dispatch = useDispatch();
+  const subscription = useSelector((state: RootState) => state.subscription);
+
+  useEffect(() => {
+    if (!subscription.status) {
+      dispatch(fetchSubscriptionStatus()); // Dispatch action to fetch subscription status
+    }
+  }, [dispatch, subscription.status]);
 
   const handleToggle = () => {
     if (window.innerWidth >= 1024) {
@@ -20,6 +31,20 @@ const AppHeader: React.FC = () => {
 
   const toggleApplicationMenu = () => {
     setApplicationMenuOpen(!isApplicationMenuOpen);
+  };
+  const getStatusStyle = (status: string) => {
+    switch (status) {
+      case 'active':
+        return 'text-green-700 bg-green-100 border-green-300 dark:bg-green-900 dark:text-green-300 dark:border-green-600';
+      case 'expired':
+        return 'text-red-700 bg-red-100 border-red-300 dark:bg-red-900 dark:text-red-300 dark:border-red-600';
+      case 'trial_ending_soon':
+        return 'text-yellow-800 bg-yellow-100 border-yellow-300 dark:bg-yellow-900 dark:text-yellow-300 dark:border-yellow-600';
+      case 'deactivated':
+        return 'text-gray-700 bg-gray-100 border-gray-300 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600';
+      default:
+        return 'text-indigo-700 bg-indigo-100 border-indigo-300 dark:bg-indigo-900 dark:text-indigo-300 dark:border-indigo-600';
+    }
   };
 
 
@@ -116,6 +141,14 @@ const AppHeader: React.FC = () => {
             } items-center justify-between w-full gap-4 px-5 py-4 lg:flex shadow-theme-md lg:justify-end lg:px-0 lg:shadow-none`}
         >
           <div className="flex items-center gap-2 2xsm:gap-3">
+            {subscription.status && (
+              <div className={`${getStatusStyle(subscription.status)} px-3 py-1 rounded-full text-xs font-medium capitalize`}>
+                {subscription.status === 'trial_ending_soon'
+                  ? 'Trial ends soon'
+                  : subscription.status}
+              </div>
+            )}
+
             {/* <!-- Dark Mode Toggler --> */}
             {/* <ThemeToggleButton /> */}
             {/* <!-- Dark Mode Toggler --> */}
@@ -123,7 +156,11 @@ const AppHeader: React.FC = () => {
             {/* <!-- Notification Menu Area --> */}
           </div>
           {/* <!-- User Area --> */}
-          <UserDropdown />
+          {
+            // subscription.status == 'active' &&
+
+          <UserDropdown subscription={subscription} />
+          }
         </div>
       </div>
     </header>
