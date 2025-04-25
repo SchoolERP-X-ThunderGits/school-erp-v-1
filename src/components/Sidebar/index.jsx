@@ -944,25 +944,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
             Logout
           </NavLink>
         </div>
-        {showModal && (
-          <div style={{ backgroundColor: 'white', width: '80%', margin: 'auto', borderRadius: 8, padding: 10, position: 'absolute', bottom: 40, alignSelf: "center", display: 'flex', flexDirection: 'column' }}>
-            <h2 style={{ textAlign: 'center' }} className="text-xl font-semibold mb-4">Are you sure you want to logout?</h2>
-            <div className="flex justify-center space-x-4">
-              <button
-                onClick={handleCancelLogout}
-                className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400"
-              >
-                No
-              </button>
-              <button
-                onClick={handleConfirmLogout}
-                className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
-              >
-                Yes
-              </button>
-            </div>
-          </div>
-        )}
 
         {/* <!-- Sidebar Menu --> */}
       </div>

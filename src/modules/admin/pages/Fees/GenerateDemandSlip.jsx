@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { FaDownload, FaCheckCircle } from 'react-icons/fa';
 import { pdf, Document, Page, Text, View, StyleSheet, Image, Font } from '@react-pdf/renderer';
 import { saveAs } from 'file-saver';
 import apiName from '../../../../constants/ApiName'; // Importing API Names
@@ -8,16 +7,14 @@ import Loader from '../../../../components/Loader';
 import moment from 'moment';
 import { getService, postService } from '../../../../constants/Service';
 import { BASE_URL } from '../../../../constants/Config';
-import images from '../../../../constants/Images';
 import { useNavigate } from 'react-router-dom';
-import { Modal } from '../../../../components/ui/modal';
 import { Table, TableBody, TableCell, TableHeader, TableRow } from '../../../../components/ui/table/index';
 import Select from '../../../../components/form/Select';
 import Button from '../../../../components/ui/button/Button';
 import Checkbox from '../../../../components/form/input/Checkbox';
 // import {Flatpickr} from "react-flatpickr";
 import { useUserContext } from '../../../../context/UserContext';
-import { below20, months, tens, thousands } from '../../../../constants/GlobalConstants'
+import { below20, tens, thousands } from '../../../../constants/GlobalConstants'
 import Input from '../../../../components/form/input/InputField';
 const GenerateDemandSlip = () => {
     const [loading, setLoading] = useState(false);

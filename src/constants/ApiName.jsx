@@ -39,5 +39,7 @@ const apiName = {
   bulkUpload: 'student/bulkAddStudents',
   getProfile: 'tenant/',
   uploadCard: 'admrec/upload',
+  subscriptionPlan:'subscription-plans',
+  schools:'tenant'
 };
 export default apiName;

@@ -131,7 +131,7 @@ const ProfileSettings = () => {
                     <>
                         <h2 className="text-2xl font-semibold text-indigo-800 mb-6">Edit Profile</h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {[ 
+                            {[
                                 { label: 'School Name', name: 'name' },
                                 { label: 'Address', name: 'address' },
                                 { label: 'Email', name: 'email' },

@@ -31,6 +31,8 @@ import PrivacyPolicy from './modules/admin/pages/Help/PrivacyPolicy';
 import UpgradeRollNo from './modules/admin/pages/Academics/UpgradeRollNo';
 import Support from './Help/Support';
 import "flatpickr/dist/themes/material_green.css";
+import Subscriptions from './modules/admin/pages/Settings/Subscriptions';
+import Schools from './modules/admin/pages/Schools/Schools';
 import SubscriptionPlans from './modules/admin/pages/Subscription/SubscriptionPlans';
 
 function App() {
@@ -247,10 +249,29 @@ function App() {
             path="/admin/subscriptions"
             element={
               <ProtectedRoute>
-                <SubscriptionPlans />
+                <Subscriptions />
               </ProtectedRoute>
             }
           />
+
+          {/* super admin routes */}
+          <Route
+            path="/admin/schools"
+            element={
+              <ProtectedRoute>
+                <Schools />
+                </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/Subscription-plans"
+            element={
+              <ProtectedRoute>
+                <SubscriptionPlans />
+                </ProtectedRoute>
+            }
+          />
+
         </Route>
 
         {/* Parent Section (not wrapped in DefaultLayout) */}

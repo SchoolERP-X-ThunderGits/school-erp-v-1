@@ -73,9 +73,28 @@ const navItems: NavItem[] = [
     name: "Settings",
     subItems: [
       { name: "Profile Settings", path: "/admin/profile-settings", pro: false },
-      { name: "Subscription", path: "/admin/subscriptions", pro: false },
+      { name: "Subscriptions", path: "/admin/subscriptions", pro: false },
     ],
   },
+
+  // Super admin sections
+
+  {
+    icon: <CiSettings />,
+    name: "School",
+    subItems: [
+      { name: "Schools", path: "/admin/schools", pro: false },
+    ],
+  },
+
+  {
+    icon: <CiSettings />,
+    name: "Subscriptions",
+    subItems: [
+      { name: "Subscription plans", path: "/admin/Subscription-plans", pro: false },
+    ],
+  },
+ 
 ];
 
 const othersItems: NavItem[] = [
@@ -122,7 +141,7 @@ const AppSidebar: React.FC = () => {
   );
   const dispatch = useDispatch();
   const subscription = useSelector((state: RootState) => state.subscription);
-
+  const role = localStorage.getItem("role")
   useEffect(() => {
     if (!subscription.status) {
       dispatch(fetchSubscriptionStatus()); // Dispatch action to fetch subscription status
@@ -173,6 +192,15 @@ const AppSidebar: React.FC = () => {
     }
   }, [openSubmenu]);
 
+  const filterNavItemsForRole = (role: string) => {
+    if (role === 'superadmin') {
+      return navItems.filter(item =>
+        item.name === 'Home' || item.name === 'School' || item.name === 'Subscriptions'
+      );
+    }
+    return navItems; // Return all if the role is not superadmin
+  };
+  const itemsToUse = filterNavItemsForRole(role || ''); 
   const handleSubmenuToggle = (index: number, menuType: "main" | "others") => {
     setOpenSubmenu((prevOpenSubmenu) => {
       if (
@@ -240,7 +268,7 @@ const AppSidebar: React.FC = () => {
                 {(isExpanded || isHovered || isMobileOpen) && (
                   <span className="menu-item-text">{nav.name}</span>
                 )}
-                {(subscription.status !== "active" && nav.name != 'Home') && (
+                {(subscription.status !== "active" && nav.name != 'Home' && role == 'admin') && (
                   <MdOutlineLockOpen className="ml-2 text-gray-400" />
                 )}
               </Link>
@@ -263,14 +291,14 @@ const AppSidebar: React.FC = () => {
                 {nav.subItems.map((subItem) => (
                   <li key={subItem.name}>
                     <Link
-                      to={(subscription.status === "active" || subItem?.name == 'Dashboard') ? subItem.path : "/admin/subscriptions"}
+                      to={(subscription.status === "active" || subItem?.name == 'Dashboard' || role != 'admin') ? subItem.path : "/admin/subscriptions"}
                       className={`menu-dropdown-item ${isActive(subItem.path)
                         ? "menu-dropdown-item-active"
                         : "menu-dropdown-item-inactive"
                         }`}
                     >
                       {subItem.name}
-                      {(subscription.status !== "active" && subItem?.name !== 'Dashboard') && (
+                      {(subscription.status !== "active" && subItem?.name !== 'Dashboard' && role == 'admin') && (
                         <MdOutlineLockOpen className="ml-2 text-gray-400" />
                       )}
                     </Link>
@@ -356,7 +384,7 @@ const AppSidebar: React.FC = () => {
                   <FiChevronDown className="size-6" />
                 )}
               </h2>
-              {renderMenuItems(navItems, "main")}
+              {renderMenuItems(itemsToUse, "main")}
             </div>
           </div>
         </nav>
