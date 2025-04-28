@@ -193,13 +193,25 @@ const AppSidebar: React.FC = () => {
   }, [openSubmenu]);
 
   const filterNavItemsForRole = (role: string) => {
+    // Return navigation items for superadmin
     if (role === 'superadmin') {
       return navItems.filter(item =>
         item.name === 'Home' || item.name === 'School' || item.name === 'Subscriptions'
       );
     }
-    return navItems; // Return all if the role is not superadmin
+  
+    // Return navigation items for admin or other roles
+    if (role === 'admin') {
+      // Exclude 'School' and 'Subscriptions' for admin role
+      return navItems.filter(item =>
+        item.name !== 'School' && item.name !== 'Subscriptions'
+      );
+    }
+  
+    // Return all navigation items if the role is not superadmin or admin (you can handle other roles here)
+    return navItems;
   };
+  
   const itemsToUse = filterNavItemsForRole(role || ''); 
   const handleSubmenuToggle = (index: number, menuType: "main" | "others") => {
     setOpenSubmenu((prevOpenSubmenu) => {

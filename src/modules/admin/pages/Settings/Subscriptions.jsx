@@ -3,53 +3,31 @@ import { FaCheck } from 'react-icons/fa';
 import SubscriptionModal from '../../../../components/SubscriptionModal';
 import { getService } from '../../../../constants/Service';
 import apiName from '../../../../constants/ApiName';
-const plans = [
-  {
-    name: 'Basic',
-    price: '$10/month',
-    description: 'Great for personal projects and getting started.',
-    features: ['1 User', 'Basic Analytics', 'Email Support'],
-    mostPopular: false,
-    type: 'basic',
-  },
-  {
-    name: 'Premium',
-    price: '$20/month',
-    description: 'Perfect for professionals who need more features.',
-    features: ['5 Users', 'Advanced Analytics', 'Priority Support'],
-    mostPopular: true,
-    type: 'premium',
-  },
-  {
-    name: 'Enterprise',
-    price: '$30/month',
-    description: 'Best for large teams and enterprise use cases.',
-    features: ['Unlimited Users', 'Custom Analytics', 'Dedicated Manager'],
-    mostPopular: false,
-    type: 'enterprise',
-  },
-];
 
 const Subscriptions = () => {
   const [selectedPlan, setSelectedPlan] = useState(null); // for modal
+  const [plansList, setPlansList] = useState([]);
   const [subscribedPlan, setSubscribedPlan] = useState(null); // current plan
   const [showModal, setShowModal] = useState(false);
-useEffect(()=>{
-  getPlansList()
-})
+
+  useEffect(() => {
+    getPlansList();
+  }, []);
+
   const getPlansList = async () => {
     try {
-        const result = await getService(apiName.subscriptionPlan); // API endpoint (e.g. '/posts')
-       console.log('result--',result)
-      } catch (error) {
-      console.log('error',error)
-        // setLoading(false);
+      const result = await getService(apiName.SuperSubscriptionPlan); // API endpoint (e.g. '/posts')
+      console.log('result--', result);
+      setPlansList(result?.data);
+    } catch (error) {
+      console.log('error', error);
     }
-};
-  const getPlanIndex = (planType) => plans.findIndex(p => p.type === planType);
+  };
+
+  const getPlanIndex = (planType) => plansList.findIndex(p => p._id === planType);
 
   const handleSelectPlan = (plan) => {
-    setSelectedPlan(plan.type);
+    setSelectedPlan(plan._id);
     setShowModal(true);
   };
 
@@ -72,20 +50,20 @@ useEffect(()=>{
       </div>
 
       <div className="max-w-6xl mx-auto grid gap-8 lg:grid-cols-3 sm:grid-cols-1">
-        {plans.map((plan, index) => {
-          const isCurrent = subscribedPlan === plan.type;
+        {plansList.filter(plan => plan.isVisible).map((plan, index) => {
+          const isCurrent = subscribedPlan === plan._id;
           const isUpgrade = currentPlanIndex > -1 && index > currentPlanIndex;
           const isDowngrade = currentPlanIndex > -1 && index < currentPlanIndex;
 
           return (
             <div
-              key={plan.name}
+              key={plan._id}
               className={`relative rounded-2xl shadow-lg overflow-hidden border 
-                ${plan.mostPopular ? 'border-blue-600 ring-2 ring-blue-500' : 'border-gray-200'}
-                ${isCurrent ? 'border-green-500 ring-green-400' : ''}
+                ${plan.name === 'premium' ? 'border-blue-600 ring-2 ring-blue-500' : 'border-gray-200'}
+                ${isCurrent ? 'border-green-500 ring-green-400' : ''} 
                 hover:scale-105 transition-transform duration-300 bg-white`}
             >
-              {plan.mostPopular && !isCurrent && (
+              {plan.name === 'premium' && !isCurrent && (
                 <div className="absolute top-0 right-0 bg-blue-600 text-white text-xs font-semibold px-4 py-1 rounded-bl-lg">
                   Most Popular
                 </div>
@@ -99,12 +77,12 @@ useEffect(()=>{
               <div className="p-8">
                 <h3 className="text-xl font-semibold text-gray-800">{plan.name}</h3>
                 <p className="mt-2 text-gray-500">{plan.description}</p>
-                <p className="mt-4 text-3xl font-bold text-gray-900">{plan.price}</p>
+                <p className="mt-4 text-3xl font-bold text-gray-900">{`$${plan.price}/month`}</p>
                 <ul className="mt-6 space-y-3">
                   {plan.features.map((feature, index) => (
-                    <li key={index} className="flex items-center text-gray-700">
+                    <li key={feature._id} className="flex items-center text-gray-700">
                       <FaCheck className="text-green-500 mr-2" />
-                      {feature}
+                      {feature.label}
                     </li>
                   ))}
                 </ul>
@@ -113,13 +91,11 @@ useEffect(()=>{
                   onClick={() => handleSelectPlan(plan)}
                   disabled={isCurrent || isDowngrade}
                   className={`mt-8 w-full py-3 px-6 rounded-lg text-white font-semibold transition 
-                    ${
-                      isCurrent
-                        ? 'bg-green-500 cursor-not-allowed opacity-80'
-                        : isDowngrade
-                        ? 'bg-gray-400 cursor-not-allowed'
-                        : 'bg-blue-600 hover:bg-blue-700'
-                    }`}
+                    ${isCurrent
+                      ? 'bg-green-500 cursor-not-allowed opacity-80'
+                      : isDowngrade
+                      ? 'bg-gray-400 cursor-not-allowed'
+                      : 'bg-blue-600 hover:bg-blue-700'}`}
                 >
                   {isCurrent
                     ? 'Subscribed'

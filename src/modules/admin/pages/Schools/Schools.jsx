@@ -143,7 +143,7 @@ const Schools = () => {
             }
         } else {
             try {
-                const response = await postService(apiName.schools, body);
+                const response = await postService(apiName.addSchool, body);
                 showToast("School added successfully.", 'success');
                 getSchoolsList();
             } catch (error) {

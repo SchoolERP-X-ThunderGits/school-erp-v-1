@@ -47,7 +47,7 @@ const SubscriptionPlans = () => {
 
     const getSubscriptionsList = async () => {
         try {
-            const result = await getService(apiName.subscriptionPlan); // API endpoint (e.g. '/posts')
+            const result = await getService(apiName.SuperSubscriptionPlan); // API endpoint (e.g. '/posts')
             setEditMode(false);
             setEditId('');
             setSubscriptionsList(result?.data);
@@ -153,10 +153,10 @@ const SubscriptionPlans = () => {
 
         try {
             if (editMode) {
-                await putService(`${apiName.subscriptionPlan}/${editId}`, body);
+                await putService(`${apiName.SuperSubscriptionPlan}/${editId}`, body);
                 showToast("Subscription updated successfully.", 'success');
             } else {
-                await postService(apiName.subscriptionPlan, body);
+                await postService(apiName.SuperSubscriptionPlan, body);
                 showToast("Subscription added successfully.", 'success');
             }
             getSubscriptionsList();
@@ -170,7 +170,7 @@ const SubscriptionPlans = () => {
     const handleConfirmDelete = async () => {
         try {
             // Call delete service with the subscription ID
-            await deleteService(`${apiName.subscriptionPlan}/${subscriptionToDelete}`);
+            await deleteService(`${apiName.SuperSubscriptionPlan}/${subscriptionToDelete}`);
             showToast('Subscription deleted successfully', 'success');
             getSubscriptionsList(); // Refresh the subscription list
         } catch (error) {
