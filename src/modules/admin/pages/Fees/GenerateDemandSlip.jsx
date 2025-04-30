@@ -69,9 +69,8 @@ const GenerateDemandSlip = () => {
     };
 
     // Handle search button click
-    const handleSearch = () => {
-        console.log('startDate', startDate)
-        console.log('startDate111', endDate)
+    const handleSearch = (e) => {
+        e.preventDefault()
         if (!classFilter || !sectionFilter || !startDate || !endDate) {
             showToast('Please select all fields', 'error')
             return
@@ -96,7 +95,6 @@ const GenerateDemandSlip = () => {
     // Fetch filtered students based on filters (Class, Section, and Search Text)
     const fetchFilteredStudents = async () => {
         try {
-            setLoading(true);
             const result = await getService(`${apiName.getStudentByExam}/${classFilter}/${sectionFilter}`);
             setStudents(result);
             setLoading(false);
@@ -106,7 +104,6 @@ const GenerateDemandSlip = () => {
     };
     const getStudentFeeByClass = async () => {
         try {
-            setLoading(true);
             const result = await getService(`${apiName.dueFees}/${classFilter}/${sectionFilter}/${endDate}`);
             console.log('bckvbkcbc', result)
             setFeeDetails(result)
@@ -432,7 +429,7 @@ const GenerateDemandSlip = () => {
                                 setStartDate('')
                                 setEndDate('')
                             }}
-                            className="px-6 py-3 bg-gray-200 text-black rounded-lg hover:bg-gray-300 transition duration-300"
+                            className="px-6 py-3 bg-gray-200 !text-black rounded-lg hover:bg-gray-300 transition duration-300"
                         >
                             Clear Filters
                         </Button>

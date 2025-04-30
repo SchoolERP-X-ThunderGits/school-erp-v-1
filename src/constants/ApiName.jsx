@@ -40,7 +40,8 @@ const apiName = {
   getProfile: 'tenant/',
   uploadCard: 'admrec/upload',
   SuperSubscriptionPlan:'subscription-plans',
-  getSubscriptions:'subscriptions',
+  subscriptions:'subscriptions',
+  subscriptionPayment:'subscription-payment',
   getCurrentSubscriptions:'subscriptions/curr',
   schools:'tenant',
   addSchool:'user/addUser'

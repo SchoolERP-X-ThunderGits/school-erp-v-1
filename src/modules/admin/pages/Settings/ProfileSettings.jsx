@@ -6,8 +6,6 @@ import { showToast } from '../../../../components/Toast';
 import { UploadFile } from '../../../../components/UploadFile';
 import Button from '../../../../components/ui/button/Button';
 import Input from '../../../../components/form/input/InputField';
-import { Plans } from '../../../../constants/GlobalConstants';
-import Select from '../../../../components/form/Select';
 import Loader from '../../../../components/Loader';
 
 const ProfileSettings = () => {
@@ -94,39 +92,60 @@ const ProfileSettings = () => {
         <div className="">
             <div className="max-w-5xl mx-auto bg-white shadow-2xl rounded-3xl p-8">
                 {!isEditing ? (
-                    <>
-                        <div className="flex justify-center mb-6">
-                            <div className="w-36 h-36 rounded-full overflow-hidden border-4 border-indigo-500 shadow-lg">
+                    <div className="max-w-5xl mx-auto bg-white rounded-3xl  p-6 lg:p-10">
+                        {/* Profile Picture Section */}
+                        <div className="flex justify-center mb-8">
+                            <div className="w-32 h-32 sm:w-32 sm:h-32 lg:w-32 lg:h-32 rounded-full overflow-hidden border-4 border-gray-300 shadow-lg transform transition duration-300 ">
                                 <img
                                     src={profileData?.logo || "https://static.vecteezy.com/system/resources/thumbnails/001/840/612/small/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-free-vector.jpg"}
                                     alt="Profile"
                                     className="w-full h-full object-cover"
                                 />
                             </div>
+
                         </div>
 
-                        <h2 className="text-3xl font-extrabold text-center text-indigo-500 mb-4">
+                        {/* Profile Name */}
+                        <h2 className="text-3xl font-bold text-center text-indigo-800 mb-6">
                             {profileData?.name}
                         </h2>
 
-                        <div className="grid sm:grid-cols-2 gap-6 text-gray-700 text-lg mt-6">
-                            <div><strong>Contact:</strong> {profileData?.contactNumber}</div>
-                            <div><strong>Website:</strong> {profileData?.website}</div>
-                            <div><strong>Subdomain:</strong> {profileData?.subdomain}</div>
-                            <div><strong>Plan:</strong> {profileData?.plan}</div>
-                            {profileData?.email && <div><strong>Email:</strong> {profileData?.email}</div>}
-                            <div><strong>Address:</strong> {profileData?.address}</div>
+                        {/* Profile Info Grid */}
+                        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                            <div className="card p-4 rounded-xl shadow-sm bg-gray-50 hover:bg-indigo-50 transition duration-300">
+                                <strong className="text-[#465fff]">Contact</strong>
+                                <p>{profileData?.contactNumber}</p>
+                            </div>
+                            <div className="card p-4 rounded-xl shadow-sm bg-gray-50 hover:bg-indigo-50 transition duration-300">
+                                <strong className="text-[#465fff]">Website</strong>
+                                <p>{profileData?.website}</p>
+                            </div>
+                            <div className="card p-4 rounded-xl shadow-sm bg-gray-50 hover:bg-indigo-50 transition duration-300">
+                                <strong className="text-[#465fff]">Subdomain</strong>
+                                <p>{profileData?.subdomain}</p>
+                            </div>
+                            {profileData?.email && (
+                                <div className="card p-4 rounded-xl shadow-sm bg-gray-50 hover:bg-indigo-50 transition duration-300">
+                                    <strong className="text-[#465fff]">Email</strong>
+                                    <p>{profileData?.email}</p>
+                                </div>
+                            )}
+                            <div className="card p-4 rounded-xl shadow-sm bg-gray-50 hover:bg-indigo-50 transition duration-300">
+                                <strong className="text-[#465fff]">Address</strong>
+                                <p>{profileData?.address}</p>
+                            </div>
                         </div>
 
-                        <div className="text-center mt-8">
+                        {/* Edit Profile Button */}
+                        <div className="text-center mt-10">
                             <Button
-                                className="px-6 py-3 bg-indigo-600 text-white font-semibold rounded-xl border-2 border-indigo-600 hover:bg-white hover:text-indigo-600 transition duration-300"
+                                className="px-8 py-3 bg text-white font-semibold rounded-lg border-2 border-indigo-600 hover:bg-white hover:text-indigo-600 transition duration-300"
                                 onClick={handleEditClick}
                             >
                                 Edit Profile
                             </Button>
                         </div>
-                    </>
+                    </div>
                 ) : (
                     <>
                         <h2 className="text-2xl font-semibold text-indigo-800 mb-6">Edit Profile</h2>
@@ -151,21 +170,6 @@ const ProfileSettings = () => {
                             ))}
 
                             <div>
-                                <label className="text-gray-600">Plan:</label>
-                                <Select
-                                    placeholder='Select Plan'
-                                    options={Plans.map((plan) => ({
-                                        value: plan,
-                                        label: plan,
-                                    }))}
-                                    defaultValue={formData?.plan}
-                                    onChange={(e) => {
-                                        setFormData(prev => ({ ...prev, plan: e }));
-                                    }}
-                                />
-                            </div>
-
-                            <div>
                                 <label className="text-gray-600">Logo:</label>
                                 <Input type="file" name="logo" onChange={handleInputChange} className="mt-2" />
                                 {formData?.logo && (
@@ -187,7 +191,7 @@ const ProfileSettings = () => {
                         <div className="mt-8 flex justify-end space-x-4">
                             <Button
                                 onClick={handleSaveClick}
-                                className="px-6 py-3 bg-indigo-500 text-white rounded-xl hover:bg-green-600 transition"
+                                className="px-6 py-3 bg-indigo-500 text-white rounded-xl hover:bg-indigo-600 transition"
                             >
                                 Save Changes
                             </Button>

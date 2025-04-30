@@ -1,12 +1,13 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { getService } from '../../constants/Service';
+import apiName from '../../constants/ApiName';
 
 // Async thunk to fetch subscription status
 export const fetchSubscriptionStatus = createAsyncThunk(
   'subscription/fetchSubscriptionStatus',
   async () => {
     try {
-      const response = await axios.get('/api/user/status');
+      const response = await getService(apiName.getCurrentSubscriptions);
       return response.data; // Assuming response.data contains { status: 'subscribed' | 'trial' | ... }
     } catch (error) {
       throw new Error('Failed to fetch subscription status');
@@ -14,26 +15,10 @@ export const fetchSubscriptionStatus = createAsyncThunk(
   }
 );
 
-// Async thunk to handle Razorpay payment and update subscription status
-export const updateSubscriptionStatus = createAsyncThunk(
-  'subscription/updateSubscriptionStatus',
-  async ({ paymentId, signature }) => {
-    try {
-      const response = await axios.post('/api/razorpay/verify', {
-        paymentId,
-        signature,
-      });
-      return response.data; // Assuming this response contains updated subscription status
-    } catch (error) {
-      throw new Error('Failed to verify Razorpay payment');
-    }
-  }
-);
-
 const subscriptionSlice = createSlice({
   name: 'subscription',
   initialState: {
-    status: 'active', // 'subscribed', 'trial', 'trial-expired', 'not-subscribed', etc.
+    status: '', // 'subscribed', 'trial', 'trial-expired', 'not-subscribed', etc.
     isLoading: false,
     error: null,
   },
@@ -54,20 +39,14 @@ const subscriptionSlice = createSlice({
       })
       .addCase(fetchSubscriptionStatus.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.status = action.payload.status; // Assuming payload is { status: 'subscribed' | 'trial' | ... }
+        state.data = action.payload;
+        state.status = action.payload.isActive; // Assuming payload is { status: 'subscribed' | 'trial' | ... }
       })
       .addCase(fetchSubscriptionStatus.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message; // Store the error message
       })
 
-      // Update Subscription Status (e.g., on successful Razorpay payment)
-      .addCase(updateSubscriptionStatus.fulfilled, (state, action) => {
-        state.status = 'subscribed'; // Assuming the payment was successful and subscription status is 'subscribed'
-      })
-      .addCase(updateSubscriptionStatus.rejected, (state, action) => {
-        state.error = action.error.message; // Handle payment failure if any
-      });
   },
 });
 

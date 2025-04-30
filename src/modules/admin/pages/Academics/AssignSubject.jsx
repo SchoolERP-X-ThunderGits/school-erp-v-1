@@ -96,6 +96,7 @@ const AssignSubject = () => {
                 showToast("Subject updated successfully.", 'success');
                 getAssignList();
             } catch (error) {
+                setErrorMessage(error?.response?.data?.message)
                 console.error('Error posting data:', error);
             }
         } else {
@@ -106,6 +107,7 @@ const AssignSubject = () => {
                 getAssignList();
             } catch (error) {
                 console.error('Error posting data:', error);
+                setErrorMessage(error?.response?.data?.message)
             }
         }
     };
@@ -137,9 +139,27 @@ const AssignSubject = () => {
             {/* Add Class Button */}
             <div className='w-full p-4 flex justify-between items-center'>
                 <div className='text-3xl font-medium'>Assign Subject List</div>
-                <Button onClick={() => { setShowModal(true), setSelectedClass(''), setSelectedSubjects([]), setErrorMessage(''), setEditMode(false); }}>
+                <Button
+                    onClick={() => {
+                        if (classList.length === 0) {
+                            showToast('No classes found. Please add a class first.', 'error');
+                            return;
+                        }
+                        if (subjectList.length === 0) {
+                            showToast('No subjects found. Please add a subject first.', 'error');
+                            return;
+                        }
+
+                        setShowModal(true);
+                        setSelectedClass('');
+                        setSelectedSubjects([]);
+                        setErrorMessage('');
+                        setEditMode(false);
+                    }}
+                >
                     <Link>Assign Subject</Link>
                 </Button>
+
             </div>
             {
 
@@ -213,7 +233,7 @@ const AssignSubject = () => {
 
                                 </div>
                                 <div className="mt-6">
-                                    <Label className="block text-sm font-medium text-gray-600">Sections</Label>
+                                    <Label className="block text-sm font-medium text-gray-600">Subjects</Label>
                                     <div className="mt-2 flex flex-wrap gap-4">
                                         {subjectList.map((subject) => (
                                             <div key={subject} style={{ flexDirection: 'column' }} className="flex items-center">

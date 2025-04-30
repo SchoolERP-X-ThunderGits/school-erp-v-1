@@ -102,6 +102,7 @@ const FeeStructure = () => {
                 });
                 fetchFeeStructures();
             } catch (error) {
+                setErrorMessage(error?.response?.data?.message)
                 showToast(error?.response?.data?.error, 'error')
                 console.error('Error posting data:', error);
             }
@@ -204,7 +205,15 @@ const FeeStructure = () => {
             {/* Add Class Button */}
             <div className='w-full p-4 flex justify-between items-center'>
                 <div className='text-3xl font-medium'>Fee Structures List</div>
-                <Button onClick={() => { setShowModal(true), setEditMode(false) }}>
+                <Button onClick={() => {
+                    if (classes.length == 0) {
+                        showToast('Please add a class first.', 'error')
+                    } else if (feeTypes.length == 0) {
+                        showToast('Please add a fee type.', 'error')
+                    } else {
+                        setShowModal(true), setEditMode(false)
+                    }
+                }}>
                     <Link>Add Fee Structures</Link>
                 </Button>
             </div>

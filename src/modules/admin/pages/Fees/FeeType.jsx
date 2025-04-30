@@ -74,6 +74,7 @@ const FeeType = () => {
                 showToast("Fee updated successfully.", 'success');
                 getFeeTypeList();
             } catch (error) {
+                setErrorMessage(error?.response?.data?.message)
                 console.error('Error posting data:', error);
             }
         } else {

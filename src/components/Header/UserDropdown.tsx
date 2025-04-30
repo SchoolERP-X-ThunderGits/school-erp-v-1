@@ -5,11 +5,11 @@ import { useUserContext } from '../../context/UserContext';
 import { Modal } from "../ui/modal";
 import Button from "../ui/button/Button";
 import { MdOutlineLockOpen } from "react-icons/md";
-export default function UserDropdown({subscription}:any) {
-  console.log('subscriptionsubscription',subscription)
+export default function UserDropdown({ status }: any) {
   const [isOpen, setIsOpen] = useState(false);
   const [logoutModal, setLogoutModal] = useState(false)
   const { logout, school } = useUserContext();
+  const role = localStorage.getItem("role")
   function toggleDropdown() {
     setIsOpen(!isOpen);
   }
@@ -62,7 +62,7 @@ export default function UserDropdown({subscription}:any) {
             <DropdownItem
               onItemClick={closeDropdown}
               tag="a"
-               to={subscription?.status !='active'?"/admin/subscriptions":"admin/profile-settings"}
+              to={!status && role == 'admin' ? "/admin/subscriptions" : "admin/profile-settings"}
               className="flex items-center gap-3 px-3 py-2 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
             >
               <svg
@@ -80,14 +80,14 @@ export default function UserDropdown({subscription}:any) {
                   fill=""
                 />
               </svg>
-              Edit profile    <MdOutlineLockOpen className="ml-2 text-gray-400" />
+              Edit profile     {!status && role == 'admin' && <MdOutlineLockOpen className="ml-2 text-gray-400" />}
             </DropdownItem>
           </li>
           <li>
             <DropdownItem
               onItemClick={closeDropdown}
               tag="a"
-              to={subscription?.status !='active'?"/admin/subscriptions":"/admin/Support"}
+              to={!status && role == 'admin' ? "/admin/subscriptions" : "/admin/Support"}
               className="flex items-center gap-3 px-3 py-2 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
             >
               <svg
@@ -105,7 +105,7 @@ export default function UserDropdown({subscription}:any) {
                   fill=""
                 />
               </svg>
-              Support  {subscription?.status !='active' && <MdOutlineLockOpen className="ml-2 text-gray-400" />}
+              Support  {!status && role == 'admin' && <MdOutlineLockOpen className="ml-2 text-gray-400" />}
             </DropdownItem>
           </li>
         </ul>

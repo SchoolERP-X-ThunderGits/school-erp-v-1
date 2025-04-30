@@ -163,7 +163,13 @@ const Students = () => {
             {/* Add Class Button */}
             <div className='w-full p-4 flex justify-between items-center'>
                 <div className='text-3xl font-medium'>Students List</div>
-                <Button onClick={() => navigate('/admin/add-student')}>
+                <Button onClick={() => {
+                    if (classes.length == 0) {
+                        showToast('Please create a class first.', 'error')
+                    } else {
+                        navigate('/admin/add-student')
+                    }
+                }}>
                     <Link>Add Student</Link>
                 </Button>
             </div>
@@ -204,7 +210,7 @@ const Students = () => {
                                 setSectionFilter('');
                                 setSearchText('');
                             }}
-                            className="px-6 py-3 bg-gray-200 text-black rounded-lg hover:bg-gray-300 transition duration-300"
+                            className="px-6 py-3 bg-gray-200 !text-black rounded-lg hover:bg-gray-300 transition duration-300"
                         >
                             Clear Filters
                         </Button>

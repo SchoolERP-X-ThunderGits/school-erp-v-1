@@ -1,26 +1,17 @@
 import { useEffect, useState } from "react";
 import { useSidebar } from "../context/SidebarContext";
-import { ThemeToggleButton } from "../components/common/ThemeToggleButton";
+import { ThemeToggleButton } from "..components/common/ThemeToggleButton";
 import NotificationDropdown from "../components/Header/NotificationDropdown";
 import UserDropdown from "../components/Header/UserDropdown";
 import { Link } from "react-router-dom";
 import { useUserContext } from '../context/UserContext';
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store";
-import { fetchSubscriptionStatus } from "../redux/slices/subscriptionSlice";
 const AppHeader: React.FC = () => {
   const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
   const { school } = useUserContext();
   const { isMobileOpen, toggleSidebar, toggleMobileSidebar } = useSidebar();
-  const dispatch = useDispatch();
-  const subscription = useSelector((state: RootState) => state.subscription);
-
-  useEffect(() => {
-    if (!subscription.status) {
-      dispatch(fetchSubscriptionStatus()); // Dispatch action to fetch subscription status
-    }
-  }, [dispatch, subscription.status]);
-
+  const { status, data } = useSelector((state: RootState) => state.subscription);
   const handleToggle = () => {
     if (window.innerWidth >= 1024) {
       toggleSidebar();
@@ -94,7 +85,7 @@ const AppHeader: React.FC = () => {
           <Link to="/admin/home" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} className="lg:hidden">
             <img
               className="dark:hidden"
-              style={{ width: 40, height: 40, objectFit: 'cover' }}
+              style={{ width: 40, height: 40, objectFit: 'cover', }}
               src={school?.logo}
               alt="Logo"
             />
@@ -141,11 +132,9 @@ const AppHeader: React.FC = () => {
             } items-center justify-between w-full gap-4 px-5 py-4 lg:flex shadow-theme-md lg:justify-end lg:px-0 lg:shadow-none`}
         >
           <div className="flex items-center gap-2 2xsm:gap-3">
-            {subscription.status && (
-              <div className={`${getStatusStyle(subscription.status)} px-3 py-1 rounded-full text-xs font-medium capitalize`}>
-                {subscription.status === 'trial_ending_soon'
-                  ? 'Trial ends soon'
-                  : subscription.status}
+            {data && (
+              <div className={`${getStatusStyle(status ? 'active' : data?.plan)} px-3 py-1 rounded-full text-xs font-medium capitalize`}>
+                {data?.plan}
               </div>
             )}
 
@@ -159,7 +148,7 @@ const AppHeader: React.FC = () => {
           {
             // subscription.status == 'active' &&
 
-          <UserDropdown subscription={subscription} />
+            <UserDropdown status={status} />
           }
         </div>
       </div>

@@ -331,8 +331,8 @@ const AddStudent = () => {
       {
         imageLoad &&
 
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="h-16 w-16 animate-spin rounded-full border-4 border-solid border-primary border-t-transparent"></div>
+        <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-50">
+          <div className="h-16 w-16 animate-spin rounded-full border-4 border-solid border-blue-500 border-t-transparent"></div>
         </div>
       }
       {
@@ -512,7 +512,7 @@ const AddStudent = () => {
                   </div>
 
                   <div className="mb-4 ">
-                    <Label className="block text-gray-700">Corr. Address *:</Label>
+                    <Label className="block text-gray-700">Correspondence Address*:</Label>
                     <Input
                       type="text"
                       name="address_For_Correspondence"
@@ -901,6 +901,7 @@ const AddStudent = () => {
         setBulkStudentModal(false)
         setBulkClassId('')
         setBulkSection('')
+        setErrorMessage('')
       }} className="max-w-[700px] m-4">
         <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
           <div className="px-2 pr-14">
@@ -917,7 +918,7 @@ const AddStudent = () => {
                 <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
                   <div>
                     <Select
-                      placeholder='Select New Class'
+                      placeholder='Select Class'
                       options={classes.map((classItem) => ({
                         value: classItem._id,
                         label: classItem.name,
@@ -940,7 +941,7 @@ const AddStudent = () => {
                         setBulkSection(e)
                       }}
                       disabled={!bulkClassId}
-                      placeholder='Select New Section'
+                      placeholder='Select Section'
                       options={sections.map((section) => ({
                         value: section,
                         label: section,
@@ -951,6 +952,7 @@ const AddStudent = () => {
                 <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
                   <div>
                     <Input
+                      disabled={!bulkSection}
                       type="file"
                       onChange={handleFileChange}
                       accept=".csv, .xlsx"

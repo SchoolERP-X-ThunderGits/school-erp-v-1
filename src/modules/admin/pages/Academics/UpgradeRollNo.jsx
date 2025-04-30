@@ -72,7 +72,6 @@ const UpgradeRollNo = () => {
 
     const fetchFilteredStudents = async () => {
         try {
-            setLoading(true);
             const result = await getService(`${apiName.getStudentByExam}/${classFilter}/${sectionFilter}/${sessionFilter}`);
             setStudentRollArray(result.map(i => {
                 return {
@@ -96,7 +95,8 @@ const UpgradeRollNo = () => {
 
     const handleUpgradeStudent = async (e, mode) => {
         e.preventDefault()
-        if (!newRollNo) {
+        console.log('skfskfsdf')
+        if (!newRollNo && mode == 'auto') {
             setErrorMessage('Please enter new roll number.');
             return;
         }
@@ -116,6 +116,7 @@ const UpgradeRollNo = () => {
             showToast("Roll No Update Successfully", 'success');
             setModalOpen(false);
         } catch (error) {
+            setErrorMessage(error?.response?.data?.message)
             console.error('Error posting data:', error);
         }
     };
@@ -241,7 +242,7 @@ const UpgradeRollNo = () => {
                                 setSessionFilter('')
                                 setStudents([]);
                             }}
-                            className="px-6 py-3 bg-gray-200 text-black rounded-lg hover:bg-gray-300 transition duration-300"
+                            className="px-6 py-3 bg-gray-200 !text-black rounded-lg hover:bg-gray-300 transition duration-300"
                         >
                             Clear Filters
                         </Button>

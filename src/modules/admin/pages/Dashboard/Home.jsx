@@ -10,6 +10,9 @@ import { HiMiniAcademicCap } from "react-icons/hi2";
 import { BsFillSignIntersectionFill } from "react-icons/bs";
 import { MdPayment } from "react-icons/md";
 import Chart from "react-apexcharts";
+import { fetchSubscriptionStatus } from '../../../../redux/slices/subscriptionSlice';
+import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 // Example static data for dashboard
 const dashboardData = {
   students: 14,
@@ -32,6 +35,7 @@ const AdminHome = () => {
   const [loading, setLoading] = useState(true);
   const [sections, setSections] = useState([]);
   const [payments, setPayments] = useState(dashboardData.payments);
+  const dispatch = useDispatch()
   const [recentTransactions, setRecentTransactions] = useState(dashboardData.recentTransactions);
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -39,6 +43,7 @@ const AdminHome = () => {
 
   useEffect(() => {
     setTimeout(() => {
+      dispatch(fetchSubscriptionStatus());
       fetchStudents();
       getClassList();
     }, 1000);
@@ -136,29 +141,30 @@ const AdminHome = () => {
       {/* Dashboard Stats */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-4 md:gap-6">
         {/* <!-- Metric Item Start --> */}
-        <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
-          <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
-            <PiStudentFill className="text-gray-800 size-6 dark:text-white/90" />
-          </div>
-
-          <div className="flex items-end justify-between mt-5">
-            <div>
-              <span className="text-sm text-gray-500 dark:text-gray-400">
-                Students
-              </span>
-              <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-                {students}
-              </h4>
+        <Link to="/admin/student" className="block">
+          <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
+            <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
+              <PiStudentFill className="text-gray-800 size-6 dark:text-white/90" />
             </div>
-            <Badge color="success">
-              <FaArrowDown />
-              11.01%
-            </Badge>
+
+
+            <div className="flex items-end justify-between mt-5">
+              <div>
+                <span className="text-sm text-gray-500 dark:text-gray-400">
+                  Students
+                </span>
+                <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
+                  {students}
+                </h4>
+              </div>
+
+            </div>
           </div>
-        </div>
+        </Link>
         {/* <!-- Metric Item End --> */}
 
         {/* <!-- Metric Item Start --> */}
+        <Link to="/admin/class" className="block">
         <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
           <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
             <HiMiniAcademicCap className="text-gray-800 size-6 dark:text-white/90" />
@@ -172,13 +178,9 @@ const AdminHome = () => {
                 {classes}
               </h4>
             </div>
-
-            <Badge color="error">
-              <FaArrowDown />
-              9.05%
-            </Badge>
           </div>
         </div>
+        </Link>
         <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
           <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
             <BsFillSignIntersectionFill className="text-gray-800 size-6 dark:text-white/90" />
@@ -192,11 +194,6 @@ const AdminHome = () => {
                 {sections}
               </h4>
             </div>
-
-            <Badge color="error">
-              <FaArrowDown />
-              9.05%
-            </Badge>
           </div>
         </div>
         <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
@@ -213,10 +210,6 @@ const AdminHome = () => {
               </h4>
             </div>
 
-            <Badge color="error">
-              <FaArrowDown />
-              9.05%
-            </Badge>
           </div>
         </div>
         {/* <!-- Metric Item End --> */}

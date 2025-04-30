@@ -20,83 +20,83 @@ import Checkbox from '../../../../components/form/input/Checkbox';
 const TemplateModal = ({ open, onClose, onSelectTemplate, selectedTemplate }) => {
     return (
         <Modal isOpen={open} onClose={onClose} className="max-w-[700px] m-4">
-        <div className="no-scrollbar relative w-full max-w-[700px] rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11 h-[500px] flex flex-col">
-          <div className="px-2 pr-14">
-            <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
-              Select Template
-            </h4>
-            <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
-              Please select template for your student id card.
-            </p>
-          </div>
-      
-          {/* Scrollable content */}
-          <div className="flex-grow overflow-y-auto px-2 pb-3 custom-scrollbar">
-            <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
-              {/* Template 1 */}
-              <div
-                className="flex flex-col items-center cursor-pointer"
-                onClick={() => onSelectTemplate('portrait')}
-              >
-                <img
-                  src={images.sspsPortrait}
-                  alt="Portrait Template"
-                  className="rounded-lg shadow-md transition-transform duration-300 object-contain"
-                />
-                <div className="flex items-center justify-center">
-                  {selectedTemplate === 'portrait' && (
-                    <FaCheckCircle className="mr-2 mt-2 text-green-500" />
-                  )}
-                  <p className="mt-2 text-sm font-semibold text-gray-700 text-center">
-                    SSPS Portrait Template
-                  </p>
+            <div className="no-scrollbar relative w-full max-w-[700px] rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11 h-[500px] flex flex-col">
+                <div className="px-2 pr-14">
+                    <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
+                        Select Template
+                    </h4>
+                    <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
+                        Please select template for your student id card.
+                    </p>
                 </div>
-              </div>
-      
-              {/* Template 2 */}
-              <div
-                className="flex flex-col items-center cursor-pointer"
-                onClick={() => onSelectTemplate('landscape')}
-              >
-                <img
-                  src={images.sspsLandScape}
-                  alt="Landscape Template"
-                  className="rounded-lg shadow-md transition-transform duration-300 object-contain"
-                />
-                <div className="flex items-center justify-center">
-                  {selectedTemplate === 'landscape' && (
-                    <FaCheckCircle className="mr-2 mt-2 text-green-500" />
-                  )}
-                  <p className="mt-2 text-sm font-semibold text-gray-700 text-center">
-                    SSPS Landscape Template
-                  </p>
+
+                {/* Scrollable content */}
+                <div className="flex-grow overflow-y-auto px-2 pb-3 custom-scrollbar">
+                    <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
+                        {/* Template 1 */}
+                        <div
+                            className="flex flex-col items-center cursor-pointer"
+                            onClick={() => onSelectTemplate('portrait')}
+                        >
+                            <img
+                                src={images.sspsPortrait}
+                                alt="Portrait Template"
+                                className="rounded-lg shadow-md transition-transform duration-300 object-contain"
+                            />
+                            <div className="flex items-center justify-center">
+                                {selectedTemplate === 'portrait' && (
+                                    <FaCheckCircle className="mr-2 mt-2 text-green-500" />
+                                )}
+                                <p className="mt-2 text-sm font-semibold text-gray-700 text-center">
+                                    SSPS Portrait Template
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Template 2 */}
+                        <div
+                            className="flex flex-col items-center cursor-pointer"
+                            onClick={() => onSelectTemplate('landscape')}
+                        >
+                            <img
+                                src={images.sspsLandScape}
+                                alt="Landscape Template"
+                                className="rounded-lg shadow-md transition-transform duration-300 object-contain"
+                            />
+                            <div className="flex items-center justify-center">
+                                {selectedTemplate === 'landscape' && (
+                                    <FaCheckCircle className="mr-2 mt-2 text-green-500" />
+                                )}
+                                <p className="mt-2 text-sm font-semibold text-gray-700 text-center">
+                                    SSPS Landscape Template
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Template 3 */}
+                        <div
+                            className="flex flex-col items-center cursor-pointer"
+                            onClick={() => onSelectTemplate('visionSchool')}
+                        >
+                            <img
+                                src={images.VisionSchool}
+                                alt="VS Template"
+                                className="rounded-lg shadow-md transition-transform duration-300 object-cover"
+                            />
+                            <div className="flex items-center justify-center">
+                                {selectedTemplate === 'visionSchool' && (
+                                    <FaCheckCircle className="mr-2 mt-2 text-green-500" />
+                                )}
+                                <p className="mt-2 text-sm font-semibold text-gray-700 text-center">
+                                    VS Template
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-      
-              {/* Template 3 */}
-              <div
-                className="flex flex-col items-center cursor-pointer"
-                onClick={() => onSelectTemplate('visionSchool')}
-              >
-                <img
-                  src={images.VisionSchool}
-                  alt="VS Template"
-                  className="rounded-lg shadow-md transition-transform duration-300 object-cover"
-                />
-                <div className="flex items-center justify-center">
-                  {selectedTemplate === 'visionSchool' && (
-                    <FaCheckCircle className="mr-2 mt-2 text-green-500" />
-                  )}
-                  <p className="mt-2 text-sm font-semibold text-gray-700 text-center">
-                    VS Template
-                  </p>
-                </div>
-              </div>
             </div>
-          </div>
-        </div>
-      </Modal>
-      
+        </Modal>
+
     );
 };
 // Main StudentIDCard Component
@@ -147,7 +147,8 @@ const StudentIDCard = () => {
         setSectionFilter(e);
     };
 
-    const handleSearch = () => {
+    const handleSearch = (e) => {
+        e.preventDefault()
         if (!classFilter || !sectionFilter) {
             showToast('Please select both class and section', 'error');
             return;
@@ -161,7 +162,6 @@ const StudentIDCard = () => {
 
     const fetchFilteredStudents = async () => {
         try {
-            setLoading(true);
             const result = await getService(`${apiName.getStudentByExam}/${classFilter}/${sectionFilter}`);
             setStudents(result);
             setSelectedStudents([])
@@ -504,6 +504,7 @@ const StudentIDCard = () => {
                             onChange={handleSectionFilterChange}
                         />
                         <Button
+                            disabled={!sectionFilter}
                             onClick={() => setTemplateModalOpen(true)} // Open the template selection modal
                             className="px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition duration-300"
                         >
@@ -522,7 +523,7 @@ const StudentIDCard = () => {
                                 setStudents([])
                                 setSelectedStudents([])
                             }}
-                            className="px-6 py-3 bg-gray-200 text-black rounded-lg hover:bg-gray-300 transition duration-300"
+                            className="px-6 py-3 bg-gray-200 !text-black rounded-lg hover:bg-gray-300 transition duration-300"
                         >
                             Clear Filters
                         </Button>

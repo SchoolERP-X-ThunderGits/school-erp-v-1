@@ -9,7 +9,7 @@ const ProtectedRoute = ({ children }) => {
   useEffect(() => {
     if (!isAuthenticated) {
       navigate('/admin'); // Redirect to login if not authenticated
-    } else if (subscriptionStatus !== 'active') {
+    } else if (!subscriptionStatus) {
       navigate('/admin/subscriptions')
     }
   }, [isAuthenticated, navigate]);

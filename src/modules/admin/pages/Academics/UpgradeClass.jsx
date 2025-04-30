@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getService, postService, putService, deleteService } from '../../../../constants/Service';
+import { getService, postService } from '../../../../constants/Service';
 import apiName from '../../../../constants/ApiName';
 import Loader from '../../../../components/Loader';
 import { Modal } from '../../../../components/ui/modal';
@@ -61,9 +61,8 @@ const UpgradeClass = () => {
         setSectionFilter(e);
         setSessionFilter('')
     };
-
     const handleSearch = (e) => {
-        e.preventDefault()
+        e.preventDefault();
         if (!classFilter || !sectionFilter || !sessionFilter) {
             showToast('Please select all fields', 'error');
             return;
@@ -73,16 +72,16 @@ const UpgradeClass = () => {
 
     const fetchFilteredStudents = async () => {
         try {
-            setLoading(true);
             const result = await getService(`${apiName.getStudentByExam}/${classFilter}/${sectionFilter}/${sessionFilter}`);
             setStudents(result);
-            setSelectedStudentsId([])
+            setSelectedStudentsId([]);
             setLoading(false);
         } catch (error) {
             showToast('Error fetching filtered students', 'error');
             setLoading(false);
         }
     };
+
 
     const handleStudentSelect = (e, studentId) => {
         if (e) {
@@ -164,6 +163,7 @@ const UpgradeClass = () => {
             setErrorMessage('Please select all fields');
             return;
         }
+        setLoading(true)
         const body = {
             _id: selectedStudentsId,
             class_Id: newClass,
@@ -172,7 +172,6 @@ const UpgradeClass = () => {
         };
         try {
             const response = await postService(apiName.upgradeStudentSessionSectionClass, JSON.stringify(body));
-            console.log('responseresponse', response)
             setClassFilter('')
             setSectionFilter('')
             setSessionFilter('')
@@ -183,7 +182,9 @@ const UpgradeClass = () => {
             setNewSession('')
             showToast("Details updated successfully", 'success');
             setModalOpen(false);
+            setLoading(false)
         } catch (error) {
+            setErrorMessage(error?.response?.data?.message)
             console.error('Error posting data:', error);
         }
     };
@@ -243,7 +244,7 @@ const UpgradeClass = () => {
                                 setSessionFilter('')
                                 setStudents([]);
                             }}
-                            className="px-6 py-3 bg-gray-200 text-black rounded-lg hover:bg-gray-300 transition duration-300"
+                            className="px-6 py-3 bg-gray-200 !text-black rounded-lg hover:bg-gray-300 transition duration-300"
                         >
                             Clear Filters
                         </Button>
@@ -326,7 +327,7 @@ const UpgradeClass = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <h3 style={{ textAlign: 'start', color: 'red',marginLeft:10 }}>{ErrorMessage}</h3>
+                                <h3 style={{ textAlign: 'start', color: 'red', marginLeft: 10 }}>{ErrorMessage}</h3>
                                 <div className="flex items-center gap-3 px-2 mt-6 lg:justify-end">
                                     <Button size="sm" variant="outline" onClick={() => {
                                         setModalOpen(false)

@@ -147,7 +147,7 @@ const StudentDetails = () => {
                     <img
                         src={student.student_Photo}
                         alt="Profile"
-                        className="w-24 h-24 rounded-full border-4 border-blue-400 shadow-lg"
+                        className="w-24 h-24 rounded-full border-4 border-gray shadow-lg"
                     />
                     <h2 className="mt-4 text-xl font-semibold text-gray-800">
                         {student.first_Name} {student.last_Name}
@@ -156,34 +156,34 @@ const StudentDetails = () => {
                 </div>
 
                 <div className="bg-white border rounded-xl shadow p-4">
-                    <h3 className="text-md font-semibold mb-2 text-blue-600">Class Info</h3>
+                    <h3 className="text-md font-semibold mb-2 text-[#465fff]">Class Info</h3>
                     <p><strong>Class:</strong> {student?.class_Id?.name}</p>
                     <p><strong>Section:</strong> {student?.section}</p>
                     <p><strong>Roll No:</strong> {student?.roll_Number}</p>
                 </div>
 
                 <div className="bg-white border rounded-xl shadow p-4">
-                    <h3 className="text-md font-semibold mb-2 text-blue-600">Contact Info</h3>
+                    <h3 className="text-md font-semibold mb-2 text-[#465fff]">Contact Info</h3>
                     <p><strong>Email:</strong> {student.email}</p>
                     <p><strong>Phone:</strong> {student.contact_Number}</p>
                     <p><strong>Alternate:</strong> {student.alternet_Contact_Number}</p>
                 </div>
 
                 <div className="bg-white border rounded-xl shadow p-4">
-                    <h3 className="text-md font-semibold mb-2 text-blue-600">Personal Details</h3>
+                    <h3 className="text-md font-semibold mb-2 text-[#465fff]">Personal Details</h3>
                     <p><strong>Gender:</strong> {student.gender}</p>
                     <p><strong>DOB:</strong> {new Date(student.date_Of_Birth).toLocaleDateString()}</p>
                     <p><strong>Blood Group:</strong> {student.blood_Group}</p>
                 </div>
 
                 <div className="bg-white border rounded-xl shadow p-4">
-                    <h3 className="text-md font-semibold mb-2 text-blue-600">Parents Info</h3>
+                    <h3 className="text-md font-semibold mb-2 text-[#465fff]">Parents Info</h3>
                     <p><strong>Father:</strong> {student.father_Name} ({student.father_Occupation})</p>
                     <p><strong>Mother:</strong> {student.mother_Name} ({student.mother_Occupation})</p>
                 </div>
 
                 <div className="bg-white border rounded-xl shadow p-4">
-                    <h3 className="text-md font-semibold mb-2 text-blue-600">Address Info</h3>
+                    <h3 className="text-md font-semibold mb-2 text-[#465fff]">Address Info</h3>
                     <p><strong>Permanent:</strong> {student.permanent_Address}</p>
                     <p><strong>Correspondence:</strong> {student.address_For_Correspondence}</p>
                 </div>
@@ -316,7 +316,7 @@ const StudentDetails = () => {
                                     onClick={() => setActiveTab(tab.key)}
                                     className={`flex items-center space-x-2 px-5 py-2 rounded-full font-semibold text-sm md:text-base transition-all duration-300
                     ${activeTab === tab.key
-                                            ? 'bg-gradient-to-r from-indigo-500 to-blue-500 text-white shadow-md'
+                                            ? 'bg-[#465fff] text-white shadow-md'
                                             : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
                                         }`}
                                 >

@@ -34,16 +34,20 @@ import "flatpickr/dist/themes/material_green.css";
 import Subscriptions from './modules/admin/pages/Settings/Subscriptions';
 import Schools from './modules/admin/pages/Schools/Schools';
 import SubscriptionPlans from './modules/admin/pages/Subscription/SubscriptionPlans';
+import { useDispatch } from 'react-redux';
+import { fetchSubscriptionStatus } from './redux/slices/subscriptionSlice';
 
 function App() {
   const [loading, setLoading] = useState(true);
   const { pathname } = useLocation();
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
-
+useEffect(()=>{
+  dispatch(fetchSubscriptionStatus());
+},[])
   useEffect(() => {
     setTimeout(() => setLoading(false), 1000); // Simulate loading time
   }, []);

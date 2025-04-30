@@ -16,7 +16,6 @@ import logo3 from '../assets/Images/logo/ThunderGits_Logos/3.png'
 import logo4 from '../assets/Images/logo/ThunderGits_Logos/4.png'
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store";
-import { fetchSubscriptionStatus } from "../redux/slices/subscriptionSlice";
 
 type NavItem = {
   name: string;
@@ -94,7 +93,7 @@ const navItems: NavItem[] = [
       { name: "Subscription plans", path: "/admin/Subscription-plans", pro: false },
     ],
   },
- 
+
 ];
 
 const othersItems: NavItem[] = [
@@ -139,14 +138,8 @@ const AppSidebar: React.FC = () => {
   const [subMenuHeight, setSubMenuHeight] = useState<Record<string, number>>(
     {}
   );
-  const dispatch = useDispatch();
-  const subscription = useSelector((state: RootState) => state.subscription);
+  const { status } = useSelector((state: RootState) => state.subscription);
   const role = localStorage.getItem("role")
-  useEffect(() => {
-    if (!subscription.status) {
-      dispatch(fetchSubscriptionStatus()); // Dispatch action to fetch subscription status
-    }
-  }, [dispatch, subscription.status]);
 
   const subMenuRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
@@ -199,7 +192,7 @@ const AppSidebar: React.FC = () => {
         item.name === 'Home' || item.name === 'School' || item.name === 'Subscriptions'
       );
     }
-  
+
     // Return navigation items for admin or other roles
     if (role === 'admin') {
       // Exclude 'School' and 'Subscriptions' for admin role
@@ -207,12 +200,12 @@ const AppSidebar: React.FC = () => {
         item.name !== 'School' && item.name !== 'Subscriptions'
       );
     }
-  
+
     // Return all navigation items if the role is not superadmin or admin (you can handle other roles here)
     return navItems;
   };
-  
-  const itemsToUse = filterNavItemsForRole(role || ''); 
+
+  const itemsToUse = filterNavItemsForRole(role || '');
   const handleSubmenuToggle = (index: number, menuType: "main" | "others") => {
     setOpenSubmenu((prevOpenSubmenu) => {
       if (
@@ -265,7 +258,7 @@ const AppSidebar: React.FC = () => {
           ) : (
             nav.path && (
               <Link
-                to={(subscription.status === "active" || nav.name == 'Home') ? nav.path : "/admin/subscriptions"}
+                to={(status === true || nav.name == 'Home') ? nav.path : "/admin/subscriptions"}
                 className={`menu-item group ${isActive(nav.path) ? "menu-item-active" : "menu-item-inactive"
                   }`}
               >
@@ -280,7 +273,7 @@ const AppSidebar: React.FC = () => {
                 {(isExpanded || isHovered || isMobileOpen) && (
                   <span className="menu-item-text">{nav.name}</span>
                 )}
-                {(subscription.status !== "active" && nav.name != 'Home' && role == 'admin') && (
+                {(!status && nav.name != 'Home' && role == 'admin') && (
                   <MdOutlineLockOpen className="ml-2 text-gray-400" />
                 )}
               </Link>
@@ -303,14 +296,14 @@ const AppSidebar: React.FC = () => {
                 {nav.subItems.map((subItem) => (
                   <li key={subItem.name}>
                     <Link
-                      to={(subscription.status === "active" || subItem?.name == 'Dashboard' || role != 'admin') ? subItem.path : "/admin/subscriptions"}
+                      to={(status || subItem?.name == 'Dashboard' || role != 'admin') ? subItem.path : "/admin/subscriptions"}
                       className={`menu-dropdown-item ${isActive(subItem.path)
                         ? "menu-dropdown-item-active"
                         : "menu-dropdown-item-inactive"
                         }`}
                     >
                       {subItem.name}
-                      {(subscription.status !== "active" && subItem?.name !== 'Dashboard' && role == 'admin') && (
+                      {(!status && subItem?.name !== 'Dashboard' && role == 'admin') && (
                         <MdOutlineLockOpen className="ml-2 text-gray-400" />
                       )}
                     </Link>

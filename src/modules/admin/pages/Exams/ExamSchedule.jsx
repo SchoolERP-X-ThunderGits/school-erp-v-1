@@ -261,7 +261,7 @@ const ExamSchedule = () => {
                                             setSelectedClass('');
                                             fetchExamSchedules('', '');
                                         }}
-                                        className="px-6 py-3 bg-gray-200 text-black rounded-lg hover:bg-gray-300 transition duration-300"
+                                        className="px-6 py-3 bg-gray-200 !text-black rounded-lg hover:bg-gray-300 transition duration-300"
                                     >
                                         Clear Filters
                                     </Button>

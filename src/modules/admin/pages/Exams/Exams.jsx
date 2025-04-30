@@ -75,6 +75,7 @@ const Exams = () => {
                 showToast("Exam updated successfully.", 'success');
                 getExamsList();
             } catch (error) {
+                setErrorMessage(error?.response?.data?.message)
                 console.error('Error posting data:', error);
             }
         } else {
