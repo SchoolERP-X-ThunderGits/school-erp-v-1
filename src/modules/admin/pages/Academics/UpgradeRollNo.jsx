@@ -21,16 +21,17 @@ const UpgradeRollNo = () => {
     const [sectionFilter, setSectionFilter] = useState('');
     const [sessionFilter, setSessionFilter] = useState('');
     const [newRollNo, setNewRollNo] = useState('');
-    const [studentRollArray, setStudentRollArray] = useState([])
+    const [studentRollArray, setStudentRollArray] = useState([]);
     const [studentOldRollArray, setStudentOldRollArray] = useState([]);
     const [modalOpen, setModalOpen] = useState(false);
-    const [ErrorMessage, setErrorMessage] = useState('')
-    const navigate = useNavigate()
+    const [ErrorMessage, setErrorMessage] = useState('');
+    const navigate = useNavigate();
 
     useEffect(() => {
         setLoading(true);
         fetchClasses();
     }, []);
+
     const fetchClasses = async () => {
         try {
             const result = await getService(apiName.getClassList);
@@ -58,11 +59,11 @@ const UpgradeRollNo = () => {
 
     const handleSectionFilterChange = (e) => {
         setSectionFilter(e);
-        setSessionFilter('')
+        setSessionFilter('');
     };
 
     const handleSearch = (e) => {
-        e.preventDefault()
+        e.preventDefault();
         if (!classFilter || !sectionFilter || !sessionFilter) {
             showToast('All fields are required', 'error');
             return;
@@ -73,18 +74,14 @@ const UpgradeRollNo = () => {
     const fetchFilteredStudents = async () => {
         try {
             const result = await getService(`${apiName.getStudentByExam}/${classFilter}/${sectionFilter}/${sessionFilter}`);
-            setStudentRollArray(result.map(i => {
-                return {
-                    _id: i._id,
-                    roll_Number: i.roll_Number
-                }
-            }))
-            setStudentOldRollArray(result.map(i => {
-                return {
-                    _id: i._id,
-                    roll_Number: i.roll_Number
-                }
-            }))
+            setStudentRollArray(result.map(i => ({
+                _id: i._id,
+                roll_Number: i.roll_Number,
+            })));
+            setStudentOldRollArray(result.map(i => ({
+                _id: i._id,
+                roll_Number: i.roll_Number,
+            })));
             setStudents(result);
             setLoading(false);
         } catch (error) {
@@ -94,9 +91,8 @@ const UpgradeRollNo = () => {
     };
 
     const handleUpgradeStudent = async (e, mode) => {
-        e.preventDefault()
-        console.log('skfskfsdf')
-        if (!newRollNo && mode == 'auto') {
+        e.preventDefault();
+        if (!newRollNo && mode === 'auto') {
             setErrorMessage('Please enter new roll number.');
             return;
         }
@@ -111,29 +107,28 @@ const UpgradeRollNo = () => {
             type: mode,
         };
         try {
-            const response = await postService(apiName.upgradeStudentRollNo, mode == 'auto' ? JSON.stringify(body2) : JSON.stringify(body));
-            fetchFilteredStudents()
+            const response = await postService(apiName.upgradeStudentRollNo, mode === 'auto' ? JSON.stringify(body2) : JSON.stringify(body));
+            fetchFilteredStudents();
             showToast("Roll No Update Successfully", 'success');
             setModalOpen(false);
         } catch (error) {
-            setErrorMessage(error?.response?.data?.message)
+            setErrorMessage(error?.response?.data?.message);
             console.error('Error posting data:', error);
         }
     };
 
     const renderStudentList = () => {
-
         return (
             <div className="container mx-auto p-4">
-                <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+                <div className="overflow-x-auto bg-white dark:bg-gray-800 shadow-md rounded-lg">
                     {students.length === 0 ? (
-                        <p style={{ textAlign: 'center', margin: 10 }}>No students found</p>
+                        <p className="text-center text-gray-500 dark:text-gray-300">No students found</p>
                     ) : (
                         <Table className="w-full text-left border-collapse">
                             <TableHeader className='bg-gray-100 dark:bg-gray-800'>
                                 <TableRow>
                                     {['Admission Number', 'Roll Number', 'Name', 'Class', 'Section'].map((header) => (
-                                        <th key={header} className="px-5 py-3 font-medium text-gray-500 text-left">{header}</th>
+                                        <th key={header} className="px-5 py-3 font-medium text-gray-500 text-left dark:text-gray-300">{header}</th>
                                     ))}
                                 </TableRow>
                             </TableHeader>
@@ -147,28 +142,27 @@ const UpgradeRollNo = () => {
                                                 <Input
                                                     type="number"
                                                     value={(() => {
-                                                        const studentObj = studentRollArray.find(obj => obj._id == student?._id);
+                                                        const studentObj = studentRollArray.find(obj => obj._id === student?._id);
                                                         return studentObj ? studentObj.roll_Number : '';
                                                     })()}
                                                     onChange={(e) => {
                                                         const updatedArray = studentRollArray.map(obj => {
-                                                            if (obj._id == student?._id) {
+                                                            if (obj._id === student?._id) {
                                                                 return { ...obj, roll_Number: Number(e.target.value) };
                                                             }
                                                             return obj;
                                                         });
                                                         setStudentRollArray(updatedArray);
                                                     }}
-                                                    className="border px-0.5 py-1"
+                                                    className="border px-0.5 py-1 dark:border-gray-600"
                                                     style={{ borderWidth: 0.5, borderColor: 'gray' }}
                                                 />
-
                                             </div>
                                         </TableCell>
                                         <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">
                                             <button
-                                                onClick={() => navigate(`/admin/student/student-details/${student?._id}`)} // Navigate to student details page
-                                                className="text-blue-500 hover:text-blue-700 transition duration-200"
+                                                onClick={() => navigate(`/admin/student/student-details/${student?._id}`)}
+                                                className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-500 transition duration-200"
                                             >
                                                 {student?.first_Name} {student?.last_Name}
                                             </button>
@@ -185,13 +179,11 @@ const UpgradeRollNo = () => {
         );
     };
 
-
-
     return (
-        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-white/[0.03] dark:border-gray-900">
+        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-900">
             {/* Add Class Button */}
             <div className='w-full p-4 flex justify-between items-center'>
-                <div className='text-3xl font-medium'>Upgrade Roll Number</div>
+                <div className='text-3xl font-medium text-gray-800 dark:text-white'>Upgrade Roll Number</div>
             </div>
             {loading ? (
                 <Loader />
@@ -230,7 +222,6 @@ const UpgradeRollNo = () => {
                         />
                     </div>
                     <div className="p-4 mb-4 flex flex-wrap gap-4">
-
                         <Button onClick={(e) => { handleSearch(e) }}>
                             <Link>Search</Link>
                         </Button>
@@ -239,10 +230,10 @@ const UpgradeRollNo = () => {
                             onClick={() => {
                                 setClassFilter('');
                                 setSectionFilter('');
-                                setSessionFilter('')
+                                setSessionFilter('');
                                 setStudents([]);
                             }}
-                            className="px-6 py-3 bg-gray-200 !text-black rounded-lg hover:bg-gray-300 transition duration-300"
+                            className="px-6 py-3 bg-gray-200 !text-black rounded-lg hover:bg-gray-300 transition duration-300 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white"
                         >
                             Clear Filters
                         </Button>
@@ -255,8 +246,7 @@ const UpgradeRollNo = () => {
                             </Button>
                         )}
                         {
-                            JSON.stringify(studentRollArray) != JSON.stringify(studentOldRollArray) &&
-
+                            JSON.stringify(studentRollArray) !== JSON.stringify(studentOldRollArray) &&
                             <Button
                                 onClick={(e) => handleUpgradeStudent(e, 'manual')}
                                 className="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300"
@@ -270,7 +260,8 @@ const UpgradeRollNo = () => {
 
                     {/* Modal for updating class and section */}
                     <Modal isOpen={modalOpen} onClose={() => {
-                        setModalOpen(false), setNewRollNo('')
+                        setModalOpen(false);
+                        setNewRollNo('');
                     }} className="max-w-[700px] m-4">
                         <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
                             <div className="px-2 pr-14">
@@ -282,18 +273,17 @@ const UpgradeRollNo = () => {
                                 </p>
                             </div>
                             <form className="flex flex-col">
-                                <div className="custom-scrollbar  overflow-y-auto px-2 pb-3">
+                                <div className="custom-scrollbar overflow-y-auto px-2 pb-3">
                                     <div>
                                         <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
                                             <div>
                                                 <Input
                                                     type="number"
-                                                    className="p-2 border rounded w-full mb-4"
+                                                    className="p-2 border rounded w-full mb-4 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                                                     value={newRollNo}
                                                     onChange={(e) => setNewRollNo(e.target.value)}
                                                     placeholder="Enter New Starting roll number"
                                                 />
-
                                             </div>
                                         </div>
                                     </div>
@@ -301,7 +291,8 @@ const UpgradeRollNo = () => {
                                 <h3 style={{ textAlign: 'start', color: 'red', marginLeft: 10 }}>{ErrorMessage}</h3>
                                 <div className="flex items-center gap-3 px-2 mt-6 lg:justify-end">
                                     <Button size="sm" variant="outline" onClick={() => {
-                                        setModalOpen(false), setNewRollNo('')
+                                        setModalOpen(false);
+                                        setNewRollNo('');
                                     }}>
                                         Close
                                     </Button>

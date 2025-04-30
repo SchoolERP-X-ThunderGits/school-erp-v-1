@@ -4,7 +4,6 @@ import AdminSignIn from './modules/admin/pages/Authentication/SignIn';
 import ParentSignIn from './modules/parents/pages/Authentication/SignIn';
 import AdminHome from './modules/admin/pages/Dashboard/Home';
 import ParentHome from './modules/parents/pages/DashBoard/Home';
-import FindStudent from './modules/admin/pages/Students/FindStudent';
 import FeeType from './modules/admin/pages/Fees/FeeType';
 import FeeStructure from './modules/admin/pages/Fees/FeeStructure';
 import Loader from './components/Loader/index';
@@ -118,14 +117,6 @@ useEffect(()=>{
             element={
               <ProtectedRoute>
                 <StudentIDCard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/find-student"
-            element={
-              <ProtectedRoute>
-                <FindStudent />
               </ProtectedRoute>
             }
           />

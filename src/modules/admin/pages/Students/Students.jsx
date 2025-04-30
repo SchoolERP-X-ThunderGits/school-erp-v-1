@@ -13,6 +13,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { sessionsArray } from '../../../../constants/GlobalConstants';
 import { FaDownload, FaTimeline } from "react-icons/fa6";
 import Input from '../../../../components/form/input/InputField';
+
 const Students = () => {
     const [loading, setLoading] = useState(false);
     const [classes, setClasses] = useState([]); // Classes for dropdown
@@ -109,17 +110,17 @@ const Students = () => {
 
     const renderStudentList = () => {
         return (
-            <div className="container mx-auto ">
-                <div className="overflow-x-auto bg-white shadow-md rounded-lg">
-                    {filteredStudents.length == 0 ?
+            <div className="container mx-auto">
+                <div className="overflow-x-auto bg-white dark:bg-gray-800 shadow-md rounded-lg">
+                    {filteredStudents.length == 0 ? 
                         <p style={{ textAlign: 'center', margin: 10 }}>No students found</p> :
                         <Table className="w-full text-left border-collapse">
                             <TableHeader className='bg-gray-100 dark:bg-gray-800'>
                                 <TableRow>
                                     {['Admission Number', 'Roll Number', 'Name', 'Class', 'Section'].map((header) => (
-                                        <th key={header} className="px-5 py-3 font-medium text-gray-500 text-left">{header}</th>
+                                        <th key={header} className="px-5 py-3 font-medium text-gray-500 text-left dark:text-gray-300">{header}</th>
                                     ))}
-                                    <th className='px-5 py-3 font-medium text-gray-500 text-left'>Action</th>
+                                    <th className='px-5 py-3 font-medium text-gray-500 text-left dark:text-gray-300'>Action</th>
                                 </TableRow>
                             </TableHeader>
 
@@ -131,7 +132,7 @@ const Students = () => {
                                         <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">
                                             <button
                                                 onClick={() => navigate(`/admin/student/student-details/${student?._id}`)} // Navigate to student details page
-                                                className="text-blue-500 hover:text-blue-700 transition duration-200"
+                                                className="text-blue-500 hover:text-blue-700 transition duration-200 dark:text-blue-400 dark:hover:text-blue-500"
                                             >
                                                 {student?.first_Name} {student?.last_Name}
                                             </button>
@@ -141,10 +142,10 @@ const Students = () => {
                                         <TableCell className="px-5 py-4">
                                             <div className='flex gap-3 justify-start items-center'>
                                                 <button onClick={() => navigate(`/admin/edit-student/${student?._id}`)}>
-                                                    <MdOutlineModeEdit className='dark:text-white' />
+                                                    <MdOutlineModeEdit className='text-gray-700 dark:text-white' />
                                                 </button>
                                                 <button onClick={() => handleDelete(student?._id)}>
-                                                    <MdDelete className='dark:text-white' />
+                                                    <MdDelete className='text-gray-700 dark:text-white' />
                                                 </button>
                                             </div>
                                         </TableCell>
@@ -159,20 +160,21 @@ const Students = () => {
     };
 
     return (
-        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-white/[0.03] dark:border-gray-900">
+        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-700">
             {/* Add Class Button */}
             <div className='w-full p-4 flex justify-between items-center'>
-                <div className='text-3xl font-medium'>Students List</div>
+                <div className='text-3xl font-medium text-gray-800 dark:text-white'>Students List</div>
                 <Button onClick={() => {
                     if (classes.length == 0) {
                         showToast('Please create a class first.', 'error')
                     } else {
                         navigate('/admin/add-student')
                     }
-                }}>
+                }} className="bg-blue-500 text-white hover:bg-blue-600 dark:bg-blue-700 dark:hover:bg-blue-600">
                     <Link>Add Student</Link>
                 </Button>
             </div>
+
             {loading ? (
                 <Loader />
             ) : (
@@ -187,6 +189,7 @@ const Students = () => {
                             }))}
                             value={classFilter}
                             onChange={handleClassFilterChange}
+                            className="dark:bg-gray-700 dark:text-white"
                         />
                         <Select
                             disabled={!classFilter}
@@ -197,12 +200,14 @@ const Students = () => {
                             }))}
                             value={sectionFilter}
                             onChange={handleSectionFilterChange}
+                            className="dark:bg-gray-700 dark:text-white"
                         />
                         <Input
                             type="text"
                             placeholder="Search"
                             value={searchText}
                             onChange={(e) => setSearchText(e.target.value)}
+                            className="dark:bg-gray-700 dark:text-white"
                         />
                         <Button
                             onClick={() => {
@@ -210,13 +215,11 @@ const Students = () => {
                                 setSectionFilter('');
                                 setSearchText('');
                             }}
-                            className="px-6 py-3 bg-gray-200 !text-black rounded-lg hover:bg-gray-300 transition duration-300"
+                            className="px-6 py-3 bg-gray-200 !text-black rounded-lg hover:bg-gray-300 transition duration-300 dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500"
                         >
                             Clear Filters
                         </Button>
                     </div>
-
-
 
                     <div className="mt-6">{renderStudentList()}</div>
                 </div>
@@ -227,8 +230,8 @@ const Students = () => {
                 setShowDeleteModal(false)
             }} className="max-w-[700px] m-4">
                 <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
-                    <div className="bg-white p-8 ">
-                        <h2 className="text-xl font-semibold text-gray-800 mb-4">Are you sure you want to delete this student?</h2>
+                    <div className="bg-white p-8 dark:bg-gray-800">
+                        <h2 className="text-xl font-semibold text-gray-800 mb-4 dark:text-white">Are you sure you want to delete this student?</h2>
                         <div className="flex justify-end space-x-4">
                             <Button
                                 onClick={() => setShowDeleteModal(false)} // Close the confirmation modal
@@ -246,7 +249,6 @@ const Students = () => {
                     </div>
                 </div>
             </Modal>
-
         </div>
     );
 };

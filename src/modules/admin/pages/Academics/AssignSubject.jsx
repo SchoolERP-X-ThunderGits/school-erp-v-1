@@ -11,6 +11,7 @@ import Select from '../../../../components/form/Select';
 import { showToast } from '../../../../components/Toast';
 import { Link } from 'react-router-dom';
 import Checkbox from '../../../../components/form/input/Checkbox';
+
 const AssignSubject = () => {
     const [assignList, setAssignList] = useState([]);
     const [classList, setClassList] = useState([]);
@@ -135,10 +136,10 @@ const AssignSubject = () => {
     };
 
     return (
-        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-white/[0.03] dark:border-gray-900">
+        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700">
             {/* Add Class Button */}
             <div className='w-full p-4 flex justify-between items-center'>
-                <div className='text-3xl font-medium'>Assign Subject List</div>
+                <div className='text-3xl font-medium text-gray-800 dark:text-white'>Assign Subject List</div>
                 <Button
                     onClick={() => {
                         if (classList.length === 0) {
@@ -156,17 +157,17 @@ const AssignSubject = () => {
                         setErrorMessage('');
                         setEditMode(false);
                     }}
+                    className="bg-blue-500 text-white hover:bg-blue-600"
                 >
                     <Link>Assign Subject</Link>
                 </Button>
-
             </div>
             {
 
                 loading ? <Loader /> :
-                    <div className="overflow-x-auto bg-white shadow-md rounded-lg">
-                        {assignList.length == 0 ?
-                            <p style={{ textAlign: 'center', margin: 10 }}>No assign subject list found</p> :
+                    <div className="overflow-x-auto bg-white dark:bg-gray-700 shadow-md rounded-lg">
+                        {assignList.length === 0 ?
+                            <p style={{ textAlign: 'center', margin: 10 }} className="text-gray-500 dark:text-gray-400">No assign subject list found</p> :
                             <Table className="w-full text-left border-collapse">
                                 <TableHeader className='bg-gray-100 dark:bg-gray-800'>
                                     <TableRow>
@@ -179,7 +180,7 @@ const AssignSubject = () => {
 
                                 <TableBody>
                                     {assignList?.map((subject) => (
-                                        <TableRow className='border-gray-200 dark:border-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800' key={subject._id}>
+                                        <TableRow className='border-gray-200 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-800' key={subject._id}>
                                             <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{subject?.class?.name}</TableCell>
                                             <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{subject?.subjects?.map(subject => subject.name)?.join(', ')}</TableCell>
                                             <TableCell className="px-5 py-4">
@@ -230,10 +231,9 @@ const AssignSubject = () => {
                                         />
                                     </div>
 
-
                                 </div>
                                 <div className="mt-6">
-                                    <Label className="block text-sm font-medium text-gray-600">Subjects</Label>
+                                    <Label className="block text-sm font-medium text-gray-600 dark:text-gray-300">Subjects</Label>
                                     <div className="mt-2 flex flex-wrap gap-4">
                                         {subjectList.map((subject) => (
                                             <div key={subject} style={{ flexDirection: 'column' }} className="flex items-center">
@@ -242,7 +242,7 @@ const AssignSubject = () => {
                                                     checked={selectedSubjects.includes(subject._id)}
                                                     onChange={() => handleSubjectChange(subject._id)}
                                                 />
-                                                <Label htmlFor={subject} className="text-sm mt-2 text-gray-600">
+                                                <Label htmlFor={subject} className="text-sm mt-2 text-gray-600 dark:text-gray-300">
                                                     {subject.name}
                                                 </Label>
                                             </div>
@@ -274,8 +274,8 @@ const AssignSubject = () => {
                 setErrorMessage('')
             }} className="max-w-[700px] m-4">
                 <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
-                    <div className="bg-white p-8 ">
-                        <h2 className="text-xl font-semibold text-gray-800 mb-4">Are you sure you want to delete this subject?</h2>
+                    <div className="bg-white p-8 dark:bg-gray-800">
+                        <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Are you sure you want to delete this subject?</h2>
                         <div className="flex justify-end space-x-4">
                             <Button
                                 onClick={() => setShowDeleteModal(false)} // Close the confirmation modal

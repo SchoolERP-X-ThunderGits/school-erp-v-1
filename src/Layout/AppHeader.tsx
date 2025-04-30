@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useSidebar } from "../context/SidebarContext";
-import { ThemeToggleButton } from "..components/common/ThemeToggleButton";
+// import { ThemeToggleButton } from "..components/common/ThemeToggleButton";
 import NotificationDropdown from "../components/Header/NotificationDropdown";
 import UserDropdown from "../components/Header/UserDropdown";
 import { Link } from "react-router-dom";
 import { useUserContext } from '../context/UserContext';
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store";
+import { ThemeToggleButton } from "../components/common/ThemeToggleButton";
 const AppHeader: React.FC = () => {
   const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
   const { school } = useUserContext();
@@ -139,7 +140,7 @@ const AppHeader: React.FC = () => {
             )}
 
             {/* <!-- Dark Mode Toggler --> */}
-            {/* <ThemeToggleButton /> */}
+             <ThemeToggleButton /> 
             {/* <!-- Dark Mode Toggler --> */}
             <NotificationDropdown />
             {/* <!-- Notification Menu Area --> */}

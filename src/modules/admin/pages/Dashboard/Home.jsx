@@ -13,7 +13,7 @@ import Chart from "react-apexcharts";
 import { fetchSubscriptionStatus } from '../../../../redux/slices/subscriptionSlice';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-// Example static data for dashboard
+
 const dashboardData = {
   students: 14,
   classes: 9,
@@ -35,7 +35,7 @@ const AdminHome = () => {
   const [loading, setLoading] = useState(true);
   const [sections, setSections] = useState([]);
   const [payments, setPayments] = useState(dashboardData.payments);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [recentTransactions, setRecentTransactions] = useState(dashboardData.recentTransactions);
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -53,12 +53,13 @@ const AdminHome = () => {
     try {
       const result = await getService(apiName.getStudent);
       setStudents(result?.length);
-      setLoading(false)
+      setLoading(false);
     } catch (error) {
-      console.log('fetchStudents error', error)
+      console.log('fetchStudents error', error);
       showToast('Error fetching students data', 'error');
     }
   };
+
   const getClassList = async () => {
     try {
       const result = await getService(apiName.getClassList);
@@ -69,7 +70,7 @@ const AdminHome = () => {
       });
       setSections(totalSections);
     } catch (error) {
-      console.log('getClassList error', error)
+      console.log('getClassList error', error);
       setLoading(false);
     }
   };
@@ -117,7 +118,7 @@ const AdminHome = () => {
         columnWidth: '55%',
       },
     },
-    colors: ['#FF4560', '#00E396', '#008FFB'], // You can add more or fewer depending on your series
+    colors: ['#FF4560', '#00E396', '#008FFB'], 
     dataLabels: {
       enabled: true,
     },
@@ -131,101 +132,80 @@ const AdminHome = () => {
     },
   };
 
-
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
-      {
-        loading &&
-        <Loader />
-      }
+    <div className="p-6 bg-gray-50 min-h-screen dark:bg-gray-900">
+      {loading && <Loader />}
       {/* Dashboard Stats */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-4 md:gap-6">
-        {/* <!-- Metric Item Start --> */}
+        {/* Students Metric */}
         <Link to="/admin/student" className="block">
-          <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
-            <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
+          <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-gray-800/[0.03] md:p-6">
+            <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-700">
               <PiStudentFill className="text-gray-800 size-6 dark:text-white/90" />
             </div>
-
-
             <div className="flex items-end justify-between mt-5">
               <div>
-                <span className="text-sm text-gray-500 dark:text-gray-400">
-                  Students
-                </span>
+                <span className="text-sm text-gray-500 dark:text-gray-400">Students</span>
                 <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
                   {students}
                 </h4>
               </div>
-
             </div>
           </div>
         </Link>
-        {/* <!-- Metric Item End --> */}
 
-        {/* <!-- Metric Item Start --> */}
+        {/* Classes Metric */}
         <Link to="/admin/class" className="block">
-        <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
-          <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
-            <HiMiniAcademicCap className="text-gray-800 size-6 dark:text-white/90" />
-          </div>
-          <div className="flex items-end justify-between mt-5">
-            <div>
-              <span className="text-sm text-gray-500 dark:text-gray-400">
-                Classes
-              </span>
-              <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-                {classes}
-              </h4>
+          <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-gray-800/[0.03] md:p-6">
+            <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-700">
+              <HiMiniAcademicCap className="text-gray-800 size-6 dark:text-white/90" />
+            </div>
+            <div className="flex items-end justify-between mt-5">
+              <div>
+                <span className="text-sm text-gray-500 dark:text-gray-400">Classes</span>
+                <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
+                  {classes}
+                </h4>
+              </div>
             </div>
           </div>
-        </div>
         </Link>
-        <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
-          <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
+
+        {/* Sections Metric */}
+        <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-gray-800/[0.03] md:p-6">
+          <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-700">
             <BsFillSignIntersectionFill className="text-gray-800 size-6 dark:text-white/90" />
           </div>
           <div className="flex items-end justify-between mt-5">
             <div>
-              <span className="text-sm text-gray-500 dark:text-gray-400">
-                Sections
-              </span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">Sections</span>
               <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
                 {sections}
               </h4>
             </div>
           </div>
         </div>
-        <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
-          <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
+
+        {/* Payments Metric */}
+        <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-gray-800/[0.03] md:p-6">
+          <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-700">
             <MdPayment className="text-gray-800 size-6 dark:text-white/90" />
           </div>
           <div className="flex items-end justify-between mt-5">
             <div>
-              <span className="text-sm text-gray-500 dark:text-gray-400">
-                Payment
-              </span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">Payments</span>
               <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
                 {payments}
               </h4>
             </div>
-
           </div>
         </div>
-        {/* <!-- Metric Item End --> */}
       </div>
 
       {/* Chart for Students, Classes, and Fee Dues */}
-      <div className="bg-white p-6 rounded-lg shadow-md mb-8 mt-10">
-        <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-          Enrollment Overview and Fee Status
-        </h3>
-        <Chart
-          options={chartOptions}
-          series={chartData.datasets}
-          type="bar"
-          height={350}
-        />
+      <div className="bg-white p-6 rounded-lg shadow-md mb-8 mt-10 dark:bg-gray-800">
+        <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">Enrollment Overview and Fee Status</h3>
+        <Chart options={chartOptions} series={chartData.datasets} type="bar" height={350} />
       </div>
     </div>
   );

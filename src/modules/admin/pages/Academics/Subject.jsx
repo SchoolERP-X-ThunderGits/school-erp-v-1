@@ -10,6 +10,7 @@ import Input from '../../../../components/form/input/InputField';
 import Label from '../../../../components/form/Label';
 import { showToast } from '../../../../components/Toast';
 import { Link } from 'react-router-dom';
+
 const Subject = () => {
     const [subjectList, setSubjectList] = useState([]);
     const [showModal, setShowModal] = useState(false);
@@ -40,15 +41,15 @@ const Subject = () => {
         }
     };
 
-    const handleEdit = (classData) => {
+    const handleEdit = (subjectData) => {
         setShowModal(true);
         setEditMode(true);
-        setEditId(classData._id);
-        setNewSubjectName(classData.name);
+        setEditId(subjectData._id);
+        setNewSubjectName(subjectData.name);
     };
 
-    const handleDelete = (classId) => {
-        setSubjectToDelete(classId); // Store subject ID for deletion
+    const handleDelete = (subjectId) => {
+        setSubjectToDelete(subjectId); // Store subject ID for deletion
         setShowDeleteModal(true);  // Show confirmation modal
     };
 
@@ -97,33 +98,31 @@ const Subject = () => {
     };
 
     return (
-        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-white/[0.03] dark:border-gray-900">
+        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-800">
             {/* Add Subject Button */}
             <div className='w-full p-4 flex justify-between items-center'>
-                <div className='text-3xl font-medium'>Subjects List</div>
+                <div className='text-3xl font-medium text-gray-800 dark:text-white'>Subjects List</div>
                 <Button onClick={() => { setShowModal(true), setNewSubjectName(''), setErrorMessage(''), setEditMode(false); }}>
                     <Link>Add Subject</Link>
                 </Button>
             </div>
 
             {
-
                 loading ? <Loader /> :
-                    <div className="overflow-x-auto bg-white shadow-md rounded-lg">
-                        {subjectList.length == 0 ?
-                            <p style={{ textAlign: 'center', margin: 10 }}>No subjects found</p> :
+                    <div className="overflow-x-auto bg-white shadow-md rounded-lg dark:bg-gray-800">
+                        {subjectList.length === 0 ?
+                            <p className="text-center text-gray-500 dark:text-gray-300" style={{ margin: 10 }}>No subjects found</p> :
                             <Table className="w-full text-left border-collapse">
                                 <TableHeader className='bg-gray-100 dark:bg-gray-800'>
                                     <TableRow>
-                                        <th className="px-5 py-3 font-medium text-gray-500 text-left">Subject Name</th>
-
-                                        <th className='px-5 py-3 font-medium text-gray-500 text-left'>Action</th>
+                                        <th className="px-5 py-3 font-medium text-gray-500 dark:text-gray-400 text-left">Subject Name</th>
+                                        <th className='px-5 py-3 font-medium text-gray-500 dark:text-gray-400 text-left'>Action</th>
                                     </TableRow>
                                 </TableHeader>
 
                                 <TableBody>
                                     {subjectList?.map((subjectItem) => (
-                                        <TableRow className='border-gray-200 dark:border-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800' key={subjectItem._id}>
+                                        <TableRow className='border-gray-200 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700' key={subjectItem._id}>
                                             <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{subjectItem.name}</TableCell>
                                             <TableCell className="px-5 py-4">
                                                 <div className='flex gap-3 justify-start items-center'>
@@ -167,7 +166,7 @@ const Subject = () => {
                                             type="text"
                                             value={newSubjectName}
                                             onChange={(e) => setNewSubjectName(e.target.value)}
-                                            className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white dark:border-gray-700"
                                             placeholder="Enter subject name"
                                         />
                                     </div>
@@ -200,7 +199,7 @@ const Subject = () => {
             }} className="max-w-[700px] m-4">
                 <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
                     <div className="bg-white p-8 ">
-                        <h2 className="text-xl font-semibold text-gray-800 mb-4">Are you sure you want to delete this subject?</h2>
+                        <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Are you sure you want to delete this subject?</h2>
                         <div className="flex justify-end space-x-4">
                             <Button
                                 onClick={() => setShowDeleteModal(false)} // Close the confirmation modal

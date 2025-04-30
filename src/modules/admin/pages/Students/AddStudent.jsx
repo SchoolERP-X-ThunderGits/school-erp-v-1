@@ -331,9 +331,10 @@ const AddStudent = () => {
       {
         imageLoad &&
 
-        <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-50">
-          <div className="h-16 w-16 animate-spin rounded-full border-4 border-solid border-blue-500 border-t-transparent"></div>
-        </div>
+        <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-50 dark:bg-black dark:bg-opacity-50 z-50">
+        <div className="h-16 w-16 animate-spin rounded-full border-4 border-solid border-blue-500 border-t-transparent"></div>
+      </div>
+      
       }
       {
         registrationCompleted ?
@@ -897,90 +898,125 @@ const AddStudent = () => {
 
           </form>
       }
-      <Modal isOpen={bulkStudentModal} onClose={() => {
-        setBulkStudentModal(false)
-        setBulkClassId('')
-        setBulkSection('')
-        setErrorMessage('')
-      }} className="max-w-[700px] m-4">
-        <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
-          <div className="px-2 pr-14">
-            <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
-              Bulk Student Upload
-            </h4>
-            <p className="mb-6 text-sm text-gray-500 dark:text-gray-400 lg:mb-7">
-              Upload here bulk students
-            </p>
+    <Modal
+  isOpen={bulkStudentModal}
+  onClose={() => {
+    setBulkStudentModal(false);
+    setBulkClassId('');
+    setBulkSection('');
+    setErrorMessage('');
+  }}
+  className="max-w-[700px] m-4"
+>
+  <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
+    <div className="px-2 pr-14">
+      <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
+        Bulk Student Upload
+      </h4>
+      <p className="mb-6 text-sm text-gray-500 dark:text-gray-400 lg:mb-7">
+        Upload here bulk students
+      </p>
+    </div>
+    <form className="flex flex-col">
+      <div className="custom-scrollbar overflow-y-auto px-2 pb-3">
+        <div>
+          <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
+            <div>
+              <Select
+                placeholder="Select Class"
+                options={classes.map((classItem) => ({
+                  value: classItem._id,
+                  label: classItem.name,
+                }))}
+                value={bulkClassId}
+                onChange={(e) => {
+                  setBulkClassId(e);
+                  const filterClassData = classes.filter(
+                    (classItem) => classItem._id === e
+                  );
+                  setSections(filterClassData[0]?.sections);
+                }}
+                className="dark:bg-gray-700 dark:text-white"
+              />
+            </div>
           </div>
-          <form className="flex flex-col">
-            <div className="custom-scrollbar overflow-y-auto px-2 pb-3">
-              <div>
-                <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
-                  <div>
-                    <Select
-                      placeholder='Select Class'
-                      options={classes.map((classItem) => ({
-                        value: classItem._id,
-                        label: classItem.name,
-                      }))}
-                      value={bulkClassId}
-                      onChange={(e) => {
-                        setBulkClassId(e)
-                        const filterClassData = classes.filter((classes) => classes._id === e);
-                        setSections(filterClassData[0]?.sections)
-                      }}
-                    />
-
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 mt-3 mb-3 gap-x-6 gap-y-5 lg:grid-cols-2">
-                  <div>
-                    <Select
-                      value={bulkSection}
-                      onChange={(e) => {
-                        setBulkSection(e)
-                      }}
-                      disabled={!bulkClassId}
-                      placeholder='Select Section'
-                      options={sections.map((section) => ({
-                        value: section,
-                        label: section,
-                      }))}
-                    />
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
-                  <div>
-                    <Input
-                      disabled={!bulkSection}
-                      type="file"
-                      onChange={handleFileChange}
-                      accept=".csv, .xlsx"
-                      placeholder="Enter exam name"
-                    />
-                  </div>
-                </div>
-              </div>
+          <div className="grid grid-cols-1 mt-3 mb-3 gap-x-6 gap-y-5 lg:grid-cols-2">
+            <div>
+              <Select
+                value={bulkSection}
+                onChange={(e) => {
+                  setBulkSection(e);
+                }}
+                disabled={!bulkClassId}
+                placeholder="Select Section"
+                options={sections.map((section) => ({
+                  value: section,
+                  label: section,
+                }))}
+                className="dark:bg-gray-700 dark:text-white"
+              />
             </div>
-            <h3 style={{ textAlign: 'start', color: 'red', marginLeft: 10 }}>{ErrorMessage}</h3>
-            <div className="flex items-center gap-3 px-2 mt-6 lg:justify-end">
-              <Button size="sm" variant="outline" onClick={() => {
-                setBulkStudentModal(false)
-                setBulkClassId('')
-                setBulkSection('')
-              }}>
-                Close
-              </Button>
-              <Button
-                onClick={(e) => buildStudentUpload(e)}
-                className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-200"
-              >
-                Upload
-              </Button>
+          </div>
+          <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
+            <div>
+              <Input
+                disabled={!bulkSection}
+                type="file"
+                onChange={handleFileChange}
+                accept=".csv, .xlsx"
+                placeholder="Enter exam name"
+                className="dark:bg-gray-700 dark:text-white"
+              />
             </div>
-          </form>
+          </div>
         </div>
-      </Modal>
+      </div>
+      {/* Error Message */}
+      <h3
+        style={{ textAlign: 'start', color: 'red', marginLeft: 10 }}
+        className="dark:text-red-400"
+      >
+        {ErrorMessage}
+      </h3>
+
+      {/* Button for downloading the sample CSV */}
+      <div className="flex items-center gap-3 px-2 mt-6 lg:justify-between">
+        <div className="flex justify-start mt-3 px-2">
+          <Button
+            size="sm"
+            variant="outline"
+            // onClick={downloadSampleCSV}
+            className="mr-4 dark:text-white dark:border-gray-500"
+          >
+            Download Sample CSV
+          </Button>
+        </div>
+        <div>
+          <Button
+            size="sm"
+            variant="outline"
+            className="mr-4 dark:text-white dark:border-gray-500"
+            onClick={() => {
+              setBulkStudentModal(false);
+              setBulkClassId('');
+              setBulkSection('');
+            }}
+          >
+            Close
+          </Button>
+          <Button
+            onClick={(e) => buildStudentUpload(e)}
+            className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-200 dark:bg-blue-700 dark:hover:bg-blue-600"
+          >
+            Upload
+          </Button>
+        </div>
+      </div>
+    </form>
+  </div>
+</Modal>
+
+
     </form>
 
   );

@@ -11,6 +11,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { sessionsArray } from '../../../../constants/GlobalConstants';
 import { FaDownload } from "react-icons/fa6";
 import Checkbox from '../../../../components/form/input/Checkbox';
+
 const UpgradeClass = () => {
     const [loading, setLoading] = useState(false);
     const [classes, setClasses] = useState([]);
@@ -24,8 +25,9 @@ const UpgradeClass = () => {
     const [newSection, setNewSection] = useState('');
     const [newSession, setNewSession] = useState('');
     const [modalOpen, setModalOpen] = useState(false);
-    const [ErrorMessage, setErrorMessage] = useState('')
-    const navigate = useNavigate()
+    const [ErrorMessage, setErrorMessage] = useState('');
+    const navigate = useNavigate();
+
     useEffect(() => {
         setLoading(true);
         fetchClasses();
@@ -53,14 +55,15 @@ const UpgradeClass = () => {
         const selectedClass = e;
         setClassFilter(selectedClass);
         setSectionFilter('');
-        setSessionFilter('')
+        setSessionFilter('');
         fetchSectionsForClass(selectedClass);
     };
 
     const handleSectionFilterChange = (e) => {
         setSectionFilter(e);
-        setSessionFilter('')
+        setSessionFilter('');
     };
+
     const handleSearch = (e) => {
         e.preventDefault();
         if (!classFilter || !sectionFilter || !sessionFilter) {
@@ -81,7 +84,6 @@ const UpgradeClass = () => {
             setLoading(false);
         }
     };
-
 
     const handleStudentSelect = (e, studentId) => {
         if (e) {
@@ -104,7 +106,7 @@ const UpgradeClass = () => {
 
         return (
             <div className="container mx-auto p-4">
-                <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+                <div className="overflow-x-auto bg-white dark:bg-gray-800 shadow-md rounded-lg">
                     {students.length === 0 ? (
                         <p style={{ textAlign: 'center', margin: 10 }}>No students found</p>
                     ) : (
@@ -113,7 +115,6 @@ const UpgradeClass = () => {
                                 <TableRow>
                                     <th className='px-5 py-3 font-medium text-gray-500 text-left'>
                                         <Checkbox
-                                            // id={subject}
                                             checked={isAllSelected}
                                             onChange={handleSelectAll}
                                         />
@@ -158,12 +159,12 @@ const UpgradeClass = () => {
     };
 
     const handleUpgradeStudent = async (e) => {
-        e.preventDefault()
+        e.preventDefault();
         if (!newClass || !newSection || !newSession) {
             setErrorMessage('Please select all fields');
             return;
         }
-        setLoading(true)
+        setLoading(true);
         const body = {
             _id: selectedStudentsId,
             class_Id: newClass,
@@ -172,28 +173,28 @@ const UpgradeClass = () => {
         };
         try {
             const response = await postService(apiName.upgradeStudentSessionSectionClass, JSON.stringify(body));
-            setClassFilter('')
-            setSectionFilter('')
-            setSessionFilter('')
-            setStudents([])
-            setSelectedStudentsId([])
-            setNewClass('')
-            setNewSection('')
-            setNewSession('')
+            setClassFilter('');
+            setSectionFilter('');
+            setSessionFilter('');
+            setStudents([]);
+            setSelectedStudentsId([]);
+            setNewClass('');
+            setNewSection('');
+            setNewSession('');
             showToast("Details updated successfully", 'success');
             setModalOpen(false);
-            setLoading(false)
+            setLoading(false);
         } catch (error) {
-            setErrorMessage(error?.response?.data?.message)
+            setErrorMessage(error?.response?.data?.message);
             console.error('Error posting data:', error);
         }
     };
 
     return (
-        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-white/[0.03] dark:border-gray-900">
+        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-900">
             {/* Add Class Button */}
             <div className='w-full p-4 flex justify-between items-center'>
-                <div className='text-3xl font-medium'>Upgrade Class, Section and Session</div>
+                <div className='text-3xl font-medium text-gray-800 dark:text-white'>Upgrade Class, Section and Session</div>
             </div>
             {loading ? (
                 <Loader />
@@ -241,7 +242,7 @@ const UpgradeClass = () => {
                             onClick={() => {
                                 setClassFilter('');
                                 setSectionFilter('');
-                                setSessionFilter('')
+                                setSessionFilter('');
                                 setStudents([]);
                             }}
                             className="px-6 py-3 bg-gray-200 !text-black rounded-lg hover:bg-gray-300 transition duration-300"
@@ -262,11 +263,11 @@ const UpgradeClass = () => {
 
                     {/* Modal for updating class and section */}
                     <Modal isOpen={modalOpen} onClose={() => {
-                        setModalOpen(false)
-                        setNewClass('')
-                        setNewSection('')
-                        setNewSession('')
-                        setErrorMessage('')
+                        setModalOpen(false);
+                        setNewClass('');
+                        setNewSection('');
+                        setNewSession('');
+                        setErrorMessage('');
                     }} className="max-w-[700px] m-4">
                         <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
                             <div className="px-2 pr-14">
@@ -288,13 +289,12 @@ const UpgradeClass = () => {
                                                         value: classItem._id,
                                                         label: classItem.name,
                                                     }))}
-                                                    value={classFilter}
+                                                    value={newClass}
                                                     onChange={(e) => {
-                                                        setNewClass(e)
-                                                        fetchSectionsForClass(e)
+                                                        setNewClass(e);
+                                                        fetchSectionsForClass(e);
                                                     }}
                                                 />
-
                                             </div>
                                         </div>
                                         <div className="grid grid-cols-1 mt-3 mb-3 gap-x-6 gap-y-5 lg:grid-cols-2">
@@ -330,11 +330,11 @@ const UpgradeClass = () => {
                                 <h3 style={{ textAlign: 'start', color: 'red', marginLeft: 10 }}>{ErrorMessage}</h3>
                                 <div className="flex items-center gap-3 px-2 mt-6 lg:justify-end">
                                     <Button size="sm" variant="outline" onClick={() => {
-                                        setModalOpen(false)
-                                        setNewClass('')
-                                        setNewSection('')
-                                        setNewSession('')
-                                        setErrorMessage('')
+                                        setModalOpen(false);
+                                        setNewClass('');
+                                        setNewSection('');
+                                        setNewSession('');
+                                        setErrorMessage('');
                                     }}>
                                         Close
                                     </Button>

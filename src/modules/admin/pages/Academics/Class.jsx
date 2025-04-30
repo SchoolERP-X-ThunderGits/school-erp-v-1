@@ -12,6 +12,7 @@ import Label from '../../../../components/form/Label';
 import { showToast } from '../../../../components/Toast';
 import { sectionArray } from '../../../../constants/GlobalConstants';
 import { Link } from 'react-router-dom';
+
 const Class = () => {
     const [classList, setClassList] = useState([]);
     const [showModal, setShowModal] = useState(false);
@@ -23,6 +24,7 @@ const Class = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false); // Delete confirmation modal
     const [classToDelete, setClassToDelete] = useState(null); // Track class to delete
     const [ErrorMessage, setErrorMessage] = useState('')
+
     useEffect(() => {
         setLoading(true);
         getClassList();
@@ -111,10 +113,10 @@ const Class = () => {
     };
 
     return (
-        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-white/[0.03] dark:border-gray-900">
+        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-800">
             {/* Add Class Button */}
             <div className='w-full p-4 flex justify-between items-center'>
-                <div className='text-3xl font-medium'>Classes List</div>
+                <div className='text-3xl font-medium text-gray-800 dark:text-white'>Classes List</div>
                 <Button onClick={() => { setShowModal(true), setNewClassName(''), setSelectedSections([]), setErrorMessage(''), setEditMode(false); }}>
                     <Link>Add Class</Link>
                 </Button>
@@ -123,15 +125,15 @@ const Class = () => {
 
                 loading ? <Loader /> :
                     <div className="max-w-full overflow-x-auto">
-                        {classList.length == 0 ?
-                            <p style={{ textAlign: 'center', margin: 10 }}>No Class found</p> :
+                        {classList.length === 0 ?
+                            <p className="text-center text-gray-500 dark:text-gray-300" style={{ margin: 10 }}>No Class found</p> :
                             <Table className="w-full text-left border-collapse">
                                 <TableHeader className='bg-gray-100 dark:bg-gray-800'>
                                     <TableRow>
                                         {['Class Name', 'Sections'].map((header) => (
-                                            <th key={header} className="px-5 py-3 font-medium text-gray-500 text-left">{header}</th>
+                                            <th key={header} className="px-5 py-3 font-medium text-gray-500 dark:text-gray-400 text-left">{header}</th>
                                         ))}
-                                        <th className='px-5 py-3 font-medium text-gray-500 text-left'>Action</th>
+                                        <th className='px-5 py-3 font-medium text-gray-500 dark:text-gray-400 text-left'>Action</th>
                                     </TableRow>
                                 </TableHeader>
 
@@ -158,6 +160,7 @@ const Class = () => {
                     </div>
             }
 
+            {/* Modal for Add/Edit Class */}
             <Modal isOpen={showModal} onClose={() => {
                 setShowModal(false)
                 setErrorMessage('')
@@ -185,11 +188,9 @@ const Class = () => {
                                             placeholder="Enter class name"
                                         />
                                     </div>
-
-
                                 </div>
                                 <div className="mt-6">
-                                    <Label className="block text-sm font-medium text-gray-600">Sections</Label>
+                                    <Label className="block text-sm font-medium text-gray-600 dark:text-gray-400">Sections</Label>
                                     <div className="mt-2 flex flex-wrap gap-4">
                                         {sectionArray.map((section) => (
                                             <div key={section} style={{ flexDirection: 'column' }} className="flex items-center">
@@ -198,7 +199,7 @@ const Class = () => {
                                                     checked={selectedSections.includes(section)}
                                                     onChange={() => handleSectionChange(section)}
                                                 />
-                                                <Label htmlFor={section} className="text-sm text-gray-600">
+                                                <Label htmlFor={section} className="text-sm text-gray-600 dark:text-gray-400">
                                                     {section}
                                                 </Label>
                                             </div>
@@ -225,13 +226,15 @@ const Class = () => {
                     </form>
                 </div>
             </Modal>
+
+            {/* Delete Confirmation Modal */}
             <Modal isOpen={showDeleteModal} onClose={() => {
                 setShowDeleteModal(false)
                 setErrorMessage('')
             }} className="max-w-[700px] m-4">
                 <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
                     <div className="bg-white p-8 ">
-                        <h2 className="text-xl font-semibold text-gray-800 mb-4">Are you sure you want to delete this class?</h2>
+                        <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Are you sure you want to delete this class?</h2>
                         <div className="flex justify-end space-x-4">
                             <Button
                                 onClick={() => setShowDeleteModal(false)} // Close the confirmation modal
