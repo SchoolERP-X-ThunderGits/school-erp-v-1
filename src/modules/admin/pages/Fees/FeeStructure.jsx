@@ -10,7 +10,6 @@ import Input from '../../../../components/form/input/InputField';
 import Label from '../../../../components/form/Label';
 import { showToast } from '../../../../components/Toast';
 import { Link } from 'react-router-dom';
-import { sessionsArray } from '../../../../constants/GlobalConstants';
 import Select from '../../../../components/form/Select';
 import { FaTrash } from 'react-icons/fa';
 const FeeStructure = () => {
@@ -201,10 +200,10 @@ const FeeStructure = () => {
     };
 
     return (
-        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-white/[0.03] dark:border-gray-900">
+        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-700">
             {/* Add Class Button */}
-            <div className='w-full p-4 flex justify-between items-center'>
-                <div className='text-3xl font-medium'>Fee Structures List</div>
+            <div className="w-full p-4 flex justify-between items-center">
+                <div className="text-3xl font-medium text-gray-800 dark:text-white">Fee Structures List</div>
                 <Button onClick={() => {
                     if (classes.length == 0) {
                         showToast('Please add a class first.', 'error')
@@ -221,18 +220,18 @@ const FeeStructure = () => {
             {loading ? (
                 <Loader /> // Show loading spinner if data is being fetched
             ) : (
-                <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+                <div className="overflow-x-auto bg-white shadow-md rounded-lg dark:bg-gray-900">
                     {feeStructures.length == 0 ?
-                        <p style={{ textAlign: 'center', margin: 10 }}>No fee structures found</p> :
+                        <p style={{ textAlign: 'center', margin: 10 }} className="text-gray-700 dark:text-gray-300">No fee structures found</p> :
                         <Table className="w-full text-left border-collapse">
                             <TableHeader className="bg-gray-100 dark:bg-gray-800">
                                 <TableRow>
                                     {['Name', 'Class'].map((header) => (
-                                        <th key={header} className="px-5 py-3 font-medium text-gray-500 text-left">
+                                        <th key={header} className="px-5 py-3 font-medium text-gray-500 text-left dark:text-gray-400">
                                             {header}
                                         </th>
                                     ))}
-                                    <th className="px-5 py-3 font-medium text-gray-500 text-left">Action</th>
+                                    <th className="px-5 py-3 font-medium text-gray-500 text-left dark:text-gray-400">Action</th>
                                 </TableRow>
                             </TableHeader>
 
@@ -266,12 +265,11 @@ const FeeStructure = () => {
                                         {expandedFees[structure._id] && structure.feeGroups && structure.feeGroups.length > 0 && (
                                             <tr>
                                                 <td colSpan="3">
-                                                    <Table className="min-w-full table-auto bg-gray-50">
+                                                    <Table className="min-w-full table-auto bg-gray-50 dark:bg-gray-600">
                                                         <TableHeader className='bg-gray-100 dark:bg-gray-800'>
-
                                                             <TableRow>
                                                                 {['Fee Type', 'Amount', 'Due Date'].map((header) => (
-                                                                    <th key={header} className="px-5 py-3 font-medium text-gray-500 text-left">
+                                                                    <th key={header} className="px-5 py-3 font-medium text-gray-500 text-left dark:text-gray-200">
                                                                         {header}
                                                                     </th>
                                                                 ))}
@@ -304,19 +302,16 @@ const FeeStructure = () => {
                                 ))}
                             </TableBody>
                         </Table>
-
                     }
                 </div>
             )}
 
             {/* Fee Structure Modal */}
-
             <Modal isOpen={showModal} onClose={() => {
                 setShowModal(false);
                 setErrorMessage('');
             }} className="max-w-[700px] m-4">
                 <div className="w-full max-w-[700px] max-h-[90vh] bg-white dark:bg-gray-900 rounded-3xl p-4 lg:p-11 flex flex-col">
-
                     {/* Header */}
                     <div className="px-2 pr-14">
                         <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
@@ -341,6 +336,7 @@ const FeeStructure = () => {
                                             name: e.target?.value
                                         }))}
                                         placeholder="Enter name"
+                                        className="bg-gray-50 dark:bg-gray-700"
                                     />
                                 </div>
                                 <div>
@@ -356,12 +352,13 @@ const FeeStructure = () => {
                                             ...prevData,
                                             class: e
                                         }))}
+                                        className="bg-gray-50 dark:bg-gray-700"
                                     />
                                 </div>
                             </div>
 
                             <div>
-                                <Label className="block text-gray-700 mb-2">Fee Types:</Label>
+                                <Label className="block text-gray-700 mb-2 dark:text-gray-300">Fee Types:</Label>
                                 {formData.feeGroups.map((feeGroup, index) => (
                                     <div key={index} className="mb-4">
                                         <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
@@ -374,6 +371,7 @@ const FeeStructure = () => {
                                                     }))}
                                                     value={feeGroup.feeType}
                                                     onChange={(e) => handleFeeTypeGroupChange(e, index)}
+                                                    className="bg-gray-50 dark:bg-gray-700"
                                                 />
                                             </div>
                                             <Input
@@ -382,12 +380,14 @@ const FeeStructure = () => {
                                                 value={feeGroup.amount}
                                                 onChange={(e) => handleFeeGroupChange(e, index)}
                                                 placeholder="Amount"
+                                                className="bg-gray-50 dark:bg-gray-700"
                                             />
                                             <Input
                                                 type="date"
                                                 name="dueDate"
                                                 value={feeGroup.dueDate}
                                                 onChange={(e) => handleFeeGroupChange(e, index)}
+                                                className="bg-gray-50 dark:bg-gray-700"
                                             />
                                             <button
                                                 disabled={formData.feeGroups.length === 1}
@@ -436,15 +436,14 @@ const FeeStructure = () => {
                 </div>
             </Modal>
 
-
             {/* Delete Confirmation Modal */}
             <Modal isOpen={showDeleteModal} onClose={() => {
                 setShowDeleteModal(false)
                 setErrorMessage('')
             }} className="max-w-[700px] m-4">
                 <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
-                    <div className="bg-white p-8 ">
-                        <h2 className="text-xl font-semibold text-gray-800 mb-4">Are you sure you want to delete this fee structure?</h2>
+                    <div className="bg-white p-8 dark:bg-gray-800">
+                        <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Are you sure you want to delete this fee structure?</h2>
                         <div className="flex justify-end space-x-4">
                             <Button
                                 onClick={() => setShowDeleteModal(false)} // Close the confirmation modal
@@ -463,6 +462,7 @@ const FeeStructure = () => {
                 </div>
             </Modal>
         </div>
+
     );
 };
 

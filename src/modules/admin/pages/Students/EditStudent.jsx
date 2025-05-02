@@ -287,73 +287,57 @@ const EditStudent = () => {
     return (
         <div className="container">
             {/* Add Student Modal */}
-            <h2 className="text-2xl font-semibold mb-4">Add Student</h2>
-{console.log('formDataformData',formData)}
+            <h2 className="text-2xl font-semibold mb-4">Edit Student</h2>
             <div className="">
-                <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
-                    <button onClick={() => setBulkStudentModal(true)} style={{
-                        backgroundColor: "#007bff",
-                        color: "white",
-                        fontWeight: '500',
-                        padding: 10,
-                        borderRadius: 10,
-                        marginTop: 20, marginBottom: 20
-                    }}>
-                        Import Student
-                    </button>
-                </div>
-
                 {/* Form Fields */}
                 {
                     formData.roll_Number &&
 
-                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4">
-
-
+                    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4">
                     {/* Roll Number */}
                     <div className="mb-4">
-                        <label className="block text-gray-700">Roll Number :</label>
+                        <label className="block text-gray-700 dark:text-gray-300">Roll Number :</label>
                         <input
                             type="number"
                             name="roll_Number"
                             value={formData.roll_Number}
                             onChange={handleInputChange}
-                            className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                            className="mt-2 p-2 border border-gray-300 dark:border-gray-700 rounded-md w-full"
                         />
                     </div>
-
+                
                     {/* First Name */}
                     <div className="mb-4">
-                        <label className="block text-gray-700">First Name *:</label>
+                        <label className="block text-gray-700 dark:text-gray-300">First Name *:</label>
                         <input
                             type="text"
                             name="first_Name"
                             value={formData.first_Name}
                             onChange={handleInputChange}
-                            className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                            className="mt-2 p-2 border border-gray-300 dark:border-gray-700 rounded-md w-full"
                         />
                     </div>
-
+                
                     {/* Last Name */}
                     <div className="mb-4">
-                        <label className="block text-gray-700">Last Name *:</label>
+                        <label className="block text-gray-700 dark:text-gray-300">Last Name *:</label>
                         <input
                             type="text"
                             name="last_Name"
                             value={formData.last_Name}
                             onChange={handleInputChange}
-                            className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                            className="mt-2 p-2 border border-gray-300 dark:border-gray-700 rounded-md w-full"
                         />
                     </div>
-
+                
                     {/* Class Dropdown */}
                     <div className="mb-4">
-                        <label className="block text-gray-700">Class *:</label>
+                        <label className="block text-gray-700 dark:text-gray-300">Class *:</label>
                         <select
                             name="class_Id"
                             value={formData.class_Id}
                             onChange={handleInputChange}
-                            className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                            className="mt-2 p-2 border border-gray-300 dark:border-gray-700 rounded-md w-full"
                         >
                             <option value="">Select Class</option>
                             {classes?.map((cls) => (
@@ -363,15 +347,15 @@ const EditStudent = () => {
                             ))}
                         </select>
                     </div>
-
+                
                     {/* Section Dropdown */}
                     <div className="mb-4">
-                        <label className="block text-gray-700">Section *:</label>
+                        <label className="block text-gray-700 dark:text-gray-300">Section *:</label>
                         <select
                             name="section"
                             value={formData.section}
                             onChange={handleInputChange}
-                            className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                            className="mt-2 p-2 border border-gray-300 dark:border-gray-700 rounded-md w-full"
                             disabled={!formData.class_Id}
                         >
                             <option value="">Select Section</option>
@@ -382,15 +366,15 @@ const EditStudent = () => {
                             ))}
                         </select>
                     </div>
-
+                
                     {/* Session Dropdown */}
                     <div className="mb-4">
-                        <label className="block text-gray-700">Session *:</label>
+                        <label className="block text-gray-700 dark:text-gray-300">Session *:</label>
                         <select
                             name="session"
                             value={formData.session}
                             onChange={handleInputChange}
-                            className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                            className="mt-2 p-2 border border-gray-300 dark:border-gray-700 rounded-md w-full"
                         >
                             <option value="">Select Session</option>
                             {sessionsArray?.map((section) => (
@@ -400,27 +384,27 @@ const EditStudent = () => {
                             ))}
                         </select>
                     </div>
-
+                
                     {/* Date of Birth */}
                     <div className="mb-4">
-                        <label className="block text-gray-700">Date of Birth *:</label>
+                        <label className="block text-gray-700 dark:text-gray-300">Date of Birth *:</label>
                         <input
                             type="date"
                             name="date_Of_Birth"
                             value={formData.date_Of_Birth.split('T')[0]}
                             onChange={handleInputChange}
-                            className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                            className="mt-2 p-2 border border-gray-300 dark:border-gray-700 rounded-md w-full"
                         />
                     </div>
-
+                
                     {/* Gender Dropdown */}
                     <div className="mb-4">
-                        <label className="block text-gray-700">Gender *:</label>
+                        <label className="block text-gray-700 dark:text-gray-300">Gender *:</label>
                         <select
                             name="gender"
                             value={formData.gender}
                             onChange={handleInputChange}
-                            className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                            className="mt-2 p-2 border border-gray-300 dark:border-gray-700 rounded-md w-full"
                         >
                             <option value="">Select Gender</option>
                             <option value="Male">Male</option>
@@ -428,39 +412,40 @@ const EditStudent = () => {
                             <option value="Other">Other</option>
                         </select>
                     </div>
-
+                
                     {/* Permanent Address */}
-                    <div className="mb-4 ">
-                        <label className="block text-gray-700">Permanent Address *:</label>
+                    <div className="mb-4">
+                        <label className="block text-gray-700 dark:text-gray-300">Permanent Address *:</label>
                         <input
                             type="text"
                             name="permanent_Address"
                             value={formData.permanent_Address}
                             onChange={handleInputChange}
-                            className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                            className="mt-2 p-2 border border-gray-300 dark:border-gray-700 rounded-md w-full"
                         />
                     </div>
-
+                
                     {/* Contact Number */}
                     <div className="mb-4">
-                        <label className="block text-gray-700">Contact Number *:</label>
+                        <label className="block text-gray-700 dark:text-gray-300">Contact Number *:</label>
                         <input
-                            type='number'
+                            type="number"
                             name="contact_Number"
                             value={formData.contact_Number}
                             onChange={handleInputChange}
-                            className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                            className="mt-2 p-2 border border-gray-300 dark:border-gray-700 rounded-md w-full"
                         />
                     </div>
-
-                    <div className="mb-4 ">
-                        <label className="block text-gray-700">Address for Correspondence *:</label>
+                
+                    {/* Address for Correspondence */}
+                    <div className="mb-4">
+                        <label className="block text-gray-700 dark:text-gray-300">Address for Correspondence *:</label>
                         <input
                             type="text"
                             name="address_For_Correspondence"
                             value={formData.address_For_Correspondence}
                             onChange={handleInputChange}
-                            className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                            className="mt-2 p-2 border border-gray-300 dark:border-gray-700 rounded-md w-full"
                         />
                         <input
                             type="checkbox"
@@ -474,66 +459,69 @@ const EditStudent = () => {
                             }}
                             className="mr-2"
                         />
-                        <label htmlFor="sameAsPermanent" className="text-gray-700">
+                        <label htmlFor="sameAsPermanent" className="text-gray-700 dark:text-gray-300">
                             Same as Permanent Address
                         </label>
                     </div>
-
-
+                
+                    {/* Alternate Contact No */}
                     <div className="mb-4">
-                        <label className="block text-gray-700">Alternate Contact No:</label>
+                        <label className="block text-gray-700 dark:text-gray-300">Alternate Contact No:</label>
                         <input
                             type="number"
                             name="alternet_Contact_Number"
                             value={formData.alternet_Contact_Number}
                             onChange={handleInputChange}
-                            className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                            className="mt-2 p-2 border border-gray-300 dark:border-gray-700 rounded-md w-full"
                         />
                     </div>
-                    <div className="mb-4 ">
-                        <label className="block text-gray-700">Address for Id Card*:</label>
+                
+                    {/* Address for Id Card */}
+                    <div className="mb-4">
+                        <label className="block text-gray-700 dark:text-gray-300">Address for Id Card*:</label>
                         <input
                             type="text"
                             name="address_for_id"
                             maxLength={45}
                             value={formData.address_for_id}
                             onChange={handleInputChange}
-                            className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                            className="mt-2 p-2 border border-gray-300 dark:border-gray-700 rounded-md w-full"
                         />
                     </div>
+                
                     {/* Email */}
                     <div className="mb-4">
-                        <label className="block text-gray-700">Email:</label>
+                        <label className="block text-gray-700 dark:text-gray-300">Email:</label>
                         <input
                             type="email"
                             name="email"
                             value={formData.email}
                             onChange={handleInputChange}
-                            className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                            className="mt-2 p-2 border border-gray-300 dark:border-gray-700 rounded-md w-full"
                         />
                     </div>
-
+                
                     {/* Nationality */}
                     <div className="mb-4">
-                        <label className="block text-gray-700">Nationality :</label>
+                        <label className="block text-gray-700 dark:text-gray-300">Nationality :</label>
                         <input
                             readOnly
                             type="text"
                             name="nationality"
                             value={formData.nationality}
                             onChange={handleInputChange}
-                            className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                            className="mt-2 p-2 border border-gray-300 dark:border-gray-700 rounded-md w-full"
                         />
                     </div>
-
+                
                     {/* Religion */}
                     <div className="mb-4">
-                        <label className="block text-gray-700">Religion:</label>
+                        <label className="block text-gray-700 dark:text-gray-300">Religion:</label>
                         <select
                             name="religion"
                             value={formData.religion}
                             onChange={handleInputChange}
-                            className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                            className="mt-2 p-2 border border-gray-300 dark:border-gray-700 rounded-md w-full"
                         >
                             <option value="">Select Religion</option>
                             <option value="Hinduism">Hinduism</option>
@@ -544,15 +532,15 @@ const EditStudent = () => {
                             <option value="Other">Other</option>
                         </select>
                     </div>
-
+                
                     {/* Category */}
                     <div className="mb-4">
-                        <label className="block text-gray-700">Category *:</label>
+                        <label className="block text-gray-700 dark:text-gray-300">Category *:</label>
                         <select
                             name="category"
                             value={formData.category}
                             onChange={handleInputChange}
-                            className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                            className="mt-2 p-2 border border-gray-300 dark:border-gray-700 rounded-md w-full"
                         >
                             <option value="">Select Category</option>
                             <option value="General">General</option>
@@ -561,15 +549,15 @@ const EditStudent = () => {
                             <option value="ST">ST</option>
                         </select>
                     </div>
-
+                
                     {/* Blood Group */}
                     <div className="mb-4">
-                        <label className="block text-gray-700">Blood Group :</label>
+                        <label className="block text-gray-700 dark:text-gray-300">Blood Group :</label>
                         <select
                             name="blood_Group"
                             value={formData.blood_Group}
                             onChange={handleInputChange}
-                            className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                            className="mt-2 p-2 border border-gray-300 dark:border-gray-700 rounded-md w-full"
                         >
                             <option value="">Select Blood Group</option>
                             <option value="A+">A+</option>
@@ -582,82 +570,82 @@ const EditStudent = () => {
                             <option value="AB-">AB-</option>
                         </select>
                     </div>
-
+                
                     {/* Father's Name */}
                     <div className="mb-4">
-                        <label className="block text-gray-700">Father's Name *:</label>
+                        <label className="block text-gray-700 dark:text-gray-300">Father's Name *:</label>
                         <input
                             type="text"
                             name="father_Name"
                             value={formData.father_Name}
                             onChange={handleInputChange}
-                            className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                            className="mt-2 p-2 border border-gray-300 dark:border-gray-700 rounded-md w-full"
                         />
                     </div>
-
+                
                     {/* Father's Occupation */}
                     <div className="mb-4">
-                        <label className="block text-gray-700">Father's Occupation :</label>
+                        <label className="block text-gray-700 dark:text-gray-300">Father's Occupation :</label>
                         <input
                             type="text"
                             name="father_Occupation"
                             value={formData.father_Occupation}
                             onChange={handleInputChange}
-                            className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                            className="mt-2 p-2 border border-gray-300 dark:border-gray-700 rounded-md w-full"
                         />
                     </div>
-
+                
                     {/* Mother's Name */}
                     <div className="mb-4">
-                        <label className="block text-gray-700">Mother's Name *:</label>
+                        <label className="block text-gray-700 dark:text-gray-300">Mother's Name *:</label>
                         <input
                             type="text"
                             name="mother_Name"
                             value={formData.mother_Name}
                             onChange={handleInputChange}
-                            className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                            className="mt-2 p-2 border border-gray-300 dark:border-gray-700 rounded-md w-full"
                         />
                     </div>
-
+                
                     {/* Mother's Occupation */}
                     <div className="mb-4">
-                        <label className="block text-gray-700">Mother's Occupation :</label>
+                        <label className="block text-gray-700 dark:text-gray-300">Mother's Occupation :</label>
                         <input
                             type="text"
                             name="mother_Occupation"
                             value={formData.mother_Occupation}
                             onChange={handleInputChange}
-                            className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                            className="mt-2 p-2 border border-gray-300 dark:border-gray-700 rounded-md w-full"
                         />
                     </div>
-
+                
                     {/* Due amount */}
                     <div className="mb-4">
-                        <label className="block text-gray-700">Due amount :</label>
+                        <label className="block text-gray-700 dark:text-gray-300">Due amount :</label>
                         <input
                             type="number"
                             name="due_amount"
                             value={formData.due_amount}
                             onChange={handleInputChange}
-                            className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                            className="mt-2 p-2 border border-gray-300 dark:border-gray-700 rounded-md w-full"
                         />
                     </div>
-
+                
                     {/* Date of Admission */}
-                    <div className="mb-4 ">
-                        <label className="block text-gray-700">Date of Admission *:</label>
+                    <div className="mb-4">
+                        <label className="block text-gray-700 dark:text-gray-300">Date of Admission *:</label>
                         <input
                             type="date"
                             name="date_Of_Admission"
-                            value={formData.date_Of_Admission != '' ? formData.date_Of_Admission.split('T')[0] : new Date().toISOString().split('T')[0]}
+                            value={formData.date_Of_Admission !== '' ? formData.date_Of_Admission.split('T')[0] : new Date().toISOString().split('T')[0]}
                             onChange={handleInputChange}
-                            className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                            className="mt-2 p-2 border border-gray-300 dark:border-gray-700 rounded-md w-full"
                         />
                     </div>
-
+                
                     {/* Aadhar Number */}
                     <div className="mb-4 col-span-2">
-                        <label className="block text-gray-700">Aadhar Number *:</label>
+                        <label className="block text-gray-700 dark:text-gray-300">Aadhar Number *:</label>
                         <div className="flex space-x-2 mt-2">
                             {[0, 1, 2].map((index) => (
                                 <input
@@ -667,100 +655,101 @@ const EditStudent = () => {
                                     value={aadharParts[index]}
                                     onChange={(e) => handleAadharChange(e, index)}
                                     maxLength="4"
-                                    className="p-2 border border-gray-300 rounded-md w-1/4 text-center"
+                                    className="p-2 border border-gray-300 dark:border-gray-700 rounded-md w-1/4 text-center"
                                     placeholder="0000"
                                 />
                             ))}
                         </div>
                     </div>
-
+                
                     {/* Student photo */}
                     {
                         // !editMode &&
-                        <div className="mb-4 ">
-                            <label className="block text-gray-700">Student Photo *:</label>
+                        <div className="mb-4">
+                            <label className="block text-gray-700 dark:text-gray-300">Student Photo *:</label>
                             <input
                                 type="file"
                                 name="image"
                                 onChange={handleInputChange}
-                                className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                                className="mt-2 p-2 border border-gray-300 dark:border-gray-700 rounded-md w-full"
                             />
                         </div>
                     }
+                
+                    {/* Image Preview */}
                     {imagePreview && (
                         <div className="mt-4 mb-6 flex justify-center items-center">
                             <img src={imagePreview} alt="Student Preview" className="w-30 h-30 object-cover rounded-md" />
                         </div>
                     )}
+                </div>
+                
+                }
+               {
+    // !editMode &&
+
+    <div className="mb-4">
+        <label className="block text-gray-700 dark:text-gray-300">Fee Structure :</label>
+        <div className="space-y-2 max-h-102 overflow-y-auto">
+            {feeStructures.map((fee) => (
+                <div key={fee._id} className="flex flex-col mb-4">
+                    {/* Fee Structure Name */}
+                    <div className="flex items-center mb-2">
+                        <input
+                            type="checkbox"
+                            name="feeStructures"
+                            value={fee._id}
+                            checked={formData.feeStructures?.includes(fee._id)}
+                            onChange={(e) => handleFeeStructureChange(e, fee._id)}
+                            className="mr-2"
+                        />
+                        <label
+                            className="text-gray-700 font-semibold cursor-pointer dark:text-gray-300"
+                            onClick={() => toggleFeeGroupVisibility(fee._id)}
+                        >
+                            {fee.name}
+                        </label>
+                    </div>
+
+                    {/* Fee Groups (conditionally rendered based on expanded state) */}
+                    {expandedFees[fee._id] && fee.feeGroups && fee.feeGroups.length > 0 && (
+                        <div className="ml-4 space-y-2">
+                            <table className="min-w-full table-auto border-collapse">
+                                <thead>
+                                    <tr className="bg-gray-200 dark:bg-gray-800">
+                                        <th className="px-4 py-2 text-left text-gray-500 dark:text-gray-300">Fee Type</th>
+                                        <th className="px-4 py-2 text-left text-gray-500 dark:text-gray-300">Amount</th>
+                                        <th className="px-4 py-2 text-left text-gray-500 dark:text-gray-300">Due Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {fee.feeGroups.map((group) => (
+                                        <tr key={group._id} className="border-b dark:border-gray-900">
+                                            <td className="px-4 py-2 text-gray-600 dark:text-gray-300">{group.feeType}</td>
+                                            <td className="px-4 py-2 text-gray-600 dark:text-gray-300">{group.amount}</td>
+                                            <td className="px-4 py-2 text-gray-600 dark:text-gray-300">
+                                                {new Date(group.dueDate).toLocaleDateString()}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
 
                 </div>
-                }
-                {
-                    // !editMode &&
+            ))}
+        </div>
+    </div>
+}
 
-                    <div className="mb-4 ">
-                        <label className="block text-gray-700">Fee Structure :</label>
-                        <div className="space-y-2 max-h-102 overflow-y-auto">
-                            {feeStructures.map((fee) => (
-                                <div key={fee._id} className="flex flex-col mb-4">
-                                    {/* Fee Structure Name */}
-                                    <div className="flex items-center mb-2">
-                                        <input
-                                            type="checkbox"
-                                            name="feeStructures"
-                                            value={fee._id}
-                                            checked={formData.feeStructures?.includes(fee._id)}
-                                            onChange={(e) => handleFeeStructureChange(e, fee._id)}
-                                            className="mr-2"
-                                        />
-                                        <label
-                                            className="text-gray-700 font-semibold cursor-pointer"
-                                            onClick={() => toggleFeeGroupVisibility(fee._id)}
-                                        >
-                                            {fee.name}
-                                        </label>
-                                    </div>
-
-                                    {/* Fee Groups (conditionally rendered based on expanded state) */}
-                                    {expandedFees[fee._id] && fee.feeGroups && fee.feeGroups.length > 0 && (
-                                        <div className="ml-4 space-y-2">
-                                            <table className="min-w-full table-auto border-collapse">
-                                                <thead>
-                                                    <tr className="bg-gray-200">
-                                                        <th className="px-4 py-2 text-left">Fee Type</th>
-                                                        <th className="px-4 py-2 text-left">Amount</th>
-                                                        <th className="px-4 py-2 text-left">Due Date</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {fee.feeGroups.map((group) => (
-                                                        <tr key={group._id} className="border-b">
-                                                            <td className="px-4 py-2 text-gray-600">{group.feeType}</td>
-                                                            <td className="px-4 py-2 text-gray-600">{group.amount}</td>
-                                                            <td className="px-4 py-2 text-gray-600">
-                                                                {new Date(group.dueDate).toLocaleDateString()}
-                                                            </td>
-                                                        </tr>
-                                                    ))}
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    )}
-
-                                </div>
-                            ))}
-
-                        </div>
-
-                    </div>
-                }
             </div>
 
             {/* Submit Button */}
             <div className="flex justify-center mt-6">
                 <button
                     onClick={handleSubmit}
-                    className={`px-4 py-2 rounded-md text-white ${!formData.first_Name ||
+                    className={`w-64 mb-5 px-4 py-2 rounded-md text-white ${!formData.first_Name ||
                         !formData.last_Name ||
                         !formData?.aadhar_number ||
                         !formData?.section ||

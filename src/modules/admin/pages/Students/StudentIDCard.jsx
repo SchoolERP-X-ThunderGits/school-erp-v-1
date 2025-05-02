@@ -190,39 +190,44 @@ const StudentIDCard = () => {
                 setSelectedStudents([]);
             }
         };
-
+    
         const isAllSelected = students.length > 0 && selectedStudents.length === students.length;
-
+    
         return (
             <div className="container mx-auto p-4">
-                <div className="overflow-x-auto bg-white shadow-md rounded-lg">
-                    {students.length == 0 ?
+                <div className="overflow-x-auto bg-white dark:bg-gray-800 shadow-md rounded-lg">
+                    {students.length === 0 ?
                         <p style={{ textAlign: 'center', margin: 10 }}>No students found</p> :
                         <Table className="w-full text-left border-collapse">
                             <TableHeader className='bg-gray-100 dark:bg-gray-800'>
                                 <TableRow>
                                     <th className='px-5 py-3 font-medium text-gray-500 text-left'>
                                         <Checkbox
-                                            // id={subject}
                                             checked={isAllSelected}
                                             onChange={handleSelectAll}
+                                            className="dark:bg-gray-600 dark:border-gray-600"
                                         />
                                     </th>
                                     {['Admission Number', 'Roll Number', 'Name', 'Class', 'Section'].map((header) => (
-                                        <th key={header} className="px-5 py-3 font-medium text-gray-500 text-left">{header}</th>
+                                        <th key={header} className="px-5 py-3 font-medium text-gray-500 text-left dark:text-gray-400">
+                                            {header}
+                                        </th>
                                     ))}
-
                                 </TableRow>
                             </TableHeader>
-
+    
                             <TableBody>
                                 {students?.map((student) => (
-                                    <TableRow className='border-gray-200 dark:border-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800' key={student._id}>
+                                    <TableRow 
+                                        className='border-gray-200 dark:border-gray-900 hover:bg-gray-200 dark:bg-gray-900 dark:hover:bg-gray-800' 
+                                        key={student._id}
+                                    >
                                         <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">
                                             <Checkbox
-                                                id={student}
+                                                id={student._id}
                                                 checked={selectedStudents.includes(student._id)}
                                                 onChange={(e) => handleStudentSelect(e, student._id)}
+                                                className="dark:bg-gray-600 dark:border-gray-600"
                                             />
                                         </TableCell>
                                         <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{student?.admission_Number}</TableCell>
@@ -230,7 +235,7 @@ const StudentIDCard = () => {
                                         <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">
                                             <button
                                                 onClick={() => navigate(`/admin/student/student-details/${student?._id}`)} // Navigate to student details page
-                                                className="text-blue-500 hover:text-blue-700 transition duration-200"
+                                                className="text-blue-500 hover:text-blue-700 transition duration-200 dark:text-blue-400 dark:hover:text-blue-600"
                                             >
                                                 {student?.first_Name} {student?.last_Name}
                                             </button>
@@ -240,11 +245,13 @@ const StudentIDCard = () => {
                                     </TableRow>
                                 ))}
                             </TableBody>
-                        </Table>}
+                        </Table>
+                    }
                 </div>
             </div>
         );
     };
+    
 
 
     const generateMultipleIdCardPdf = async () => {
@@ -473,84 +480,85 @@ const StudentIDCard = () => {
     };
 
     return (
-        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-white/[0.03] dark:border-gray-900">
-            {/* Add Class Button */}
-            <div className='w-full p-4 flex justify-between items-center'>
-                <div className='text-3xl font-medium'>Students ID Card</div>
-            </div>
-            {loading ? (
-                <Loader />
-            ) : (
-                <div>
-                    {/* Filters */}
-                    <div className="grid grid-cols-2 p-4 gap-x-6 gap-y-5 lg:grid-cols-4">
-                        <Select
-                            placeholder='Filter by Class'
-                            options={classes.map((classItem) => ({
-                                value: classItem._id,
-                                label: classItem.name,
-                            }))}
-                            value={classFilter}
-                            onChange={handleClassFilterChange}
-                        />
-                        <Select
-                            disabled={!classFilter}
-                            placeholder='Filter by Section'
-                            options={sections.map((section) => ({
-                                value: section,
-                                label: section,
-                            }))}
-                            value={sectionFilter}
-                            onChange={handleSectionFilterChange}
-                        />
-                        <Button
-                            disabled={!sectionFilter}
-                            onClick={() => setTemplateModalOpen(true)} // Open the template selection modal
-                            className="px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition duration-300"
-                        >
-                            Select Template
-                        </Button>
-                        <Button
-                            onClick={handleSearch}
-                            className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
-                        >
-                            Search
-                        </Button>
-                        <Button
-                            onClick={() => {
-                                setClassFilter('');
-                                setSectionFilter('');
-                                setStudents([])
-                                setSelectedStudents([])
-                            }}
-                            className="px-6 py-3 bg-gray-200 !text-black rounded-lg hover:bg-gray-300 transition duration-300"
-                        >
-                            Clear Filters
-                        </Button>
-                        {selectedStudents.length > 0 && (
-                            <Button
-                                onClick={generateMultipleIdCardPdf}
-                                className="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-gray-300 transition duration-300"
-                            >
-                                <FaDownload className="mr-2" /> Download ID Cards
-                            </Button>
-                        )}
-                    </div>
-
-                    <div className="mt-6">{renderStudentList()}</div>
-
-
-                </div>
-            )}
-
-            {/* Template Modal */}
-            <TemplateModal
-                selectedTemplate={selectedTemplate}
-                open={templateModalOpen}
-                onClose={() => setTemplateModalOpen(false)}
-                onSelectTemplate={handleTemplateSelect}
-            />
+        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-900">
+        {/* Add Class Button */}
+        <div className='w-full p-4 flex justify-between items-center'>
+            <div className='text-3xl font-medium text-gray-800 dark:text-white'>Students ID Card</div>
         </div>
+        {loading ? (
+            <Loader />
+        ) : (
+            <div>
+                {/* Filters */}
+                <div className="grid grid-cols-2 p-4 gap-x-6 gap-y-5 lg:grid-cols-4">
+                    <Select
+                        placeholder='Filter by Class'
+                        options={classes.map((classItem) => ({
+                            value: classItem._id,
+                            label: classItem.name,
+                        }))}
+                        value={classFilter}
+                        onChange={handleClassFilterChange}
+                        className="bg-white dark:bg-gray-700 dark:text-white text-black border border-gray-300 dark:border-gray-600 rounded-md"
+                    />
+                    <Select
+                        disabled={!classFilter}
+                        placeholder='Filter by Section'
+                        options={sections.map((section) => ({
+                            value: section,
+                            label: section,
+                        }))}
+                        value={sectionFilter}
+                        onChange={handleSectionFilterChange}
+                        className="bg-white dark:bg-gray-700 dark:text-white text-black border border-gray-300 dark:border-gray-600 rounded-md"
+                    />
+                    <Button
+                        disabled={!sectionFilter}
+                        onClick={() => setTemplateModalOpen(true)} // Open the template selection modal
+                        className="px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 dark:hover:bg-purple-700 transition duration-300"
+                    >
+                        Select Template
+                    </Button>
+                    <Button
+                        onClick={handleSearch}
+                        className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 dark:hover:bg-blue-700 transition duration-300"
+                    >
+                        Search
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            setClassFilter('');
+                            setSectionFilter('');
+                            setStudents([]);
+                            setSelectedStudents([]);
+                        }}
+                        className="px-6 py-3 bg-gray-200 !text-black rounded-lg hover:bg-gray-300 transition duration-300"
+                    >
+                        Clear Filters
+                    </Button>
+                    {selectedStudents.length > 0 && (
+                        <Button
+                            onClick={generateMultipleIdCardPdf}
+                            className="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-gray-300 dark:hover:bg-green-600 transition duration-300"
+                        >
+                            <FaDownload className="mr-2" /> Download ID Cards
+                        </Button>
+                    )}
+                </div>
+    
+                <div className="mt-6">{renderStudentList()}</div>
+            </div>
+        )}
+    
+        {/* Template Modal */}
+        <TemplateModal
+            selectedTemplate={selectedTemplate}
+            open={templateModalOpen}
+            onClose={() => setTemplateModalOpen(false)}
+            onSelectTemplate={handleTemplateSelect}
+        />
+    </div>
+    
     );
 };
 

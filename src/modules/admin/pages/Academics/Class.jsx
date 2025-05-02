@@ -233,7 +233,7 @@ const Class = () => {
                 setErrorMessage('')
             }} className="max-w-[700px] m-4">
                 <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
-                    <div className="bg-white p-8 ">
+                    <div className="bg-white dark:bg-gray-900 p-8 ">
                         <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Are you sure you want to delete this class?</h2>
                         <div className="flex justify-end space-x-4">
                             <Button

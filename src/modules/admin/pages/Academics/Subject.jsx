@@ -113,31 +113,34 @@ const Subject = () => {
                         {subjectList.length === 0 ?
                             <p className="text-center text-gray-500 dark:text-gray-300" style={{ margin: 10 }}>No subjects found</p> :
                             <Table className="w-full text-left border-collapse">
-                                <TableHeader className='bg-gray-100 dark:bg-gray-800'>
-                                    <TableRow>
-                                        <th className="px-5 py-3 font-medium text-gray-500 dark:text-gray-400 text-left">Subject Name</th>
-                                        <th className='px-5 py-3 font-medium text-gray-500 dark:text-gray-400 text-left'>Action</th>
-                                    </TableRow>
-                                </TableHeader>
-
-                                <TableBody>
-                                    {subjectList?.map((subjectItem) => (
-                                        <TableRow className='border-gray-200 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700' key={subjectItem._id}>
-                                            <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{subjectItem.name}</TableCell>
-                                            <TableCell className="px-5 py-4">
-                                                <div className='flex gap-3 justify-start items-center'>
-                                                    <Link onClick={() => handleEdit(subjectItem)}>
-                                                        <MdOutlineModeEdit className='dark:text-white' />
-                                                    </Link>
-                                                    <button onClick={() => handleDelete(subjectItem._id)}>
-                                                        <MdDelete className='dark:text-white' />
-                                                    </button>
-                                                </div>
-                                            </TableCell>
-                                        </TableRow>
+                            <TableHeader className='bg-gray-100 dark:bg-gray-800'>
+                                <TableRow>
+                                    {['Subject Name'].map((header) => (
+                                        <th key={header} className="px-5 py-3 font-medium text-gray-500 dark:text-gray-400 text-left">{header}</th>
                                     ))}
-                                </TableBody>
-                            </Table>
+                                    <th className='px-5 py-3 font-medium text-gray-500 dark:text-gray-400 text-left'>Action</th>
+                                </TableRow>
+                            </TableHeader>
+                        
+                            <TableBody>
+                                {subjectList?.map((subjectItem) => (
+                                    <TableRow className='dark:bg-gray-900 border-gray-200 dark:border-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800' key={subjectItem._id}>
+                                        <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{subjectItem.name}</TableCell>
+                                        <TableCell className="px-5 py-4">
+                                            <div className='flex gap-3 justify-start items-center'>
+                                                <Link onClick={() => handleEdit(subjectItem)}>
+                                                    <MdOutlineModeEdit className='dark:text-white' />
+                                                </Link>
+                                                <button onClick={() => handleDelete(subjectItem._id)}>
+                                                    <MdDelete className='dark:text-white' />
+                                                </button>
+                                            </div>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                        
                         }
                     </div>
             }
@@ -198,7 +201,7 @@ const Subject = () => {
                 setErrorMessage('')
             }} className="max-w-[700px] m-4">
                 <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
-                    <div className="bg-white p-8 ">
+                    <div className="bg-white p-8 dark:bg-gray-900 ">
                         <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Are you sure you want to delete this subject?</h2>
                         <div className="flex justify-end space-x-4">
                             <Button

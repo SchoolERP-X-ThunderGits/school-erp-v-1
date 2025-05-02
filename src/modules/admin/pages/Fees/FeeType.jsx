@@ -104,10 +104,10 @@ const FeeType = () => {
     };
 
     return (
-        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-white/[0.03] dark:border-gray-900">
+        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-900">
             {/* Add Class Button */}
             <div className='w-full p-4 flex justify-between items-center'>
-                <div className='text-3xl font-medium'>FeeType List</div>
+                <div className='text-3xl font-medium text-gray-900 dark:text-white'>FeeType List</div>
                 <Button onClick={() => { setShowModal(true), setFeeName(''), setDescription(''), setErrorMessage('') }}>
                     <Link>Add FeeType</Link>
                 </Button>
@@ -116,16 +116,16 @@ const FeeType = () => {
                 loading ? <Loader />
                     :
 
-                    <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+                    <div className="overflow-x-auto bg-white dark:bg-gray-900 shadow-md rounded-lg">
                         {feeTypeList.length == 0 ?
-                            <p style={{ textAlign: 'center', margin: 10 }}>No fee type found</p> :
+                            <p style={{ textAlign: 'center', margin: 10 }} className="text-gray-700 dark:text-gray-300">No fee type found</p> :
                             <Table className="w-full text-left border-collapse">
                                 <TableHeader className='bg-gray-100 dark:bg-gray-800'>
                                     <TableRow>
                                         {['Fee Name', 'Fee Description'].map((header) => (
-                                            <th key={header} className="px-5 py-3 font-medium text-gray-500 text-left">{header}</th>
+                                            <th key={header} className="px-5 py-3 font-medium text-gray-500 dark:text-gray-300 text-left">{header}</th>
                                         ))}
-                                        <th className='px-5 py-3 font-medium text-gray-500 text-left'>Action</th>
+                                        <th className='px-5 py-3 font-medium text-gray-500 dark:text-gray-300 text-left'>Action</th>
                                     </TableRow>
                                 </TableHeader>
 
@@ -137,10 +137,10 @@ const FeeType = () => {
                                             <TableCell className="px-5 py-4">
                                                 <div className='flex gap-3 justify-start items-center'>
                                                     <Link onClick={() => handleEdit(feeItem)}>
-                                                        <MdOutlineModeEdit className='dark:text-white' />
+                                                        <MdOutlineModeEdit className='text-gray-700 dark:text-white' />
                                                     </Link>
                                                     <Link onClick={() => handleDelete(feeItem._id)}>
-                                                        <MdDelete className='dark:text-white' />
+                                                        <MdDelete className='text-gray-700 dark:text-white' />
                                                     </Link>
                                                 </div>
                                             </TableCell>
@@ -156,13 +156,13 @@ const FeeType = () => {
                 setShowModal(false)
                 setErrorMessage('')
             }} className="max-w-[700px] m-4">
-                <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
+                <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white dark:bg-gray-900 p-4 lg:p-11">
                     <div className="px-2 pr-14">
                         <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
                             Add FeeType
                         </h4>
                         <p className="mb-6 text-sm text-gray-500 dark:text-gray-400 lg:mb-7">
-                            Here we are adding diffrent feetypes.
+                            Here we are adding different fee types.
                         </p>
                     </div>
                     <form className="flex flex-col">
@@ -177,6 +177,7 @@ const FeeType = () => {
                                             value={feeName}
                                             onChange={(e) => setFeeName(e.target.value)}
                                             placeholder="Enter fee name"
+                                            className="bg-gray-100 dark:bg-gray-800"
                                         />
                                     </div>
                                     <div>
@@ -186,6 +187,7 @@ const FeeType = () => {
                                             value={description}
                                             onChange={(e) => setDescription(e.target.value)}
                                             placeholder="Enter fee description"
+                                            className="bg-gray-100 dark:bg-gray-800"
                                         />
                                     </div>
                                 </div>
@@ -213,9 +215,9 @@ const FeeType = () => {
                 setShowDeleteModal(false)
                 setErrorMessage('')
             }} className="max-w-[700px] m-4">
-                <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
-                    <div className="bg-white p-8 ">
-                        <h2 className="text-xl font-semibold text-gray-800 mb-4">Are you sure you want to delete this feetype?</h2>
+                <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white dark:bg-gray-900 p-4 lg:p-11">
+                    <div className="bg-white p-8 dark:bg-gray-800">
+                        <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Are you sure you want to delete this fee type?</h2>
                         <div className="flex justify-end space-x-4">
                             <Button
                                 onClick={() => setShowDeleteModal(false)} // Close the confirmation modal

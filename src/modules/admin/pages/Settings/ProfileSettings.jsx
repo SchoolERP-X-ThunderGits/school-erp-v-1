@@ -15,7 +15,6 @@ const ProfileSettings = () => {
     const [formData, setFormData] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
 
-    // Step 1: Load school data from localStorage
     useEffect(() => {
         const profileData = localStorage.getItem('school');
         if (profileData) {
@@ -24,7 +23,6 @@ const ProfileSettings = () => {
         }
     }, []);
 
-    // Step 2: Fetch profile once `school` is available
     useEffect(() => {
         if (school?._id) {
             getProfileDetails();
@@ -83,63 +81,52 @@ const ProfileSettings = () => {
     };
 
     if (loading || !formData) {
-        return (
-            <Loader />
-        );
+        return <Loader />;
     }
 
     return (
         <div className="">
-            <div className="max-w-5xl mx-auto bg-white shadow-2xl rounded-3xl p-8">
+            <div className="max-w-5xl mx-auto bg-white dark:bg-gray-800 shadow-2xl rounded-3xl p-8">
                 {!isEditing ? (
-                    <div className="max-w-5xl mx-auto bg-white rounded-3xl  p-6 lg:p-10">
+                    <div className="max-w-5xl mx-auto bg-white dark:bg-gray-800 rounded-3xl p-6 lg:p-10">
                         {/* Profile Picture Section */}
                         <div className="flex justify-center mb-8">
-                            <div className="w-32 h-32 sm:w-32 sm:h-32 lg:w-32 lg:h-32 rounded-full overflow-hidden border-4 border-gray-300 shadow-lg transform transition duration-300 ">
+                            <div className="w-32 h-32 sm:w-32 sm:h-32 lg:w-32 lg:h-32 rounded-full overflow-hidden border-4 border-gray-300 dark:border-gray-600 shadow-lg transform transition duration-300">
                                 <img
                                     src={profileData?.logo || "https://static.vecteezy.com/system/resources/thumbnails/001/840/612/small/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-free-vector.jpg"}
                                     alt="Profile"
                                     className="w-full h-full object-cover"
                                 />
                             </div>
-
                         </div>
 
                         {/* Profile Name */}
-                        <h2 className="text-3xl font-bold text-center text-indigo-800 mb-6">
+                        <h2 className="text-3xl font-bold text-center text-indigo-800 dark:text-white mb-6">
                             {profileData?.name}
                         </h2>
 
                         {/* Profile Info Grid */}
                         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                            <div className="card p-4 rounded-xl shadow-sm bg-gray-50 hover:bg-indigo-50 transition duration-300">
-                                <strong className="text-[#465fff]">Contact</strong>
-                                <p>{profileData?.contactNumber}</p>
-                            </div>
-                            <div className="card p-4 rounded-xl shadow-sm bg-gray-50 hover:bg-indigo-50 transition duration-300">
-                                <strong className="text-[#465fff]">Website</strong>
-                                <p>{profileData?.website}</p>
-                            </div>
-                            <div className="card p-4 rounded-xl shadow-sm bg-gray-50 hover:bg-indigo-50 transition duration-300">
-                                <strong className="text-[#465fff]">Subdomain</strong>
-                                <p>{profileData?.subdomain}</p>
-                            </div>
-                            {profileData?.email && (
-                                <div className="card p-4 rounded-xl shadow-sm bg-gray-50 hover:bg-indigo-50 transition duration-300">
-                                    <strong className="text-[#465fff]">Email</strong>
-                                    <p>{profileData?.email}</p>
-                                </div>
-                            )}
-                            <div className="card p-4 rounded-xl shadow-sm bg-gray-50 hover:bg-indigo-50 transition duration-300">
-                                <strong className="text-[#465fff]">Address</strong>
-                                <p>{profileData?.address}</p>
-                            </div>
+                            {[
+                                { label: 'Contact', value: profileData?.contactNumber },
+                                { label: 'Website', value: profileData?.website },
+                                { label: 'Subdomain', value: profileData?.subdomain },
+                                { label: 'Email', value: profileData?.email },
+                                { label: 'Address', value: profileData?.address },
+                            ].map(({ label, value }, index) => (
+                                value && (
+                                    <div key={index} className="card p-4 rounded-xl shadow-sm bg-gray-50 dark:bg-gray-700 hover:bg-indigo-50 dark:hover:bg-gray-600 transition duration-300">
+                                        <strong className="text-[#465fff] dark:text-indigo-300">{label}</strong>
+                                        <p className="text-gray-900 dark:text-gray-200">{value}</p>
+                                    </div>
+                                )
+                            ))}
                         </div>
 
                         {/* Edit Profile Button */}
                         <div className="text-center mt-10">
                             <Button
-                                className="px-8 py-3 bg text-white font-semibold rounded-lg border-2 border-indigo-600 hover:bg-white hover:text-indigo-600 transition duration-300"
+                                className="px-8 py-3 bg text-white font-semibold rounded-lg border-2 border-indigo-600 hover:bg-white hover:text-indigo-600 dark:hover:bg-gray-800 transition duration-300"
                                 onClick={handleEditClick}
                             >
                                 Edit Profile
@@ -148,7 +135,7 @@ const ProfileSettings = () => {
                     </div>
                 ) : (
                     <>
-                        <h2 className="text-2xl font-semibold text-indigo-800 mb-6">Edit Profile</h2>
+                        <h2 className="text-2xl font-semibold text-indigo-800 dark:text-white mb-6">Edit Profile</h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                             {[
                                 { label: 'School Name', name: 'name' },
@@ -158,31 +145,31 @@ const ProfileSettings = () => {
                                 { label: 'Website', name: 'website' },
                             ].map(({ label, name }) => (
                                 <div key={name}>
-                                    <label className="text-gray-600">{label}:</label>
+                                    <label className="text-gray-600 dark:text-gray-300">{label}:</label>
                                     <Input
                                         type="text"
                                         name={name}
                                         value={formData?.[name] || ''}
                                         onChange={handleInputChange}
-                                        className="w-full mt-2 p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                                        className="w-full mt-2 p-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400"
                                     />
                                 </div>
                             ))}
 
                             <div>
-                                <label className="text-gray-600">Logo:</label>
+                                <label className="text-gray-600 dark:text-gray-300">Logo:</label>
                                 <Input type="file" name="logo" onChange={handleInputChange} className="mt-2" />
                                 {formData?.logo && (
-                                    <img src={formData.logo} alt="Logo" className="mt-2 h-20 object-contain rounded-xl shadow" />
+                                    <img src={formData.logo} alt="Logo" className="mt-2 h-20 object-contain rounded-xl shadow bg-white dark:bg-gray-800" />
                                 )}
                             </div>
 
                             {['directorSignature', 'principalSignature', 'managerSignature'].map(name => (
                                 <div key={name}>
-                                    <label className="text-gray-600 capitalize">{name.replace(/([A-Z])/g, ' $1')}:</label>
+                                    <label className="text-gray-600 dark:text-gray-300 capitalize">{name.replace(/([A-Z])/g, ' $1')}:</label>
                                     <Input type="file" name={name} onChange={handleInputChange} className="mt-2" />
                                     {formData?.[name] && (
-                                        <img src={formData[name]} alt={name} className="mt-2 h-20 object-contain rounded-xl shadow" />
+                                        <img src={formData[name]} alt={name} className="mt-2 h-20 object-contain rounded-xl shadow bg-white dark:bg-gray-800" />
                                     )}
                                 </div>
                             ))}

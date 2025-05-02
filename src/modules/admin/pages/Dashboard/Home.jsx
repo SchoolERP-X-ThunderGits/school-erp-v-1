@@ -3,8 +3,6 @@ import { showToast } from '../../../../components/Toast';
 import { getService } from '../../../../constants/Service';
 import apiName from '../../../../constants/ApiName';
 import Loader from '../../../../components/Loader';
-import Badge from '../../../../components/ui/badge/Badge';
-import { FaArrowDown } from "react-icons/fa6";
 import { PiStudentFill } from "react-icons/pi";
 import { HiMiniAcademicCap } from "react-icons/hi2";
 import { BsFillSignIntersectionFill } from "react-icons/bs";

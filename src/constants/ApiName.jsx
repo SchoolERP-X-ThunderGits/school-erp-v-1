@@ -1,7 +1,7 @@
 
 const apiName = {
   adminLogin: 'user/login',
-  parentLogin: 'user/parent/login',
+  parentLogin: 'user/student/login',
   getClassList: 'class/getAll',
   getClassById: 'class/get',
   subject: 'subjects',
@@ -44,6 +44,8 @@ const apiName = {
   subscriptionPayment:'subscription-payment',
   getCurrentSubscriptions:'subscriptions/curr',
   schools:'tenant',
-  addSchool:'user/addUser'
+  addSchool:'user/addUser',
+  studentLogin:'user/student-login',
+  studentDashboard:'dashboard',
 };
 export default apiName;

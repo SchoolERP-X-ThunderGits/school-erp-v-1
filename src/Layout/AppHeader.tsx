@@ -85,7 +85,6 @@ const AppHeader: React.FC = () => {
 
           <Link to="/admin/home" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} className="lg:hidden">
             <img
-              className="dark:hidden"
               style={{ width: 40, height: 40, objectFit: 'cover', }}
               src={school?.logo}
               alt="Logo"
@@ -95,17 +94,17 @@ const AppHeader: React.FC = () => {
                 marginLeft: 10,
                 fontSize: '20px',
                 fontWeight: 'bold',
-                color: '#2C3E50',
                 letterSpacing: '2px',
                 textTransform: 'uppercase',
                 fontFamily: 'Arial, sans-serif',
-                textShadow: '2px 2px 5px rgba(0, 0, 0, 0.1)',
                 flex: 1, // To make sure it takes the remaining space
                 textAlign: 'center',
               }}
+              className="text-gray-900 dark:text-gray-100 dark:text-shadow-lg text-shadow-lg"
             >
               {school?.name}
             </h1>
+
           </Link>
 
           <button
@@ -140,7 +139,7 @@ const AppHeader: React.FC = () => {
             )}
 
             {/* <!-- Dark Mode Toggler --> */}
-             <ThemeToggleButton /> 
+            <ThemeToggleButton />
             {/* <!-- Dark Mode Toggler --> */}
             <NotificationDropdown />
             {/* <!-- Notification Menu Area --> */}

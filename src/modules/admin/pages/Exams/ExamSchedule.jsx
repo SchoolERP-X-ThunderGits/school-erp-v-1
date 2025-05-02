@@ -10,7 +10,7 @@ import Label from '../../../../components/form/Label';
 import { showToast } from '../../../../components/Toast';
 import { Link } from 'react-router-dom';
 import Select from '../../../../components/form/Select';
-// import Flatpickr from "react-flatpickr";
+
 const ExamSchedule = () => {
     const [examsList, setExamsList] = useState([]);
     const [selectedExam, setSelectedExam] = useState('');
@@ -20,7 +20,7 @@ const ExamSchedule = () => {
     const [examSchedules, setExamSchedules] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [ErrorMessage, setErrorMessage] = useState('')
+    const [ErrorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
         fetchExamSchedules('', '');
@@ -56,7 +56,6 @@ const ExamSchedule = () => {
     };
 
     const handleInputChange = (index, field, value, subjectId) => {
-        console.log('valuevalue', value)
         const updatedSchedules = [...examSchedules];
         updatedSchedules[index] = {
             ...updatedSchedules[index],
@@ -85,7 +84,7 @@ const ExamSchedule = () => {
     };
 
     const handleScheduleExam = async (e) => {
-        e.preventDefault()
+        e.preventDefault();
         if (!selectedExam || !selectedClass) {
             setErrorMessage('Please fill in all fields for each subject');
             return;
@@ -93,9 +92,7 @@ const ExamSchedule = () => {
 
         try {
             for (const schedule of examSchedules) {
-                console.log('schedule', schedule)
                 const result = await postService(apiName.addSchedule, schedule);
-                console.log('result ----', result);
             }
 
             setSelectedClass('');
@@ -110,31 +107,28 @@ const ExamSchedule = () => {
             }, 1000);
         } catch (error) {
             console.error('Error scheduling exam:', error);
-            showToast(error?.response?.data?.error, 'error')
+            showToast(error?.response?.data?.error, 'error');
         }
     };
 
-
     return (
         <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-white/[0.03] dark:border-gray-900">
-            {/* Add Class Button */}
             <div className='w-full p-4 flex justify-between items-center'>
-                <div className='text-3xl font-medium'>Schedule Exams List</div>
-                <Button onClick={() => { setShowModal(true), setErrorMessage('') }}>
+                <div className='text-3xl font-medium text-gray-800 dark:text-white'>Schedule Exams List</div>
+                <Button onClick={() => { setShowModal(true), setErrorMessage('') }} className="text-white bg-blue-500 hover:bg-blue-600">
                     <Link>Schedule Exam</Link>
                 </Button>
             </div>
 
-            {/* Table to Show Scheduled Exams */}
-            <div className="overflow-x-auto bg-white shadow-md rounded-lg">
-                <div className="overflow-x-auto bg-white shadow-md rounded-lg mt-4">
-                    {examSchedules.length == 0 ?
-                        <p style={{ textAlign: 'center', margin: 10 }}>No exams schedule found</p> :
+            <div className="overflow-x-auto bg-white dark:bg-gray-800 shadow-md rounded-lg">
+                <div className="overflow-x-auto bg-white dark:bg-gray-800 shadow-md rounded-lg mt-4">
+                    {examSchedules.length === 0 ?
+                        <p style={{ textAlign: 'center', margin: 10 }} className="text-gray-700 dark:text-gray-300">No exams schedule found</p> :
                         <Table className="w-full text-left border-collapse">
                             <TableHeader className='bg-gray-100 dark:bg-gray-800'>
                                 <TableRow>
                                     {['Subject Name', 'Exam Date', 'Start Time', 'End Time'].map((header) => (
-                                        <th key={header} className="px-5 py-3 font-medium text-gray-500 text-left">{header}</th>
+                                        <th key={header} className="px-5 py-3 font-medium text-gray-500 dark:text-gray-400 text-left">{header}</th>
                                     ))}
                                 </TableRow>
                             </TableHeader>
@@ -146,33 +140,25 @@ const ExamSchedule = () => {
                                         <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{new Date(schedule.date).toLocaleDateString()}</TableCell>
                                         <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{schedule.startTime}</TableCell>
                                         <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{schedule.endTime}</TableCell>
-
                                     </TableRow>
                                 ))}
                             </TableBody>
                         </Table>}
                 </div>
             </div>
-            <Modal isOpen={showModal} onClose={() => {
-                setShowModal(false)
-                setErrorMessage('')
-            }} className="max-w-[700px] m-4">
+
+            <Modal isOpen={showModal} onClose={() => { setShowModal(false), setErrorMessage('') }} className="max-w-[700px] m-4">
                 <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
                     <div className="px-2 pr-14">
-                        <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
-                            Schedule Exam
-                        </h4>
-                        <p className="mb-6 text-sm text-gray-500 dark:text-gray-400 lg:mb-7">
-                            Schedule exams here for selected subjects.
-                        </p>
+                        <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">Schedule Exam</h4>
+                        <p className="mb-6 text-sm text-gray-500 dark:text-gray-400 lg:mb-7">Schedule exams here for selected subjects.</p>
                     </div>
                     <form className="flex flex-col">
                         <div className="custom-scrollbar overflow-y-auto px-2 pb-3">
                             <div>
-
                                 <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
                                     <div>
-                                        <Label >Select Exam</Label>
+                                        <Label>Select Exam</Label>
                                         <Select
                                             placeholder='Select exam'
                                             options={examsList.map((exam) => ({
@@ -199,13 +185,14 @@ const ExamSchedule = () => {
                                         />
                                     </div>
                                 </div>
+
                                 {selectedClass && subjectsList?.length !== 0 ?
                                     <div className="mb-4">
                                         <label className="block text-sm font-medium text-gray-600 mt-4 mb-4">Subjects for Selected Class</label>
-                                        <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+                                        <div className="overflow-x-auto bg-white dark:bg-gray-800 shadow-md rounded-lg">
                                             <Table className="min-w-full table-auto">
                                                 <TableHeader>
-                                                    <TableRow className="bg-gray-100 text-gray-600">
+                                                    <TableRow className="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-200">
                                                         <th className="py-3 px-6 text-left text-sm font-semibold">Subject Name</th>
                                                         <th className="py-3 px-6 text-left text-sm font-semibold">Select Date</th>
                                                         <th className="py-3 px-6 text-left text-sm font-semibold">Start Time</th>
@@ -214,17 +201,21 @@ const ExamSchedule = () => {
                                                 </TableHeader>
                                                 <TableBody>
                                                     {subjectsList?.map((subject, index) => (
-                                                        <TableRow key={subject.subjectId} className="border-b hover:bg-gray-50 transition duration-200">
-                                                            <TableCell className="py-3 px-6 text-sm text-gray-800">{subject.name}</TableCell>
+                                                        <TableRow
+                                                            key={subject.subjectId}
+                                                            className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition duration-200"
+                                                        >
+                                                            <TableCell className="py-3 px-6 text-sm text-gray-800 dark:text-gray-200">
+                                                                {subject.name}
+                                                            </TableCell>
                                                             <TableCell className="py-3 px-6">
                                                                 <Input
                                                                     type="date"
                                                                     onChange={(e) =>
                                                                         handleInputChange(index, "date", e.target.value, subject._id)
                                                                     }
-                                                                    className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm"
-                                                                /> 
-                                                              
+                                                                    className="mt-2 block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-900 dark:text-gray-200"
+                                                                />
                                                             </TableCell>
                                                             <TableCell className="py-3 px-6">
                                                                 <input
@@ -233,6 +224,7 @@ const ExamSchedule = () => {
                                                                     onChange={(e) =>
                                                                         handleInputChange(index, "startTime", e.target.value, subject._id)
                                                                     }
+                                                                    className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-900 dark:text-gray-200"
                                                                 />
                                                             </TableCell>
                                                             <TableCell className="py-3 px-6">
@@ -242,6 +234,7 @@ const ExamSchedule = () => {
                                                                     onChange={(e) =>
                                                                         handleInputChange(index, "endTime", e.target.value, subject._id)
                                                                     }
+                                                                    className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-900 dark:text-gray-200"
                                                                 />
                                                             </TableCell>
                                                         </TableRow>
@@ -249,14 +242,16 @@ const ExamSchedule = () => {
                                                 </TableBody>
                                             </Table>
                                         </div>
+
                                     </div>
                                     :
                                     selectedClass && <p>No Subjects Found</p>
                                 }
+
                                 <div className="mt-4">
                                     <Button
                                         onClick={(e) => {
-                                            e.preventDefault()
+                                            e.preventDefault();
                                             setSelectedExam('');
                                             setSelectedClass('');
                                             fetchExamSchedules('', '');
@@ -275,7 +270,7 @@ const ExamSchedule = () => {
                                 setSelectedExam('');
                                 setSubjectsList([]);
                                 setExamSchedules([]);
-                                fetchExamSchedules('', '')
+                                fetchExamSchedules('', '');
                             }}>
                                 Close
                             </Button>

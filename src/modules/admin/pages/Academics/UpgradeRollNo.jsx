@@ -120,15 +120,15 @@ const UpgradeRollNo = () => {
     const renderStudentList = () => {
         return (
             <div className="container mx-auto p-4">
-                <div className="overflow-x-auto bg-white dark:bg-gray-800 shadow-md rounded-lg">
+                <div className="overflow-x-auto bg-white dark:bg-gray-900 shadow-md rounded-lg">
                     {students.length === 0 ? (
-                        <p className="text-center text-gray-500 dark:text-gray-300">No students found</p>
+                        <p className="text-center text-gray-500 m-2 dark:text-gray-200">No students found</p>
                     ) : (
                         <Table className="w-full text-left border-collapse">
                             <TableHeader className='bg-gray-100 dark:bg-gray-800'>
                                 <TableRow>
                                     {['Admission Number', 'Roll Number', 'Name', 'Class', 'Section'].map((header) => (
-                                        <th key={header} className="px-5 py-3 font-medium text-gray-500 text-left dark:text-gray-300">{header}</th>
+                                        <th key={header} className="px-5 py-3 font-medium text-gray-500 text-left dark:text-gray-400">{header}</th>
                                     ))}
                                 </TableRow>
                             </TableHeader>
@@ -180,7 +180,7 @@ const UpgradeRollNo = () => {
     };
 
     return (
-        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-900">
+        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-900">
             {/* Add Class Button */}
             <div className='w-full p-4 flex justify-between items-center'>
                 <div className='text-3xl font-medium text-gray-800 dark:text-white'>Upgrade Roll Number</div>
@@ -233,7 +233,7 @@ const UpgradeRollNo = () => {
                                 setSessionFilter('');
                                 setStudents([]);
                             }}
-                            className="px-6 py-3 bg-gray-200 !text-black rounded-lg hover:bg-gray-300 transition duration-300 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white"
+                             className="px-6 py-3 bg-gray-200 !text-black rounded-lg hover:bg-gray-300 transition duration-300"
                         >
                             Clear Filters
                         </Button>

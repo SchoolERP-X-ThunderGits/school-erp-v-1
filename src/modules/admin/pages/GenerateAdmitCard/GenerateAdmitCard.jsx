@@ -195,7 +195,7 @@ const GenerateAdmitCard = () => {
 
 
     return (
-        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-white/[0.03] dark:border-gray-900">
+        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-900">
             <div className='w-full p-4 flex justify-between items-center'>
                 <div className='text-3xl font-medium'>Generate Admit Cards</div>
             </div>
@@ -232,7 +232,7 @@ const GenerateAdmitCard = () => {
                 />
                 <Select
                     disabled={!selectedExam}
-                    placeholder='Select Exam'
+                    placeholder='Select Session'
                     options={sessionsArray.map((session) => ({
                         value: session,
                         label: session,
@@ -240,20 +240,17 @@ const GenerateAdmitCard = () => {
                     value={selectedSession}
                     onChange={(e) => setSelectedSession(e)}
                 />
-                <Button
-                    onClick={handleSearchStudents}
-                // className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
-                >
+                <Button onClick={handleSearchStudents}>
                     Search
                 </Button>
                 <Button
                     onClick={() => {
-                        setSelectedClass('');  // Reset selected class
-                        setSelectedSection('');  // Reset selected section
-                        setSelectedExam('');  // Reset selected exam
-                        setSelectedSession('');  // Reset selected session
-                        setStudents([])
-                        setSelectedStudents([])
+                        setSelectedClass('');
+                        setSelectedSection('');
+                        setSelectedExam('');
+                        setSelectedSession('');
+                        setStudents([]);
+                        setSelectedStudents([]);
                     }}
                     className="px-6 py-3 bg-gray-200 !text-black rounded-lg hover:bg-gray-300 transition duration-300"
                 >
@@ -273,39 +270,48 @@ const GenerateAdmitCard = () => {
                 <Loader />
             ) : (
                 students.length > 0 ? (
-                    <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+                    <div className="overflow-x-auto bg-white dark:bg-gray-900 shadow-md rounded-lg">
                         <Table className="w-full text-left border-collapse">
-                            <TableHeader className='bg-gray-100 dark:bg-gray-800'>
+                            <TableHeader className="bg-gray-100 dark:bg-gray-800">
                                 <TableRow>
-                                    <th className='px-5 py-3 font-medium text-gray-500 text-left'>
+                                    <th className="px-5 py-3 font-medium text-gray-500 dark:text-gray-400 text-left">
                                         <Checkbox
-                                            // id={subject}
                                             checked={selectedStudents.length === students.length}
                                             onChange={handleSelectAllStudents}
                                         />
                                     </th>
                                     {['Roll Number', 'Name'].map((header) => (
-                                        <th key={header} className="px-5 py-3 font-medium text-gray-500 text-left">{header}</th>
+                                        <th
+                                            key={header}
+                                            className="px-5 py-3 font-medium text-gray-500 dark:text-gray-400 text-left"
+                                        >
+                                            {header}
+                                        </th>
                                     ))}
-
                                 </TableRow>
                             </TableHeader>
 
+
                             <TableBody>
                                 {students?.map((student) => (
-                                    <TableRow className='border-gray-200 dark:border-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800' key={student._id}>
+                                    <TableRow
+                                        className='border-gray-200 dark:border-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800'
+                                        key={student._id}
+                                    >
                                         <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">
                                             <Checkbox
-                                                id={student}
+                                                id={student._id}
                                                 checked={selectedStudents.includes(student._id)}
                                                 onChange={() => handleSelectStudent(student._id)}
                                             />
                                         </TableCell>
 
-                                        <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{student?.roll_Number}</TableCell>
+                                        <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">
+                                            {student?.roll_Number}
+                                        </TableCell>
                                         <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">
                                             <button
-                                                onClick={() => navigate(`/admin/student/student-details/${student?._id}`)} // Navigate to student details page
+                                                onClick={() => navigate(`/admin/student/student-details/${student?._id}`)}
                                                 className="text-blue-500 hover:text-blue-700 transition duration-200"
                                             >
                                                 {student?.first_Name} {student?.last_Name}
@@ -316,13 +322,13 @@ const GenerateAdmitCard = () => {
                             </TableBody>
                         </Table>
                     </div>
+
                 ) : (
-                    <p style={{ textAlign: 'center' }}>No students found</p>
+                    <p className="text-center text-gray-500 m-2 dark:text-gray-200">No students found</p>
                 )
             )}
-
-
         </div>
+
     );
 };
 

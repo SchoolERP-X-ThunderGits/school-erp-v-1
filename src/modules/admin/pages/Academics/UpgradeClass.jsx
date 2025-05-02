@@ -108,7 +108,7 @@ const UpgradeClass = () => {
             <div className="container mx-auto p-4">
                 <div className="overflow-x-auto bg-white dark:bg-gray-800 shadow-md rounded-lg">
                     {students.length === 0 ? (
-                        <p style={{ textAlign: 'center', margin: 10 }}>No students found</p>
+                        <p className="text-center text-gray-500 m-2 dark:text-gray-400">No students found</p>
                     ) : (
                         <Table className="w-full text-left border-collapse">
                             <TableHeader className='bg-gray-100 dark:bg-gray-800'>
@@ -121,14 +121,14 @@ const UpgradeClass = () => {
                                     </th>
 
                                     {['Admission Number', 'Roll Number', 'Name', 'Class', 'Section'].map((header) => (
-                                        <th key={header} className="px-5 py-3 font-medium text-gray-500 text-left">{header}</th>
+                                        <th key={header} className="px-5 py-3 font-medium text-gray-500 dark:text-gray-400 text-left">{header}</th>
                                     ))}
                                 </TableRow>
                             </TableHeader>
 
                             <TableBody>
                                 {students?.map((student) => (
-                                    <TableRow className='border-gray-200 dark:border-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800' key={student._id}>
+                                    <TableRow className='border-gray-200 dark:border-gray-900 dark:bg-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800' key={student._id}>
                                         <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">
                                             <Checkbox
                                                 id={student}
@@ -191,7 +191,7 @@ const UpgradeClass = () => {
     };
 
     return (
-        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-900">
+        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-900">
             {/* Add Class Button */}
             <div className='w-full p-4 flex justify-between items-center'>
                 <div className='text-3xl font-medium text-gray-800 dark:text-white'>Upgrade Class, Section and Session</div>

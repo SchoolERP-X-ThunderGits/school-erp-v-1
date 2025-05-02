@@ -136,7 +136,7 @@ const AssignSubject = () => {
     };
 
     return (
-        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700">
+        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-700">
             {/* Add Class Button */}
             <div className='w-full p-4 flex justify-between items-center'>
                 <div className='text-3xl font-medium text-gray-800 dark:text-white'>Assign Subject List</div>
@@ -172,15 +172,15 @@ const AssignSubject = () => {
                                 <TableHeader className='bg-gray-100 dark:bg-gray-800'>
                                     <TableRow>
                                         {['Class Name', 'Subjects Name'].map((header) => (
-                                            <th key={header} className="px-5 py-3 font-medium text-gray-500 text-left">{header}</th>
+                                            <th key={header} className="px-5 py-3 font-medium text-gray-500 dark:text-gray-400 text-left">{header}</th>
                                         ))}
-                                        <th className='px-5 py-3 font-medium text-gray-500 text-left'>Action</th>
+                                        <th className='px-5 py-3 font-medium text-gray-500 dark:text-gray-400 text-left'>Action</th>
                                     </TableRow>
                                 </TableHeader>
 
                                 <TableBody>
                                     {assignList?.map((subject) => (
-                                        <TableRow className='border-gray-200 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-800' key={subject._id}>
+                                        <TableRow className='dark:bg-gray-900 border-gray-200 dark:border-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800' key={subject._id}>
                                             <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{subject?.class?.name}</TableCell>
                                             <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{subject?.subjects?.map(subject => subject.name)?.join(', ')}</TableCell>
                                             <TableCell className="px-5 py-4">
@@ -272,9 +272,9 @@ const AssignSubject = () => {
             <Modal isOpen={showDeleteModal} onClose={() => {
                 setShowDeleteModal(false)
                 setErrorMessage('')
-            }} className="max-w-[700px] m-4">
+            }} className="max-w-[700px]  m-4">
                 <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
-                    <div className="bg-white p-8 dark:bg-gray-800">
+                    <div className="bg-white p-8 dark:bg-gray-900">
                         <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Are you sure you want to delete this subject?</h2>
                         <div className="flex justify-end space-x-4">
                             <Button

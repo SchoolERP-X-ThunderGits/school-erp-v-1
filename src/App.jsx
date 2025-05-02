@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import AdminSignIn from './modules/admin/pages/Authentication/SignIn';
-import ParentSignIn from './modules/parents/pages/Authentication/SignIn';
+import ParentSignIn from './modules/student/pages/Authentication/SignIn';
 import AdminHome from './modules/admin/pages/Dashboard/Home';
-import ParentHome from './modules/parents/pages/DashBoard/Home';
+import ParentHome from './modules/student/pages/DashBoard/Home';
 import FeeType from './modules/admin/pages/Fees/FeeType';
 import FeeStructure from './modules/admin/pages/Fees/FeeStructure';
 import Loader from './components/Loader/index';
 import AppLayout from './Layout/AppLayout';
+import StudentAppLayout from './Layout/StudentAppLayout';
 import ProtectedRoute from './Layout/ProtectedRoute';
 import Class from './modules/admin/pages/Academics/Class';
 import UpgradeClass from './modules/admin/pages/Academics/UpgradeClass';
@@ -35,6 +36,7 @@ import Schools from './modules/admin/pages/Schools/Schools';
 import SubscriptionPlans from './modules/admin/pages/Subscription/SubscriptionPlans';
 import { useDispatch } from 'react-redux';
 import { fetchSubscriptionStatus } from './redux/slices/subscriptionSlice';
+import PaymentSummary from './modules/student/pages/Payment/PaymentSummary';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -44,19 +46,27 @@ function App() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
-useEffect(()=>{
-  dispatch(fetchSubscriptionStatus());
-},[])
+  useEffect(() => {
+    dispatch(fetchSubscriptionStatus());
+  }, [])
   useEffect(() => {
     setTimeout(() => setLoading(false), 1000); // Simulate loading time
   }, []);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
+    const role = localStorage.getItem('role');
     if (token) {
-      if (pathname === '/' || pathname === '/admin') {
-        navigate('/admin/home');
+      if (role == 'student') {
+        if (pathname === '/' || pathname === '/admin') {
+          navigate('/student/home');
+        }
+      } else {
+        if (pathname === '/' || pathname === '/admin') {
+          navigate('/admin/home');
+        }
       }
+
     }
   }, [pathname, navigate]);
 
@@ -253,25 +263,25 @@ useEffect(()=>{
           <Route
             path="/admin/schools"
             element={
-              <ProtectedRoute>
-                <Schools />
-                </ProtectedRoute>
+              <Schools />
             }
           />
           <Route
             path="/admin/Subscription-plans"
             element={
-              <ProtectedRoute>
-                <SubscriptionPlans />
-                </ProtectedRoute>
+              <SubscriptionPlans />
             }
           />
 
         </Route>
 
         {/* Parent Section (not wrapped in DefaultLayout) */}
-        <Route path="/parent" element={<ParentSignIn />} />
-        <Route path="/parent/home" element={<ParentHome />} />
+        <Route path="/student" element={<ParentSignIn />} />
+        <Route element={<StudentAppLayout />}>
+
+          <Route path="/student/home" element={<ParentHome />} />
+          <Route path="/student/payment-summary" element={<PaymentSummary />} />
+        </Route>
       </Routes>
     </UserProvider>
   );

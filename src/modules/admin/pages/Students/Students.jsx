@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { MdDelete, MdOutlineModeEdit } from "react-icons/md";
-import { getService, postService, putService, deleteService } from '../../../../constants/Service';
+import { getService, deleteService } from '../../../../constants/Service';
 import apiName from '../../../../constants/ApiName';
 import Loader from '../../../../components/Loader';
 import { Modal } from '../../../../components/ui/modal';
 import { Table, TableBody, TableCell, TableHeader, TableRow } from '../../../../components/ui/table/index';
 import Button from '../../../../components/ui/button/Button';
-import Label from '../../../../components/form/Label';
 import Select from '../../../../components/form/Select';
 import { showToast } from '../../../../components/Toast';
 import { Link, useNavigate } from 'react-router-dom';
-import { sessionsArray } from '../../../../constants/GlobalConstants';
-import { FaDownload, FaTimeline } from "react-icons/fa6";
 import Input from '../../../../components/form/input/InputField';
 
 const Students = () => {
@@ -111,14 +108,14 @@ const Students = () => {
     const renderStudentList = () => {
         return (
             <div className="container mx-auto">
-                <div className="overflow-x-auto bg-white dark:bg-gray-800 shadow-md rounded-lg">
+                <div className="overflow-x-auto bg-white dark:bg-gray-900 shadow-md rounded-lg">
                     {filteredStudents.length == 0 ? 
                         <p style={{ textAlign: 'center', margin: 10 }}>No students found</p> :
                         <Table className="w-full text-left border-collapse">
                             <TableHeader className='bg-gray-100 dark:bg-gray-800'>
                                 <TableRow>
                                     {['Admission Number', 'Roll Number', 'Name', 'Class', 'Section'].map((header) => (
-                                        <th key={header} className="px-5 py-3 font-medium text-gray-500 text-left dark:text-gray-300">{header}</th>
+                                        <th key={header} className="px-5 py-3 font-medium text-gray-500 text-left dark:text-gray-400">{header}</th>
                                     ))}
                                     <th className='px-5 py-3 font-medium text-gray-500 text-left dark:text-gray-300'>Action</th>
                                 </TableRow>
@@ -215,7 +212,7 @@ const Students = () => {
                                 setSectionFilter('');
                                 setSearchText('');
                             }}
-                            className="px-6 py-3 bg-gray-200 !text-black rounded-lg hover:bg-gray-300 transition duration-300 dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500"
+                           className="px-6 py-3 bg-gray-200 !text-black rounded-lg hover:bg-gray-300 transition duration-300"
                         >
                             Clear Filters
                         </Button>
@@ -230,7 +227,7 @@ const Students = () => {
                 setShowDeleteModal(false)
             }} className="max-w-[700px] m-4">
                 <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
-                    <div className="bg-white p-8 dark:bg-gray-800">
+                    <div className="bg-white p-8 dark:bg-gray-900">
                         <h2 className="text-xl font-semibold text-gray-800 mb-4 dark:text-white">Are you sure you want to delete this student?</h2>
                         <div className="flex justify-end space-x-4">
                             <Button

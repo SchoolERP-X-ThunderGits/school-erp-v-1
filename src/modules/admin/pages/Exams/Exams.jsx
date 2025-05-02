@@ -24,6 +24,7 @@ const Exams = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false); // Delete confirmation modal
     const [examToDelete, setExamToDelete] = useState(null); // Track exam to delete
     const [ErrorMessage, setErrorMessage] = useState('')
+
     useEffect(() => {
         setLoading(true);
         getExamsList();
@@ -36,7 +37,7 @@ const Exams = () => {
             setEditId('');
             setExamsList(result);
             setExamName('');
-            setExamSession('')
+            setExamSession('');
             setShowModal(false);
             setLoading(false);
         } catch (error) {
@@ -71,28 +72,24 @@ const Exams = () => {
         if (editMode) {
             try {
                 const response = await putService(`${apiName.exams}/${editId}`, body);
-                console.log('blvcbkcvkbk', response)
                 showToast("Exam updated successfully.", 'success');
                 getExamsList();
             } catch (error) {
                 setErrorMessage(error?.response?.data?.message)
-                console.error('Error posting data:', error);
             }
         } else {
             try {
                 const response = await postService(apiName.exams, body);
-                console.log('respofdfnse', response)
                 showToast("Exam added successfully.", 'success');
                 getExamsList();
             } catch (error) {
-                console.error('Error posting data:', error);
+                showToast("Error adding exam", 'error');
             }
         }
     };
 
     const handleConfirmDelete = async () => {
         try {
-            // Call delete service with the exam ID
             await deleteService(`${apiName.exams}/${examToDelete}`);
             showToast('Exam deleted successfully', 'success');
             getExamsList(); // Refresh the exam list
@@ -105,72 +102,73 @@ const Exams = () => {
 
     return (
         <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-white/[0.03] dark:border-gray-900">
-            {/* Add Class Button */}
+            {/* Add Exam Button */}
             <div className='w-full p-4 flex justify-between items-center'>
-                <div className='text-3xl font-medium'>Exams List</div>
-                <Button onClick={() => { setShowModal(true), setErrorMessage(''), setEditMode(false), setEditId(), setExamName('') }}>
+                <div className='text-3xl font-medium text-gray-700 dark:text-white'>Exams List</div>
+                <Button
+                    onClick={() => {
+                        setShowModal(true);
+                        setErrorMessage('');
+                        setEditMode(false);
+                        setEditId('');
+                        setExamName('');
+                    }}
+                    className="bg-blue-500 text-white hover:bg-blue-600 transition duration-200"
+                >
                     <Link>Add Exam</Link>
                 </Button>
             </div>
-            {
-                loading ? <Loader />
-                    :
 
-                    <div className="overflow-x-auto bg-white shadow-md rounded-lg">
-                        {examsList.length == 0 ?
-                            <p style={{ textAlign: 'center', margin: 10 }}>No exams found</p> :
-                            <Table className="w-full text-left border-collapse">
-                                <TableHeader className='bg-gray-100 dark:bg-gray-800'>
-                                    <TableRow>
-                                        {['Exam Name', 'Session'].map((header) => (
-                                            <th key={header} className="px-5 py-3 font-medium text-gray-500 text-left">{header}</th>
-                                        ))}
-                                        <th className='px-5 py-3 font-medium text-gray-500 text-left'>Action</th>
-                                    </TableRow>
-                                </TableHeader>
-
-                                <TableBody>
-                                    {examsList?.map((examItem) => (
-                                        <TableRow className='border-gray-200 dark:border-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800' key={examItem._id}>
-                                            <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{examItem?.name}</TableCell>
-                                            <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{examItem.session}</TableCell>
-                                            <TableCell className="px-5 py-4">
-                                                <div className='flex gap-3 justify-start items-center'>
-                                                    <Link onClick={() => handleEdit(examItem)}>
-                                                        <MdOutlineModeEdit className='dark:text-white' />
-                                                    </Link>
-                                                    <Link onClick={() => handleDelete(examItem._id)}>
-                                                        <MdDelete className='dark:text-white' />
-                                                    </Link>
-                                                </div>
-                                            </TableCell>
-                                        </TableRow>
+            {loading ? <Loader /> :
+                <div className="overflow-x-auto bg-white dark:bg-gray-900 shadow-md rounded-lg">
+                    {examsList.length === 0 ?
+                        <p style={{ textAlign: 'center', margin: 10 }} className="text-gray-700 dark:text-white">No exams found</p> :
+                        <Table className="w-full text-left border-collapse">
+                            <TableHeader className='bg-gray-100 dark:bg-gray-800'>
+                                <TableRow>
+                                    {['Exam Name', 'Session'].map((header) => (
+                                        <th key={header} className="px-5 py-3 font-medium text-gray-500 text-left dark:text-gray-400">{header}</th>
                                     ))}
-                                </TableBody>
-                            </Table>}
-                    </div>
+                                    <th className='px-5 py-3 font-medium text-gray-500 text-left dark:text-white'>Action</th>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {examsList?.map((examItem) => (
+                                    <TableRow className='border-gray-200 dark:border-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800' key={examItem._id}>
+                                        <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{examItem?.name}</TableCell>
+                                        <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{examItem.session}</TableCell>
+                                        <TableCell className="px-5 py-4">
+                                            <div className='flex gap-3 justify-start items-center'>
+                                                <Link onClick={() => handleEdit(examItem)}>
+                                                    <MdOutlineModeEdit className='text-gray-700 dark:text-white hover:text-blue-500 dark:hover:text-blue-400' />
+                                                </Link>
+                                                <Link onClick={() => handleDelete(examItem._id)}>
+                                                    <MdDelete className='text-gray-700 dark:text-white hover:text-red-500 dark:hover:text-red-400' />
+                                                </Link>
+                                            </div>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>}
+                </div>
             }
 
             <Modal isOpen={showModal} onClose={() => {
-                setShowModal(false)
-                setErrorMessage('')
+                setShowModal(false);
+                setErrorMessage('');
             }} className="max-w-[700px] m-4">
                 <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
                     <div className="px-2 pr-14">
-                        <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
-                            Add Exam
-                        </h4>
-                        <p className="mb-6 text-sm text-gray-500 dark:text-gray-400 lg:mb-7">
-                            Add new exam here for students.
-                        </p>
+                        <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">Add Exam</h4>
+                        <p className="mb-6 text-sm text-gray-500 dark:text-gray-400 lg:mb-7">Add new exam here for students.</p>
                     </div>
                     <form className="flex flex-col">
                         <div className="custom-scrollbar overflow-y-auto px-2 pb-3">
                             <div>
-
                                 <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
                                     <div>
-                                        <Label >Exam Name</Label>
+                                        <Label>Exam Name</Label>
                                         <Input
                                             type="text"
                                             value={examName}
@@ -179,9 +177,8 @@ const Exams = () => {
                                         />
                                     </div>
 
-
-                                    <div >
-                                        <Label >Select Session</Label>
+                                    <div>
+                                        <Label>Select Session</Label>
                                         <Select
                                             placeholder='Select session'
                                             options={sessionsArray.map((session) => ({
@@ -198,9 +195,10 @@ const Exams = () => {
                         <h3 style={{ textAlign: 'start', color: 'red', marginLeft: 10 }}>{ErrorMessage}</h3>
                         <div className="flex items-center gap-3 px-2 mt-6 lg:justify-end">
                             <Button size="sm" variant="outline" onClick={() => {
-                                setShowModal(false)
-                                setErrorMessage('')
-                                setEditMode(false); setEditId('')
+                                setShowModal(false);
+                                setErrorMessage('');
+                                setEditMode(false);
+                                setEditId('');
                             }}>
                                 Close
                             </Button>
@@ -217,11 +215,11 @@ const Exams = () => {
 
             {/* Delete Confirmation Modal */}
             <Modal isOpen={showDeleteModal} onClose={() => {
-                setShowDeleteModal(false)
-                setErrorMessage('')
+                setShowDeleteModal(false);
+                setErrorMessage('');
             }} className="max-w-[700px] m-4">
                 <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
-                    <div className="bg-white p-8 ">
+                    <div className="bg-white p-8 dark:bg-gray-900">
                         <h2 className="text-xl font-semibold text-gray-800 mb-4">Are you sure you want to delete this exam?</h2>
                         <div className="flex justify-end space-x-4">
                             <Button

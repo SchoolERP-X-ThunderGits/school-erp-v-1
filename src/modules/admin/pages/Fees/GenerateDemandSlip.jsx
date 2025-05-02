@@ -111,33 +111,7 @@ const GenerateDemandSlip = () => {
             showToast('Error fetching filtered students', 'error');
         }
     };
-    function numberToWords(num) {
-        // Helper function to convert numbers into words
-        function helper(n) {
-            if (n === 0) return "";
-            if (n < 20) return below20[n];
-            if (n < 100) return tens[Math.floor(n / 10)] + (n % 10 !== 0 ? " " + below20[n % 10] : "");
-            return below20[Math.floor(n / 100)] + " Hundred" + (n % 100 !== 0 ? " " + helper(n % 100) : "");
-        }
-
-        // Special case for 0
-        if (num === 0) {
-            return "Zero Only";
-        }
-
-        let result = "";
-        let i = 0; // This is for the position in the thousands array
-        while (num > 0) {
-            if (num % 1000 !== 0) {
-                result = helper(num % 1000) + " " + thousands[i] + " " + result;
-            }
-            num = Math.floor(num / 1000);
-            i++;
-        }
-
-        // Trim any unnecessary spaces
-        return result.trim() + " Only";
-    }
+   
     const toggleStudentSelection = (studentId) => {
         setSelectedStudents((prevSelected) =>
             prevSelected.includes(studentId)
@@ -319,29 +293,31 @@ const GenerateDemandSlip = () => {
     const renderStudentList = () => {
         return (
             <div className="container mx-auto p-4">
-                <div className="overflow-x-auto bg-white shadow-md rounded-lg">
-                    {students.length == 0 ?
-                        <p style={{ textAlign: 'center', margin: 10 }}>No students found</p> :
+                <div className="overflow-x-auto bg-white dark:bg-gray-900 shadow-md rounded-lg">
+                    {students.length === 0 ? (
+                        <p style={{ textAlign: 'center', margin: 10 }} className="text-gray-700 dark:text-white">No students found</p>
+                    ) : (
                         <Table className="w-full text-left border-collapse">
                             <TableHeader className='bg-gray-100 dark:bg-gray-800'>
                                 <TableRow>
                                     <th className='px-5 py-3 font-medium text-gray-500 text-left'>
                                         <Checkbox
-                                            // id={subject}
                                             checked={selectAll}
                                             onChange={toggleSelectAll}
                                         />
                                     </th>
                                     {['Admission Number', 'Roll Number', 'Name', 'Class', 'Section'].map((header) => (
-                                        <th key={header} className="px-5 py-3 font-medium text-gray-500 text-left">{header}</th>
+                                        <th key={header} className="px-5 py-3 font-medium text-gray-500 text-left dark:text-white">{header}</th>
                                     ))}
-
                                 </TableRow>
                             </TableHeader>
-
+    
                             <TableBody>
                                 {students?.map((student) => (
-                                    <TableRow className='border-gray-200 dark:border-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800' key={student._id}>
+                                    <TableRow 
+                                        className='border-gray-200 dark:border-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800' 
+                                        key={student._id}
+                                    >
                                         <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">
                                             <Checkbox
                                                 id={student}
@@ -349,109 +325,120 @@ const GenerateDemandSlip = () => {
                                                 onChange={() => toggleStudentSelection(student._id)}
                                             />
                                         </TableCell>
-                                        <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{student?.admission_Number}</TableCell>
-                                        <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{student?.roll_Number}</TableCell>
+                                        <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">
+                                            {student?.admission_Number}
+                                        </TableCell>
+                                        <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">
+                                            {student?.roll_Number}
+                                        </TableCell>
                                         <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">
                                             <button
                                                 onClick={() => navigate(`/admin/student/student-details/${student?._id}`)} // Navigate to student details page
-                                                className="text-blue-500 hover:text-blue-700 transition duration-200"
+                                                className="text-blue-500 hover:text-blue-700 transition duration-200 dark:text-blue-400 dark:hover:text-blue-500"
                                             >
                                                 {student?.first_Name} {student?.last_Name}
                                             </button>
                                         </TableCell>
-                                        <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{student?.class_Id?.name}</TableCell>
-                                        <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{student?.section}</TableCell>
+                                        <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">
+                                            {student?.class_Id?.name}
+                                        </TableCell>
+                                        <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">
+                                            {student?.section}
+                                        </TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
-                        </Table>}
+                        </Table>
+                    )}
                 </div>
             </div>
         );
     };
+    
 
     return (
-        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-white/[0.03] dark:border-gray-900">
-            <div className='w-full p-4 flex justify-between items-center'>
-                <div className='text-3xl font-medium'>Generate Admit Cards</div>
-            </div>
-            {loading ? (
-                <Loader />
-            ) : (
-                <div>
-                    {/* Filters */}
-                    <div className="grid grid-cols-2 p-4 gap-x-6 gap-y-5 lg:grid-cols-4">
-                        <Select
-                            placeholder='Filter by Class'
-                            options={classes.map((classItem) => ({
-                                value: classItem._id,
-                                label: classItem.name,
-                            }))}
-                            value={classFilter}
-                            onChange={handleClassFilterChange}
-                        />
-                        <Select
-                            placeholder='Filter by Section'
-                            options={sections.map((section) => ({
-                                value: section,
-                                label: section,
-                            }))}
-                            value={sectionFilter}
-                            onChange={handleSectionFilterChange}
-                            disabled={!classFilter}
-                        />
-                        <Input
-                            type="date"
-                            onChange={(e) =>
-                                handleStartDateChange(e.target.value)
-                            }
-                            className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm"
-                        />
-                        <Input
-                            type="date"
-                            onChange={(e) =>
-                                handleEndDateChange(e.target.value)
-                            }
-                            className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm"
-                        />
-                        
-                        <Button
-                            onClick={handleSearch}
-                        // className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
-                        >
-                            Search
-                        </Button>
-                        <Button
-                            onClick={() => {
-                                setClassFilter('');   // Reset class filter
-                                setSectionFilter(''); // Reset section filter
-                                setStudents([])
-                                setStartDate('')
-                                setEndDate('')
-                            }}
-                            className="px-6 py-3 bg-gray-200 !text-black rounded-lg hover:bg-gray-300 transition duration-300"
-                        >
-                            Clear Filters
-                        </Button>
-                        {selectedStudents.length > 0 && (
-                            <Button
-                                onClick={generateSelectedStudentsPdf}
-                                className=" bg-green-500 text-white rounded-lg hover:bg-gray-300 "
-                            >
-                                Download Demand Slips
-                            </Button>
-                        )}
-                    </div>
-
-
-                    {/* Students List */}
-                    <div className="mt-6">{renderStudentList()}</div>
-
-                    {/* Download Button */}
-
-                </div>
-            )}
+        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-700">
+        <div className='w-full p-4 flex justify-between items-center'>
+            <div className='text-3xl font-medium text-gray-800 dark:text-white'>Generate Demand Slips</div>
         </div>
+        {loading ? (
+            <Loader />
+        ) : (
+            <div>
+                {/* Filters */}
+                <div className="grid grid-cols-2 p-4 gap-x-6 gap-y-5 lg:grid-cols-4">
+                    <Select
+                        placeholder='Filter by Class'
+                        options={classes.map((classItem) => ({
+                            value: classItem._id,
+                            label: classItem.name,
+                        }))}
+                        value={classFilter}
+                        onChange={handleClassFilterChange}
+                        className="bg-white dark:bg-gray-700 text-black dark:text-white border border-gray-300 dark:border-gray-600"
+                    />
+                    <Select
+                        placeholder='Filter by Section'
+                        options={sections.map((section) => ({
+                            value: section,
+                            label: section,
+                        }))}
+                        value={sectionFilter}
+                        onChange={handleSectionFilterChange}
+                        disabled={!classFilter}
+                        className="bg-white dark:bg-gray-700 text-black dark:text-white border border-gray-300 dark:border-gray-600"
+                    />
+                    <Input
+                        type="date"
+                        onChange={(e) =>
+                            handleStartDateChange(e.target.value)
+                        }
+                        className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm bg-white dark:bg-gray-700 text-black dark:text-white dark:border-gray-600"
+                    />
+                    <Input
+                        type="date"
+                        onChange={(e) =>
+                            handleEndDateChange(e.target.value)
+                        }
+                        className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm bg-white dark:bg-gray-700 text-black dark:text-white dark:border-gray-600"
+                    />
+                    
+                    <Button
+                        onClick={handleSearch}
+                        className="bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
+                    >
+                        Search
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            setClassFilter('');   // Reset class filter
+                            setSectionFilter(''); // Reset section filter
+                            setStudents([])
+                            setStartDate('')
+                            setEndDate('')
+                        }}
+                      className="px-6 py-3 bg-gray-200 !text-black rounded-lg hover:bg-gray-300 transition duration-300"
+                    >
+                        Clear Filters
+                    </Button>
+                    {selectedStudents.length > 0 && (
+                        <Button
+                            onClick={generateSelectedStudentsPdf}
+                            className="bg-green-500 text-white rounded-lg hover:bg-gray-300 dark:bg-green-600 dark:hover:bg-green-500"
+                        >
+                            Download Demand Slips
+                        </Button>
+                    )}
+                </div>
+    
+                {/* Students List */}
+                <div className="mt-6">{renderStudentList()}</div>
+    
+                {/* Download Button */}
+            </div>
+        )}
+    </div>
+    
     );
 };
 

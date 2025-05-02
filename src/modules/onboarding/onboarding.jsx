@@ -10,7 +10,7 @@ const Onboarding = () => {
   };
 
   const handleParentLogin = () => {
-    navigate('/parent');
+    navigate('/student');
   };
 
   return (
