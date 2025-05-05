@@ -13,6 +13,7 @@ import { useUserContext } from '../../../../context/UserContext';
 import { generateMultipleIdCardPdf } from '../../../../components/generateIdCardPdf';
 import { GenerateAdmitCardPdf } from '../../../../components/GenerateAdmitCardPdf';
 import { GenerateDemandSlipPdf } from '../../../../components/GenerateDemandSlipPdf';
+import { showToast } from '../../../../components/Toast';
 const StudentHome = () => {
   const { school } = useUserContext();
   const navigate = useNavigate()
@@ -27,8 +28,6 @@ const StudentHome = () => {
       const result = await getService(`${apiName.studentDashboard}/${studentData?._id}`);
       console.log('kfskkresultresult', result)
       setData(result)
-      // setStudents(result?.length);
-      // setLoading(false);
     } catch (error) {
       console.log('fetchStudents error', error);
       showToast('Error fetching students data', 'error');
@@ -41,15 +40,8 @@ const StudentHome = () => {
       <div className="max-w-6xl mx-auto space-y-8">
         
         {/* Metric Cards */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 md:gap-6">
-        <div className="flex items-center gap-5 bg-white dark:bg-gray-800 p-6 rounded-2xl shadow border dark:border-gray-700">
-          <img src={data?.studentInfo?.student_Photo} alt="Student" className="w-20 h-20 rounded-full object-cover border-2 border-indigo-600" />
-          <div>
-            <h2 className="text-xl font-bold text-gray-800 dark:text-white capitalize">{data?.studentInfo?.first_Name} {data?.studentInfo?.last_Name}</h2>
-            <p className="text-gray-600 dark:text-gray-400">Roll No: {data?.studentInfo?.roll_Number} | Class: {data?.studentInfo?.section}</p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Admission No: {data?.studentInfo?.admission_Number}</p>
-          </div>
-        </div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6">
+
           {/* Subjects */}
           <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-5 md:p-6 shadow">
             <div className="flex items-center justify-center w-12 h-12 bg-indigo-100 dark:bg-indigo-800 rounded-xl">
@@ -83,7 +75,7 @@ const StudentHome = () => {
               <h2 className="text-lg font-semibold text-indigo-700 dark:text-indigo-300">Fees Summary</h2>
             </div>
             <div className="space-y-2 text-gray-700 dark:text-gray-200">
-              <p><span className="font-semibold text-gray-600 dark:text-gray-300">Total Fees:</span> {data?.feeSummary?.totalAssigned}</p>
+              <p><span className="font-semibold text-gray-600 dark:text-gray-300">Total Fees:</span> {data?.feeSummary?.totalFees || 0}</p>
               <p><span className="font-semibold text-gray-600 dark:text-gray-300">Paid:</span> {data?.feeSummary?.totalPaid || 0}</p>
               <p className="text-red-600 dark:text-red-400"><span className="font-semibold">Due:</span> {data?.feeSummary?.totalDue || 0}</p>
               <p className="text-red-600 dark:text-red-400"><span className="font-semibold">Due Date:</span> 05-May-2025</p>
@@ -104,7 +96,7 @@ const StudentHome = () => {
               <h2 className="text-lg font-semibold text-indigo-700 dark:text-indigo-300">Upcoming Exams</h2>
             </div>
             {
-              data?.upcomingExam.length == 0 ?
+              data?.upcomingExam?.length == 0 ?
                 <p>No Exams</p>
                 :
 

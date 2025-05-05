@@ -40,6 +40,29 @@ const Schools = () => {
         principalSignature: '',
         managerSignature: ''
     });
+    const fields = [
+        { label: 'Username', name: 'username' },
+        { label: 'Password', name: 'password' },
+        { label: 'Email', name: 'email' },
+        { label: 'Contact Number', name: 'contactNumber' },
+        { label: 'Full Name', name: 'fullName' },
+        { label: 'Subdomain', name: 'subdomain' },
+        { label: 'School Name', name: 'schoolName' },
+        { label: 'Website', name: 'website' },
+        { label: 'Address', name: 'address' },
+        { label: 'Admission Number Prefix', name: 'prefix' },
+    ];
+    const editFields = [
+
+        { label: 'Email', name: 'email' },
+        { label: 'Contact Number', name: 'contactNumber' },
+        { label: 'Full Name', name: 'fullName' },
+        { label: 'Subdomain', name: 'subdomain' },
+        { label: 'School Name', name: 'schoolName' },
+        { label: 'Website', name: 'website' },
+        { label: 'Address', name: 'address' },
+        { label: 'Admission Number Prefix', name: 'prefix' },
+    ]
     const [ErrorMessage, setErrorMessage] = useState('')
     useEffect(() => {
         setLoading(true);
@@ -127,7 +150,7 @@ const Schools = () => {
             directorSignature: formData.directorSignature,
             principalSignature: formData.principalSignature,
             managerSignature: formData.managerSignature,
-            role:'admin',
+            role: 'admin',
             qrCodeUrl: `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(formData.website)}`
         };
 
@@ -220,9 +243,9 @@ const Schools = () => {
                                 <TableHeader className='bg-gray-100 dark:bg-gray-800'>
                                     <TableRow>
                                         {['School Name', 'Email', 'Website', 'Status'].map((header) => (
-                                            <th key={header} className="px-5 py-3 font-medium text-gray-500 text-left">{header}</th>
+                                            <th key={header} className="px-5 py-3 font-medium text-gray-500 dark:text-gray-400 text-left">{header}</th>
                                         ))}
-                                        <th className='px-5 py-3 font-medium text-gray-500 text-left'>Action</th>
+                                        <th className='px-5 py-3 font-medium text-gray-500 dark:text-gray-400 text-left'>Action</th>
                                     </TableRow>
                                 </TableHeader>
 
@@ -268,30 +291,34 @@ const Schools = () => {
                         {/* Scrollable section starts here */}
                         <div className="custom-scrollbar overflow-y-auto px-2 pb-3" style={{ maxHeight: '40vh' }}>
                             <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
-                                {[
-                                    { label: 'Username', name: 'username' },
-                                    { label: 'Password', name: 'password' },
-                                    { label: 'Email', name: 'email' },
-                                    { label: 'Contact Number', name: 'contactNumber' },
-                                    { label: 'Full Name', name: 'fullName' },
-                                    { label: 'Subdomain', name: 'subdomain' },
-                                    { label: 'School Name', name: 'schoolName' },
-                                    { label: 'Website', name: 'website' },
-                                    { label: 'Contact Number', name: 'contactNumber' },
-                                    { label: 'Address', name: 'address' },
-                                    { label: 'Admission Number Prefix', name: 'prefix' },
-                                ].map(({ label, name }) => (
-                                    <div key={name}>
-                                        <Label className="text-gray-600">{label}:</Label>
-                                        <Input
-                                            type="text"
-                                            name={name}
-                                            value={formData?.[name] || ''}
-                                            onChange={handleInputChange}
-                                            className="w-full mt-2 p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400"
-                                        />
-                                    </div>
-                                ))}
+                                {
+                                    editMode
+                                        ? editFields.map(({ label, name }) => (
+                                            <div key={name}>
+                                                <Label className="text-gray-600">{label}:</Label>
+                                                <Input
+                                                    type="text"
+                                                    name={name}
+                                                    value={formData?.[name] || ''}
+                                                    onChange={handleInputChange}
+                                                    className="w-full mt-2 p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                                                />
+                                            </div>
+                                        ))
+                                        : fields.map(({ label, name }) => (
+                                            <div key={name}>
+                                                <Label className="text-gray-600">{label}:</Label>
+                                                <Input
+                                                    type="text"
+                                                    name={name}
+                                                    value={formData?.[name] || ''}
+                                                    onChange={handleInputChange}
+                                                    className="w-full mt-2 p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                                                />
+                                            </div>
+                                        ))
+                                }
+
                                 <div>
                                     <Label className="text-gray-600">Logo:</Label>
                                     <Input type="file" name="logo" onChange={handleInputChange} className="mt-2" />
@@ -341,8 +368,8 @@ const Schools = () => {
                 setErrorMessage('')
             }} className="max-w-[700px] m-4">
                 <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
-                    <div className="bg-white p-8 ">
-                        <h2 className="text-xl font-semibold text-gray-800 mb-4">Are you sure you want to delete this school?</h2>
+                    <div className="bg-white dark:bg-gray-900 p-8 ">
+                        <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Are you sure you want to delete this school?</h2>
                         <div className="flex justify-end space-x-4">
                             <Button
                                 onClick={() => setShowDeleteModal(false)} // Close the confirmation modal

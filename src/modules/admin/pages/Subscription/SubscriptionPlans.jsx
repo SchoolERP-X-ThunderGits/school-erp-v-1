@@ -13,8 +13,6 @@ import { FaCheck, FaEdit, FaTrash } from 'react-icons/fa';
 const SubscriptionPlans = () => {
     const [subscriptionsList, setSubscriptionsList] = useState([]);
     const [showModal, setShowModal] = useState(false);
-    const [subscriptionName, setSubscriptionName] = useState('');
-    const [subscriptionSession, setSubscriptionSession] = useState();
     const [editId, setEditId] = useState('');
     const [loading, setLoading] = useState(false);
     const [editMode, setEditMode] = useState(false);
@@ -47,8 +45,6 @@ const SubscriptionPlans = () => {
             setEditMode(false);
             setEditId('');
             setSubscriptionsList(result?.data);
-            setSubscriptionName('');
-            setSubscriptionSession('')
             setShowModal(false);
             setLoading(false);
         } catch (error) {
@@ -223,7 +219,21 @@ const SubscriptionPlans = () => {
                         setErrorMessage('');
                         setEditMode(false);
                         setEditId();
-                        setSubscriptionName('');
+                        setFormData({
+                            name: '',
+                            price: '',
+                            validityInDays: '',
+                            description: '',
+                            color: '',
+                            isVisible: true,
+                            limits: {
+                                userLimit: '',
+                                departmentLimit: '',
+                                medicineLimit: '',
+                                saleLimitPerDay: ''
+                            },
+                            features: []
+                        })
                     }}
                 >
                     <Link>Add Subscription</Link>
@@ -249,7 +259,7 @@ const SubscriptionPlans = () => {
                                         className={`relative rounded-2xl shadow-lg overflow-hidden border
                 ${plan.mostPopular ? 'border-blue-600 ring-2 ring-blue-500' : 'border-gray-200'}
                 ${isCurrent ? 'border-green-500 ring-green-400' : ''}
-                hover:scale-105 transition-transform duration-300 bg-white dark:bg-gray-700 dark:border-gray-600`}
+                 bg-white dark:bg-gray-700 dark:border-gray-600`}
                                     >
                                         {plan.mostPopular && !isCurrent && (
                                             <div className="absolute top-0 right-0 bg-blue-600 text-white text-xs font-semibold px-4 py-1 rounded-bl-lg">
@@ -323,26 +333,130 @@ const SubscriptionPlans = () => {
 
                     <form className="flex flex-col">
                         {/* Scrollable section starts here */}
-                        <div className="custom-scrollbar overflow-y-auto px-2 pb-3" style={{ maxHeight: '40vh' }}>
+                        <div className="custom-scrollbar overflow-y-auto px-2 pb-3" style={{ maxHeight: '60vh' }}>
                             <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
                                 {[
                                     { label: 'Name', name: 'name' },
                                     { label: 'Price', name: 'price' },
                                     { label: 'Validity Days', name: 'validityInDays' },
                                     { label: 'Description', name: 'description' },
-                                ].map(({ label, name }) => (
+                                    { label: 'Color', name: 'color', type: 'color' },
+                                ].map(({ label, name, type = 'text' }) => (
                                     <div key={name}>
-                                        <Label className="text-gray-600 dark:text-gray-300">{label}:</Label>
+                                        <Label className="text-gray-600">{label}:</Label>
                                         <Input
-                                            type="text"
+                                            type={type}
                                             name={name}
                                             value={formData?.[name] || ''}
                                             onChange={handleInputChange}
-                                            className="w-full mt-2 p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:bg-gray-700 dark:border-gray-600"
+                                            className="w-full mt-2 p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400"
                                         />
                                     </div>
                                 ))}
+
+                                {/* Visibility Toggle */}
+                                <div>
+                                    <Label className="text-gray-600">Is Visible:</Label>
+                                    <select
+                                        name="isVisible"
+                                        value={formData?.isVisible ?? true}
+                                        onChange={handleInputChange}
+                                        className="w-full mt-2 p-3 border border-gray-300 rounded-xl"
+                                    >
+                                        <option value={true}>Yes</option>
+                                        <option value={false}>No</option>
+                                    </select>
+                                </div>
                             </div>
+
+                            {/* Limits Section */}
+                            <h4 className="mt-6 mb-2 text-lg font-semibold text-gray-800 dark:text-white/90">Limits</h4>
+                            <div key="limits.userLimit">
+                                <Label className="text-gray-600">User Limit:</Label>
+                                <Input
+                                    type="number"
+                                    name="limits.userLimit"
+                                    value={formData?.limits?.userLimit || ''}
+                                    onChange={handleInputChange}
+                                    className="w-full mt-2 p-3 border border-gray-300 rounded-xl"
+                                />
+                            </div>
+                            <div key="limits.departmentLimit">
+                                <Label className="text-gray-600">Department Limit:</Label>
+                                <Input
+                                    type="number"
+                                    name="limits.departmentLimit"
+                                    value={formData?.limits?.departmentLimit || ''}
+                                    onChange={handleInputChange}
+                                    className="w-full mt-2 p-3 border border-gray-300 rounded-xl"
+                                />
+                            </div>
+                            <div key="limits.medicineLimit">
+                                <Label className="text-gray-600">Medicine Limit:</Label>
+                                <Input
+                                    type="number"
+                                    name="limits.medicineLimit"
+                                    value={formData?.limits?.medicineLimit || ''}
+                                    onChange={handleInputChange}
+                                    className="w-full mt-2 p-3 border border-gray-300 rounded-xl"
+                                />
+                            </div>
+                            <div key="limits.saleLimitPerDay">
+                                <Label className="text-gray-600">Sale Limit Per Day:</Label>
+                                <Input
+                                    type="number"
+                                    name="limits.saleLimitPerDay"
+                                    value={formData?.limits?.saleLimitPerDay || ''}
+                                    onChange={handleInputChange}
+                                    className="w-full mt-2 p-3 border border-gray-300 rounded-xl"
+                                />
+                            </div>
+
+
+                            {/* Features List */}
+                            <h4 className="mt-6 mb-2 text-lg font-semibold text-gray-800 dark:text-white/90">Features</h4>
+                            {(formData?.features?.length > 0 ? formData.features : [{ key: '', label: '', description: '', isEnabled: true }])
+                                .map((feature, index) => (
+                                    <div key={index} className="grid grid-cols-1 gap-4 mb-4 lg:grid-cols-4">
+                                        <Input
+                                            type="text"
+                                            name={`features.${index}.key`}
+                                            placeholder="Key"
+                                            value={feature.key}
+                                            onChange={e => handleFeatureChange(e, index, 'key')}
+                                        />
+                                        <Input
+                                            type="text"
+                                            name={`features.${index}.label`}
+                                            placeholder="Label"
+                                            value={feature.label}
+                                            onChange={e => handleFeatureChange(e, index, 'label')}
+                                        />
+                                        <Input
+                                            type="text"
+                                            name={`features.${index}.description`}
+                                            placeholder="Description"
+                                            value={feature.description}
+                                            onChange={e => handleFeatureChange(e, index, 'description')}
+                                        />
+                                        <select
+                                            value={feature.isEnabled}
+                                            onChange={e => handleFeatureChange(e, index, 'isEnabled')}
+                                        >
+                                            <option value={true}>Enabled</option>
+                                            <option value={false}>Disabled</option>
+                                        </select>
+                                    </div>
+                                ))}
+                            <Button type="button" onClick={(e) => {
+                                e.preventDefault()
+                                setFormData(prev => ({
+                                    ...prev,
+                                    features: [...(prev?.features || []), { key: '', label: '', description: '', isEnabled: true }]
+                                }))
+                            }}>
+                                + Add Feature
+                            </Button>
                         </div>
                         {/* Scrollable section ends */}
 

@@ -209,36 +209,41 @@ const PaymentSummary = () => {
 
         <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow">
           <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Payment History</h2>
-          <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-800">
-            <Table className="w-full text-left border-collapse">
-              <TableHeader className="bg-gray-100 dark:bg-gray-800 sticky top-0 z-10">
-                <TableRow className="text-sm text-gray-600 dark:text-gray-300 border-b dark:border-gray-700">
-                  <th className="px-5 py-3">Receipt No.</th>
-                  <th className="px-5 py-3">Date</th>
-                  <th className="px-5 py-3">Amount</th>
-                  <th className="px-5 py-3">Method</th>
-                  <th className="px-5 py-3">Status</th>
-                </TableRow>
-              </TableHeader>
-              <TableBody className="text-sm divide-y divide-gray-100 dark:divide-gray-800">
-                {data?.feeSummary?.paymentHistory?.map((item, index) => (
-                  <TableRow key={index} className="hover:bg-gray-100 dark:hover:bg-gray-800">
-                    <TableCell className="px-5 py-4 font-medium text-indigo-600 dark:text-indigo-400">
-                      #{item.receipt_no}
-                    </TableCell>
-                    <TableCell className="px-5 py-4">{moment(item.date).format("DD-MMM-YYYY").toLowerCase()}</TableCell>
-                    <TableCell className="px-5 py-4">₹{item.amountPaid}</TableCell>
-                    <TableCell className="px-5 py-4">{item.paymentMethod}</TableCell>
-                    <TableCell className="px-5 py-4">
-                      <span className="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">
-                        Paid
-                      </span>
-                    </TableCell>
+          {data?.feeSummary?.paymentHistory.length == 0 ?
+            <div>
+              <p className='text-center'>No history found</p>
+            </div>
+            :
+            <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-800">
+              <Table className="w-full text-left border-collapse">
+                <TableHeader className="bg-gray-100 dark:bg-gray-800 sticky top-0 z-10">
+                  <TableRow className="text-sm text-gray-600 dark:text-gray-300 border-b dark:border-gray-700">
+                    <th className="px-5 py-3">Receipt No.</th>
+                    <th className="px-5 py-3">Date</th>
+                    <th className="px-5 py-3">Amount</th>
+                    <th className="px-5 py-3">Method</th>
+                    <th className="px-5 py-3">Status</th>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+                </TableHeader>
+                <TableBody className="text-sm divide-y divide-gray-100 dark:divide-gray-800">
+                  {data?.feeSummary?.paymentHistory?.map((item, index) => (
+                    <TableRow key={index} className="hover:bg-gray-100 dark:hover:bg-gray-800">
+                      <TableCell className="px-5 py-4 font-medium text-indigo-600 dark:text-indigo-400">
+                        #{item.receipt_no}
+                      </TableCell>
+                      <TableCell className="px-5 py-4">{moment(item.date).format("DD-MMM-YYYY").toLowerCase()}</TableCell>
+                      <TableCell className="px-5 py-4">₹{item.amountPaid}</TableCell>
+                      <TableCell className="px-5 py-4">{item.paymentMethod}</TableCell>
+                      <TableCell className="px-5 py-4">
+                        <span className="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">
+                          Paid
+                        </span>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>}
         </div>
 
         <Modal isOpen={payModal} onClose={() => {

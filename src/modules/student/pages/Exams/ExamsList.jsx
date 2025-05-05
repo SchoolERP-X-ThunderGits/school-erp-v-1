@@ -6,6 +6,7 @@ import apiName from '../../../../constants/ApiName';
 import moment from 'moment';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { Table, TableBody, TableCell, TableHeader, TableRow } from '../../../../components/ui/table';
 
 const ExamList = () => {
   const [exams, setExams] = useState([]);
@@ -39,41 +40,45 @@ const ExamList = () => {
         {exams.length === 0 ? (
           <p className="text-center text-gray-600 dark:text-gray-300 text-lg mt-10">No exams found.</p>
         ) : (
-          <section
-            ref={pdfRef}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-          >
-            {exams.map((exam, index) => (
-              <article
-                key={index}
-                className="bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md border border-gray-200 dark:border-gray-700 transition-shadow p-5 space-y-4"
-              >
-                <h2 className="text-xl font-bold text-indigo-600 dark:text-indigo-300">
-                  {exam.examName?.name} ({exam.examName?.session})
-                </h2>
-
-                <div className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
-                  <p className="flex items-center gap-2">
-                    <FaBook className="text-blue-500" />
-                    <span><strong>Subject:</strong> {exam.subject?.name}</span>
-                  </p>
-                  <p className="flex items-center gap-2">
-                    <FaChalkboardTeacher className="text-green-500" />
-                    <span><strong>Class:</strong> {exam.class?.name} ({exam.class?.sections?.join(', ')})</span>
-                  </p>
-                  <p className="flex items-center gap-2">
-                    <FaCalendarAlt className="text-red-500" />
-                    <span><strong>Date:</strong> {moment(exam.date).format('dddd, DD MMMM YYYY')}</span>
-                  </p>
-                  <p className="flex items-center gap-2">
-                    <FaClock className="text-yellow-500" />
-                    <span><strong>Time:</strong> {exam.startTime} - {exam.endTime}</span>
-                  </p>
-                </div>
-              </article>
-            ))}
-          </section>
+          <div className="overflow-x-auto bg-white dark:bg-gray-800 shadow-md rounded-lg">
+            <Table className="min-w-full table-auto">
+              <TableHeader>
+                <TableRow className="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-200">
+                  <th className="py-3 px-6 text-left text-sm font-semibold">Exam Name (Session)</th>
+                  <th className="py-3 px-6 text-left text-sm font-semibold">Subject</th>
+                  <th className="py-3 px-6 text-left text-sm font-semibold">Class (Sections)</th>
+                  <th className="py-3 px-6 text-left text-sm font-semibold">Date</th>
+                  <th className="py-3 px-6 text-left text-sm font-semibold">Time</th>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {exams.map((exam, index) => (
+                  <TableRow
+                    key={index}
+                    className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition duration-200"
+                  >
+                    <TableCell className="py-3 px-6 text-sm text-gray-800 dark:text-gray-200">
+                      {exam.examName?.name} ({exam.examName?.session})
+                    </TableCell>
+                    <TableCell className="py-3 px-6 text-sm text-gray-800 dark:text-gray-200">
+                      {exam.subject?.name}
+                    </TableCell>
+                    <TableCell className="py-3 px-6 text-sm text-gray-800 dark:text-gray-200">
+                      {exam.class?.name} ({exam.class?.sections?.join(', ')})
+                    </TableCell>
+                    <TableCell className="py-3 px-6 text-sm text-gray-800 dark:text-gray-200">
+                      {moment(exam.date).format('dddd, DD MMMM YYYY')}
+                    </TableCell>
+                    <TableCell className="py-3 px-6 text-sm text-gray-800 dark:text-gray-200">
+                      {exam.startTime} - {exam.endTime}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         )}
+
       </div>
     </main>
   );

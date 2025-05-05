@@ -121,6 +121,52 @@ const ProfileSettings = () => {
                                     </div>
                                 )
                             ))}
+                             {/* QR Code */}
+                        {formData.qrCodeUrl && (
+                            <div className="card p-4 rounded-xl shadow-sm bg-gray-50 dark:bg-gray-700 hover:bg-indigo-50 dark:hover:bg-gray-600 transition duration-300">
+                                <strong className="text-[#465fff] dark:text-indigo-300">QR Code</strong>
+                                <img
+                                    src={formData.qrCodeUrl}
+                                    alt="QR Code"
+                                    className="mt-2 h-20 object-contain rounded-xl shadow bg-white dark:bg-gray-800"
+                                />
+                            </div>
+                        )}
+
+                        {/* Signatures */}
+                        {formData.directorSignature && (
+                            <div className="card p-4 rounded-xl shadow-sm bg-gray-50 dark:bg-gray-700 hover:bg-indigo-50 dark:hover:bg-gray-600 transition duration-300">
+                                <strong className="text-[#465fff] dark:text-indigo-300">Director Signature</strong>
+                                <img
+                                    src={formData.directorSignature}
+                                    alt="Director Signature"
+                                    className="mt-2 h-20 object-contain rounded-xl shadow bg-white dark:bg-gray-800"
+                                />
+                            </div>
+                        )}
+
+                        {formData.principalSignature && (
+                            <div className="card p-4 rounded-xl shadow-sm bg-gray-50 dark:bg-gray-700 hover:bg-indigo-50 dark:hover:bg-gray-600 transition duration-300">
+                                <strong className="text-[#465fff] dark:text-indigo-300">Principal Signature</strong>
+                                <img
+                                    src={formData.principalSignature}
+                                    alt="Principal Signature"
+                                    className="mt-2 h-20 object-contain rounded-xl shadow bg-white dark:bg-gray-800"
+                                />
+                            </div>
+                        )}
+
+                        {formData.managerSignature && (
+                            <div className="card p-4 rounded-xl shadow-sm bg-gray-50 dark:bg-gray-700 hover:bg-indigo-50 dark:hover:bg-gray-600 transition duration-300">
+                                <strong className="text-[#465fff] dark:text-indigo-300">Manager Signature</strong>
+                                <img
+                                    src={formData.managerSignature}
+                                    alt="Manager Signature"
+                                    className="mt-2 h-20 object-contain rounded-xl shadow bg-white dark:bg-gray-800"
+                                />
+                            </div>
+                        )}
+
                         </div>
 
                         {/* Edit Profile Button */}

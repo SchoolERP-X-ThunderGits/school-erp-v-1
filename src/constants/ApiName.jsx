@@ -47,6 +47,7 @@ const apiName = {
   addSchool: 'user/addUser',
   studentLogin: 'user/student-login',
   studentDashboard: 'dashboard',
+  superAdminDashbaord: 'dashboard/super-admin',
   studentExams: 'exam/student',
   studentPayment: 'payments/order',
   createRazorpayOrder: "payments/order",

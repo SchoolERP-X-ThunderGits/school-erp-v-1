@@ -85,11 +85,11 @@ const AppHeader: React.FC = () => {
           </button>
 
           <Link to={role=='student'?"/student/home":"/admin/home"} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} className="lg:hidden">
-            <img
+          {role !='superadmin' &&  <img
               style={{ width: 40, height: 40, objectFit: 'cover', }}
               src={school?.logo}
               alt="Logo"
-            />
+            />}
             <h1
               style={{
                 marginLeft: 10,
