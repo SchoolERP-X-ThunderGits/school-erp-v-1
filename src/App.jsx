@@ -37,6 +37,8 @@ import SubscriptionPlans from './modules/admin/pages/Subscription/SubscriptionPl
 import { useDispatch } from 'react-redux';
 import { fetchSubscriptionStatus } from './redux/slices/subscriptionSlice';
 import PaymentSummary from './modules/student/pages/Payment/PaymentSummary';
+import ExamsList from './modules/student/pages/Exams/ExamsList';
+import StudentProfile from './modules/student/pages/Profile/StudentProfile';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -46,9 +48,6 @@ function App() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
-  useEffect(() => {
-    dispatch(fetchSubscriptionStatus());
-  }, [])
   useEffect(() => {
     setTimeout(() => setLoading(false), 1000); // Simulate loading time
   }, []);
@@ -64,6 +63,7 @@ function App() {
       } else {
         if (pathname === '/' || pathname === '/admin') {
           navigate('/admin/home');
+          dispatch(fetchSubscriptionStatus());
         }
       }
 
@@ -281,6 +281,8 @@ function App() {
 
           <Route path="/student/home" element={<ParentHome />} />
           <Route path="/student/payment-summary" element={<PaymentSummary />} />
+          <Route path="/student/exams-list" element={<ExamsList />} />
+          <Route path="/student/student-profile" element={<StudentProfile />} />
         </Route>
       </Routes>
     </UserProvider>

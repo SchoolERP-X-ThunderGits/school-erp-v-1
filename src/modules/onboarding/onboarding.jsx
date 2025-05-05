@@ -24,7 +24,7 @@ const Onboarding = () => {
               Login as Admin
             </button>
             <button className="onboarding-button parent" onClick={handleParentLogin}>
-              Login as Parent
+              Login as Student
             </button>
           </div>
         </div>

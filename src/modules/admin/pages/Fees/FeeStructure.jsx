@@ -348,10 +348,12 @@ const FeeStructure = () => {
                                             label: cls.name,
                                         }))}
                                         defaultValue={formData.class}
-                                        onChange={(e) => setFormData((prevData) => ({
+                                        onChange={(e) => {
+                                            console.log('sfkdsfksf',e,formData.class)
+                                            setFormData((prevData) => ({
                                             ...prevData,
                                             class: e
-                                        }))}
+                                        }))}}
                                         className="bg-gray-50 dark:bg-gray-700"
                                     />
                                 </div>

@@ -13,6 +13,7 @@ const AppHeader: React.FC = () => {
   const { school } = useUserContext();
   const { isMobileOpen, toggleSidebar, toggleMobileSidebar } = useSidebar();
   const { status, data } = useSelector((state: RootState) => state.subscription);
+  const role = localStorage.getItem("role");
   const handleToggle = () => {
     if (window.innerWidth >= 1024) {
       toggleSidebar();
@@ -83,7 +84,7 @@ const AppHeader: React.FC = () => {
             {/* Cross Icon */}
           </button>
 
-          <Link to="/admin/home" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} className="lg:hidden">
+          <Link to={role=='student'?"/student/home":"/admin/home"} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} className="lg:hidden">
             <img
               style={{ width: 40, height: 40, objectFit: 'cover', }}
               src={school?.logo}

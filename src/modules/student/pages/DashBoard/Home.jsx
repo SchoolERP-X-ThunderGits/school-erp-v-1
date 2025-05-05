@@ -5,15 +5,22 @@ import { HiBookOpen } from 'react-icons/hi';
 import { FaFileDownload } from 'react-icons/fa';
 import { getService } from '../../../../constants/Service';
 import apiName from '../../../../constants/ApiName';
-
+import { useNavigate } from 'react-router-dom';
+import moment from 'moment/moment';
+import { pdf, Document, Page, Text, View, StyleSheet, Image, Font } from '@react-pdf/renderer';
+import images from '../../../../constants/Images';
+import { useUserContext } from '../../../../context/UserContext';
+import { generateMultipleIdCardPdf } from '../../../../components/generateIdCardPdf';
+import { GenerateAdmitCardPdf } from '../../../../components/GenerateAdmitCardPdf';
+import { GenerateDemandSlipPdf } from '../../../../components/GenerateDemandSlipPdf';
 const StudentHome = () => {
-
+  const { school } = useUserContext();
+  const navigate = useNavigate()
   const [data, setData] = useState()
   useEffect(() => {
     getDashboardData()
   }, [])
   const studentData = JSON.parse(localStorage.getItem("studentData"));
-  console.log('dfskdskff', studentData)
 
   const getDashboardData = async () => {
     try {
@@ -27,22 +34,22 @@ const StudentHome = () => {
       showToast('Error fetching students data', 'error');
     }
   };
+
+
   return (
     <div className="p-6 bg-white dark:bg-gray-900 min-h-screen transition-colors duration-300">
       <div className="max-w-6xl mx-auto space-y-8">
+        
         {/* Metric Cards */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 md:gap-6">
-          {/* Attendance */}
-          <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-5 md:p-6 shadow">
-            <div className="flex items-center justify-center w-12 h-12 bg-indigo-100 dark:bg-indigo-800 rounded-xl">
-              <MdOutlineToday className="text-indigo-700 dark:text-indigo-300 size-6" />
-            </div>
-            <div className="mt-5">
-              <span className="text-sm text-gray-500 dark:text-gray-400">Attendance</span>
-              <h4 className="mt-2 font-bold text-gray-800 dark:text-white text-title-sm">95%</h4>
-            </div>
+        <div className="flex items-center gap-5 bg-white dark:bg-gray-800 p-6 rounded-2xl shadow border dark:border-gray-700">
+          <img src={data?.studentInfo?.student_Photo} alt="Student" className="w-20 h-20 rounded-full object-cover border-2 border-indigo-600" />
+          <div>
+            <h2 className="text-xl font-bold text-gray-800 dark:text-white capitalize">{data?.studentInfo?.first_Name} {data?.studentInfo?.last_Name}</h2>
+            <p className="text-gray-600 dark:text-gray-400">Roll No: {data?.studentInfo?.roll_Number} | Class: {data?.studentInfo?.section}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Admission No: {data?.studentInfo?.admission_Number}</p>
           </div>
-
+        </div>
           {/* Subjects */}
           <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-5 md:p-6 shadow">
             <div className="flex items-center justify-center w-12 h-12 bg-indigo-100 dark:bg-indigo-800 rounded-xl">
@@ -50,7 +57,7 @@ const StudentHome = () => {
             </div>
             <div className="mt-5">
               <span className="text-sm text-gray-500 dark:text-gray-400">Subjects</span>
-              <h4 className="mt-2 font-bold text-gray-800 dark:text-white text-title-sm">6</h4>
+              <h4 className="mt-2 font-bold text-gray-800 dark:text-white text-title-sm">{data?.subjectCount}</h4>
             </div>
           </div>
 
@@ -61,7 +68,7 @@ const StudentHome = () => {
             </div>
             <div className="mt-5">
               <span className="text-sm text-gray-500 dark:text-gray-400">Fees Paid</span>
-              <h4 className="mt-2 font-bold text-gray-800 dark:text-white text-title-sm">₹40,000</h4>
+              <h4 className="mt-2 font-bold text-gray-800 dark:text-white text-title-sm">₹{data?.feeSummary?.totalPaid || 0}</h4>
             </div>
           </div>
         </div>
@@ -77,12 +84,14 @@ const StudentHome = () => {
             </div>
             <div className="space-y-2 text-gray-700 dark:text-gray-200">
               <p><span className="font-semibold text-gray-600 dark:text-gray-300">Total Fees:</span> {data?.feeSummary?.totalAssigned}</p>
-              <p><span className="font-semibold text-gray-600 dark:text-gray-300">Paid:</span> {data?.feeSummary?.totalPaid}</p>
-              <p className="text-red-600 dark:text-red-400"><span className="font-semibold">Due:</span> {data?.feeSummary?.totalDue}</p>
+              <p><span className="font-semibold text-gray-600 dark:text-gray-300">Paid:</span> {data?.feeSummary?.totalPaid || 0}</p>
+              <p className="text-red-600 dark:text-red-400"><span className="font-semibold">Due:</span> {data?.feeSummary?.totalDue || 0}</p>
               <p className="text-red-600 dark:text-red-400"><span className="font-semibold">Due Date:</span> 05-May-2025</p>
             </div>
             <div className="flex gap-3 mt-4">
-              <button className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition">Pay Now</button>
+              <button onClick={() => {
+                navigate('/student/payment-summary');
+              }} className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition">Pay Now</button>
               <button className="bg-indigo-100 dark:bg-indigo-700 dark:text-white text-indigo-700 px-4 py-2 rounded-md hover:bg-indigo-200 dark:hover:bg-indigo-600 transition">Download Receipt</button>
             </div>
           </div>
@@ -94,19 +103,22 @@ const StudentHome = () => {
               </div>
               <h2 className="text-lg font-semibold text-indigo-700 dark:text-indigo-300">Upcoming Exams</h2>
             </div>
-            <div className="space-y-2 text-gray-700 dark:text-gray-200">
-              <p><span className="font-semibold text-gray-600 dark:text-gray-300">Next Exam:</span> Mathematics</p>
-              <p><span className="font-semibold text-gray-600 dark:text-gray-300">Date:</span> 12-May-2025</p>
-              <p><span className="font-semibold text-gray-600 dark:text-gray-300">Time:</span> 10:00 AM</p>
-              <p className="mt-2">
-                <a href="#" className="text-indigo-600 dark:text-indigo-400 underline hover:text-indigo-800 dark:hover:text-indigo-300">📅 View Full Schedule</a>
-              </p>
-              <p className="mt-3">
-                <span className="font-semibold text-gray-600 dark:text-gray-300">Admit Card:</span> ✅ Available
-                &nbsp;&nbsp;
-                <a href="#" className="text-indigo-600 dark:text-indigo-400 underline hover:text-indigo-800 dark:hover:text-indigo-300">Download</a>
-              </p>
-            </div>
+            {
+              data?.upcomingExam.length == 0 ?
+                <p>No Exams</p>
+                :
+
+                <div className="space-y-2 text-gray-700 dark:text-gray-200">
+                  <p><span className="font-semibold text-gray-600 dark:text-gray-300">Next Exam:</span> {data?.upcomingExam[0]?.examName?.name}</p>
+                  <p><span className="font-semibold text-gray-600 dark:text-gray-300">Date:</span> {moment(data?.upcomingExam[0]?.date).format("DD-MMM-YYYY").toLowerCase()}</p>
+                  <p><span className="font-semibold text-gray-600 dark:text-gray-300">Time:</span> {data?.upcomingExam[0]?.startTime} AM</p>
+                  <p className="mt-2">
+                    <a onClick={() => {
+                      navigate('/student/exams-list');
+                    }} className="text-indigo-600 dark:text-indigo-400 underline hover:text-indigo-800 dark:hover:text-indigo-300">📅 View Full Schedule</a>
+                  </p>
+                </div>
+            }
           </div>
         </div>
 
@@ -121,9 +133,19 @@ const StudentHome = () => {
             <h2 className="text-lg font-semibold text-indigo-700 dark:text-indigo-300">Quick Downloads</h2>
           </div>
           <div className="flex flex-wrap gap-3">
-            <button className="bg-indigo-100 dark:bg-indigo-700 dark:text-white text-indigo-700 px-4 py-2 rounded-md hover:bg-indigo-200 dark:hover:bg-indigo-600 transition">Download ID Card</button>
-            <button className="bg-indigo-100 dark:bg-indigo-700 dark:text-white text-indigo-700 px-4 py-2 rounded-md hover:bg-indigo-200 dark:hover:bg-indigo-600 transition">Download Admission Receipt</button>
-            <button className="bg-indigo-100 dark:bg-indigo-700 dark:text-white text-indigo-700 px-4 py-2 rounded-md hover:bg-indigo-200 dark:hover:bg-indigo-600 transition">Download Latest Fee Receipt</button>
+            <button onClick={()=>{
+               generateMultipleIdCardPdf({
+                student:data?.studentInfo,
+                school,
+                selectedTemplate: 'visionSchool',
+              });
+            }} className="bg-indigo-100 dark:bg-indigo-700 dark:text-white text-indigo-700 px-4 py-2 rounded-md hover:bg-indigo-200 dark:hover:bg-indigo-600 transition">Download ID Card</button>
+            <button onClick={()=>{
+              GenerateDemandSlipPdf({student:data?.studentInfo,school})
+            }} className="bg-indigo-100 dark:bg-indigo-700 dark:text-white text-indigo-700 px-4 py-2 rounded-md hover:bg-indigo-200 dark:hover:bg-indigo-600 transition">Download on demand slip</button>
+            <button onClick={()=>{
+              GenerateAdmitCardPdf({student:data?.studentInfo,school,examSchedule:data?.upcomingExam})
+            }} className="bg-indigo-100 dark:bg-indigo-700 dark:text-white text-indigo-700 px-4 py-2 rounded-md hover:bg-indigo-200 dark:hover:bg-indigo-600 transition">Download Admit Card</button>
           </div>
         </div>
 
@@ -133,3 +155,4 @@ const StudentHome = () => {
 };
 
 export default StudentHome;
+

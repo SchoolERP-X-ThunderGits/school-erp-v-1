@@ -112,10 +112,17 @@ const studentNavItems: NavItem[] = [
     ],
   },
   {
+    icon: <LiaMoneyCheckSolid />,
+    name: "Exams",
+    subItems: [
+      { name: "ExamsList", path: "/student/exams-list" },
+    ],
+  },
+  {
     icon: <CiSettings />,
     name: "Settings",
     subItems: [
-      { name: "Profile Settings", path: "/student/profile-settings" },
+      { name: "Profile Settings", path: "/student/student-profile" },
     ],
   },
 ];

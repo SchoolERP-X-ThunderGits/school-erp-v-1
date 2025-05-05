@@ -11,6 +11,8 @@ import Label from '../../../../components/form/Label';
 import { showToast } from '../../../../components/Toast';
 import { Link } from 'react-router-dom';
 import { UploadFile } from '../../../../components/UploadFile';
+import { sessionsArray } from '../../../../constants/GlobalConstants';
+import Select from '../../../../components/form/Select';
 
 const Schools = () => {
     const [schoolsList, setSchoolsList] = useState([]);
@@ -39,7 +41,6 @@ const Schools = () => {
         managerSignature: ''
     });
     const [ErrorMessage, setErrorMessage] = useState('')
-    
     useEffect(() => {
         setLoading(true);
         getSchoolsList();
@@ -48,6 +49,7 @@ const Schools = () => {
     const getSchoolsList = async () => {
         try {
             const result = await getService(apiName.schools); // API endpoint (e.g. '/posts')
+            console.log('fsklfksfd', result)
             setEditMode(false);
             setEditId('');
             setSchoolsList(result);
@@ -79,7 +81,9 @@ const Schools = () => {
             directorSignature: schoolData?.directorSignature,
             principalSignature: schoolData?.principalSignature,
             managerSignature: schoolData?.managerSignature
-        });
+        })
+        // setSchoolName(schoolData.name);
+        // setSchoolSession(schoolData.session)
     };
 
     const handleDelete = (schoolId) => {
@@ -90,12 +94,14 @@ const Schools = () => {
     const handleAddSchool = async (e) => {
         e.preventDefault();
 
+        // Check if any of the required fields are empty
         const requiredFields = [
             'username', 'password', 'email', 'contactNumber', 'fullName', 'subdomain',
             'schoolName', 'website', 'address', 'prefix', 'logo', 'directorSignature',
             'principalSignature', 'managerSignature'
         ];
 
+        // Loop through the required fields and check if any is empty
         for (let field of requiredFields) {
             if (!formData[field]) {
                 setErrorMessage(`${field} is required.`);
@@ -103,6 +109,7 @@ const Schools = () => {
             }
         }
 
+        // Clear previous error message if all fields are valid
         setErrorMessage('');
 
         const body = {
@@ -120,13 +127,15 @@ const Schools = () => {
             directorSignature: formData.directorSignature,
             principalSignature: formData.principalSignature,
             managerSignature: formData.managerSignature,
-            role: 'admin',
+            role:'admin',
             qrCodeUrl: `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(formData.website)}`
         };
 
+        // Submit the form
         if (editMode) {
             try {
                 const response = await putService(`${apiName.schools}/${editId}`, body);
+                console.log('School updated:', response);
                 showToast("School updated successfully.", 'success');
                 getSchoolsList();
             } catch (error) {
@@ -143,16 +152,18 @@ const Schools = () => {
         }
     };
 
+
     const handleConfirmDelete = async () => {
         try {
+            // Call delete service with the school ID
             await deleteService(`${apiName.schools}/${schoolToDelete}`);
             showToast('School deleted successfully', 'success');
-            getSchoolsList();
+            getSchoolsList(); // Refresh the school list
         } catch (error) {
             showToast('Error deleting school', 'error');
         }
-        setShowDeleteModal(false);
-        setSchoolToDelete(null);
+        setShowDeleteModal(false); // Close the confirmation modal
+        setSchoolToDelete(null);    // Clear the school ID
     };
 
     const handleInputChange = (e) => {
@@ -173,9 +184,10 @@ const Schools = () => {
     };
 
     return (
-        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-700">
+        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-white/[0.03] dark:border-gray-900">
+            {/* Add Class Button */}
             <div className='w-full p-4 flex justify-between items-center'>
-                <div className='text-3xl font-medium text-gray-800 dark:text-white'>Schools List</div>
+                <div className='text-3xl font-medium'>Schools List</div>
                 <Button onClick={() => {
                     setShowModal(true), setErrorMessage(''), setEditMode(false), setEditId(), setFormData({
                         username: '',
@@ -194,66 +206,66 @@ const Schools = () => {
                         managerSignature: ''
                     })
                 }}>
-                    <Link className="text-white">Add School</Link>
+                    <Link>Add School</Link>
                 </Button>
             </div>
+            {
+                loading ? <Loader />
+                    :
 
-            {loading ? <Loader /> : (
-                <div className="overflow-x-auto bg-white dark:bg-gray-900 shadow-md rounded-lg">
-                    {schoolsList.length === 0 ? (
-                        <p style={{ textAlign: 'center', margin: 10 }}>No schools found</p>
-                    ) : (
-                        <Table className="w-full text-left border-collapse">
-                            <TableHeader className='bg-gray-100 dark:bg-gray-800'>
-                                <TableRow>
-                                    {['School Name', 'Email', 'Website', 'Status'].map((header) => (
-                                        <th key={header} className="px-5 py-3 font-medium text-gray-500 dark:text-gray-300 text-left">{header}</th>
-                                    ))}
-                                    <th className='px-5 py-3 font-medium text-gray-500 dark:text-gray-300 text-left'>Action</th>
-                                </TableRow>
-                            </TableHeader>
-
-                            <TableBody>
-                                {schoolsList?.map((schoolItem) => (
-                                    <TableRow className='border-gray-200 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700' key={schoolItem._id}>
-                                        <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{schoolItem?.schoolName}</TableCell>
-                                        <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{schoolItem.email}</TableCell>
-                                        <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{schoolItem.website}</TableCell>
-                                        <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{schoolItem.isActive ? "Active" : 'DeActive'}</TableCell>
-                                        <TableCell className="px-5 py-4">
-                                            <div className='flex gap-3 justify-start items-center'>
-                                                <Link onClick={() => handleEdit(schoolItem)}>
-                                                    <MdOutlineModeEdit className='text-gray-500 dark:text-white' />
-                                                </Link>
-                                                <Link onClick={() => handleDelete(schoolItem._id)}>
-                                                    <MdDelete className='text-red-500 dark:text-white' />
-                                                </Link>
-                                            </div>
-                                        </TableCell>
+                    <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+                        {schoolsList.length == 0 ?
+                            <p style={{ textAlign: 'center', margin: 10 }}>No schools found</p> :
+                            <Table className="w-full text-left border-collapse">
+                                <TableHeader className='bg-gray-100 dark:bg-gray-800'>
+                                    <TableRow>
+                                        {['School Name', 'Email', 'Website', 'Status'].map((header) => (
+                                            <th key={header} className="px-5 py-3 font-medium text-gray-500 text-left">{header}</th>
+                                        ))}
+                                        <th className='px-5 py-3 font-medium text-gray-500 text-left'>Action</th>
                                     </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    )}
-                </div>
-            )}
+                                </TableHeader>
 
-            {/* Modal for Add/Edit School */}
+                                <TableBody>
+                                    {schoolsList?.map((schoolItem) => (
+                                        <TableRow className='border-gray-200 dark:border-gray-900 dark:bg-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800' key={schoolItem._id}>
+                                            <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{schoolItem?.name}</TableCell>
+                                            <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{schoolItem.email}</TableCell>
+                                            <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{schoolItem.website}</TableCell>
+                                            <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{schoolItem.isActive ? "Active" : 'DeActive'}</TableCell>
+                                            <TableCell className="px-5 py-4">
+                                                <div className='flex gap-3 justify-start items-center'>
+                                                    <Link onClick={() => handleEdit(schoolItem)}>
+                                                        <MdOutlineModeEdit className='dark:text-white' />
+                                                    </Link>
+                                                    <Link onClick={() => handleDelete(schoolItem._id)}>
+                                                        <MdDelete className='dark:text-white' />
+                                                    </Link>
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>}
+                    </div>
+            }
+
             <Modal isOpen={showModal} onClose={() => {
                 setShowModal(false);
                 setErrorMessage('');
             }} className="max-w-[700px] m-4">
-                <div className="relative w-full max-w-[700px] overflow-hidden rounded-3xl bg-white dark:bg-gray-800 p-4 lg:p-11">
+                <div className="no-scrollbar relative w-full max-w-[700px] overflow-hidden rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
                     <div className="px-2 pr-14">
-                        <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white">
-                            {editMode ? 'Edit School' : 'Add School'}
+                        <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
+                            Add School
                         </h4>
                         <p className="mb-6 text-sm text-gray-500 dark:text-gray-400 lg:mb-7">
-                            {editMode ? 'Edit the school details.' : 'Add a new school.'}
+                            Add new School here.
                         </p>
                     </div>
 
                     <form className="flex flex-col">
+                        {/* Scrollable section starts here */}
                         <div className="custom-scrollbar overflow-y-auto px-2 pb-3" style={{ maxHeight: '40vh' }}>
                             <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
                                 {[
@@ -265,57 +277,86 @@ const Schools = () => {
                                     { label: 'Subdomain', name: 'subdomain' },
                                     { label: 'School Name', name: 'schoolName' },
                                     { label: 'Website', name: 'website' },
+                                    { label: 'Contact Number', name: 'contactNumber' },
                                     { label: 'Address', name: 'address' },
                                     { label: 'Admission Number Prefix', name: 'prefix' },
                                 ].map(({ label, name }) => (
                                     <div key={name}>
-                                        <Label className="text-gray-600 dark:text-gray-300">{label}:</Label>
+                                        <Label className="text-gray-600">{label}:</Label>
                                         <Input
                                             type="text"
                                             name={name}
                                             value={formData?.[name] || ''}
                                             onChange={handleInputChange}
-                                            className="w-full mt-2 p-2 border rounded-md dark:bg-gray-700 dark:text-white dark:border-gray-600"
+                                            className="w-full mt-2 p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400"
                                         />
                                     </div>
                                 ))}
-
                                 <div>
-                                    <Label className="text-gray-600 dark:text-gray-300">School Logo:</Label>
-                                    <input
-                                        type="file"
-                                        name="logo"
-                                        accept="image/*"
-                                        onChange={handleInputChange}
-                                        className="mt-2 border rounded-md dark:bg-gray-700 dark:border-gray-600"
-                                    />
+                                    <Label className="text-gray-600">Logo:</Label>
+                                    <Input type="file" name="logo" onChange={handleInputChange} className="mt-2" />
+                                    {formData?.logo && (
+                                        <img src={formData.logo} alt="Logo" className="mt-2 h-20 object-contain rounded-xl shadow" />
+                                    )}
                                 </div>
+
+                                {['directorSignature', 'principalSignature', 'managerSignature'].map(name => (
+                                    <div key={name}>
+                                        <Label className="text-gray-600 capitalize">{name.replace(/([A-Z])/g, ' $1')}:</Label>
+                                        <Input type="file" name={name} onChange={handleInputChange} className="mt-2" />
+                                        {formData?.[name] && (
+                                            <img src={formData[name]} alt={name} className="mt-2 h-20 object-contain rounded-xl shadow" />
+                                        )}
+                                    </div>
+                                ))}
                             </div>
                         </div>
+                        {/* Scrollable section ends */}
 
-                        <div className="mt-8 flex gap-4">
-                            <Button onClick={handleAddSchool}>
-                                {editMode ? 'Save Changes' : 'Add School'}
+                        <h3 className="text-red-500 text-start ml-2">{ErrorMessage}</h3>
+                        <div className="flex items-center gap-3 px-2 mt-6 lg:justify-end">
+                            <Button size="sm" variant="outline" onClick={() => {
+                                setShowModal(false);
+                                setErrorMessage('');
+                                setEditMode(false);
+                                setEditId('');
+                            }}>
+                                Close
                             </Button>
-                            <Button variant="outline" onClick={() => setShowModal(false)}>
-                                Cancel
+                            <Button
+                                onClick={e => { handleAddSchool(e) }}
+                                className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-200"
+                            >
+                                {editMode ? 'Update school' : 'Add school'}
                             </Button>
                         </div>
                     </form>
                 </div>
             </Modal>
 
-            {/* Delete confirmation modal */}
-            <Modal isOpen={showDeleteModal} onClose={() => setShowDeleteModal(false)} className="max-w-[400px] dark:bg-gray-900">
-                <div className="flex flex-col items-center justify-center p-6">
-                    <h3 className="text-xl font-semibold">Are you sure you want to delete this school?</h3>
-                    <div className="flex gap-4 mt-4">
-                        <Button variant="outline" onClick={() => setShowDeleteModal(false)}>
-                            Cancel
-                        </Button>
-                        <Button variant="danger" onClick={handleConfirmDelete}>
-                            Confirm Delete
-                        </Button>
+
+            {/* Delete Confirmation Modal */}
+            <Modal isOpen={showDeleteModal} onClose={() => {
+                setShowDeleteModal(false)
+                setErrorMessage('')
+            }} className="max-w-[700px] m-4">
+                <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
+                    <div className="bg-white p-8 ">
+                        <h2 className="text-xl font-semibold text-gray-800 mb-4">Are you sure you want to delete this school?</h2>
+                        <div className="flex justify-end space-x-4">
+                            <Button
+                                onClick={() => setShowDeleteModal(false)} // Close the confirmation modal
+                                className="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition duration-200"
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                onClick={handleConfirmDelete} // Confirm deletion
+                                className="px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-200"
+                            >
+                                Delete
+                            </Button>
+                        </div>
                     </div>
                 </div>
             </Modal>

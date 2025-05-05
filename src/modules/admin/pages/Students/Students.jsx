@@ -114,7 +114,7 @@ const Students = () => {
                         <Table className="w-full text-left border-collapse">
                             <TableHeader className='bg-gray-100 dark:bg-gray-800'>
                                 <TableRow>
-                                    {['Admission Number', 'Roll Number', 'Name', 'Class', 'Section'].map((header) => (
+                                    {['Admission Number', 'Roll Number', 'Name',"Father's Name", 'Class', 'Section'].map((header) => (
                                         <th key={header} className="px-5 py-3 font-medium text-gray-500 text-left dark:text-gray-400">{header}</th>
                                     ))}
                                     <th className='px-5 py-3 font-medium text-gray-500 text-left dark:text-gray-300'>Action</th>
@@ -134,6 +134,7 @@ const Students = () => {
                                                 {student?.first_Name} {student?.last_Name}
                                             </button>
                                         </TableCell>
+                                        <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{student?.father_Name}</TableCell>
                                         <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{student?.class_Id?.name}</TableCell>
                                         <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{student?.section}</TableCell>
                                         <TableCell className="px-5 py-4">
