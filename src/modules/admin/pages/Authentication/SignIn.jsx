@@ -29,7 +29,7 @@ const SignInForm = () => {
     const body = {
       username: values.username,
       password: values.password,
-      role: "admin"
+      role: "superadmin"
     };
 
     try {

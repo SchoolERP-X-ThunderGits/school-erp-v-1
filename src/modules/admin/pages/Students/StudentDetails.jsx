@@ -126,63 +126,84 @@ const StudentDetails = () => {
     };
 
     const renderProfile = () => (
-        <div className="p-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div className="bg-white dark:bg-gray-800 border rounded-xl shadow-sm p-4 flex flex-col items-center text-center">
+        <div className="p-6 bg-gray-100 dark:bg-gray-900 min-h-screen transition-colors duration-300">
+            <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                {/* Profile Card */}
+                <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg p-6 flex flex-col items-center text-center">
                     <img
                         src={student.student_Photo}
                         alt="Profile"
-                        className="w-24 h-24 rounded-full border-4 border-gray shadow-lg"
+                        className="w-24 h-24 rounded-full border-4 border-brand-500 shadow-md"
                     />
-                    <h2 className="mt-4 text-xl font-semibold text-gray-800 dark:text-white">
+                    <h2 className="mt-4 text-2xl font-bold text-gray-900 dark:text-white">
                         {student.first_Name} {student.last_Name}
                     </h2>
-                    <p className="text-sm text-gray-500 dark:text-gray-300">Admission No: {student.admission_Number}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Admission No: {student.admission_Number}
+                    </p>
                 </div>
-
-                <div className="bg-white dark:bg-gray-800 border rounded-xl shadow p-4">
-                    <h3 className="text-md font-semibold mb-2 text-[#465fff] dark:text-[#465fff]">Class Info</h3>
-                    <p><strong>Class:</strong> {student?.class_Id?.name}</p>
-                    <p><strong>Section:</strong> {student?.section}</p>
-                    <p><strong>Roll No:</strong> {student?.roll_Number}</p>
-                </div>
-
-                <div className="bg-white dark:bg-gray-800 border rounded-xl shadow p-4">
-                    <h3 className="text-md font-semibold mb-2 text-[#465fff] dark:text-[#465fff]">Contact Info</h3>
-                    <p><strong>Email:</strong> {student.email}</p>
-                    <p><strong>Phone:</strong> {student.contact_Number}</p>
-                    <p><strong>Alternate:</strong> {student.alternet_Contact_Number}</p>
-                </div>
-
-                <div className="bg-white dark:bg-gray-800 border rounded-xl shadow p-4">
-                    <h3 className="text-md font-semibold mb-2 text-[#465fff] dark:text-[#465fff]">Personal Details</h3>
-                    <p><strong>Gender:</strong> {student.gender}</p>
-                    <p><strong>DOB:</strong> {new Date(student.date_Of_Birth).toLocaleDateString()}</p>
-                    <p><strong>Blood Group:</strong> {student.blood_Group}</p>
-                </div>
-
-                <div className="bg-white dark:bg-gray-800 border rounded-xl shadow p-4">
-                    <h3 className="text-md font-semibold mb-2 text-[#465fff] dark:text-[#465fff]">Parents Info</h3>
-                    <p><strong>Father:</strong> {student.father_Name} ({student.father_Occupation})</p>
-                    <p><strong>Mother:</strong> {student.mother_Name} ({student.mother_Occupation})</p>
-                </div>
-
-                <div className="bg-white dark:bg-gray-800 border rounded-xl shadow p-4">
-                    <h3 className="text-md font-semibold mb-2 text-[#465fff] dark:text-[#465fff]">Address Info</h3>
-                    <p><strong>Permanent:</strong> {student.permanent_Address}</p>
-                    <p><strong>Correspondence:</strong> {student.address_For_Correspondence}</p>
-                </div>
-
-                <div className="col-span-full flex justify-end">
-                    <Button
+    
+                {/* Info Cards */}
+                <InfoCard title="Class Info">
+                    <InfoItem label="Class" value={student?.class_Id?.name} />
+                    <InfoItem label="Section" value={student?.section} />
+                    <InfoItem label="Roll No" value={student?.roll_Number} />
+                </InfoCard>
+    
+                <InfoCard title="Contact Info">
+                    <InfoItem label="Email" value={student.email} />
+                    <InfoItem label="Phone" value={student.contact_Number} />
+                    <InfoItem label="Alternate" value={student.alternet_Contact_Number} />
+                </InfoCard>
+    
+                <InfoCard title="Personal Details">
+                    <InfoItem label="Gender" value={student.gender} />
+                    <InfoItem label="DOB" value={new Date(student.date_Of_Birth).toLocaleDateString()} />
+                    <InfoItem label="Blood Group" value={student.blood_Group} />
+                </InfoCard>
+    
+                <InfoCard title="Parents Info">
+                    <InfoItem label="Father" value={`${student.father_Name} (${student.father_Occupation})`} />
+                    <InfoItem label="Mother" value={`${student.mother_Name} (${student.mother_Occupation})`} />
+                </InfoCard>
+    
+                <InfoCard title="Address Info">
+                    <InfoItem label="Permanent" value={student.permanent_Address} />
+                    <InfoItem label="Correspondence" value={student.address_For_Correspondence} />
+                </InfoCard>
+    
+                {/* Action Button */}
+                <div className="col-span-full flex justify-end mt-4">
+                    <button
                         onClick={() => setAdmissionReceptPage(true)}
+                        className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition"
                     >
                         Generate Admission Receipt
-                    </Button>
+                    </button>
                 </div>
             </div>
         </div>
     );
+    
+    // InfoCard component
+    const InfoCard = ({ title, children }) => (
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg p-6">
+            <h3 className="text-lg font-semibold mb-4 text-brand-500 dark:text-brand-500 border-b border-gray-200 dark:border-gray-700 pb-2">
+                {title}
+            </h3>
+            <div className="space-y-2">{children}</div>
+        </div>
+    );
+    
+    // InfoItem component
+    const InfoItem = ({ label, value }) => (
+        <p className="text-gray-700 dark:text-gray-300">
+            <span className="font-medium text-gray-800 dark:text-white">{label}:</span>{' '}
+            <span>{value}</span>
+        </p>
+    );
+    
 
     const renderFee = () => (
         <div className="overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">

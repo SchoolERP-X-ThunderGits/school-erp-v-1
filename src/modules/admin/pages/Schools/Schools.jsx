@@ -118,13 +118,20 @@ const Schools = () => {
         e.preventDefault();
 
         // Check if any of the required fields are empty
-        const requiredFields = [
+        const addRequiredFields = [
             'username', 'password', 'email', 'contactNumber', 'fullName', 'subdomain',
+            'schoolName', 'website', 'address', 'prefix', 'logo', 'directorSignature',
+            'principalSignature', 'managerSignature'
+        ];
+        const editRequiredFields = [
+             'email', 'contactNumber', 'fullName', 'subdomain',
             'schoolName', 'website', 'address', 'prefix', 'logo', 'directorSignature',
             'principalSignature', 'managerSignature'
         ];
 
         // Loop through the required fields and check if any is empty
+        const requiredFields = editMode ? editRequiredFields : addRequiredFields
+
         for (let field of requiredFields) {
             if (!formData[field]) {
                 setErrorMessage(`${field} is required.`);

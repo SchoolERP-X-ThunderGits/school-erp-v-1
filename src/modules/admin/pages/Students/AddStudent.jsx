@@ -12,6 +12,7 @@ import Input from '../../../../components/form/input/InputField';
 import Select from '../../../../components/form/Select';
 import Label from '../../../../components/form/Label';
 import Checkbox from '../../../../components/form/input/Checkbox';
+import Loader from '../../../../components/Loader';
 const AddStudent = () => {
 
   const [feeStructures, setFeeStructures] = useState([]);
@@ -325,17 +326,23 @@ const AddStudent = () => {
     }));
   };
   return (
+    <div>
+{
+  imageLoad ?
+  <Loader/>
+  :
+
     <form className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-white/[0.03] dark:border-gray-900">
       {/* Add Class Button */}
 
-      {
+      {/* {
         imageLoad &&
 
         <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-50 dark:bg-black dark:bg-opacity-50 z-50">
         <div className="h-16 w-16 animate-spin rounded-full border-4 border-solid border-blue-500 border-t-transparent"></div>
       </div>
       
-      }
+      } */}
       {
         registrationCompleted ?
           <div className=''>
@@ -1018,6 +1025,8 @@ const AddStudent = () => {
 
 
     </form>
+}
+    </div>
 
   );
 };

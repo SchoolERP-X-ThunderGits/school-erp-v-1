@@ -8,8 +8,8 @@ import Input from '../../../../components/form/input/InputField';
 import Label from '../../../../components/form/Label';
 import { showToast } from '../../../../components/Toast';
 import { Link } from 'react-router-dom';
-import { FaCheck, FaEdit, FaTrash } from 'react-icons/fa';
-
+import { FaCheck    , FaEdit, FaTrash } from 'react-icons/fa';
+import { IoMdClose } from "react-icons/io";
 const SubscriptionPlans = () => {
     const [subscriptionsList, setSubscriptionsList] = useState([]);
     const [showModal, setShowModal] = useState(false);
@@ -277,9 +277,10 @@ const SubscriptionPlans = () => {
                                             <p className="mt-2 text-gray-500 dark:text-gray-300">{plan.description}</p>
                                             <p className="mt-4 text-3xl font-bold text-gray-900 dark:text-white">{plan.price}</p>
                                             <ul className="mt-6 space-y-3">
+                                                {console.log('plan.featuresplan.features',plan.features)}
                                                 {plan.features.map((feature, index) => (
                                                     <li key={index} className="flex items-center text-gray-700 dark:text-gray-300">
-                                                        <FaCheck className="text-green-500 mr-2" />
+                                                      {feature?.isEnabled?  <FaCheck className="text-green-500 mr-2" />: <IoMdClose className="text-red-500 mr-2 text-xl" />}
                                                         {feature.label}
                                                     </li>
                                                 ))}

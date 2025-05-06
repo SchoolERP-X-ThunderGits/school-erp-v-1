@@ -154,7 +154,7 @@ const AdmissionReceipt = ({ studentData, setRegistrationCompleted, resetForm }) 
   };
 
   return (
-    <div className="admission-receipt">
+    <div className="dark:bg-gray-900 admission-receipt">
       <div className="flex gap-4 justify-center header-to-hide">
         <Link to="/admin/add-student">
           <button
