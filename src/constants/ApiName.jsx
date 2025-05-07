@@ -49,9 +49,9 @@ const apiName = {
   studentDashboard: 'dashboard',
   superAdminDashbaord: 'dashboard/super-admin',
   studentExams: 'exam/student',
-  studentPayment: 'payments/order',
-  createRazorpayOrder: "payments/order",
-  verifyRazorpayPayment: "payments/verify",
+  studentPayment: 'payment/order',
+  createRazorpayOrder: "payment/order",
+  verifyRazorpayPayment: "payment/verify",
 
 };
 export default apiName;

@@ -39,6 +39,7 @@ import { fetchSubscriptionStatus } from './redux/slices/subscriptionSlice';
 import PaymentSummary from './modules/student/pages/Payment/PaymentSummary';
 import ExamsList from './modules/student/pages/Exams/ExamsList';
 import StudentProfile from './modules/student/pages/Profile/StudentProfile';
+import SchoolDetails from './modules/admin/pages/Schools/SchoolDetails';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -264,6 +265,12 @@ function App() {
             path="/admin/schools"
             element={
               <Schools />
+            }
+          />
+          <Route
+            path="/admin/schools/:id"
+            element={
+              <SchoolDetails />
             }
           />
           <Route
