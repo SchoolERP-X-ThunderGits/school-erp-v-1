@@ -1,7 +1,7 @@
 import onboardGirl from '../assets/Images/OnboardingIcon/onboardGirl.png';
 import VisionSchool from '../assets/Images/CardBackgrounds/VisionSchool.jpeg';
 import sspsPortrait from '../assets/Images/CardBackgrounds/sspsPortrait.png';
-// import sspsLandScape from '../assets/Images/CardBackgrounds/sspsLandScape.png';
+import sspsLand from '../assets/Images/CardBackgrounds/sspsLand.png';
 import gridImg from '../assets/Images/shape/grid-01.svg';
 import logo1 from '../assets/Images/logo/ThunderGits_Logos/1.png';
 import logo2 from '../assets/Images/logo/ThunderGits_Logos/2.png';
@@ -12,7 +12,7 @@ const images = {
   onboardGirl,
   VisionSchool,
   sspsPortrait,
-  // sspsLandScape,
+  sspsLand,
   gridImg,
   logo1,
   logo2,
