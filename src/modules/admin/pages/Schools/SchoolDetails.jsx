@@ -82,7 +82,7 @@ const SchoolDetails = () => {
               {['Admission Number', 'Roll Number', 'Name', "Father's Name", 'Class', 'Section'].map((header) => (
                 <th key={header} className="px-5 py-3 font-medium text-gray-500 dark:text-gray-400">{header}</th>
               ))}
-              <th className="px-5 py-3 font-medium text-gray-500 dark:text-gray-300">Action</th>
+              {/* <th className="px-5 py-3 font-medium text-gray-500 dark:text-gray-300">Action</th> */}
             </TableRow>
           </TableHeader>
 
@@ -105,7 +105,7 @@ const SchoolDetails = () => {
                 <TableCell className="px-5 py-4 text-gray-700 dark:text-gray-300">{student.father_Name}</TableCell>
                 <TableCell className="px-5 py-4 text-gray-700 dark:text-gray-300">{student.class_Id?.name}</TableCell>
                 <TableCell className="px-5 py-4 text-gray-700 dark:text-gray-300">{student.section}</TableCell>
-                <TableCell className="px-5 py-4">
+                {/* <TableCell className="px-5 py-4">
                   <div className="flex gap-3 justify-start items-center">
                     <button
                       onClick={() => navigate(`/admin/edit-student/${student._id}`)}
@@ -120,7 +120,7 @@ const SchoolDetails = () => {
                       <MdDelete size={24} />
                     </button>
                   </div>
-                </TableCell>
+                </TableCell> */}
               </TableRow>
             ))}
           </TableBody>

@@ -27,6 +27,7 @@ const Schools = () => {
     username: '',
     password: '',
     email: '',
+    schoolEmail: '',
     contactNumber: '',
     fullName: '',
     subdomain: '',
@@ -43,6 +44,7 @@ const Schools = () => {
     { label: 'Username', name: 'username' },
     { label: 'Password', name: 'password' },
     { label: 'Email', name: 'email' },
+    { label: 'School Email', name: 'schoolEmail' },
     { label: 'Contact Number', name: 'contactNumber' },
     { label: 'Full Name', name: 'fullName' },
     { label: 'Subdomain', name: 'subdomain' },
@@ -54,6 +56,7 @@ const Schools = () => {
   const editFields = [
 
     { label: 'Email', name: 'email' },
+    { label: 'School Email', name: 'schoolEmail' },
     { label: 'Contact Number', name: 'contactNumber' },
     { label: 'Full Name', name: 'fullName' },
     { label: 'Subdomain', name: 'subdomain' },
@@ -90,7 +93,8 @@ const Schools = () => {
     setEditId(schoolData._id);
     setFormData({
       username: schoolData?.user?.username,
-      email: schoolData?.user?.email,
+      email: schoolData.user?.email,
+      schoolEmail: schoolData?.email,
       contactNumber: schoolData?.contactNumber,
       fullName: schoolData?.user?.fullName,
       subdomain: schoolData?.subdomain,
@@ -117,12 +121,12 @@ const Schools = () => {
   
     // Define the required fields
     const addRequiredFields = [
-      'username', 'password', 'email', 'contactNumber', 'fullName', 'subdomain',
+      'username', 'password', 'email','schoolEmail', 'contactNumber', 'fullName', 'subdomain',
       'schoolName', 'website', 'address', 'prefix', 'logo', 'directorSignature',
       'principalSignature', 'managerSignature'
     ];
     const editRequiredFields = [
-      'email', 'contactNumber', 'fullName', 'subdomain',
+      'email','schoolEmail', 'contactNumber', 'fullName', 'subdomain',
       'schoolName', 'website', 'address', 'prefix', 'logo', 'directorSignature',
       'principalSignature', 'managerSignature'
     ];
@@ -143,6 +147,10 @@ const Schools = () => {
       setErrorMessage('Please enter a valid email address.');
       return;
     }
+    if (!emailRegex.test(formData.schoolEmail)) {
+      setErrorMessage('Please enter a valid school email address.');
+      return;
+    }
   
     // Phone number validation regex (adjustable for international numbers)
     const phoneRegex = /^[+]?[0-9]{10,15}$/;
@@ -159,6 +167,7 @@ const Schools = () => {
       username: formData.username,
       password: formData.password,
       email: formData.email,
+      schoolEmail: formData.schoolEmail,
       contactNumber: formData.contactNumber,
       fullName: formData.fullName,
       subdomain: formData.subdomain,

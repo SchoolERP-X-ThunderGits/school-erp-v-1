@@ -40,7 +40,8 @@ const subscriptionSlice = createSlice({
       .addCase(fetchSubscriptionStatus.fulfilled, (state, action) => {
         state.isLoading = false;
         state.data = action.payload;
-        state.status = action.payload.isActive; // Assuming payload is { status: 'subscribed' | 'trial' | ... }
+        console.log('statestate',state)
+        state.status = action.payload.isActive; 
       })
       .addCase(fetchSubscriptionStatus.rejected, (state, action) => {
         state.isLoading = false;
