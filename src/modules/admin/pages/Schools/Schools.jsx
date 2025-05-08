@@ -11,8 +11,6 @@ import Label from '../../../../components/form/Label';
 import { showToast } from '../../../../components/Toast';
 import { Link, useNavigate } from 'react-router-dom';
 import { UploadFile } from '../../../../components/UploadFile';
-import { sessionsArray } from '../../../../constants/GlobalConstants';
-import Select from '../../../../components/form/Select';
 
 const Schools = () => {
   const [schoolsList, setSchoolsList] = useState([]);
@@ -90,8 +88,8 @@ const Schools = () => {
     setShowModal(true);
     setEditMode(true);
     setEditId(schoolData._id);
-    console.log('sdfsfsf',schoolData?.name)
     setFormData({
+      username: schoolData?.user?.username,
       email: schoolData?.user?.email,
       contactNumber: schoolData?.contactNumber,
       fullName: schoolData?.user?.fullName,
@@ -116,8 +114,8 @@ const Schools = () => {
 
   const handleAddSchool = async (e) => {
     e.preventDefault();
-
-    // Check if any of the required fields are empty
+  
+    // Define the required fields
     const addRequiredFields = [
       'username', 'password', 'email', 'contactNumber', 'fullName', 'subdomain',
       'schoolName', 'website', 'address', 'prefix', 'logo', 'directorSignature',
@@ -128,20 +126,35 @@ const Schools = () => {
       'schoolName', 'website', 'address', 'prefix', 'logo', 'directorSignature',
       'principalSignature', 'managerSignature'
     ];
-
-    // Loop through the required fields and check if any is empty
-    const requiredFields = editMode ? editRequiredFields : addRequiredFields
-
+  
+    const requiredFields = editMode ? editRequiredFields : addRequiredFields;
+  
+    // Loop through required fields and check if any are empty
     for (let field of requiredFields) {
       if (!formData[field]) {
         setErrorMessage(`${field} is required.`);
         return;
       }
     }
-
+  
+    // Email validation regex
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(formData.email)) {
+      setErrorMessage('Please enter a valid email address.');
+      return;
+    }
+  
+    // Phone number validation regex (adjustable for international numbers)
+    const phoneRegex = /^[+]?[0-9]{10,15}$/;
+    if (!phoneRegex.test(formData.contactNumber)) {
+      setErrorMessage('Please enter a valid phone number (10-15 digits).');
+      return;
+    }
+  
     // Clear previous error message if all fields are valid
     setErrorMessage('');
-
+  
+    // Prepare the body for submission
     const body = {
       username: formData.username,
       password: formData.password,
@@ -160,7 +173,7 @@ const Schools = () => {
       role: 'admin',
       qrCodeUrl: `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(formData.website)}`
     };
-
+  
     // Submit the form
     if (editMode) {
       try {
@@ -177,12 +190,12 @@ const Schools = () => {
         showToast("School added successfully.", 'success');
         getSchoolsList();
       } catch (error) {
-        setErrorMessage(error?.response?.data?.message)
+        setErrorMessage(error?.response?.data?.message || 'Error adding school.');
         console.error('Error adding school:', error);
       }
     }
   };
-
+  
 
   const handleConfirmDelete = async () => {
     try {
