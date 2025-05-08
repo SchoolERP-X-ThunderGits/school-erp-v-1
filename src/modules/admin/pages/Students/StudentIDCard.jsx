@@ -16,6 +16,7 @@ import { Table, TableBody, TableCell, TableHeader, TableRow } from '../../../../
 import Select from '../../../../components/form/Select';
 import Button from '../../../../components/ui/button/Button';
 import Checkbox from '../../../../components/form/input/Checkbox';
+import sspsLandScape from '../../../../assets/Images/CardBackgrounds/sspsLandScape.png';
 // Template Modal Component
 const TemplateModal = ({ open, onClose, onSelectTemplate, selectedTemplate }) => {
     return (
@@ -59,7 +60,7 @@ const TemplateModal = ({ open, onClose, onSelectTemplate, selectedTemplate }) =>
                             onClick={() => onSelectTemplate('landscape')}
                         >
                             <img
-                                src={images.sspsLandScape}
+                                src={sspsLandScape}
                                 alt="Landscape Template"
                                 className="rounded-lg shadow-md transition-transform duration-300 object-contain"
                             />
