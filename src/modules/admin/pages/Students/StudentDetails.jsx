@@ -8,7 +8,6 @@ import { useUserContext } from '../../../../context/UserContext';
 import StudentReceiptPage from '../../../../components/StudentReceiptPage';
 import Button from '../../../../components/ui/button/Button';
 import { Table, TableBody, TableCell, TableHeader, TableRow } from '../../../../components/ui/table/index';
-import Select from '../../../../components/form/Select';
 import Checkbox from '../../../../components/form/input/Checkbox';
 
 const StudentDetails = () => {

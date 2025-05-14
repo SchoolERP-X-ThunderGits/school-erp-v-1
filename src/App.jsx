@@ -64,13 +64,15 @@ function App() {
       } else {
         if (pathname === '/' || pathname === '/admin') {
           navigate('/admin/home');
+        }
+        if(role == 'admin'){
+
           dispatch(fetchSubscriptionStatus());
         }
       }
 
     }
   }, [pathname, navigate]);
-
   if (loading) return <Loader />; // Show loader while loading
 
   return (

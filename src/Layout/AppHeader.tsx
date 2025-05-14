@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSidebar } from "../context/SidebarContext";
 // import { ThemeToggleButton } from "..components/common/ThemeToggleButton";
 import NotificationDropdown from "../components/Header/NotificationDropdown";
 import UserDropdown from "../components/Header/UserDropdown";
 import { Link } from "react-router-dom";
 import { useUserContext } from '../context/UserContext';
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import { ThemeToggleButton } from "../components/common/ThemeToggleButton";
 const AppHeader: React.FC = () => {
@@ -84,27 +84,26 @@ const AppHeader: React.FC = () => {
             {/* Cross Icon */}
           </button>
 
-          <Link to={role=='student'?"/student/home":"/admin/home"} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} className="lg:hidden">
-          {role !='superadmin' &&  <img
+          <Link to={role == 'student' ? "/student/home" : "/admin/home"} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} className="lg:hidden">
+            {role != 'superadmin' && <img
               style={{ width: 40, height: 40, objectFit: 'cover', }}
               src={school?.logo}
               alt="Logo"
             />}
             <h1
+              className="ml-5 text-center font-bold text-[20px] uppercase tracking-wider 
+             text-transparent bg-clip-text 
+             bg-gradient-to-r from-blue-800 to-blue-400 
+             dark:bg-gradient-to-r dark:from-indigo-200 dark:to-blue-400"
               style={{
-                marginLeft: 10,
-                fontSize: '20px',
-                fontWeight: 'bold',
-                letterSpacing: '2px',
-                textTransform: 'uppercase',
-                fontFamily: 'Arial, sans-serif',
-                flex: 1, // To make sure it takes the remaining space
-                textAlign: 'center',
+                fontFamily: `'Poppins', 'Segoe UI', 'Arial', sans-serif'`,
               }}
-              className="text-gray-900 dark:text-gray-100 dark:text-shadow-lg text-shadow-lg"
             >
-              {school?.name}
+              {school?.name || ''}
             </h1>
+
+
+
 
           </Link>
 

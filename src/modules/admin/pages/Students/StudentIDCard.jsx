@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { FaDownload, FaCheckCircle } from 'react-icons/fa';
-import { pdf, Document, Page, Text, View, StyleSheet, Image, Font } from '@react-pdf/renderer';
+import { pdf, Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 import { saveAs } from 'file-saver';
-import apiName from '../../../../constants/ApiName'; // Importing API Names
-import { showToast } from '../../../../components/Toast'; // Show Toast Notifications
+import apiName from '../../../../constants/ApiName'; 
+import { showToast } from '../../../../components/Toast'; 
 import Loader from '../../../../components/Loader';
 import moment from 'moment';
-import { getService, postService } from '../../../../constants/Service';
+import { getService } from '../../../../constants/Service';
 import { useUserContext } from '../../../../context/UserContext';
 import { BASE_URL } from '../../../../constants/Config';
 import images from '../../../../constants/Images';
@@ -47,7 +47,7 @@ const TemplateModal = ({ open, onClose, onSelectTemplate, selectedTemplate }) =>
                                 {selectedTemplate === 'portrait' && (
                                     <FaCheckCircle className="mr-2 mt-2 text-green-500" />
                                 )}
-                                <p className="mt-2 text-sm font-semibold text-gray-700 text-center">
+                                <p className="mt-2 text-sm font-semibold text-gray-400 text-center">
                                     SSPS Portrait Template
                                 </p>
                             </div>
@@ -67,7 +67,7 @@ const TemplateModal = ({ open, onClose, onSelectTemplate, selectedTemplate }) =>
                                 {selectedTemplate === 'landscape' && (
                                     <FaCheckCircle className="mr-2 mt-2 text-green-500" />
                                 )}
-                                <p className="mt-2 text-sm font-semibold text-gray-700 text-center">
+                                <p className="mt-2 text-sm font-semibold text-gray-400 text-center">
                                     SSPS Landscape Template
                                 </p>
                             </div>
@@ -87,7 +87,7 @@ const TemplateModal = ({ open, onClose, onSelectTemplate, selectedTemplate }) =>
                                 {selectedTemplate === 'visionSchool' && (
                                     <FaCheckCircle className="mr-2 mt-2 text-green-500" />
                                 )}
-                                <p className="mt-2 text-sm font-semibold text-gray-700 text-center">
+                                <p className="mt-2 text-sm font-semibold text-gray-400 text-center">
                                     VS Template
                                 </p>
                             </div>
@@ -273,9 +273,9 @@ const StudentIDCard = () => {
                                 {/* Header */}
                                 <View style={{ marginTop: 5 }}>
                                     <View style={{ flexDirection: 'row', marginHorizontal: 10, alignItems: 'center' }}>
-                                        <View style={{ backgroundColor: 'white', borderRadius: 50, padding: 5 }}>
+                                        <View style={{ backgroundColor: 'white', borderRadius: 50 }}>
 
-                                            <Image style={{ width: 50, height: 50, objectFit: 'cover' }} src={school?.logo} />
+                                            <Image style={{ width: 50, height: 50, objectFit: 'cover',borderRadius:100 }} src={school?.logo} />
                                         </View>
                                         <View style={{ justifyContent: 'center', alignItems: 'center', marginLeft: 10 }}>
 
@@ -285,7 +285,7 @@ const StudentIDCard = () => {
                                         <Text style={{fontSize:20,color:'white'}}>{school.name.split(" ")?.slice(1).join(' ')}</Text> */}
                                         </View>
                                     </View>
-                                    <Text style={{ marginTop: 5, fontSize: 18, fontFamily: 'RobotoB', fontWeight: '500', textAlign: 'center', color: '#fbf308' }}>{school?.address?.toUpperCase()}</Text>
+                                    <Text style={{ marginTop: 5, fontSize: 14, fontFamily: 'RobotoB', fontWeight: '500', textAlign: 'center', color: '#fbf308' }}>{school?.addressForIdCard?.toUpperCase()}</Text>
                                 </View>
                                 <View style={styles.body}>
                                     <View style={{}}>
@@ -365,7 +365,6 @@ const StudentIDCard = () => {
                             key={index}
                             style={selectedTemplate === 'portrait' ? styles.portraitPage : styles.landscapePage}
                         >
-                            {console.log('vllvclvc', student)}
                             <View style={[{ position: 'absolute', zIndex: -100, width: '100%', height: '100%' }]}>
                                 <Image style={{ width: '100%', height: '100%' }} src={'https://i2.wp.com/a.rgbimg.com/users/o/or/organza3/600/msE62kY.jpg'} />
                             </View>
@@ -379,7 +378,7 @@ const StudentIDCard = () => {
                                     <View style={{ justifyContent: 'center', alignItems: 'center', width: '60%' }}>
 
                                         <Text style={styles.schoolName}>{school?.name}</Text>
-                                        <Text style={{ marginTop: 5, fontSize: 12, fontFamily: 'RobotoRI', textAlign: 'center' }}>{school?.address}</Text>
+                                        <Text style={{ marginTop: 5, fontSize: 12, fontFamily: 'RobotoRI', textAlign: 'center' }}>{school?.addressForIdCard}</Text>
                                     </View>
                                     <View style={{ width: '20%' }}>
 

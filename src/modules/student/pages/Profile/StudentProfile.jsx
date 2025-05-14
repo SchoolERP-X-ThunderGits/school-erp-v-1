@@ -41,6 +41,7 @@ const StudentProfile = () => {
             <h2 className="text-3xl font-bold text-gray-800 dark:text-white">
               {student.first_Name} {student.last_Name}
             </h2>
+           { console.log('sfskfs',student)}
             <p className="text-gray-600 dark:text-gray-300">
               <MdSchool className="inline mr-1" />
               Class: {student.class_Id?.name} | Section: {student.section}

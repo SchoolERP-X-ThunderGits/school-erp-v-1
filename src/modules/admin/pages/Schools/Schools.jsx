@@ -34,6 +34,7 @@ const Schools = () => {
     schoolName: '',
     website: '',
     address: '',
+    addressForIdCard: '',
     prefix: '',
     logo: '',
     directorSignature: '',
@@ -51,6 +52,7 @@ const Schools = () => {
     { label: 'School Name', name: 'schoolName' },
     { label: 'Website', name: 'website' },
     { label: 'Address', name: 'address' },
+    { label: 'Address For Id Card', name: 'addressForIdCard' },
     { label: 'Admission Number Prefix', name: 'prefix' },
   ];
   const editFields = [
@@ -63,6 +65,7 @@ const Schools = () => {
     { label: 'School Name', name: 'schoolName' },
     { label: 'Website', name: 'website' },
     { label: 'Address', name: 'address' },
+    { label: 'Address For Id Card', name: 'addressForIdCard' },
     { label: 'Admission Number Prefix', name: 'prefix' },
   ]
   const [ErrorMessage, setErrorMessage] = useState('')
@@ -101,6 +104,7 @@ const Schools = () => {
       schoolName: schoolData?.name,
       website: schoolData?.website,
       address: schoolData?.address,
+      addressForIdCard: schoolData?.addressForIdCard,
       prefix: schoolData?.prefix,
       logo: schoolData?.logo,
       directorSignature: schoolData?.directorSignature,
@@ -122,12 +126,12 @@ const Schools = () => {
     // Define the required fields
     const addRequiredFields = [
       'username', 'password', 'email','schoolEmail', 'contactNumber', 'fullName', 'subdomain',
-      'schoolName', 'website', 'address', 'prefix', 'logo', 'directorSignature',
+      'schoolName', 'website', 'address','addressForIdCard', 'prefix', 'logo', 'directorSignature',
       'principalSignature', 'managerSignature'
     ];
     const editRequiredFields = [
       'email','schoolEmail', 'contactNumber', 'fullName', 'subdomain',
-      'schoolName', 'website', 'address', 'prefix', 'logo', 'directorSignature',
+      'schoolName', 'website', 'address','addressForIdCard', 'prefix', 'logo', 'directorSignature',
       'principalSignature', 'managerSignature'
     ];
   
@@ -174,6 +178,7 @@ const Schools = () => {
       schoolName: formData.schoolName,
       website: formData.website,
       address: formData.address,
+      addressForIdCard: formData.addressForIdCard,
       prefix: formData.prefix,
       logo: formData.logo,
       directorSignature: formData.directorSignature,
@@ -252,6 +257,7 @@ const Schools = () => {
             schoolName: '',
             website: '',
             address: '',
+            addressForIdCard: '',
             prefix: '',
             logo: '',
             directorSignature: '',

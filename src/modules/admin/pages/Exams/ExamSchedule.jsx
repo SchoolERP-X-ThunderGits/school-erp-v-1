@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getService, postService, putService, deleteService } from '../../../../constants/Service';
 import apiName from '../../../../constants/ApiName';
-import Loader from '../../../../components/Loader';
 import { Modal } from '../../../../components/ui/modal';
 import { Table, TableBody, TableCell, TableHeader, TableRow } from '../../../../components/ui/table/index';
 import Button from '../../../../components/ui/button/Button';
@@ -10,6 +9,7 @@ import Label from '../../../../components/form/Label';
 import { showToast } from '../../../../components/Toast';
 import { Link } from 'react-router-dom';
 import Select from '../../../../components/form/Select';
+import { MdDelete, MdOutlineModeEdit } from 'react-icons/md';
 
 const ExamSchedule = () => {
     const [examsList, setExamsList] = useState([]);
@@ -19,8 +19,12 @@ const ExamSchedule = () => {
     const [classes, setClasses] = useState([]);
     const [examSchedules, setExamSchedules] = useState([]);
     const [showModal, setShowModal] = useState(false);
+    const [examToDelete, setExamToDelete] = useState(null);
     const [loading, setLoading] = useState(false);
     const [ErrorMessage, setErrorMessage] = useState('');
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [isEditMode, setIsEditMode] = useState(false);
+    const [editId, setEditId] = useState(null); // to track the schedule being edited
 
     useEffect(() => {
         fetchExamSchedules('', '');
@@ -83,31 +87,85 @@ const ExamSchedule = () => {
         getSubjectsByClass(event);
     };
 
+    const handleEdit = async (schedule) => {
+        setIsEditMode(true);
+        setEditId(schedule._id);
+
+        const examId = schedule.examName?._id || schedule.examNameId;
+        const classId = schedule.class?._id || schedule.classId;
+
+        setSelectedExam(examId);
+        setSelectedClass(classId);
+
+        await getSubjectsByClass(classId);
+
+        // Pre-fill with this single schedule
+        const prefilledSchedule = [{
+            subjectId: schedule.subject?._id || schedule.subjectId,
+            examNameId: examId,
+            classId: classId,
+            date: new Date(schedule.date),
+            startTime: schedule.startTime,
+            endTime: schedule.endTime
+        }];
+
+        setExamSchedules(prefilledSchedule);
+        setShowModal(true);
+    };
+
+
+    const handleDelete = (examId) => {
+        setExamToDelete(examId);
+        setShowDeleteModal(true);
+    };
+
+    const handleConfirmDelete = async () => {
+        try {
+            await deleteService(`${apiName.addSchedule}/${examToDelete}`);
+            showToast('Exam schedule deleted successfully', 'success');
+            fetchExamSchedules(); // Refresh the exam list
+        } catch (error) {
+            showToast('Error deleting exam', 'error');
+        }
+        setShowDeleteModal(false); // Close the confirmation modal
+        setExamToDelete(null);    // Clear the exam ID
+    };
+
+
     const handleScheduleExam = async (e) => {
         e.preventDefault();
+
         if (!selectedExam || !selectedClass) {
             setErrorMessage('Please fill in all fields for each subject');
             return;
         }
 
         try {
-            for (const schedule of examSchedules) {
-                const result = await postService(apiName.addSchedule, schedule);
+            if (isEditMode) {
+                // Update mode
+                const updated = examSchedules[0]; // only one item during edit
+                await putService(`${apiName.addSchedule}/${editId}`, updated);
+                showToast('Exam schedule updated successfully!', 'success');
+            } else {
+                // Create mode
+                for (const schedule of examSchedules) {
+                    await postService(apiName.addSchedule, schedule);
+                }
+                showToast('Exam scheduled successfully!', 'success');
             }
 
+            // Reset modal and state
+            setShowModal(false);
             setSelectedClass('');
             setSelectedExam('');
             setSubjectsList([]);
             setExamSchedules([]);
             fetchExamSchedules('', '');
-            setShowModal(false);
-
-            setTimeout(() => {
-                showToast('Exam scheduled successfully!', 'success');
-            }, 1000);
+            setIsEditMode(false);
+            setEditId(null);
         } catch (error) {
-            console.error('Error scheduling exam:', error);
-            showToast(error?.response?.data?.error, 'error');
+            console.error('Error saving schedule:', error);
+            showToast(error?.response?.data?.error || 'Something went wrong', 'error');
         }
     };
 
@@ -127,19 +185,30 @@ const ExamSchedule = () => {
                         <Table className="w-full text-left border-collapse">
                             <TableHeader className='bg-gray-100 dark:bg-gray-800'>
                                 <TableRow>
-                                    {['Subject Name', 'Exam Date', 'Start Time', 'End Time'].map((header) => (
+                                    {['Exam Name', 'Exam Date', 'Start Time', 'End Time'].map((header) => (
                                         <th key={header} className="px-5 py-3 font-medium text-gray-500 dark:text-gray-400 text-left">{header}</th>
                                     ))}
+                                    <th className='px-5 py-3 font-medium text-gray-500 text-left dark:text-white'>Action</th>
                                 </TableRow>
                             </TableHeader>
 
                             <TableBody>
                                 {examSchedules?.map((schedule) => (
                                     <TableRow className='border-gray-200 dark:border-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800' key={schedule._id}>
-                                        <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{schedule.subject?.name}</TableCell>
+                                        <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{schedule.examName?.name}</TableCell>
                                         <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{new Date(schedule.date).toLocaleDateString()}</TableCell>
                                         <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{schedule.startTime}</TableCell>
                                         <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{schedule.endTime}</TableCell>
+                                        <TableCell className="px-5 py-4">
+                                            <div className='flex gap-3 justify-center items-center'>
+                                                {/* <Link onClick={() => handleEdit(schedule)}>
+                                                    <MdOutlineModeEdit className='text-gray-700 dark:text-white hover:text-blue-500 dark:hover:text-blue-400' />
+                                                </Link> */}
+                                                <Link onClick={() => handleDelete(schedule._id)}>
+                                                    <MdDelete className='text-gray-700 dark:text-white hover:text-red-500 dark:hover:text-red-400' />
+                                                </Link>
+                                            </div>
+                                        </TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
@@ -147,7 +216,7 @@ const ExamSchedule = () => {
                 </div>
             </div>
 
-            <Modal isOpen={showModal} onClose={() => { setShowModal(false), setErrorMessage('') }} className="max-w-[700px] m-4">
+            <Modal isOpen={showModal} onClose={() => { setShowModal(false), setErrorMessage(''), fetchExamSchedules('', '') }} className="max-w-[700px] m-4">
                 <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
                     <div className="px-2 pr-14">
                         <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">Schedule Exam</h4>
@@ -188,7 +257,7 @@ const ExamSchedule = () => {
 
                                 {selectedClass && subjectsList?.length !== 0 ?
                                     <div className="mb-4">
-                                        <label className="block text-sm font-medium text-gray-600 mt-4 mb-4">Subjects for Selected Class</label>
+                                        <Label className="block text-sm font-medium text-gray-600 mt-4 mb-4">Subjects for Selected Class</Label>
                                         <div className="overflow-x-auto bg-white dark:bg-gray-800 shadow-md rounded-lg">
                                             <Table className="min-w-full table-auto">
                                                 <TableHeader>
@@ -209,16 +278,19 @@ const ExamSchedule = () => {
                                                                 {subject.name}
                                                             </TableCell>
                                                             <TableCell className="py-3 px-6">
+                                                                {console.log('sfsksfsf', subject)}
                                                                 <Input
                                                                     type="date"
                                                                     onChange={(e) =>
                                                                         handleInputChange(index, "date", e.target.value, subject._id)
                                                                     }
+                                                                    value={subject?.updatedAt}
                                                                     className="mt-2 block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-900 dark:text-gray-200"
                                                                 />
                                                             </TableCell>
                                                             <TableCell className="py-3 px-6">
                                                                 <input
+                                                                    placeholder='HH:MM'
                                                                     type="text"
                                                                     value={examSchedules[index]?.startTime || ""}
                                                                     onChange={(e) =>
@@ -229,6 +301,7 @@ const ExamSchedule = () => {
                                                             </TableCell>
                                                             <TableCell className="py-3 px-6">
                                                                 <input
+                                                                    placeholder='HH:MM'
                                                                     type="text"
                                                                     value={examSchedules[index]?.endTime || ""}
                                                                     onChange={(e) =>
@@ -282,6 +355,31 @@ const ExamSchedule = () => {
                             </Button>
                         </div>
                     </form>
+                </div>
+            </Modal>
+            {/* Delete Confirmation Modal */}
+            <Modal isOpen={showDeleteModal} onClose={() => {
+                setShowDeleteModal(false);
+                setErrorMessage('');
+            }} className="max-w-[700px] m-4">
+                <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
+                    <div className="bg-white p-8 dark:bg-gray-900">
+                        <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Are you sure you want to delete this exam schedule?</h2>
+                        <div className="flex justify-end space-x-4">
+                            <Button
+                                onClick={() => setShowDeleteModal(false)} // Close the confirmation modal
+                                className="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition duration-200"
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                onClick={handleConfirmDelete} // Confirm deletion
+                                className="px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-200"
+                            >
+                                Delete
+                            </Button>
+                        </div>
+                    </div>
                 </div>
             </Modal>
         </div>

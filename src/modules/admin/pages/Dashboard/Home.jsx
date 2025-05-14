@@ -27,7 +27,6 @@ const AdminHome = () => {
 
   useEffect(() => {
     dispatch(fetchSubscriptionStatus());
-
     if (role === 'admin') {
       fetchAdminData();
     } else if (role === 'superadmin') {
