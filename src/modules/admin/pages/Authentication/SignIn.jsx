@@ -107,10 +107,6 @@ const SignInForm = () => {
               </Form>
             )}
           </Formik>
-
-          <div className="mt-5 text-center">
-            <p className="text-sm text-gray-600 dark:text-gray-300">Don't have an account? <Link to="/signup" className="text-blue-500">Sign Up</Link></p>
-          </div>
         </div>
       </div>
     </AuthLayout>

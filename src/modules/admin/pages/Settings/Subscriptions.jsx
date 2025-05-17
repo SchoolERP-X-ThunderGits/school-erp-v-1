@@ -7,11 +7,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchSubscriptionStatus } from '../../../../redux/slices/subscriptionSlice';
 import Button from '../../../../components/ui/button/Button';
 import { Link } from 'react-router-dom';
+import { REACT_APP_RAZORPAY_KEY } from '../../../../constants/Config';
 
 const Subscriptions = () => {
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [plansList, setPlansList] = useState([]);
   const { status, data } = useSelector((state) => state.subscription);
+  console.log('sfksfksdf',data)
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
 
@@ -49,7 +51,9 @@ const Subscriptions = () => {
 
   const handleRazorpayPayment = async () => {
     try {
-      const response = await getService(`${apiName.SuperSubscriptionPlan}/orders?billId=${selectedPlan.billId}`);
+      const response = await postService(`${apiName.subscriptionPayment}/orders`,{
+        billId:data?.bill_id
+      });
       if (response.error) {
         alert('Failed to create Razorpay order');
         return;
@@ -58,7 +62,7 @@ const Subscriptions = () => {
       const { order_id, amount } = response.data;
 
       const options = {
-        key: 'YOUR_RAZORPAY_KEY',
+        key: REACT_APP_RAZORPAY_KEY,
         amount,
         currency: 'INR',
         order_id,

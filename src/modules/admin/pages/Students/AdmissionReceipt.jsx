@@ -406,7 +406,6 @@ const styles = StyleSheet.create({
     padding: 6,
     borderBottomWidth: 0.5,
     borderLeftWidth: 0.5,
-    borderLeftWidth: 1,
     borderRightWidth: 1,
     borderRightColor: 'black',
     borderLeftColor: 'black',

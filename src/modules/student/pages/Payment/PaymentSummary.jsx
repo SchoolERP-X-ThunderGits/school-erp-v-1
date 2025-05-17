@@ -8,6 +8,7 @@ import { Modal } from '../../../../components/ui/modal';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from '../../../../components/ui/button/Button';
 import Checkbox from '../../../../components/form/input/Checkbox';
+import { REACT_APP_RAZORPAY_KEY } from '../../../../constants/Config';
 
 const PaymentSummary = () => {
   const [data, setData] = useState();
@@ -117,13 +118,13 @@ const PaymentSummary = () => {
     try {
       const orderRes = await postService(apiName.createRazorpayOrder, orderBody);
 
-      if (!orderRes?.data?.id) {
-        return showToast("Failed to create order", "error");
-      }
-
+      // if (!orderRes?.data?.id) {
+      //   return showToast("Failed to create order", "error");
+      // }
+console.log('process.env.REACT_APP_RAZORPAY_KEY',orderRes.data.id)
       const options = {
-        key: process.env.REACT_APP_RAZORPAY_KEY,
-        amount: orderRes.data.amount, // in paise
+        key: REACT_APP_RAZORPAY_KEY,
+        amount: amount, // in paise
         currency: "INR",
         name: "Your School Name",
         description: "Fee Payment",

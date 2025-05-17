@@ -415,15 +415,15 @@ layer(base);
 }
 
 .flatpickr-weekdays {
-  @apply h-auto mt-6 mb-4 bg-transparent!;
+  @apply h-auto  bg-black!;
 }
 
 .flatpickr-weekday {
-  @apply text-theme-sm! font-medium! text-gray-500! dark:text-gray-400! bg-transparent!;
+  @apply text-theme-sm! font-medium! text-gray-500! dark:text-gray-400! bg-black!;
 }
 
 .flatpickr-day {
-  @apply flex! items-center! text-theme-sm! font-medium! text-gray-800! dark:text-white/90! dark:hover:border-gray-300! dark:hover:bg-gray-900!;
+  @apply flex! items-center! text-theme-sm! font-medium! text-gray-800! dark:text-black! dark:hover:border-gray-300! dark:hover:bg-gray-900!;
 }
 .flatpickr-day.nextMonthDay,
 .flatpickr-day.prevMonthDay {

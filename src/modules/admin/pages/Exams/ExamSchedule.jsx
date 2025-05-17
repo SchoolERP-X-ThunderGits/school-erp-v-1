@@ -10,7 +10,9 @@ import { showToast } from '../../../../components/Toast';
 import { Link } from 'react-router-dom';
 import Select from '../../../../components/form/Select';
 import { MdDelete, MdOutlineModeEdit } from 'react-icons/md';
-
+import "flatpickr/dist/themes/material_blue.css";
+import DatePicker from "../../../../components/form/date-picker.tsx";
+import moment from 'moment';
 const ExamSchedule = () => {
     const [examsList, setExamsList] = useState([]);
     const [selectedExam, setSelectedExam] = useState('');
@@ -18,6 +20,7 @@ const ExamSchedule = () => {
     const [subjectsList, setSubjectsList] = useState([]);
     const [classes, setClasses] = useState([]);
     const [examSchedules, setExamSchedules] = useState([]);
+    const [examSchedulesList, setExamSchedulesList] = useState([])
     const [showModal, setShowModal] = useState(false);
     const [examToDelete, setExamToDelete] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -44,7 +47,7 @@ const ExamSchedule = () => {
     const fetchExamSchedules = async (examId, classId) => {
         const result = await getService(`${apiName.addSchedule}?examId=${examId}&classId=${classId}`);
         console.log('resultresult', result);
-        setExamSchedules(result);
+        setExamSchedulesList(result);
     };
 
     const getExamsList = async () => {
@@ -148,9 +151,10 @@ const ExamSchedule = () => {
                 showToast('Exam schedule updated successfully!', 'success');
             } else {
                 // Create mode
-                for (const schedule of examSchedules) {
-                    await postService(apiName.addSchedule, schedule);
-                }
+                console.log('skdfskfsfs',examSchedules)
+                // for (const schedule of examSchedules) {
+                //     await postService(apiName.addSchedule, schedule);
+                // }
                 showToast('Exam scheduled successfully!', 'success');
             }
 
@@ -168,6 +172,10 @@ const ExamSchedule = () => {
             showToast(error?.response?.data?.error || 'Something went wrong', 'error');
         }
     };
+    const handleDateChange = (date) => {
+        console.log('bcklvbcklbc', date)
+        // setDateOfBirth(date[0].toLocaleDateString()); // Handle selected date and format it
+    };
 
     return (
         <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-white/[0.03] dark:border-gray-900">
@@ -180,7 +188,7 @@ const ExamSchedule = () => {
 
             <div className="overflow-x-auto bg-white dark:bg-gray-800 shadow-md rounded-lg">
                 <div className="overflow-x-auto bg-white dark:bg-gray-800 shadow-md rounded-lg mt-4">
-                    {examSchedules.length === 0 ?
+                    {examSchedulesList.length === 0 ?
                         <p style={{ textAlign: 'center', margin: 10 }} className="text-gray-700 dark:text-gray-300">No exams schedule found</p> :
                         <Table className="w-full text-left border-collapse">
                             <TableHeader className='bg-gray-100 dark:bg-gray-800'>
@@ -193,7 +201,7 @@ const ExamSchedule = () => {
                             </TableHeader>
 
                             <TableBody>
-                                {examSchedules?.map((schedule) => (
+                                {examSchedulesList?.map((schedule) => (
                                     <TableRow className='border-gray-200 dark:border-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800' key={schedule._id}>
                                         <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{schedule.examName?.name}</TableCell>
                                         <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{new Date(schedule.date).toLocaleDateString()}</TableCell>
@@ -216,8 +224,8 @@ const ExamSchedule = () => {
                 </div>
             </div>
 
-            <Modal isOpen={showModal} onClose={() => { setShowModal(false), setErrorMessage(''), fetchExamSchedules('', '') }} className="max-w-[700px] m-4">
-                <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
+            <Modal isOpen={showModal} onClose={() => { setShowModal(false), setErrorMessage(''), fetchExamSchedules('', '') }} className="max-w-[1000px] m-4">
+                <div className="no-scrollbar relative w-full max-w-[1000px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
                     <div className="px-2 pr-14">
                         <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">Schedule Exam</h4>
                         <p className="mb-6 text-sm text-gray-500 dark:text-gray-400 lg:mb-7">Schedule exams here for selected subjects.</p>
@@ -278,20 +286,29 @@ const ExamSchedule = () => {
                                                                 {subject.name}
                                                             </TableCell>
                                                             <TableCell className="py-3 px-6">
-                                                                {console.log('sfsksfsf', subject)}
-                                                                <Input
-                                                                    type="date"
-                                                                    onChange={(e) =>
-                                                                        handleInputChange(index, "date", e.target.value, subject._id)
-                                                                    }
-                                                                    value={subject?.updatedAt}
-                                                                    className="mt-2 block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-900 dark:text-gray-200"
+                                                                <DatePicker
+                                                                    id="startDate"
+                                                                    placeholder="Select a date"
+                                                                    onChange={(date) => {
+                                                                        handleInputChange(index, "date", moment(date[0]).format('YYYY/MM/DD'), subject._id)
+                                                                    }}
+                                                                    // defaultDate={new Date()}
+                                                                    mode="single" // or "range", "multiple", "time"
                                                                 />
                                                             </TableCell>
                                                             <TableCell className="py-3 px-6">
-                                                                <input
+                                                                {/* <DatePicker
+                                                                    id="startTime"
+                                                                    placeholder="Select a date"
+                                                                    onChange={(time)=>{
+                                                                        handleInputChange(index, "startTime", time, subject._id)
+                                                                    }}
+                                                                    // defaultDate={new Date()}
+                                                                    mode="time" // or "range", "multiple", "time"
+                                                                /> */}
+                                                                <Input
                                                                     placeholder='HH:MM'
-                                                                    type="text"
+                                                                    type="time"
                                                                     value={examSchedules[index]?.startTime || ""}
                                                                     onChange={(e) =>
                                                                         handleInputChange(index, "startTime", e.target.value, subject._id)
@@ -300,9 +317,18 @@ const ExamSchedule = () => {
                                                                 />
                                                             </TableCell>
                                                             <TableCell className="py-3 px-6">
-                                                                <input
+                                                                {/* <input
                                                                     placeholder='HH:MM'
                                                                     type="text"
+                                                                    value={examSchedules[index]?.endTime || ""}
+                                                                    onChange={(e) =>
+                                                                        handleInputChange(index, "endTime", e.target.value, subject._id)
+                                                                    }
+                                                                    className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-900 dark:text-gray-200"
+                                                                /> */}
+                                                                <Input
+                                                                    placeholder='HH:MM'
+                                                                    type="time"
                                                                     value={examSchedules[index]?.endTime || ""}
                                                                     onChange={(e) =>
                                                                         handleInputChange(index, "endTime", e.target.value, subject._id)

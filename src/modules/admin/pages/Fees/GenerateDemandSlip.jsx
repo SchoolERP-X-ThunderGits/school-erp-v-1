@@ -16,6 +16,7 @@ import Checkbox from '../../../../components/form/input/Checkbox';
 import { useUserContext } from '../../../../context/UserContext';
 import { below20, tens, thousands } from '../../../../constants/GlobalConstants'
 import Input from '../../../../components/form/input/InputField';
+import DatePicker from '../../../../components/form/date-picker';
 const GenerateDemandSlip = () => {
     const [loading, setLoading] = useState(false);
     const [classes, setClasses] = useState([]); // Classes for dropdown
@@ -111,7 +112,7 @@ const GenerateDemandSlip = () => {
             showToast('Error fetching filtered students', 'error');
         }
     };
-   
+
     const toggleStudentSelection = (studentId) => {
         setSelectedStudents((prevSelected) =>
             prevSelected.includes(studentId)
@@ -311,11 +312,11 @@ const GenerateDemandSlip = () => {
                                     ))}
                                 </TableRow>
                             </TableHeader>
-    
+
                             <TableBody>
                                 {students?.map((student) => (
-                                    <TableRow 
-                                        className='border-gray-200 dark:border-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800' 
+                                    <TableRow
+                                        className='border-gray-200 dark:border-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800'
                                         key={student._id}
                                     >
                                         <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">
@@ -354,91 +355,113 @@ const GenerateDemandSlip = () => {
             </div>
         );
     };
-    
+
 
     return (
         <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-700">
-        <div className='w-full p-4 flex justify-between items-center'>
-            <div className='text-3xl font-medium text-gray-800 dark:text-white'>Generate Demand Slips</div>
-        </div>
-        {loading ? (
-            <Loader />
-        ) : (
-            <div>
-                {/* Filters */}
-                <div className="grid grid-cols-2 p-4 gap-x-6 gap-y-5 lg:grid-cols-4">
-                    <Select
-                        placeholder='Filter by Class'
-                        options={classes.map((classItem) => ({
-                            value: classItem._id,
-                            label: classItem.name,
-                        }))}
-                        value={classFilter}
-                        onChange={handleClassFilterChange}
-                        className="bg-white dark:bg-gray-700 text-black dark:text-white border border-gray-300 dark:border-gray-600"
-                    />
-                    <Select
-                        placeholder='Filter by Section'
-                        options={sections.map((section) => ({
-                            value: section,
-                            label: section,
-                        }))}
-                        value={sectionFilter}
-                        onChange={handleSectionFilterChange}
-                        disabled={!classFilter}
-                        className="bg-white dark:bg-gray-700 text-black dark:text-white border border-gray-300 dark:border-gray-600"
-                    />
-                    <Input
+            <div className='w-full p-4 flex justify-between items-center'>
+                <div className='text-3xl font-medium text-gray-800 dark:text-white'>Generate Demand Slips</div>
+            </div>
+            {loading ? (
+                <Loader />
+            ) : (
+                <div>
+                    {/* Filters */}
+                    <div className="grid grid-cols-2 p-4 gap-x-6 gap-y-5 lg:grid-cols-4">
+                        <Select
+                            placeholder='Filter by Class'
+                            options={classes.map((classItem) => ({
+                                value: classItem._id,
+                                label: classItem.name,
+                            }))}
+                            value={classFilter}
+                            onChange={handleClassFilterChange}
+                            className="bg-white dark:bg-gray-700 text-black dark:text-white border border-gray-300 dark:border-gray-600"
+                        />
+                        <Select
+                            placeholder='Filter by Section'
+                            options={sections.map((section) => ({
+                                value: section,
+                                label: section,
+                            }))}
+                            value={sectionFilter}
+                            onChange={handleSectionFilterChange}
+                            disabled={!classFilter}
+                            className="bg-white dark:bg-gray-700 text-black dark:text-white border border-gray-300 dark:border-gray-600"
+                        />
+                        {/* <Input
                         type="date"
                         onChange={(e) =>
                             handleStartDateChange(e.target.value)
                         }
                         className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm bg-white dark:bg-gray-700 text-black dark:text-white dark:border-gray-600"
-                    />
-                    <Input
+                    /> */}
+                        <DatePicker
+                            id="startDate"
+                            placeholder="Select a date"
+                            onChange={(date) => {
+                                // handleStartDateChange(moment(date[0]).format('YYYY/MM/DD'))
+                                setStartDate(date[0]).format('YYYY/MM/DD');
+                            }}
+                            // defaultDate={formData.date_Of_Birth !== '' ? formData.date_Of_Birth.split('T')[0] : new Date().toISOString().split('T')[0]}
+                            mode="single" // or "range", "multiple", "time"
+                            className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm bg-white dark:bg-gray-700 text-black dark:text-white dark:border-gray-600"
+                        />
+                        <DatePicker
+                            id="startDate"
+                            placeholder="Select a date"
+                            onChange={(date) => {
+                                setEndDate(date[0]).format('YYYY/MM/DD');
+                                // handleEndDateChange(moment(date[0]).format('YYYY/MM/DD'))
+                            }}
+                            // defaultDate={formData.date_Of_Birth !== '' ? formData.date_Of_Birth.split('T')[0] : new Date().toISOString().split('T')[0]}
+                            mode="single" // or "range", "multiple", "time"
+                            className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm bg-white dark:bg-gray-700 text-black dark:text-white dark:border-gray-600"
+                        />
+                        {/* <Input
                         type="date"
                         onChange={(e) =>
                             handleEndDateChange(e.target.value)
                         }
                         className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm bg-white dark:bg-gray-700 text-black dark:text-white dark:border-gray-600"
-                    />
-                    
-                    <Button
-                        onClick={handleSearch}
-                        className="bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
-                    >
-                        Search
-                    </Button>
-                    <Button
-                        onClick={() => {
-                            setClassFilter('');   // Reset class filter
-                            setSectionFilter(''); // Reset section filter
-                            setStudents([])
-                            setStartDate('')
-                            setEndDate('')
-                        }}
-                      className="px-6 py-3 bg-gray-200 !text-black rounded-lg hover:bg-gray-300 transition duration-300"
-                    >
-                        Clear Filters
-                    </Button>
-                    {selectedStudents.length > 0 && (
+                    /> */}
+
                         <Button
-                            onClick={generateSelectedStudentsPdf}
-                            className="bg-green-500 text-white rounded-lg hover:bg-gray-300 dark:bg-green-600 dark:hover:bg-green-500"
+                            onClick={handleSearch}
+                            className="bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
                         >
-                            Download Demand Slips
+                            Search
                         </Button>
-                    )}
+                        <Button
+                            onClick={() => {
+                                setClassFilter('');   // Reset class filter
+                                setSectionFilter(''); // Reset section filter
+                                setStudents([])
+                                setStartDate('')
+                                setEndDate('')
+                            }}
+                            className="px-6 py-3 bg-gray-200 !text-black rounded-lg hover:bg-gray-300 transition duration-300"
+                        >
+                            Clear Filters
+                        </Button>
+                        {selectedStudents.length > 0 && (
+                            <Button
+                                onClick={generateSelectedStudentsPdf}
+                                className="bg-green-500 text-white rounded-lg hover:bg-gray-300 dark:bg-green-600 dark:hover:bg-green-500"
+                            >
+                                Download Demand Slips
+                            </Button>
+                        )}
+                    </div>
+
+                    {/* Students List */}
+                    <div className="mt-6">{renderStudentList()}</div>
+
+                    {/* Download Button */}
                 </div>
-    
-                {/* Students List */}
-                <div className="mt-6">{renderStudentList()}</div>
-    
-                {/* Download Button */}
-            </div>
-        )}
-    </div>
-    
+            )}
+        </div>
+
     );
 };
 

@@ -13,6 +13,8 @@ import Select from '../../../../components/form/Select';
 import Label from '../../../../components/form/Label';
 import Checkbox from '../../../../components/form/input/Checkbox';
 import Loader from '../../../../components/Loader';
+import DatePicker from '../../../../components/form/date-picker';
+import moment from 'moment';
 const AddStudent = () => {
 
   const [feeStructures, setFeeStructures] = useState([]);
@@ -353,7 +355,7 @@ const AddStudent = () => {
             <form className="flex flex-col">
               <div className='w-full py-4 px-2 flex justify-between items-center'>
                 <div className='text-3xl font-medium'>Add Student</div>
-                <Button onClick={() => { setBulkStudentModal(true) }}>
+                <Button onClick={(e) => {e.preventDefault(); setBulkStudentModal(true) }}>
                   <Link>Import Students</Link>
                 </Button>
               </div>
@@ -471,13 +473,26 @@ const AddStudent = () => {
                     {/* Date of Birth */}
                     <div className="mb-4">
                       <Label className="block text-gray-700">Date of Birth <span className="text-red-500">*</span>:</Label>
-                      <Input
+                      {/* <Input
                         type="date"
                         name="date_Of_Birth"
                         value={formData.date_Of_Birth.split('T')[0]}
                         onChange={handleInputChange}
                         className="mt-2 p-2 border border-gray-300 rounded-md w-full"
-                      />
+                      /> */}
+                         <DatePicker
+                                id="date_Of_Birth"
+                                // placeholder="Select a date"
+                                onChange={(date) => {
+                                  console.log('datedate',date)
+                                    setFormData((prevData) => ({
+                                        ...prevData,
+                                        date_Of_Birth: moment(date[0]).format('YYYY/MM/DD')
+                                      }));
+                                }}
+                                defaultDate={formData.date_Of_Birth !== '' ? formData.date_Of_Birth.split('T')[0] : new Date().toISOString().split('T')[0]}
+                                mode="single" // or "range", "multiple", "time"
+                            />
                     </div>
 
                     {/* Gender Dropdown */}
@@ -749,13 +764,25 @@ const AddStudent = () => {
                     {/* Date of Admission */}
                     <div className="mb-4 ">
                       <Label className="block text-gray-700">Date of Admission <span className="text-red-500">*</span>:</Label>
-                      <Input
+                      <DatePicker
+                                id="date_Of_Admission"
+                                // placeholder="Select a date"
+                                onChange={(date) => {
+                                  setFormData((prevData) => ({
+                                    ...prevData,
+                                    date_Of_Admission: moment(date[0]).format('YYYY/MM/DD')
+                                  }));
+                                }}
+                                defaultDate={formData.date_Of_Admission !== '' ? formData.date_Of_Admission.split('T')[0] : new Date().toISOString().split('T')[0]}
+                                mode="single" // or "range", "multiple", "time"
+                            />
+                      {/* <Input
                         type="date"
                         name="date_Of_Admission"
                         value={formData.date_Of_Admission != '' ? formData.date_Of_Admission.split('T')[0] : new Date().toISOString().split('T')[0]}
                         onChange={handleInputChange}
                         className="mt-2 p-2 border border-gray-300 rounded-md w-full"
-                      />
+                      /> */}
                     </div>
                     {
                       // !editMode &&
@@ -855,7 +882,7 @@ const AddStudent = () => {
                   </div>
                 }
               </div>
-
+{console.log('formDataformData',formData)}
               {/* Submit Button */}
               <div className="flex justify-center mt-6">
                 <Button
