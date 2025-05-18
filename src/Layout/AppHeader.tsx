@@ -84,28 +84,33 @@ const AppHeader: React.FC = () => {
             {/* Cross Icon */}
           </button>
 
-          <Link to={role == 'student' ? "/student/home" : "/admin/home"} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} className="lg:hidden">
-            {role != 'superadmin' && <img
-              style={{ width: 40, height: 40, objectFit: 'cover', }}
-              src={school?.logo}
-              alt="Logo"
-            />}
-            <h1
-              className="ml-5 text-center font-bold text-[20px] uppercase tracking-wider 
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} className="lg:hidden">
+            {role != 'superadmin' && <a href={school?.website} target="_black">
+              <img
+                style={{ width: 40, height: 40, objectFit: 'cover', }}
+                src={school?.logo}
+                alt="Logo"
+              />
+            </a>}
+            <a href={role == 'student' ? "/student/home" : "/admin/home"}>
+
+              <h1
+                className="ml-5 text-center font-bold text-[20px] uppercase tracking-wider 
              text-transparent bg-clip-text 
              bg-gradient-to-r from-blue-800 to-blue-400 
              dark:bg-gradient-to-r dark:from-indigo-200 dark:to-blue-400"
-              style={{
-                fontFamily: `'Poppins', 'Segoe UI', 'Arial', sans-serif'`,
-              }}
-            >
-              {school?.name || ''}
-            </h1>
+                style={{
+                  fontFamily: `'Poppins', 'Segoe UI', 'Arial', sans-serif'`,
+                }}
+              >
+                {school?.name || ''}
+              </h1>
+            </a>
 
 
 
 
-          </Link>
+          </div>
 
           <button
             onClick={toggleApplicationMenu}
@@ -141,7 +146,7 @@ const AppHeader: React.FC = () => {
             {/* <!-- Dark Mode Toggler --> */}
             <ThemeToggleButton />
             {/* <!-- Dark Mode Toggler --> */}
-            <NotificationDropdown />
+            {/* <NotificationDropdown /> */}
             {/* <!-- Notification Menu Area --> */}
           </div>
           {/* <!-- User Area --> */}

@@ -212,6 +212,11 @@ const FeeStructure = () => {
                     } else {
                         setShowModal(true), setEditMode(false)
                     }
+                     setFormData({
+                                    name: '',
+                                    class: '',
+                                    feeGroups: [{ feeType: '', amount: '', dueDate: '' }]
+                                })
                 }}>
                     <Link>Add Fee Structures</Link>
                 </Button>
@@ -371,7 +376,10 @@ const FeeStructure = () => {
                                                         value: fee?._id,
                                                         label: fee.name,
                                                     }))}
-                                                    value={feeGroup.feeType}
+                                                    value={feeTypes.map((fee) => ({
+                                                        value: fee?._id,
+                                                        label: fee.name,
+                                                    })).find(option => option.label === feeGroup.feeType)?.value}
                                                     onChange={(e) => handleFeeTypeGroupChange(e, index)}
                                                     className="bg-gray-50 dark:bg-gray-700"
                                                 />

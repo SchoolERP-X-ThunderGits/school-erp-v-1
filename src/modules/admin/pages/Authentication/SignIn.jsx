@@ -45,7 +45,7 @@ const SignInForm = () => {
         console.log("Admin Login Error:", response.error);
       }
     } catch (error) {
-      showToast(error.response?.statusText, 'error');
+      showToast(error.response?.data?.message, 'error');
       console.error('Error posting data:', error);
     }
   };
@@ -103,6 +103,13 @@ const SignInForm = () => {
                   disabled={loading}
                 >
                   {loading ? 'Signing in...' : 'Sign In'}
+                </button>
+               <button
+                  onClick={() => navigate(-1)} // Navigate back to the previous page
+                  className="w-full border border-gray-500 text-white py-2 rounded transition mt-4"
+                  disabled={loading}
+                >
+                  Back
                 </button>
               </Form>
             )}

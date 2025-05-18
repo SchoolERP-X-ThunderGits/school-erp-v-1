@@ -114,21 +114,21 @@ const GenerateAdmitCard = () => {
             <Document>
                 {selectedStudentData.map((student) => (
                     <Page size="A4" style={styles.page} key={student._id}>
-                        <View style={[styles.header, { flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: 'black', paddingBottom: 10 }]}>
-                            <View>
+                        <View style={[styles.header, { flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: 'black', justifyContent: 'space-between' }]}>
+                            <View style={{ width: '10%' }}>
                                 <Image style={{ width: 50, height: 50 }} src={school?.logo} />
                             </View>
-                            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                            <View style={{ width: '80%' }}>
 
                                 <Text style={styles.title}>{school?.name}</Text>
                                 <Text style={{ fontFamily: 'RobotoR', fontSize: 14, marginTop: 5 }}>{school?.address}</Text>
+                                {console.log('examSchedule', examSchedule)}
                                 <Text style={{ fontFamily: 'RobotoR', fontSize: 14 }}>{examSchedule[0]?.examName?.name}, {examSchedule[0]?.examName?.session}</Text>
                             </View>
-                            <View>
-                                <Image style={{ width: 50, height: 50 }} src={school?.logo} />
+                            <View style={{ width: '8%' }}>
+                                <Image style={{ width: 50, height: 50 }} src={school?.qrCodeUrl} />
                             </View>
                         </View>
-                        {console.log('studentstudent', student)}
                         <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginVertical: 10 }}>
                             <View>
 
@@ -150,7 +150,9 @@ const GenerateAdmitCard = () => {
                                 <Text style={styles.tableCell}>Start Time</Text>
                                 <Text style={styles.tableCell}>End Time</Text>
                             </View>
-                            {examSchedule.map((exam, index) => (
+                            {examSchedule.length == 0?
+                              <Text style={{textAlign:'center',fontFamily:'RobotoB'}}>No Exams</Text>:
+                              examSchedule.map((exam, index) => (
                                 <View style={styles.tableRow} key={index}>
                                     {console.log('examSchedule', exam)}
                                     <Text style={styles.tableCell}>{exam.subject?.name}</Text>
@@ -335,7 +337,7 @@ const GenerateAdmitCard = () => {
 const styles = StyleSheet.create({
     page: { padding: 20 },
     header: { textAlign: 'center', marginBottom: 10 },
-    title: { fontSize: 18, fontFamily: 'RobotoB' },
+    title: { fontSize: 18, fontFamily: 'RobotoB', textAlign: 'center' },
     table: { display: 'table', width: '100%', borderStyle: 'solid', borderWidth: 1, marginTop: 10 },
     tableRow: { flexDirection: 'row' },
     tableCell: { flex: 1, borderWidth: 1, padding: 5, fontSize: 10 },

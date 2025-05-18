@@ -99,10 +99,18 @@ const SignIn = () => {
                 >
                   {loading ? 'Signing in...' : 'Sign In'}
                 </button>
+
+                {/* Back Button */}
+                <button
+                  onClick={() => navigate(-1)} // Navigate back to the previous page
+                  className="w-full border border-gray-500 text-white py-2 rounded transition mt-4"
+                  disabled={loading}
+                >
+                  Back
+                </button>
               </Form>
             )}
           </Formik>
-
         </div>
       </div>
     </AuthLayout>
