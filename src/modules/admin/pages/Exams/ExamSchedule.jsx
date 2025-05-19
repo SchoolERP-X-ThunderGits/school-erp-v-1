@@ -153,7 +153,7 @@ const ExamSchedule = () => {
                 // Create mode
                 console.log('skdfskfsfs',examSchedules)
                 // for (const schedule of examSchedules) {
-                //     await postService(apiName.addSchedule, schedule);
+                    await postService(apiName.addSchedule, examSchedules);
                 // }
                 showToast('Exam scheduled successfully!', 'success');
             }
