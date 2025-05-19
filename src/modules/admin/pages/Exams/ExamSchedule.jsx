@@ -151,9 +151,9 @@ const ExamSchedule = () => {
                 showToast('Exam schedule updated successfully!', 'success');
             } else {
                 // Create mode
-                console.log('skdfskfsfs',examSchedules)
+                console.log('skdfskfsfs', examSchedules)
                 // for (const schedule of examSchedules) {
-                    await postService(apiName.addSchedule, examSchedules);
+                await postService(apiName.addSchedule, { schedules: examSchedules });
                 // }
                 showToast('Exam scheduled successfully!', 'success');
             }
@@ -193,10 +193,10 @@ const ExamSchedule = () => {
                         <Table className="w-full text-left border-collapse">
                             <TableHeader className='bg-gray-100 dark:bg-gray-800'>
                                 <TableRow>
-                                    {['Exam Name', 'Exam Date', 'Start Time', 'End Time'].map((header) => (
+                                    {['Exam Name', 'Subject', 'Exam Date', 'Start Time', 'End Time'].map((header) => (
                                         <th key={header} className="px-5 py-3 font-medium text-gray-500 dark:text-gray-400 text-left">{header}</th>
                                     ))}
-                                    <th className='px-5 py-3 font-medium text-gray-500 text-left dark:text-white'>Action</th>
+                                    <th className='px-5 py-3 font-medium text-gray-500 dark:text-gray-400 text-left'>Action</th>
                                 </TableRow>
                             </TableHeader>
 
@@ -204,11 +204,13 @@ const ExamSchedule = () => {
                                 {examSchedulesList?.map((schedule) => (
                                     <TableRow className='border-gray-200 dark:border-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800' key={schedule._id}>
                                         <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{schedule.examName?.name}</TableCell>
+                                        <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{schedule.subject
+                                            ?.name}</TableCell>
                                         <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{new Date(schedule.date).toLocaleDateString()}</TableCell>
                                         <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{schedule.startTime}</TableCell>
                                         <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{schedule.endTime}</TableCell>
                                         <TableCell className="px-5 py-4">
-                                            <div className='flex gap-3 justify-center items-center'>
+                                            <div className=''>
                                                 {/* <Link onClick={() => handleEdit(schedule)}>
                                                     <MdOutlineModeEdit className='text-gray-700 dark:text-white hover:text-blue-500 dark:hover:text-blue-400' />
                                                 </Link> */}
