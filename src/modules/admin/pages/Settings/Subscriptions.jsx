@@ -71,7 +71,7 @@ const Subscriptions = () => {
         image: 'https://your-logo-url.com/logo.png',
         handler: async function (response) {
           try {
-            const verifyResponse = await postService('/api/verify-payment', {
+            const verifyResponse = await postService('/subscription-payment/success', {
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,
