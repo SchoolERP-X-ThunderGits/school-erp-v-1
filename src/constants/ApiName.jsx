@@ -43,7 +43,7 @@ const apiName = {
   getPaymentById: 'payment/get',
   bulkUpload: 'student/bulkAddStudents',
   getProfile: 'tenant/',
-  schoolDashboard: 'dashboard/tenant',
+  schoolDashboard: 'dashboard/tenant/',
   uploadCard: 'admrec/upload',
   SuperSubscriptionPlan: 'subscription-plans',
   subscriptions: 'subscriptions',

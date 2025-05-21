@@ -35,8 +35,8 @@ const adminNavItems: NavItem[] = [
     icon: <HiMiniAcademicCap />,
     name: "Academics",
     subItems: [
-      { name: "Class", path: "/admin/class" },
       { name: "Section", path: "/admin/section" },
+      { name: "Class", path: "/admin/class" },
       { name: "Houses", path: "/admin/houses" },
       { name: "Subject", path: "/admin/subject" },
       { name: "Assign Subject", path: "/admin/assign-subject" },

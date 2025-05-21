@@ -20,14 +20,15 @@ const AdminHome = () => {
   // Admin State
   const [students, setStudents] = useState([]);
   const [classes, setClasses] = useState([]);
-  const [sections, setSections] = useState([]);
+  const [sections, setSections] = useState(0);
   const [payments, setPayments] = useState(4);
 
   // Super Admin State
   const [superAdminData, setSuperAdminData] = useState(null);
+  const [dashboardData, setDashboardData] = useState(null);
 
   useEffect(() => {
-    
+
     dispatch(fetchSubscriptionStatus());
     if (role === 'admin') {
       fetchAdminData();
@@ -35,32 +36,30 @@ const AdminHome = () => {
       fetchSuperAdminData();
     }
   }, [role]);
-useEffect(()=>{
-  getProfileDetails();
-},[])
+  useEffect(() => {
+    if (school?._id) {
+      getProfileDetails();
+    }
+  }, [school?._id])
   const getProfileDetails = async () => {
     setLoading(true);
     try {
-        const result = await getService(`${apiName.schoolDashboard}${school._id}`);
-        console.log('fksfksfssbv', result);
+      const result = await getService(`${apiName.schoolDashboard}${school?._id}`);
+      setDashboardData(result?.data);
     } catch (error) {
-        showToast('Failed to load profile details', 'error');
-        setLoading(false);
+      showToast('Failed to load profile details', 'error');
+      setLoading(false);
     }
-};
+  };
 
   const fetchAdminData = async () => {
     try {
       const studentRes = await getService(apiName.getStudent);
       const classRes = await getService(apiName.getClassList);
-
+      const result = await getService(apiName.getSectionList);
       setStudents(studentRes?.length);
       setClasses(classRes?.length);
-      let totalSections = 0;
-      classRes.forEach(cls => {
-        totalSections += cls.sections?.length;
-      });
-      setSections(totalSections);
+      setSections(result?.length);
     } catch (error) {
       console.log('error', error);
       showToast('Error loading admin dashboard', 'error');
@@ -95,7 +94,9 @@ useEffect(()=>{
         </Link>
 
         {/* Sections */}
-        <MetricCard icon={<BsFillSignIntersectionFill />} title="Sections" count={sections} />
+        <Link to="/admin/section">
+          <MetricCard icon={<BsFillSignIntersectionFill />} title="Sections" count={sections} />
+        </Link>
 
         {/* Payments */}
         <MetricCard icon={<MdPayment />} title="Payments" count={payments} />
@@ -104,19 +105,77 @@ useEffect(()=>{
       {/* Bar Chart */}
       <div className="bg-white p-6 rounded-lg shadow-md mb-8 mt-10 dark:bg-gray-800">
         <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-          Enrollment Overview and Fee Status
+          Student Enrollment
         </h3>
         <Chart
           options={{
-            chart: { type: 'bar' },
-            xaxis: { categories: ['Students', 'Classes', 'Fee Dues'] },
-            dataLabels: { enabled: true },
-            colors: ['#FF4560', '#FF9800', '#2196F3']
+            chart: { type: 'area', zoom: { enabled: false }, toolbar: { show: false } },
+            xaxis: { categories: dashboardData?.studentGraph.labels },
+            fill: {
+              type: 'gradient',
+              gradient: {
+                shadeIntensity: 1,
+                opacityFrom: 0.6,
+                opacityTo: 0.1,
+                stops: [0, 90, 100],
+              },
+            },
+            colors: ['#4F46E5'],
+            dataLabels: { enabled: false },
+            stroke: { curve: 'smooth' }
           }}
-          series={[{ name: 'Count', data: [students, classes, payments] }]}
+          series={[{ name: 'Students', data: dashboardData?.studentGraph.data }]}
+          type="area"
+          height={350}
+        />
+
+      </div>
+      <div className="bg-white p-6 rounded-lg shadow-md mb-8 mt-10 dark:bg-gray-800">
+        <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
+          Fee
+        </h3>
+        <Chart
+          options={{
+            chart: { type: 'bar', zoom: { enabled: false }, toolbar: { show: false } },
+            xaxis: { categories: dashboardData?.paymentGraph.labels },
+            colors: ['#10B981'],
+            plotOptions: {
+              bar: {
+                borderRadius: 5,
+                columnWidth: '45%',
+              }
+            },
+            dataLabels: { enabled: false }
+          }}
+          series={[{ name: 'Revenue', data: dashboardData?.paymentGraph.data }]}
           type="bar"
           height={350}
         />
+
+
+      </div>
+      <div className="bg-white p-6 rounded-lg shadow-md mb-8 mt-10 dark:bg-gray-800">
+        <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
+          Student Enrollment
+        </h3>
+        <Chart
+          options={{
+            chart: { type: 'line', zoom: { enabled: false }, toolbar: { show: false } },
+            xaxis: { categories: dashboardData?.classGraph.labels },
+            stroke: {
+              width: 3,
+              dashArray: 5,
+              curve: 'straight'
+            },
+            colors: ['#F59E0B'],
+            markers: { size: 5 }
+          }}
+          series={[{ name: 'Classes', data: dashboardData?.classGraph.data }]}
+          type="line"
+          height={350}
+        />
+
+
       </div>
     </>
   );
@@ -147,34 +206,92 @@ useEffect(()=>{
 
         {/* Revenue Chart */}
         <div className="bg-white p-6 rounded-lg shadow-md mb-8 mt-10 dark:bg-gray-800">
-          <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-            Monthly Revenue
-          </h3>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">Monthly Revenue</h3>
+            <span className="text-sm text-gray-500">Last 12 Months</span>
+          </div>
           <Chart
             options={{
-              xaxis: { categories: monthlyRevenueBreakdown.labels }, chart: {
-                zoom: {
-                  enabled: false
-                }
-              }
+              chart: {
+                type: 'area',
+                zoom: { enabled: false },
+                toolbar: { show: false },
+              },
+              xaxis: {
+                categories: monthlyRevenueBreakdown.labels,
+                labels: { style: { colors: '#6B7280' } },
+              },
+              fill: {
+                type: 'gradient',
+                gradient: {
+                  shadeIntensity: 1,
+                  opacityFrom: 0.4,
+                  opacityTo: 0.1,
+                  stops: [0, 90, 100],
+                },
+              },
+              stroke: {
+                curve: 'smooth',
+                width: 3,
+                colors: ['#3B82F6'],
+              },
+              colors: ['#3B82F6'],
+              dataLabels: { enabled: false },
+              tooltip: {
+                theme: 'dark',
+                y: {
+                  formatter: (val) => `₹${val.toLocaleString()}`,
+                },
+              },
             }}
             series={[{ name: 'Revenue', data: monthlyRevenueBreakdown.data }]}
-            type="line"
+            type="area"
             height={350}
           />
         </div>
+
 
         {/* Admissions Chart */}
         <div className="bg-white p-6 rounded-lg shadow-md mb-8 mt-10 dark:bg-gray-800">
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
             Monthly Admissions
           </h3>
-          <Chart
-            options={{ xaxis: { categories: monthlyAdmissionGraph.labels } }}
-            series={[{ name: 'Admissions', data: monthlyAdmissionGraph.data }]}
-            type="bar"
-            height={350}
-          />
+          <div className="bg-white p-6 rounded-lg shadow-md mb-8 mt-10 dark:bg-gray-800">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">Monthly Admissions</h3>
+              <span className="text-sm text-gray-500">Year to Date</span>
+            </div>
+            <Chart
+              options={{
+                chart: {
+                  type: 'bar',
+                  toolbar: { show: false },
+                },
+                plotOptions: {
+                  bar: {
+                    borderRadius: 6,
+                    columnWidth: '50%',
+                  },
+                },
+                xaxis: {
+                  categories: monthlyAdmissionGraph.labels,
+                  labels: { style: { colors: '#6B7280' } },
+                },
+                colors: ['#10B981'],
+                dataLabels: { enabled: false },
+                tooltip: {
+                  theme: 'dark',
+                  y: {
+                    formatter: (val) => `${val} Admissions`,
+                  },
+                },
+              }}
+              series={[{ name: 'Admissions', data: monthlyAdmissionGraph.data }]}
+              type="bar"
+              height={350}
+            />
+          </div>
+
         </div>
       </>
     );

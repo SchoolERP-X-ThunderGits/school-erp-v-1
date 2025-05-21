@@ -61,7 +61,8 @@ const Class = () => {
         setEditMode(true);
         setEditId(classData._id);
         setNewClassName(classData.name);
-        setSelectedSections(classData.sections);
+        console.log('sfksdfksfs', classData)
+        setSelectedSections(classData.sections?.map(item => item.name));
     };
 
     const handleDelete = (classId) => {
@@ -72,13 +73,14 @@ const Class = () => {
     const handleSectionChange = (section) => {
         setErrorMessage('')
         setSelectedSections((prevSelectedSections) =>
-            prevSelectedSections.includes(section)
-                ? prevSelectedSections.filter((sec) => sec !== section) // deselect if already selected
+            prevSelectedSections?.includes(section)
+                ? prevSelectedSections?.filter((sec) => sec !== section) // deselect if already selected
                 : [...prevSelectedSections, section] // select the section
         );
     };
 
     const handleAddClass = async (e) => {
+        console.log('selectedSectionsselectedSections',selectedSections)
         e.preventDefault();
         if (!newClassName || selectedSections.length === 0) {
             setErrorMessage('All fields are required')
@@ -128,7 +130,13 @@ const Class = () => {
             {/* Add Class Button */}
             <div className='w-full p-4 flex justify-between items-center'>
                 <div className='text-3xl font-medium text-gray-800 dark:text-white'>Classes List</div>
-                <Button onClick={() => { setShowModal(true), setNewClassName(''), setSelectedSections([]), setErrorMessage(''), setEditMode(false); }}>
+                <Button onClick={() => {
+                    if (sectionList.length == 0) {
+                        showToast('Please add sections first', 'error')
+                    } else {
+                        setShowModal(true), setNewClassName(''), setSelectedSections([]), setErrorMessage(''), setEditMode(false);
+                    }
+                }}>
                     <Link>Add Class</Link>
                 </Button>
             </div>
@@ -151,7 +159,8 @@ const Class = () => {
                                     {classList?.map((classItem) => (
                                         <TableRow className='border-gray-200 dark:border-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800' key={classItem._id}>
                                             <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{classItem?.name}</TableCell>
-                                            <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{classItem.sections.join(', ')}</TableCell>
+                                            {console.log('classItemclassItem', classItem)}
+                                            <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{classItem.sections?.map(item => item.name)?.join(', ')}</TableCell>
                                             <TableCell className="px-5 py-4">
                                                 <div className='flex gap-3 justify-start items-center'>
                                                     <Link onClick={() => handleEdit(classItem)}>
@@ -206,8 +215,8 @@ const Class = () => {
                                             <div key={section} style={{ flexDirection: 'column' }} className="flex items-center">
                                                 <Checkbox
                                                     id={section?._id}
-                                                    checked={selectedSections.includes(section)}
-                                                    onChange={() => handleSectionChange(section)}
+                                                    checked={selectedSections?.includes(section?.name)}
+                                                    onChange={() => handleSectionChange(section?.name)}
                                                 />
                                                 <Label htmlFor={section} className="text-sm text-gray-600 dark:text-gray-400">
                                                     {section?.name}
