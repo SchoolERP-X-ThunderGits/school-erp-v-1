@@ -3,6 +3,7 @@ const apiName = {
   adminLogin: 'user/login',
   parentLogin: 'user/student/login',
   getClassList: 'class/getAll',
+  getSectionList: 'section/getAll',
   getClassById: 'class/get',
   subject: 'subjects',
   getFeeList: 'fee/feetypes/getAll',
@@ -28,6 +29,9 @@ const apiName = {
   addClass: 'class/add',
   updateClass: 'class/update',
   deleteClass: 'class/delete',
+  addSection: 'section/add',
+  updateSection: 'section/update',
+  deleteSection: 'section/delete',
   getSubjectByClass: 'subject-class-mappings',
   getStudentByExam: 'student/byClassOrSection',
   getStudentFeeByClass: 'student-fee-profile/fees/byClassOrSection',
@@ -39,6 +43,7 @@ const apiName = {
   getPaymentById: 'payment/get',
   bulkUpload: 'student/bulkAddStudents',
   getProfile: 'tenant/',
+  schoolDashboard: 'dashboard/tenant',
   uploadCard: 'admrec/upload',
   SuperSubscriptionPlan: 'subscription-plans',
   subscriptions: 'subscriptions',
@@ -53,6 +58,7 @@ const apiName = {
   studentPayment: 'payment/order',
   createRazorpayOrder: "payment/order",
   verifyRazorpayPayment: "payment/verify",
+  houses: "houses",
 
 };
 export default apiName;

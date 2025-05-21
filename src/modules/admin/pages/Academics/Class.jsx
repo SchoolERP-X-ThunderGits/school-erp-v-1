@@ -10,7 +10,6 @@ import Input from '../../../../components/form/input/InputField';
 import Checkbox from '../../../../components/form/input/Checkbox';
 import Label from '../../../../components/form/Label';
 import { showToast } from '../../../../components/Toast';
-import { sectionArray } from '../../../../constants/GlobalConstants';
 import { Link } from 'react-router-dom';
 
 const Class = () => {
@@ -24,11 +23,23 @@ const Class = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false); // Delete confirmation modal
     const [classToDelete, setClassToDelete] = useState(null); // Track class to delete
     const [ErrorMessage, setErrorMessage] = useState('')
+    const [sectionList, setSectionList] = useState([])
 
     useEffect(() => {
         setLoading(true);
         getClassList();
+        getSectionList()
     }, []);
+
+    const getSectionList = async () => {
+        try {
+            const result = await getService(apiName.getSectionList); // API endpoint (e.g. '/posts')
+            setSectionList(result)
+        } catch (error) {
+            setLoading(false);
+        }
+    };
+
 
     const getClassList = async () => {
         try {
@@ -136,7 +147,6 @@ const Class = () => {
                                         <th className='px-5 py-3 font-medium text-gray-500 dark:text-gray-400 text-left'>Action</th>
                                     </TableRow>
                                 </TableHeader>
-
                                 <TableBody>
                                     {classList?.map((classItem) => (
                                         <TableRow className='border-gray-200 dark:border-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800' key={classItem._id}>
@@ -192,15 +202,15 @@ const Class = () => {
                                 <div className="mt-6">
                                     <Label className="block text-sm font-medium text-gray-600 dark:text-gray-400">Sections</Label>
                                     <div className="mt-2 flex flex-wrap gap-4">
-                                        {sectionArray.map((section) => (
+                                        {sectionList.map((section) => (
                                             <div key={section} style={{ flexDirection: 'column' }} className="flex items-center">
                                                 <Checkbox
-                                                    id={section}
+                                                    id={section?._id}
                                                     checked={selectedSections.includes(section)}
                                                     onChange={() => handleSectionChange(section)}
                                                 />
                                                 <Label htmlFor={section} className="text-sm text-gray-600 dark:text-gray-400">
-                                                    {section}
+                                                    {section?.name}
                                                 </Label>
                                             </div>
                                         ))}

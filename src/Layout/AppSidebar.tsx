@@ -36,6 +36,8 @@ const adminNavItems: NavItem[] = [
     name: "Academics",
     subItems: [
       { name: "Class", path: "/admin/class" },
+      { name: "Section", path: "/admin/section" },
+      { name: "Houses", path: "/admin/houses" },
       { name: "Subject", path: "/admin/subject" },
       { name: "Assign Subject", path: "/admin/assign-subject" },
       { name: "Upgrade Class", path: "/admin/upgrade-class" },

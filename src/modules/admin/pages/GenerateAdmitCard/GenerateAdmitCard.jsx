@@ -28,11 +28,13 @@ const GenerateAdmitCard = () => {
     const [selectedExam, setSelectedExam] = useState('');
     const [selectedSession, setSelectedSession] = useState('');
     const [students, setStudents] = useState([]);
+    const [allStudents, setAllStudents] = useState([])
     const [selectedStudents, setSelectedStudents] = useState([]);  // Track selected students
     const [loading, setLoading] = useState(false);
     const [sections, setSections] = useState([]);
     const navigate = useNavigate()
     useEffect(() => {
+        fetchStudents()
         fetchInitialData();
     }, []);
 
@@ -56,6 +58,15 @@ const GenerateAdmitCard = () => {
             setExamSchedule(response);
         } catch (error) {
             console.error("Error fetching exam schedule:", error);
+        }
+    };
+    const fetchStudents = async () => {
+        try {
+            const result = await getService(apiName.getStudent); // API to get students
+            setAllStudents(result);
+            setLoading(false);
+        } catch (error) {
+            showToast('Error fetching students', 'error');
         }
     };
 
@@ -103,12 +114,13 @@ const GenerateAdmitCard = () => {
         }
     };
 
-    const handleGenerateAdmitCardForSelected = async () => {
-        const selectedStudentData = students.filter(student => selectedStudents.includes(student._id));
-        if (selectedStudentData.length === 0) {
+    const handleGenerateAdmitCardForSelected = async (forAll) => {
+        const selectedStudentData = forAll ? allStudents : students.filter(student => selectedStudents.includes(student._id));
+        if (!forAll &&selectedStudentData.length === 0) {
             showToast('No students selected', 'error');
             return;
         }
+        console.log('sfskfskfsf',selectedStudentData)
 
         const blob = await pdf(
             <Document>
@@ -150,17 +162,17 @@ const GenerateAdmitCard = () => {
                                 <Text style={styles.tableCell}>Start Time</Text>
                                 <Text style={styles.tableCell}>End Time</Text>
                             </View>
-                            {examSchedule.length == 0?
-                              <Text style={{textAlign:'center',fontFamily:'RobotoB'}}>No Exams</Text>:
-                              examSchedule.map((exam, index) => (
-                                <View style={styles.tableRow} key={index}>
-                                    {console.log('examSchedule', exam)}
-                                    <Text style={styles.tableCell}>{exam.subject?.name}</Text>
-                                    <Text style={styles.tableCell}>{moment(exam.date).format('DD/MM/YYYY')}</Text>
-                                    <Text style={styles.tableCell}>{exam.startTime}</Text>
-                                    <Text style={styles.tableCell}>{exam.endTime}</Text>
-                                </View>
-                            ))}
+                            {examSchedule.length == 0 ?
+                                <Text style={{ textAlign: 'center', fontFamily: 'RobotoB' }}>No Exams</Text> :
+                                examSchedule.map((exam, index) => (
+                                    <View style={styles.tableRow} key={index}>
+                                        {console.log('examSchedule', exam)}
+                                        <Text style={styles.tableCell}>{exam.subject?.name}</Text>
+                                        <Text style={styles.tableCell}>{moment(exam.date).format('DD/MM/YYYY')}</Text>
+                                        <Text style={styles.tableCell}>{exam.startTime}</Text>
+                                        <Text style={styles.tableCell}>{exam.endTime}</Text>
+                                    </View>
+                                ))}
                         </View>
                     </Page>
                 ))}
@@ -257,6 +269,14 @@ const GenerateAdmitCard = () => {
                     className="px-6 py-3 bg-gray-200 !text-black rounded-lg hover:bg-gray-300 transition duration-300"
                 >
                     Clear Filters
+                </Button>
+                <Button
+                    onClick={() => {
+                        handleGenerateAdmitCardForSelected(true)
+                    }}
+                    className=" bg-green-500 text-white rounded-lg hover:bg-gray-300 transition duration-300"
+                >
+                    <FaDownload className="mr-2" /> Download All Admit Cards
                 </Button>
                 {selectedStudents.length > 0 && (
                     <Button

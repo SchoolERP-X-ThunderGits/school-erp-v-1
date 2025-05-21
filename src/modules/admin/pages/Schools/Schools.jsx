@@ -39,7 +39,9 @@ const Schools = () => {
     logo: '',
     directorSignature: '',
     principalSignature: '',
-    managerSignature: ''
+    managerSignature: '',
+    razorPayID: '',
+    razorPaySecret: '',
   });
   const fields = [
     { label: 'Username', name: 'username' },
@@ -54,6 +56,8 @@ const Schools = () => {
     { label: 'Address', name: 'address' },
     { label: 'Address For Id Card', name: 'addressForIdCard' },
     { label: 'Admission Number Prefix', name: 'prefix' },
+    { label: 'Razorpay Key Id', name: 'razorPayID' },
+    { label: 'Razorpay Key Secret', name: 'razorPaySecret' },
   ];
   const editFields = [
 
@@ -67,6 +71,8 @@ const Schools = () => {
     { label: 'Address', name: 'address' },
     { label: 'Address For Id Card', name: 'addressForIdCard' },
     { label: 'Admission Number Prefix', name: 'prefix' },
+    { label: 'Razorpay Key Id', name: 'razorPayID' },
+    { label: 'Razorpay Key Secret', name: 'razorPaySecret' },
   ]
   const [ErrorMessage, setErrorMessage] = useState('')
   useEffect(() => {
@@ -109,7 +115,9 @@ const Schools = () => {
       logo: schoolData?.logo,
       directorSignature: schoolData?.directorSignature,
       principalSignature: schoolData?.principalSignature,
-      managerSignature: schoolData?.managerSignature
+      managerSignature: schoolData?.managerSignature,
+      razorPayID: schoolData?.razorPayID || '',
+      razorPaySecret: schoolData?.razorPaySecret || '',
     })
     // setSchoolName(schoolData.name);
     // setSchoolSession(schoolData.session)
@@ -122,21 +130,21 @@ const Schools = () => {
 
   const handleAddSchool = async (e) => {
     e.preventDefault();
-  
+
     // Define the required fields
     const addRequiredFields = [
-      'username', 'password', 'email','schoolEmail', 'contactNumber', 'fullName', 'subdomain',
-      'schoolName', 'website', 'address','addressForIdCard', 'prefix', 'logo', 'directorSignature',
+      'username', 'password', 'email', 'schoolEmail', 'contactNumber', 'fullName', 'subdomain',
+      'schoolName', 'website', 'address', 'addressForIdCard', 'prefix', 'logo', 'directorSignature',
       'principalSignature', 'managerSignature'
     ];
     const editRequiredFields = [
-      'email','schoolEmail', 'contactNumber', 'fullName', 'subdomain',
-      'schoolName', 'website', 'address','addressForIdCard', 'prefix', 'logo', 'directorSignature',
+      'email', 'schoolEmail', 'contactNumber', 'fullName', 'subdomain',
+      'schoolName', 'website', 'address', 'addressForIdCard', 'prefix', 'logo', 'directorSignature',
       'principalSignature', 'managerSignature'
     ];
-  
+
     const requiredFields = editMode ? editRequiredFields : addRequiredFields;
-  
+
     // Loop through required fields and check if any are empty
     for (let field of requiredFields) {
       if (!formData[field]) {
@@ -144,7 +152,7 @@ const Schools = () => {
         return;
       }
     }
-  
+
     // Email validation regex
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(formData.email)) {
@@ -155,17 +163,17 @@ const Schools = () => {
       setErrorMessage('Please enter a valid school email address.');
       return;
     }
-  
+
     // Phone number validation regex (adjustable for international numbers)
     const phoneRegex = /^[+]?[0-9]{10,15}$/;
     if (!phoneRegex.test(formData.contactNumber)) {
       setErrorMessage('Please enter a valid phone number (10-15 digits).');
       return;
     }
-  
+
     // Clear previous error message if all fields are valid
     setErrorMessage('');
-  
+
     // Prepare the body for submission
     const body = {
       username: formData.username,
@@ -184,10 +192,12 @@ const Schools = () => {
       directorSignature: formData.directorSignature,
       principalSignature: formData.principalSignature,
       managerSignature: formData.managerSignature,
+      razorPayID: formData?.razorPayID || '',
+      razorPaySecret: formData?.razorPaySecret || '',
       role: 'admin',
       qrCodeUrl: `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(formData.website)}`
     };
-  
+
     // Submit the form
     if (editMode) {
       try {
@@ -209,7 +219,7 @@ const Schools = () => {
       }
     }
   };
-  
+
 
   const handleConfirmDelete = async () => {
     try {
@@ -262,7 +272,9 @@ const Schools = () => {
             logo: '',
             directorSignature: '',
             principalSignature: '',
-            managerSignature: ''
+            managerSignature: '',
+            razorPayID: '',
+            razorPaySecret: '',
           })
         }}>
           <Link>Add School</Link>

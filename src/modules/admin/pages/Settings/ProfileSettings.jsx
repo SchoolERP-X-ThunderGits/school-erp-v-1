@@ -189,6 +189,8 @@ const ProfileSettings = () => {
                                 { label: 'Email', name: 'email' },
                                 { label: 'Contact Number', name: 'contactNumber' },
                                 { label: 'Website', name: 'website' },
+                                { label: 'Razorpay Key Id', name: 'key_id' },
+                                { label: 'Razorpay Key Secret', name: 'key_secret' },
                             ].map(({ label, name }) => (
                                 <div key={name}>
                                     <label className="text-gray-600 dark:text-gray-300">{label}:</label>

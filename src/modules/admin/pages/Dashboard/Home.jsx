@@ -11,9 +11,10 @@ import Chart from "react-apexcharts";
 import { fetchSubscriptionStatus } from '../../../../redux/slices/subscriptionSlice';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-
+import { useUserContext } from '../../../../context/UserContext';
 const AdminHome = () => {
   const dispatch = useDispatch();
+  const { school } = useUserContext();
   const [loading, setLoading] = useState(true);
   const role = localStorage.getItem('role');
   // Admin State
@@ -26,6 +27,7 @@ const AdminHome = () => {
   const [superAdminData, setSuperAdminData] = useState(null);
 
   useEffect(() => {
+    
     dispatch(fetchSubscriptionStatus());
     if (role === 'admin') {
       fetchAdminData();
@@ -33,6 +35,19 @@ const AdminHome = () => {
       fetchSuperAdminData();
     }
   }, [role]);
+useEffect(()=>{
+  getProfileDetails();
+},[])
+  const getProfileDetails = async () => {
+    setLoading(true);
+    try {
+        const result = await getService(`${apiName.schoolDashboard}${school._id}`);
+        console.log('fksfksfssbv', result);
+    } catch (error) {
+        showToast('Failed to load profile details', 'error');
+        setLoading(false);
+    }
+};
 
   const fetchAdminData = async () => {
     try {
@@ -43,10 +58,11 @@ const AdminHome = () => {
       setClasses(classRes?.length);
       let totalSections = 0;
       classRes.forEach(cls => {
-        totalSections += cls.sections.length;
+        totalSections += cls.sections?.length;
       });
       setSections(totalSections);
     } catch (error) {
+      console.log('error', error);
       showToast('Error loading admin dashboard', 'error');
     } finally {
       setLoading(false);
@@ -135,11 +151,13 @@ const AdminHome = () => {
             Monthly Revenue
           </h3>
           <Chart
-            options={{ xaxis: { categories: monthlyRevenueBreakdown.labels },chart:{
-              zoom:{
-                enabled:false
+            options={{
+              xaxis: { categories: monthlyRevenueBreakdown.labels }, chart: {
+                zoom: {
+                  enabled: false
+                }
               }
-            } }}
+            }}
             series={[{ name: 'Revenue', data: monthlyRevenueBreakdown.data }]}
             type="line"
             height={350}

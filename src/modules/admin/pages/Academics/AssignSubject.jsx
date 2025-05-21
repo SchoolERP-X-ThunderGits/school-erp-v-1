@@ -17,9 +17,11 @@ const AssignSubject = () => {
     const [classList, setClassList] = useState([]);
     const [subjectList, setSubjectList] = useState([]); // Added to track subjects
     const [selectedClass, setSelectedClass] = useState(''); // Track selected class
+    const [selectedSection, setSelectedSection] = useState(''); // Track selected class
     const [selectedSubjects, setSelectedSubjects] = useState([]); // Track selected subjects
     const [showModal, setShowModal] = useState(false);
     const [editId, setEditId] = useState('');
+    const [sections, setSections] = useState([]);
     const [loading, setLoading] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false); // Delete confirmation modal
@@ -48,11 +50,18 @@ const AssignSubject = () => {
             setAssignList(result);
             setEditId('')
             setSelectedClass('')
+            setSelectedSection('')
             setSelectedSubjects([])
             setShowModal(false)
             setLoading(false);
         } catch (error) {
             setLoading(false);
+        }
+    };
+    const fetchSectionsForClass = (classId) => {
+        const classSelected = classList.find(classItem => classItem._id === classId);
+        if (classSelected) {
+            setSections(classSelected.sections); // sections associated with the selected class
         }
     };
 
@@ -71,6 +80,7 @@ const AssignSubject = () => {
         setEditMode(true);
         setEditId(classData._id);
         setSelectedClass(classData?.class?._id)
+        setSelectedSection(classData?.class?._id)
         setSelectedSubjects(classData?.subjects.map(subject => subject?._id));
     };
 
@@ -81,14 +91,15 @@ const AssignSubject = () => {
 
     const handleAddSubject = async (e) => {
         e.preventDefault()
-        if (!selectedClass || selectedSubjects.length === 0) {
+        if (!selectedClass || !selectedSection || selectedSubjects.length === 0) {
             setErrorMessage('All fields are required');
             return;
         }
 
         const body = {
-            classId: selectedClass, // Selected class
-            subjects: selectedSubjects, // Selected subjects
+            classId: selectedClass, 
+            sectionId: selectedSection, 
+            subjects: selectedSubjects, 
         };
 
         if (editMode) {
@@ -153,6 +164,7 @@ const AssignSubject = () => {
 
                         setShowModal(true);
                         setSelectedClass('');
+                        setSelectedSection('')
                         setSelectedSubjects([]);
                         setErrorMessage('');
                         setEditMode(false);
@@ -227,7 +239,23 @@ const AssignSubject = () => {
                                                 label: classItem.name,
                                             }))}
                                             value={selectedClass}
-                                            onChange={(e) => setSelectedClass(e)}
+                                            onChange={(e) => { setSelectedClass(e), fetchSectionsForClass(e) }}
+                                        />
+                                    </div>
+                                    <div>
+                                        <Label >Select Section</Label>
+                                        <Select
+                                            disabled={!selectedClass}
+                                            placeholder='Select Section'
+                                            options={sections.map((section) => ({
+                                                value: section,
+                                                label: section,
+                                            }))}
+                                            value={selectedSection}
+                                            onChange={(e) => {
+                                                setSelectedSection(e)
+                                            }}
+                                            className="dark:bg-gray-700 dark:text-white"
                                         />
                                     </div>
 

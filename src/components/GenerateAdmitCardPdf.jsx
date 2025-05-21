@@ -23,7 +23,6 @@ export const GenerateAdmitCardPdf = async ({ student,school,examSchedule, genera
                                    <Image style={{ width: 50, height: 50 }} src={school?.logo} />
                                </View>
                            </View>
-                           {console.log('studentstudent', student)}
                            <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginVertical: 10 }}>
                                <View>
    
@@ -47,7 +46,6 @@ export const GenerateAdmitCardPdf = async ({ student,school,examSchedule, genera
                                </View>
                                {examSchedule.map((exam, index) => (
                                    <View style={styles.tableRow} key={index}>
-                                       {console.log('examSchedule', exam)}
                                        <Text style={styles.tableCell}>{exam.subject?.name}</Text>
                                        <Text style={styles.tableCell}>{moment(exam.date).format('DD/MM/YYYY')}</Text>
                                        <Text style={styles.tableCell}>{exam.startTime}</Text>

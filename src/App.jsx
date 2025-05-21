@@ -41,6 +41,8 @@ import ExamsList from './modules/student/pages/Exams/ExamsList';
 import StudentProfile from './modules/student/pages/Profile/StudentProfile';
 import SchoolDetails from './modules/admin/pages/Schools/SchoolDetails';
 import "flatpickr/dist/flatpickr.css";
+import Section from './modules/admin/pages/Academics/Section';
+import House from './modules/admin/pages/Academics/House';
 function App() {
   const [loading, setLoading] = useState(true);
   const { pathname } = useLocation();
@@ -162,6 +164,22 @@ function App() {
             element={
               <ProtectedRoute>
                 <Class />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/section"
+            element={
+              <ProtectedRoute>
+                <Section />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/houses"
+            element={
+              <ProtectedRoute>
+                <House />
               </ProtectedRoute>
             }
           />
