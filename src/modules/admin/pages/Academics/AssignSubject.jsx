@@ -183,17 +183,17 @@ const AssignSubject = () => {
                             <Table className="w-full text-left border-collapse">
                                 <TableHeader className='bg-gray-100 dark:bg-gray-800'>
                                     <TableRow>
-                                        {['Class Name', 'Subjects Name'].map((header) => (
+                                        {['Class Name', 'Subjects Name','Section'].map((header) => (
                                             <th key={header} className="px-5 py-3 font-medium text-gray-500 dark:text-gray-400 text-left">{header}</th>
                                         ))}
                                         <th className='px-5 py-3 font-medium text-gray-500 dark:text-gray-400 text-left'>Action</th>
                                     </TableRow>
                                 </TableHeader>
-
                                 <TableBody>
                                     {assignList?.map((subject) => (
                                         <TableRow className='dark:bg-gray-900 border-gray-200 dark:border-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800' key={subject._id}>
                                             <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{subject?.class?.name}</TableCell>
+                                            <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{subject?.sectionId?.name}</TableCell>
                                             <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{subject?.subjects?.map(subject => subject.name)?.join(', ')}</TableCell>
                                             <TableCell className="px-5 py-4">
                                                 <div className='flex gap-3 justify-start items-center'>

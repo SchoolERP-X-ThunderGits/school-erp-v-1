@@ -62,7 +62,7 @@ const Class = () => {
         setEditId(classData._id);
         setNewClassName(classData.name);
         console.log('sfksdfksfs', classData)
-        setSelectedSections(classData.sections?.map(item => item.name));
+        setSelectedSections(classData.sections);
     };
 
     const handleDelete = (classId) => {
@@ -80,7 +80,6 @@ const Class = () => {
     };
 
     const handleAddClass = async (e) => {
-        console.log('selectedSectionsselectedSections',selectedSections)
         e.preventDefault();
         if (!newClassName || selectedSections.length === 0) {
             setErrorMessage('All fields are required')
@@ -160,7 +159,7 @@ const Class = () => {
                                         <TableRow className='border-gray-200 dark:border-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800' key={classItem._id}>
                                             <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{classItem?.name}</TableCell>
                                             {console.log('classItemclassItem', classItem)}
-                                            <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{classItem.sections?.map(item => item.name)?.join(', ')}</TableCell>
+                                            <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{classItem.sections?.join(', ')}</TableCell>
                                             <TableCell className="px-5 py-4">
                                                 <div className='flex gap-3 justify-start items-center'>
                                                     <Link onClick={() => handleEdit(classItem)}>

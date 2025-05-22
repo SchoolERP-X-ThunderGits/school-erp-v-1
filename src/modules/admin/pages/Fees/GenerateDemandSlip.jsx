@@ -1,21 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { pdf, Document, Page, Text, View, StyleSheet, Image, Font } from '@react-pdf/renderer';
+import { pdf, Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 import { saveAs } from 'file-saver';
 import apiName from '../../../../constants/ApiName'; // Importing API Names
 import { showToast } from '../../../../components/Toast'; // Show Toast Notifications
 import Loader from '../../../../components/Loader';
 import moment from 'moment';
-import { getService, postService } from '../../../../constants/Service';
+import { getService } from '../../../../constants/Service';
 import { BASE_URL } from '../../../../constants/Config';
 import { useNavigate } from 'react-router-dom';
 import { Table, TableBody, TableCell, TableHeader, TableRow } from '../../../../components/ui/table/index';
 import Select from '../../../../components/form/Select';
 import Button from '../../../../components/ui/button/Button';
 import Checkbox from '../../../../components/form/input/Checkbox';
-// import {Flatpickr} from "react-flatpickr";
 import { useUserContext } from '../../../../context/UserContext';
-import { below20, tens, thousands } from '../../../../constants/GlobalConstants'
-import Input from '../../../../components/form/input/InputField';
 import DatePicker from '../../../../components/form/date-picker';
 const GenerateDemandSlip = () => {
     const [loading, setLoading] = useState(false);
@@ -26,7 +23,6 @@ const GenerateDemandSlip = () => {
     const [selectedStudents, setSelectedStudents] = useState([]); // For tracking selected students
     const [classFilter, setClassFilter] = useState('');
     const [sectionFilter, setSectionFilter] = useState('');
-    const [searchText, setSearchText] = useState('');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [selectAll, setSelectAll] = useState(false); // New state for "Select All" checkbox
@@ -79,20 +75,6 @@ const GenerateDemandSlip = () => {
         fetchFilteredStudents();
         getStudentFeeByClass()
     };
-    const handleStartDateChange = (e) => {
-        const newStartDate = e;
-        setStartDate(newStartDate);
-
-        // If the new start date is later than the current end date, reset the end date
-        if (endDate && newStartDate > endDate) {
-            setEndDate('');
-        }
-    };
-
-    const handleEndDateChange = (e) => {
-        const newEndDate = e;
-        setEndDate(newEndDate);
-    };
     // Fetch filtered students based on filters (Class, Section, and Search Text)
     const fetchFilteredStudents = async () => {
         try {
@@ -136,7 +118,7 @@ const GenerateDemandSlip = () => {
         const selectedStudentData = feeDetails.filter((student) =>
             selectedStudents.includes(student.studentId)
         );
-
+        { console.log('selectedStudentData', selectedStudentData) }
         const blob = await pdf(
             <Document>
                 {selectedStudentData.map((student) => (

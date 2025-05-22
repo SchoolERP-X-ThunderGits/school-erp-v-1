@@ -58,12 +58,13 @@ const Subject = () => {
 
     const handleAddSubject = async (e) => {
         e.preventDefault();
-        if (!newSubjectName) {
-            setErrorMessage('Name is required');
+        if (!newSubjectName || !newSubjectCode) {
+            setErrorMessage('All fields are required');
             return;
         }
         const body = {
             name: newSubjectName,
+            subjectCode: newSubjectCode,
         };
 
         if (editMode) {
@@ -129,7 +130,7 @@ const Subject = () => {
                                     {subjectList?.map((subjectItem) => (
                                         <TableRow className='dark:bg-gray-900 border-gray-200 dark:border-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800' key={subjectItem._id}>
                                             <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{subjectItem.name}</TableCell>
-                                            <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{subjectItem.name}</TableCell>
+                                            <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{subjectItem.subjectCode}</TableCell>
                                             <TableCell className="px-5 py-4">
                                                 <div className='flex gap-3 justify-start items-center'>
                                                     <Link onClick={() => handleEdit(subjectItem)}>
@@ -163,7 +164,7 @@ const Subject = () => {
                         </p>
                     </div>
                     <form className="flex flex-col">
-                        <div className="custom-scrollbar h-[100px] overflow-y-auto px-2 pb-3">
+                        <div className="custom-scrollbar h-[170px] overflow-y-auto px-2 pb-3">
                             <div>
 
                                 <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
@@ -181,7 +182,7 @@ const Subject = () => {
                                         <Label >Subject Code</Label>
                                         <Input
                                             type="text"
-                                            value={newSubjectName}
+                                            value={newSubjectCode}
                                             onChange={(e) => setNewSubjectCode(e.target.value)}
                                             className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white dark:border-gray-700"
                                             placeholder="Enter subject code"

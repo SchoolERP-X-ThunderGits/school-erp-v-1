@@ -12,7 +12,6 @@ import Input from '../../../../components/form/input/InputField';
 import Select from '../../../../components/form/Select';
 import Label from '../../../../components/form/Label';
 import Checkbox from '../../../../components/form/input/Checkbox';
-import Loader from '../../../../components/Loader';
 import DatePicker from '../../../../components/form/date-picker';
 import moment from 'moment';
 const AddStudent = () => {

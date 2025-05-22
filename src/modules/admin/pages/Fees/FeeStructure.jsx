@@ -212,11 +212,11 @@ const FeeStructure = () => {
                     } else {
                         setShowModal(true), setEditMode(false)
                     }
-                     setFormData({
-                                    name: '',
-                                    class: '',
-                                    feeGroups: [{ feeType: '', amount: '', dueDate: '' }]
-                                })
+                    setFormData({
+                        name: '',
+                        class: '',
+                        feeGroups: [{ feeType: '', amount: '', dueDate: '' }]
+                    })
                 }}>
                     <Link>Add Fee Structures</Link>
                 </Button>
@@ -352,13 +352,13 @@ const FeeStructure = () => {
                                             value: cls?._id,
                                             label: cls.name,
                                         }))}
-                                        defaultValue={formData.class}
+                                        value={formData.class}
                                         onChange={(e) => {
-                                            console.log('sfkdsfksf',e,formData.class)
                                             setFormData((prevData) => ({
-                                            ...prevData,
-                                            class: e
-                                        }))}}
+                                                ...prevData,
+                                                class: e
+                                            }))
+                                        }}
                                         className="bg-gray-50 dark:bg-gray-700"
                                     />
                                 </div>
