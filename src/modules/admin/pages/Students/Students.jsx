@@ -109,12 +109,12 @@ const Students = () => {
         return (
             <div className="container mx-auto">
                 <div className="overflow-x-auto bg-white dark:bg-gray-900 shadow-md rounded-lg">
-                    {filteredStudents.length == 0 ? 
+                    {filteredStudents.length == 0 ?
                         <p style={{ textAlign: 'center', margin: 10 }}>No students found</p> :
                         <Table className="w-full text-left border-collapse">
                             <TableHeader className='bg-gray-100 dark:bg-gray-800'>
                                 <TableRow>
-                                    {['Admission Number', 'Roll Number', 'Name',"Father's Name", 'Class', 'Section'].map((header) => (
+                                    {['Admission Number', 'Roll Number', 'Name', "Father's Name", 'Class', 'Section'].map((header) => (
                                         <th key={header} className="px-5 py-3 font-medium text-gray-500 text-left dark:text-gray-400">{header}</th>
                                     ))}
                                     <th className='px-5 py-3 font-medium text-gray-500 text-left dark:text-gray-300'>Action</th>
@@ -125,7 +125,7 @@ const Students = () => {
                                 {filteredStudents?.map((student) => (
                                     <TableRow className='border-gray-200 dark:border-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800' key={student._id}>
                                         <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{student?.admission_Number}</TableCell>
-                                        <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{student?.roll_Number}</TableCell>
+                                        <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{student?.roll_Number ? student?.roll_Number : 'N/A'}</TableCell>
                                         <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">
                                             <button
                                                 onClick={() => navigate(`/admin/student/student-details/${student?._id}`)} // Navigate to student details page
@@ -213,7 +213,7 @@ const Students = () => {
                                 setSectionFilter('');
                                 setSearchText('');
                             }}
-                           className="px-6 py-3 bg-gray-200 !text-black rounded-lg hover:bg-gray-300 transition duration-300"
+                            className="px-6 py-3 bg-gray-200 !text-black rounded-lg hover:bg-gray-300 transition duration-300"
                         >
                             Clear Filters
                         </Button>

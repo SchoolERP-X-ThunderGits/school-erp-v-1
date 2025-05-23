@@ -80,7 +80,8 @@ const AssignSubject = () => {
         setEditMode(true);
         setEditId(classData._id);
         setSelectedClass(classData?.class?._id)
-        setSelectedSection(classData?.class?._id)
+        setSelectedSection(classData?.sectionId?.name)
+        fetchSectionsForClass(classData?.class?._id)
         setSelectedSubjects(classData?.subjects.map(subject => subject?._id));
     };
 
@@ -97,9 +98,9 @@ const AssignSubject = () => {
         }
 
         const body = {
-            classId: selectedClass, 
-            sectionId: selectedSection, 
-            subjects: selectedSubjects, 
+            classId: selectedClass,
+            sectionId: selectedSection,
+            subjects: selectedSubjects,
         };
 
         if (editMode) {
@@ -183,7 +184,7 @@ const AssignSubject = () => {
                             <Table className="w-full text-left border-collapse">
                                 <TableHeader className='bg-gray-100 dark:bg-gray-800'>
                                     <TableRow>
-                                        {['Class Name', 'Subjects Name','Section'].map((header) => (
+                                        {['Class Name', 'Section', 'Subjects Name'].map((header) => (
                                             <th key={header} className="px-5 py-3 font-medium text-gray-500 dark:text-gray-400 text-left">{header}</th>
                                         ))}
                                         <th className='px-5 py-3 font-medium text-gray-500 dark:text-gray-400 text-left'>Action</th>
@@ -244,6 +245,7 @@ const AssignSubject = () => {
                                     </div>
                                     <div>
                                         <Label >Select Section</Label>
+                                        {console.log('sectionssections', sections)}
                                         <Select
                                             disabled={!selectedClass}
                                             placeholder='Select Section'

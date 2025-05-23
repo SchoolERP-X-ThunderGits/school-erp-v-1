@@ -274,7 +274,7 @@ const GenerateAdmitCard = () => {
                     onClick={() => {
                         handleGenerateAdmitCardForSelected(true)
                     }}
-                    className=" bg-green-500 text-white rounded-lg hover:bg-gray-300 transition duration-300"
+                    className=" bg-green-500 text-white text-xs rounded-lg hover:bg-gray-300 transition duration-300"
                 >
                     <FaDownload className="mr-2" /> Download All Admit Cards
                 </Button>

@@ -191,15 +191,15 @@ function StudentReceiptPage({ student, school, setAdmissionReceptPage }) {
       <div className="additional-details">
         <h3 className="font-semibold text-xl text-gray-800 dark:text-white">Additional Details</h3>
         <table className="w-full">
-          <tbody>
-            <tr><td><strong>Permanent Address:</strong></td><td>{student.permanent_Address}</td></tr>
-            <tr><td><strong>Email:</strong></td><td>{student.email}</td></tr>
-            <tr><td><strong>Category:</strong></td><td>{student.category}</td></tr>
-            <tr><td><strong>Blood Group:</strong></td><td>{student.blood_Group}</td></tr>
+        <tbody>
+            <tr><td><strong>Permanent Address:</strong></td><td>{student.permanent_Address ?student.permanent_Address:'N/A'}</td></tr>
+            <tr><td><strong>Email:</strong></td><td>{student.email ? student.email : 'N/A'}</td></tr>
+            <tr><td><strong>Category:</strong></td><td>{student.category ? student.category : 'N/A'}</td></tr>
+            <tr><td><strong>Blood Group:</strong></td><td>{student.blood_Group ? student.blood_Group : 'N/A'}</td></tr>
             <tr><td><strong>Father's Name:</strong></td><td>{student.father_Name}</td></tr>
             <tr><td><strong>Mother's Name:</strong></td><td>{student.mother_Name}</td></tr>
             <tr><td><strong>Aadhar Number:</strong></td><td>{student.aadhar_number}</td></tr>
-            <tr><td><strong>Due Amount:</strong></td><td>{student.due_amount}</td></tr>
+            <tr><td><strong>Due Amount:</strong></td><td>{student.due_amount ? student.due_amount : 'N/A'}</td></tr>
           </tbody>
         </table>
         <div className="sign-section">

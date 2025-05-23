@@ -293,7 +293,7 @@ const EditStudent = () => {
             <div className="">
                 {/* Form Fields */}
                 {
-                    formData.roll_Number &&
+                    formData.section &&
 
                     <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4">
                         {/* Roll Number */}
@@ -310,7 +310,7 @@ const EditStudent = () => {
 
                         {/* First Name */}
                         <div className="mb-4">
-                            <label className="block text-gray-700 dark:text-gray-300">First Name *:</label>
+                            <label className="block text-gray-700 dark:text-gray-300">First Name<span className="text-red-500">*</span>:</label>
                             <input
                                 type="text"
                                 name="first_Name"
@@ -322,7 +322,7 @@ const EditStudent = () => {
 
                         {/* Last Name */}
                         <div className="mb-4">
-                            <label className="block text-gray-700 dark:text-gray-300">Last Name *:</label>
+                            <label className="block text-gray-700 dark:text-gray-300">Last Name<span className="text-red-500">*</span>:</label>
                             <input
                                 type="text"
                                 name="last_Name"
@@ -334,7 +334,7 @@ const EditStudent = () => {
 
                         {/* Class Dropdown */}
                         <div className="mb-4">
-                            <label className="block text-gray-700 dark:text-gray-300">Class *:</label>
+                            <label className="block text-gray-700 dark:text-gray-300">Class <span className="text-red-500">*</span>:</label>
                             <select
                                 name="class_Id"
                                 value={formData.class_Id}
@@ -352,7 +352,7 @@ const EditStudent = () => {
 
                         {/* Section Dropdown */}
                         <div className="mb-4">
-                            <label className="block text-gray-700 dark:text-gray-300">Section *:</label>
+                            <label className="block text-gray-700 dark:text-gray-300">Section <span className="text-red-500">*</span>:</label>
                             <select
                                 name="section"
                                 value={formData.section}
@@ -371,7 +371,7 @@ const EditStudent = () => {
 
                         {/* Session Dropdown */}
                         <div className="mb-4">
-                            <label className="block text-gray-700 dark:text-gray-300">Session *:</label>
+                            <label className="block text-gray-700 dark:text-gray-300">Session <span className="text-red-500">*</span>:</label>
                             <select
                                 name="session"
                                 value={formData.session}
@@ -389,7 +389,7 @@ const EditStudent = () => {
 
                         {/* Date of Birth */}
                         <div className="mb-4">
-                            <label className="block text-gray-700 dark:text-gray-300">Date of Birth *:</label>
+                            <label className="block text-gray-700 dark:text-gray-300">Date of Birth <span className="text-red-500">*</span>:</label>
                             <DatePicker
                                 id="date_Of_Birth"
                                 // placeholder="Select a date"
@@ -413,7 +413,7 @@ const EditStudent = () => {
 
                         {/* Gender Dropdown */}
                         <div className="mb-4">
-                            <label className="block text-gray-700 dark:text-gray-300">Gender *:</label>
+                            <label className="block text-gray-700 dark:text-gray-300">Gender <span className="text-red-500">*</span>:</label>
                             <select
                                 name="gender"
                                 value={formData.gender}
@@ -429,7 +429,7 @@ const EditStudent = () => {
 
                         {/* Permanent Address */}
                         <div className="mb-4">
-                            <label className="block text-gray-700 dark:text-gray-300">Permanent Address *:</label>
+                            <label className="block text-gray-700 dark:text-gray-300">Permanent Address <span className="text-red-500">*</span>:</label>
                             <input
                                 type="text"
                                 name="permanent_Address"
@@ -441,7 +441,7 @@ const EditStudent = () => {
 
                         {/* Contact Number */}
                         <div className="mb-4">
-                            <label className="block text-gray-700 dark:text-gray-300">Contact Number *:</label>
+                            <label className="block text-gray-700 dark:text-gray-300">Contact Number <span className="text-red-500">*</span>:</label>
                             <input
                                 type="number"
                                 name="contact_Number"
@@ -453,7 +453,7 @@ const EditStudent = () => {
 
                         {/* Address for Correspondence */}
                         <div className="mb-4">
-                            <label className="block text-gray-700 dark:text-gray-300">Address for Correspondence *:</label>
+                            <label className="block text-gray-700 dark:text-gray-300">Address for Correspondence <span className="text-red-500">*</span>:</label>
                             <input
                                 type="text"
                                 name="address_For_Correspondence"
@@ -492,7 +492,7 @@ const EditStudent = () => {
 
                         {/* Address for Id Card */}
                         <div className="mb-4">
-                            <label className="block text-gray-700 dark:text-gray-300">Address for Id Card*:</label>
+                            <label className="block text-gray-700 dark:text-gray-300">Address for Id Card <span className="text-red-500">*</span>:</label>
                             <input
                                 type="text"
                                 name="address_for_id"
@@ -549,7 +549,7 @@ const EditStudent = () => {
 
                         {/* Category */}
                         <div className="mb-4">
-                            <label className="block text-gray-700 dark:text-gray-300">Category *:</label>
+                            <label className="block text-gray-700 dark:text-gray-300">Category <span className="text-red-500">*</span>:</label>
                             <select
                                 name="category"
                                 value={formData.category}
@@ -587,7 +587,7 @@ const EditStudent = () => {
 
                         {/* Father's Name */}
                         <div className="mb-4">
-                            <label className="block text-gray-700 dark:text-gray-300">Father's Name *:</label>
+                            <label className="block text-gray-700 dark:text-gray-300">Father's Name <span className="text-red-500">*</span>:</label>
                             <input
                                 type="text"
                                 name="father_Name"
@@ -611,7 +611,7 @@ const EditStudent = () => {
 
                         {/* Mother's Name */}
                         <div className="mb-4">
-                            <label className="block text-gray-700 dark:text-gray-300">Mother's Name *:</label>
+                            <label className="block text-gray-700 dark:text-gray-300">Mother's Name <span className="text-red-500">*</span>:</label>
                             <input
                                 type="text"
                                 name="mother_Name"
@@ -647,7 +647,7 @@ const EditStudent = () => {
 
                         {/* Date of Admission */}
                         <div className="mb-4">
-                            <label className="block text-gray-700 dark:text-gray-300">Date of Admission *:</label>
+                            <label className="block text-gray-700 dark:text-gray-300">Date of Admission <span className="text-red-500">*</span>:</label>
                             <DatePicker
                                 id="date_Of_Admission"
                                 // placeholder="Select a date"
@@ -671,7 +671,7 @@ const EditStudent = () => {
 
                         {/* Aadhar Number */}
                         <div className="mb-4 col-span-2">
-                            <label className="block text-gray-700 dark:text-gray-300">Aadhar Number *:</label>
+                            <label className="block text-gray-700 dark:text-gray-300">Aadhar Number <span className="text-red-500">*</span>:</label>
                             <div className="flex space-x-2 mt-2">
                                 {[0, 1, 2].map((index) => (
                                     <input
@@ -692,7 +692,7 @@ const EditStudent = () => {
                         {
                             // !editMode &&
                             <div className="mb-4">
-                                <label className="block text-gray-700 dark:text-gray-300">Student Photo *:</label>
+                                <label className="block text-gray-700 dark:text-gray-300">Student Photo <span className="text-red-500">*</span>:</label>
                                 <input
                                     type="file"
                                     name="image"
@@ -780,7 +780,6 @@ const EditStudent = () => {
                         !formData?.aadhar_number ||
                         !formData?.section ||
                         !formData?.session ||
-                        !formData?.roll_Number ||
                         !formData?.class_Id ||
                         !formData?.gender ||
                         !formData?.permanent_Address ||
@@ -801,7 +800,6 @@ const EditStudent = () => {
                         !formData?.aadhar_number ||
                         !formData?.section ||
                         !formData?.session ||
-                        !formData?.roll_Number ||
                         !formData?.class_Id ||
                         !formData?.gender ||
                         !formData?.permanent_Address ||

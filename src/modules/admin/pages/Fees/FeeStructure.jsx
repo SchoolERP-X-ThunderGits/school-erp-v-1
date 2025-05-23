@@ -166,15 +166,25 @@ const FeeStructure = () => {
         const updatedFeeGroups = [...formData.feeGroups];
 
         if (name === 'feeType') {
-            // When feeType is selected, find the selected feeType by ID from the feeTypes list
             const selectedFeeType = feeTypes.find(fee => fee.name === value);
-            updatedFeeGroups[index][name] = selectedFeeType ? selectedFeeType.name : ''; // Store the name of the feeType
+            updatedFeeGroups[index][name] = selectedFeeType ? selectedFeeType.name : '';
+        } else if (name === 'dueDate') {
+            // Remove any non-digit or slash characters
+            let cleaned = value.replace(/[^\d]/g, '');
+
+            // Auto-insert slash after 2 digits
+            if (cleaned.length >= 3) {
+                cleaned = `${cleaned.slice(0, 2)}/${cleaned.slice(2, 4)}`;
+            }
+
+            updatedFeeGroups[index][name] = cleaned;
         } else {
             updatedFeeGroups[index][name] = value;
         }
 
         setFormData({ ...formData, feeGroups: updatedFeeGroups });
     };
+
     const handleFeeTypeGroupChange = (e, index) => {
         // const { name, value } = e.target;
         const updatedFeeGroups = [...formData.feeGroups];
@@ -393,12 +403,22 @@ const FeeStructure = () => {
                                                 className="bg-gray-50 dark:bg-gray-700"
                                             />
                                             <Input
-                                                type="date"
+                                                type="text"
                                                 name="dueDate"
                                                 value={feeGroup.dueDate}
                                                 onChange={(e) => handleFeeGroupChange(e, index)}
+                                                onBlur={(e) => {
+                                                    const value = e.target.value;
+                                                    const mmddRegex = /^(0[1-9]|1[0-2])\/(0[1-9]|[1-2][0-9]|3[0-1])$/;
+                                                    if (value && !mmddRegex.test(value)) {
+                                                        alert('Please enter a valid date in MM/DD format, like 12/03');
+                                                    }
+                                                }}
                                                 className="bg-gray-50 dark:bg-gray-700"
+                                                placeholder="MM/DD"
+                                                maxLength={5}
                                             />
+
                                             <button
                                                 disabled={formData.feeGroups.length === 1}
                                                 onClick={() => handleDeleteFeeGroup(index)}

@@ -297,7 +297,7 @@ const AddStudent = () => {
       ...prevFormData,
       date_Of_Admission: formData.date_Of_Admission != '' ? formData.date_Of_Admission.split('T')[0] : new Date().toISOString().split('T')[0]
     }));
-    if (!formData.first_Name || !formData.last_Name || !formData?.aadhar_number || !formData?.section || !formData?.session || !formData?.roll_Number || !formData?.class_Id || !formData?.gender || !formData?.permanent_Address || !formData?.date_Of_Birth || !formData?.contact_Number || !formData?.date_Of_Admission || !formData?.father_Name || !formData?.mother_Name || !formData?.student_Photo || !formData?.category || !formData?.address_for_id) {
+    if (!formData.first_Name || !formData.last_Name || !formData?.aadhar_number || !formData?.section || !formData?.session  || !formData?.class_Id || !formData?.gender || !formData?.permanent_Address || !formData?.date_Of_Birth || !formData?.contact_Number || !formData?.date_Of_Admission || !formData?.father_Name || !formData?.mother_Name || !formData?.student_Photo || !formData?.category || !formData?.address_for_id) {
       showToast("Please fill all the required fields.", 'error');
       return;
     }
@@ -328,12 +328,12 @@ const AddStudent = () => {
   };
   return (
     <div>
-     {
-  imageLoad &&
-  <div className="fixed inset-0 flex items-center justify-center bg-transparent z-50">
-    <div className="h-16 w-16 animate-spin rounded-full border-4 border-solid border-white border-t-transparent"></div>
-  </div>
-}
+      {
+        imageLoad &&
+        <div className="fixed inset-0 flex items-center justify-center bg-transparent z-50">
+          <div className="h-16 w-16 animate-spin rounded-full border-4 border-solid border-white border-t-transparent"></div>
+        </div>
+      }
       <form className="px-5 overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-white/[0.03] dark:border-gray-900">
         {/* Add Class Button */}
 
@@ -354,7 +354,7 @@ const AddStudent = () => {
             <form className="flex flex-col">
               <div className='w-full py-4 px-2 flex justify-between items-center'>
                 <div className='text-3xl font-medium'>Add Student</div>
-                <Button onClick={(e) => {e.preventDefault(); setBulkStudentModal(true) }}>
+                <Button onClick={(e) => { e.preventDefault(); setBulkStudentModal(true) }}>
                   <Link>Import Students</Link>
                 </Button>
               </div>
@@ -479,19 +479,18 @@ const AddStudent = () => {
                         onChange={handleInputChange}
                         className="mt-2 p-2 border border-gray-300 rounded-md w-full"
                       /> */}
-                         <DatePicker
-                                id="date_Of_Birth"
-                                // placeholder="Select a date"
-                                onChange={(date) => {
-                                  console.log('datedate',date)
-                                    setFormData((prevData) => ({
-                                        ...prevData,
-                                        date_Of_Birth: moment(date[0]).format('YYYY/MM/DD')
-                                      }));
-                                }}
-                                defaultDate={formData.date_Of_Birth !== '' ? formData.date_Of_Birth.split('T')[0] : new Date().toISOString().split('T')[0]}
-                                mode="single" // or "range", "multiple", "time"
-                            />
+                      <DatePicker
+                        id="date_Of_Birth"
+                        placeholder="Select a date"
+                        onChange={(date) => {
+                          console.log('datedate', date)
+                          setFormData((prevData) => ({
+                            ...prevData,
+                            date_Of_Birth: moment(date[0]).format('YYYY/MM/DD')
+                          }));
+                        }}
+                        mode="single"
+                      />
                     </div>
 
                     {/* Gender Dropdown */}
@@ -688,8 +687,9 @@ const AddStudent = () => {
                         }}
                       />
                     </div>
+
                     <div className="mb-4 ">
-                      <Label className="block text-gray-700">Transportation Address<span className="text-red-500">*</span>:</Label>
+                      <Label className="block text-gray-700">Transportation Address:</Label>
                       <Input
                         type="text"
                         name="transport_address"
@@ -764,17 +764,17 @@ const AddStudent = () => {
                     <div className="mb-4 ">
                       <Label className="block text-gray-700">Date of Admission <span className="text-red-500">*</span>:</Label>
                       <DatePicker
-                                id="date_Of_Admission"
-                                // placeholder="Select a date"
-                                onChange={(date) => {
-                                  setFormData((prevData) => ({
-                                    ...prevData,
-                                    date_Of_Admission: moment(date[0]).format('YYYY/MM/DD')
-                                  }));
-                                }}
-                                defaultDate={formData.date_Of_Admission !== '' ? formData.date_Of_Admission.split('T')[0] : new Date().toISOString().split('T')[0]}
-                                mode="single" // or "range", "multiple", "time"
-                            />
+                        id="date_Of_Admission"
+                        // placeholder="Select a date"
+                        onChange={(date) => {
+                          setFormData((prevData) => ({
+                            ...prevData,
+                            date_Of_Admission: moment(date[0]).format('YYYY/MM/DD')
+                          }));
+                        }}
+                        defaultDate={formData.date_Of_Admission !== '' ? formData.date_Of_Admission.split('T')[0] : new Date().toISOString().split('T')[0]}
+                        mode="single" // or "range", "multiple", "time"
+                      />
                       {/* <Input
                         type="date"
                         name="date_Of_Admission"
@@ -881,7 +881,7 @@ const AddStudent = () => {
                   </div>
                 }
               </div>
-{console.log('formDataformData',formData)}
+              {console.log('formDataformData', formData)}
               {/* Submit Button */}
               <div className="flex justify-center mt-6">
                 <Button
@@ -893,7 +893,6 @@ const AddStudent = () => {
                     !formData?.aadhar_number ||
                     !formData?.section ||
                     !formData?.session ||
-                    !formData?.roll_Number ||
                     !formData?.class_Id ||
                     !formData?.gender ||
                     !formData?.permanent_Address ||
@@ -914,7 +913,6 @@ const AddStudent = () => {
                     !formData?.aadhar_number ||
                     !formData?.section ||
                     !formData?.session ||
-                    !formData?.roll_Number ||
                     !formData?.class_Id ||
                     !formData?.gender ||
                     !formData?.permanent_Address ||

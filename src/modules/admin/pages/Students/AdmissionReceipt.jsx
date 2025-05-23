@@ -62,7 +62,7 @@ const AdmissionReceipt = ({ studentData, setRegistrationCompleted, resetForm }) 
                   <Text style={[styles.value, { borderTopWidth: 0.5, borderTopColor: 'gray' }]}>
                     {studentData?.admission_Number}
                   </Text>
-                  <Text style={styles.value}>{studentData?.roll_Number}</Text>
+                  <Text style={styles.value}>{studentData?.roll_Number ? studentData?.roll_Number : 'N/A'}</Text>
                   <Text style={styles.value}>{studentData?.first_Name} {studentData?.last_Name}</Text>
                   <Text style={styles.value}>{moment(studentData?.date_Of_Birth).format('DD-MM-YYYY')}</Text>
                   <Text style={styles.value}>{studentData?.contact_Number}</Text>
@@ -99,13 +99,13 @@ const AdmissionReceipt = ({ studentData, setRegistrationCompleted, resetForm }) 
                 <Text style={[styles.value, { borderTopWidth: 0, height: studentData?.permanent_Address?.length > 40 ? 50 : 35 }]}>
                   {studentData?.permanent_Address}
                 </Text>
-                <Text style={styles.value}>{studentData?.email?studentData?.email:'N/A'}</Text>
-                <Text style={styles.value}>{studentData?.category?studentData?.category:'N/A'}</Text>
-                <Text style={styles.value}>{studentData?.blood_Group?studentData?.blood_Group:'N/A'}</Text>
+                <Text style={styles.value}>{studentData?.email ? studentData?.email : 'N/A'}</Text>
+                <Text style={styles.value}>{studentData?.category ? studentData?.category : 'N/A'}</Text>
+                <Text style={styles.value}>{studentData?.blood_Group ? studentData?.blood_Group : 'N/A'}</Text>
                 <Text style={styles.value}>{studentData?.father_Name}</Text>
                 <Text style={styles.value}>{studentData?.mother_Name}</Text>
                 <Text style={styles.value}>{studentData?.aadhar_number}</Text>
-                <Text style={styles.value}>{studentData?.due_amount?studentData?.due_amount:'N/A'}</Text>
+                <Text style={styles.value}>{studentData?.due_amount ? studentData?.due_amount : 'N/A'}</Text>
               </View>
             </View>
 
@@ -204,7 +204,7 @@ const AdmissionReceipt = ({ studentData, setRegistrationCompleted, resetForm }) 
                 )}
               </td>
             </tr>
-            <tr><td><strong>Roll Number:</strong></td><td>{studentData.roll_Number}</td></tr>
+            <tr><td><strong>Roll Number:</strong></td><td>{studentData.roll_Number ? studentData.roll_Number : 'N/A'}</td></tr>
             <tr><td><strong>Name:</strong></td><td>{studentData.first_Name} {studentData.last_Name}</td></tr>
             <tr><td><strong>Date of Birth:</strong></td><td>{moment(studentData?.date_Of_Birth).format('DD-MM-YYYY')}</td></tr>
             <tr><td><strong>Contact Number:</strong></td><td>{studentData.contact_Number}</td></tr>
@@ -228,14 +228,14 @@ const AdmissionReceipt = ({ studentData, setRegistrationCompleted, resetForm }) 
         <h3 className="font-semibold text-xl text-gray-800 dark:text-white">Additional Details</h3>
         <table className="w-full">
           <tbody>
-            <tr><td><strong>Permanent Address:</strong></td><td>{studentData.permanent_Address}</td></tr>
-            <tr><td><strong>Email:</strong></td><td>{studentData.email}</td></tr>
-            <tr><td><strong>Category:</strong></td><td>{studentData.category}</td></tr>
-            <tr><td><strong>Blood Group:</strong></td><td>{studentData.blood_Group}</td></tr>
+            <tr><td><strong>Permanent Address:</strong></td><td>{studentData.permanent_Address ?studentData.permanent_Address:'N/A'}</td></tr>
+            <tr><td><strong>Email:</strong></td><td>{studentData.email ? studentData.email : 'N/A'}</td></tr>
+            <tr><td><strong>Category:</strong></td><td>{studentData.category ? studentData.category : 'N/A'}</td></tr>
+            <tr><td><strong>Blood Group:</strong></td><td>{studentData.blood_Group ? studentData.blood_Group : 'N/A'}</td></tr>
             <tr><td><strong>Father's Name:</strong></td><td>{studentData.father_Name}</td></tr>
             <tr><td><strong>Mother's Name:</strong></td><td>{studentData.mother_Name}</td></tr>
             <tr><td><strong>Aadhar Number:</strong></td><td>{studentData.aadhar_number}</td></tr>
-            <tr><td><strong>Due Amount:</strong></td><td>{studentData.due_amount}</td></tr>
+            <tr><td><strong>Due Amount:</strong></td><td>{studentData.due_amount ? studentData.due_amount : 'N/A'}</td></tr>
           </tbody>
         </table>
         <div className="sign-section">

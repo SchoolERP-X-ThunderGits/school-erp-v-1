@@ -176,7 +176,11 @@ const ExamSchedule = () => {
         console.log('bcklvbcklbc', date)
         // setDateOfBirth(date[0].toLocaleDateString()); // Handle selected date and format it
     };
+    const [expandedScheduleId, setExpandedScheduleId] = useState(null);
 
+    const toggleExpand = (id) => {
+        setExpandedScheduleId(prevId => (prevId === id ? null : id));
+    };
     return (
         <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-white/[0.03] dark:border-gray-900">
             <div className='w-full p-4 flex justify-between items-center'>
@@ -186,42 +190,87 @@ const ExamSchedule = () => {
                 </Button>
             </div>
 
-            <div className="overflow-x-auto bg-white dark:bg-gray-800 shadow-md rounded-lg">
+            <div className="overflow-x-auto bg-white dark:bg-gray-900 shadow-md rounded-lg">
                 <div className="overflow-x-auto bg-white dark:bg-gray-800 shadow-md rounded-lg mt-4">
                     {examSchedulesList.length === 0 ?
                         <p style={{ textAlign: 'center', margin: 10 }} className="text-gray-700 dark:text-gray-300">No exams schedule found</p> :
                         <Table className="w-full text-left border-collapse">
-                            <TableHeader className='bg-gray-100 dark:bg-gray-800'>
-                                <TableRow>
-                                    {['Exam Name', 'Subject', 'Exam Date', 'Start Time', 'End Time'].map((header) => (
-                                        <th key={header} className="px-5 py-3 font-medium text-gray-500 dark:text-gray-400 text-left">{header}</th>
+                            <thead className="bg-gray-100 dark:bg-gray-800">
+                                <tr>
+                                    {['Exam Name', 'Subjects', 'Action'].map((header) => (
+                                        <th key={header} className="px-5 py-3 font-medium text-gray-500 dark:text-gray-400 text-left">
+                                            {header}
+                                        </th>
                                     ))}
-                                    <th className='px-5 py-3 font-medium text-gray-500 dark:text-gray-400 text-left'>Action</th>
-                                </TableRow>
-                            </TableHeader>
+                                </tr>
+                            </thead>
 
-                            <TableBody>
-                                {examSchedulesList?.map((schedule) => (
-                                    <TableRow className='border-gray-200 dark:border-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800' key={schedule._id}>
-                                        <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{schedule.examName?.name}</TableCell>
-                                        <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{schedule.subject
-                                            ?.name}</TableCell>
-                                        <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{new Date(schedule.date).toLocaleDateString()}</TableCell>
-                                        <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{schedule.startTime}</TableCell>
-                                        <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{schedule.endTime}</TableCell>
-                                        <TableCell className="px-5 py-4">
-                                            <div className=''>
-                                                {/* <Link onClick={() => handleEdit(schedule)}>
-                                                    <MdOutlineModeEdit className='text-gray-700 dark:text-white hover:text-blue-500 dark:hover:text-blue-400' />
-                                                </Link> */}
+                            <tbody>
+                                {examSchedulesList.map((schedule) => (
+                                    <React.Fragment key={schedule.class._id}>
+                                        <tr
+                                            className="border-gray-200 dark:border-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800 cursor-pointer"
+                                            onClick={() => toggleExpand(schedule.class._id)}
+                                        >
+                                            <td className="px-5 py-4 text-gray-700 dark:text-gray-300">
+                                                {schedule.exam[0]?.examName?.name}
+                                            </td>
+                                            <td className="px-5 py-4 text-gray-700 dark:text-gray-300">
+                                                {schedule.exam.map((e) => e.subject.name).join(', ')}
+                                            </td>
+                                            <td className="px-5 py-4 text-gray-700 dark:text-gray-300">
+                                                {/* Action can be edit/delete buttons if needed */}
                                                 <Link onClick={() => handleDelete(schedule._id)}>
                                                     <MdDelete className='text-gray-700 dark:text-white hover:text-red-500 dark:hover:text-red-400' />
                                                 </Link>
-                                            </div>
-                                        </TableCell>
-                                    </TableRow>
+                                            </td>
+                                        </tr>
+
+                                        {/* Expanded section */}
+                                        {expandedScheduleId === schedule.class._id && (
+                                            <tr>
+                                                <td colSpan={3} className="bg-gray-50 dark:bg-gray-700 px-5 py-4">
+                                                    <table className="min-w-full table-auto bg-white dark:bg-gray-600">
+                                                        <thead className="bg-gray-200 dark:bg-gray-800">
+                                                            <tr>
+                                                                {['Exam Date', 'Start Time', 'End Time', 'Subject'].map((header) => (
+                                                                    <th
+                                                                        key={header}
+                                                                        className="px-5 py-3 font-medium text-gray-500 dark:text-gray-300 text-left"
+                                                                    >
+                                                                        {header}
+                                                                    </th>
+                                                                ))}
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {schedule.exam.map((examItem) => (
+                                                                <tr
+                                                                    key={examItem._id}
+                                                                    className="border-t border-gray-200 dark:border-gray-900"
+                                                                >
+                                                                    <td className="px-5 py-2 text-gray-700 dark:text-gray-300">
+                                                                        {new Date(examItem.date).toLocaleDateString()}
+                                                                    </td>
+                                                                    <td className="px-5 py-2 text-gray-700 dark:text-gray-300">
+                                                                        {examItem.startTime}
+                                                                    </td>
+                                                                    <td className="px-5 py-2 text-gray-700 dark:text-gray-300">
+                                                                        {examItem.endTime}
+                                                                    </td>
+                                                                    <td className="px-5 py-2 text-gray-700 dark:text-gray-300">
+                                                                        {examItem.subject.name}
+                                                                    </td>
+                                                                </tr>
+                                                            ))}
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        )}
+                                    </React.Fragment>
                                 ))}
-                            </TableBody>
+                            </tbody>
                         </Table>}
                 </div>
             </div>
@@ -299,15 +348,7 @@ const ExamSchedule = () => {
                                                                 />
                                                             </TableCell>
                                                             <TableCell className="py-3 px-6">
-                                                                {/* <DatePicker
-                                                                    id="startTime"
-                                                                    placeholder="Select a date"
-                                                                    onChange={(time)=>{
-                                                                        handleInputChange(index, "startTime", time, subject._id)
-                                                                    }}
-                                                                    // defaultDate={new Date()}
-                                                                    mode="time" // or "range", "multiple", "time"
-                                                                /> */}
+
                                                                 <Input
                                                                     placeholder='HH:MM'
                                                                     type="time"
@@ -319,15 +360,6 @@ const ExamSchedule = () => {
                                                                 />
                                                             </TableCell>
                                                             <TableCell className="py-3 px-6">
-                                                                {/* <input
-                                                                    placeholder='HH:MM'
-                                                                    type="text"
-                                                                    value={examSchedules[index]?.endTime || ""}
-                                                                    onChange={(e) =>
-                                                                        handleInputChange(index, "endTime", e.target.value, subject._id)
-                                                                    }
-                                                                    className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-900 dark:text-gray-200"
-                                                                /> */}
                                                                 <Input
                                                                     placeholder='HH:MM'
                                                                     type="time"
