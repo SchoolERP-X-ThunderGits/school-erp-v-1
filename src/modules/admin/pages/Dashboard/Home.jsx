@@ -85,21 +85,21 @@ const AdminHome = () => {
         {/* Metric Cards for Admin */}
         {/* Students */}
         <Link to="/admin/student">
-          <MetricCard icon={<PiStudentFill />} title="Students" count={students} />
+          <MetricCard icon={<PiStudentFill />} title="Students" count={dashboardData?.counts?.totalStudents} />
         </Link>
 
         {/* Classes */}
         <Link to="/admin/class">
-          <MetricCard icon={<HiMiniAcademicCap />} title="Classes" count={classes} />
+          <MetricCard icon={<HiMiniAcademicCap />} title="Classes" count={dashboardData?.counts?.totalClasses} />
         </Link>
 
         {/* Sections */}
         <Link to="/admin/section">
-          <MetricCard icon={<BsFillSignIntersectionFill />} title="Sections" count={sections} />
+          <MetricCard icon={<BsFillSignIntersectionFill />} title="Sections" count={dashboardData?.counts?.totalSections} />
         </Link>
 
         {/* Payments */}
-        <MetricCard icon={<MdPayment />} title="Payments" count={payments} />
+        <MetricCard icon={<MdPayment />} title="Payments" count={dashboardData?.counts?.totalPayments} />
       </div>
 
       {/* Bar Chart */}
