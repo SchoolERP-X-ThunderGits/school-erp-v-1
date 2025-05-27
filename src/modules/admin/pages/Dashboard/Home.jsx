@@ -156,7 +156,7 @@ const AdminHome = () => {
       </div>
       <div className="bg-white p-6 rounded-lg shadow-md mb-8 mt-10 dark:bg-gray-800">
         <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-          Student Enrollment
+          Classes
         </h3>
         <Chart
           options={{
