@@ -403,19 +403,13 @@ const FeeStructure = () => {
                                                 className="bg-gray-50 dark:bg-gray-700"
                                             />
                                             <Input
-                                                type="text"
+                                                type="date"
                                                 name="dueDate"
                                                 value={feeGroup.dueDate}
                                                 onChange={(e) => handleFeeGroupChange(e, index)}
-                                                onBlur={(e) => {
-                                                    const value = e.target.value;
-                                                    const mmddRegex = /^(0[1-9]|1[0-2])\/(0[1-9]|[1-2][0-9]|3[0-1])$/;
-                                                    if (value && !mmddRegex.test(value)) {
-                                                        alert('Please enter a valid date in MM/DD format, like 12/03');
-                                                    }
-                                                }}
+                                               
                                                 className="bg-gray-50 dark:bg-gray-700"
-                                                placeholder="MM/DD"
+                                                placeholder="Due Date"
                                                 maxLength={5}
                                             />
 

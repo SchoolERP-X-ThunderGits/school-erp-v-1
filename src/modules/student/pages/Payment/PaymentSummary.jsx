@@ -9,6 +9,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import Button from '../../../../components/ui/button/Button';
 import Checkbox from '../../../../components/form/input/Checkbox';
 import { REACT_APP_RAZORPAY_KEY } from '../../../../constants/Config';
+import { useUserContext } from '../../../../context/UserContext';
+import { pdf, Document, Page, Text, View, StyleSheet, Image, Font } from '@react-pdf/renderer';
+import { FaEye } from 'react-icons/fa';
 
 const PaymentSummary = () => {
   const [data, setData] = useState();
@@ -17,13 +20,62 @@ const PaymentSummary = () => {
   const [selectedFees, setSelectedFees] = useState([]);
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
-
+  const { school } = useUserContext();
   const student = JSON.parse(localStorage.getItem("studentData"));
 
   useEffect(() => {
     getDashboardData();
     fetchStudentFees();
   }, []);
+  const generatePaymentReceiptPdf = async (payments) => {
+    const blob = await pdf(
+      <Document>
+        {payments.map((payment, idx) => (
+          <Page key={idx} size="A4" style={styles.page}>
+            <View style={styles.header}>
+              <Text style={styles.schoolName}>{school?.name || "Your School Name"}</Text>
+              <Text style={styles.schoolAddress}>{school?.address || "School Address"}</Text>
+            </View>
+
+            <Text style={styles.title}>FEE PAYMENT RECEIPT</Text>
+
+            <View style={styles.section}>
+              <Text><Text style={styles.label}>Receipt No:</Text> {payment.receipt_no}</Text>
+              <Text><Text style={styles.label}>Date:</Text> {moment(payment.date).format('DD-MM-YYYY')}</Text>
+              <Text><Text style={styles.label}>Student Name:</Text> {student.first_Name} {student.last_Name}</Text>
+              <Text><Text style={styles.label}>Class:</Text> {student.class_Id?.name}</Text>
+              <Text><Text style={styles.label}>Section:</Text> {student.section}</Text>
+            </View>
+
+            <View style={styles.table}>
+              <View style={styles.tableRowHeader}>
+                <Text style={styles.tableCellHeader}>Fee Type</Text>
+                <Text style={styles.tableCellHeader}>Amount (₹)</Text>
+              </View>
+              {payment.feePaid?.map((fee, i) => (
+                <View key={i} style={styles.tableRow}>
+                  <Text style={styles.tableCell}>{fee.feeType}</Text>
+                  <Text style={styles.tableCell}>{fee.amount}</Text>
+                </View>
+              ))}
+              <View style={styles.tableRow}>
+                <Text style={[styles.tableCell, styles.bold]}>Total Paid</Text>
+                <Text style={[styles.tableCell, styles.bold]}>₹{payment.amountPaid}</Text>
+              </View>
+            </View>
+
+            <View style={styles.footer}>
+              <Text>Payment Method: {payment.paymentMethod}</Text>
+              <Text>Thank you for your payment!</Text>
+            </View>
+          </Page>
+        ))}
+      </Document>
+    ).toBlob();
+
+    saveAs(blob, `Payment_History_${student.first_Name}_${student.last_Name}.pdf`);
+  };
+
 
   const getDashboardData = async () => {
     try {
@@ -121,7 +173,6 @@ const PaymentSummary = () => {
       // if (!orderRes?.data?.id) {
       //   return showToast("Failed to create order", "error");
       // }
-console.log('process.env.REACT_APP_RAZORPAY_KEY',orderRes.data.id)
       const options = {
         key: REACT_APP_RAZORPAY_KEY,
         amount: amount, // in paise
@@ -203,7 +254,9 @@ console.log('process.env.REACT_APP_RAZORPAY_KEY',orderRes.data.id)
         </div>
 
         <div className="flex justify-end">
-          <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-md transition shadow">
+          <button onClick={() => {
+            generatePaymentReceiptPdf(data?.feeSummary?.paymentHistory)
+          }} className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-md transition shadow">
             Download Receipt
           </button>
         </div>
@@ -224,6 +277,7 @@ console.log('process.env.REACT_APP_RAZORPAY_KEY',orderRes.data.id)
                     <th className="px-5 py-3">Amount</th>
                     <th className="px-5 py-3">Method</th>
                     <th className="px-5 py-3">Status</th>
+                    <th className="px-5 py-3">Action</th>
                   </TableRow>
                 </TableHeader>
                 <TableBody className="text-sm divide-y divide-gray-100 dark:divide-gray-800">
@@ -239,6 +293,13 @@ console.log('process.env.REACT_APP_RAZORPAY_KEY',orderRes.data.id)
                         <span className="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">
                           Paid
                         </span>
+                      </TableCell>
+                      <TableCell className="px-5 py-4">
+                        <button onClick={() => {
+                          navigate(`/fee-receipt/${item._id}`);
+                        }}>
+                          <FaEye className='text-gray-700 dark:text-white hover:text-red-500 dark:hover:text-red-400' />
+                        </button>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -319,5 +380,69 @@ console.log('process.env.REACT_APP_RAZORPAY_KEY',orderRes.data.id)
     </div>
   );
 };
+
+const styles = StyleSheet.create({
+  page: {
+    padding: 40,
+    fontSize: 12,
+    fontFamily: 'Helvetica'
+  },
+  header: {
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  schoolName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  schoolAddress: {
+    fontSize: 12,
+    color: 'gray',
+  },
+  title: {
+    textAlign: 'center',
+    fontSize: 16,
+    marginVertical: 20,
+    fontWeight: 'bold',
+    textDecoration: 'underline'
+  },
+  section: {
+    marginBottom: 20,
+    lineHeight: 1.5,
+  },
+  label: {
+    fontWeight: 'bold',
+  },
+  table: {
+    borderWidth: 1,
+    borderColor: '#000',
+  },
+  tableRowHeader: {
+    flexDirection: 'row',
+    backgroundColor: '#f0f0f0',
+    borderBottom: '1 solid #000',
+  },
+  tableRow: {
+    flexDirection: 'row',
+    borderBottom: '1 solid #ddd',
+  },
+  tableCellHeader: {
+    flex: 1,
+    padding: 8,
+    fontWeight: 'bold',
+  },
+  tableCell: {
+    flex: 1,
+    padding: 8,
+  },
+  bold: {
+    fontWeight: 'bold',
+  },
+  footer: {
+    marginTop: 40,
+    textAlign: 'center',
+  },
+});
+
 
 export default PaymentSummary;

@@ -153,11 +153,9 @@ function App() {
             }
           />
           <Route
-            path="/admin/fee-receipt/:paymentId"
+            path="/fee-receipt/:paymentId"
             element={
-              <ProtectedRoute>
                 <FeeReceipt />
-              </ProtectedRoute>
             }
           />
           <Route

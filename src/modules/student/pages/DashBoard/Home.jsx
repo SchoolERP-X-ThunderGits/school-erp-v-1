@@ -38,7 +38,7 @@ const StudentHome = () => {
   return (
     <div className="p-6 bg-white dark:bg-gray-900 min-h-screen transition-colors duration-300">
       <div className="max-w-6xl mx-auto space-y-8">
-        
+
         {/* Metric Cards */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6">
 
@@ -84,7 +84,6 @@ const StudentHome = () => {
               <button onClick={() => {
                 navigate('/student/payment-summary');
               }} className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition">Pay Now</button>
-              <button className="bg-indigo-100 dark:bg-indigo-700 dark:text-white text-indigo-700 px-4 py-2 rounded-md hover:bg-indigo-200 dark:hover:bg-indigo-600 transition">Download Receipt</button>
             </div>
           </div>
           {/* Upcoming Exams */}
@@ -125,18 +124,18 @@ const StudentHome = () => {
             <h2 className="text-lg font-semibold text-indigo-700 dark:text-indigo-300">Quick Downloads</h2>
           </div>
           <div className="flex flex-wrap gap-3">
-            <button onClick={()=>{
-               generateMultipleIdCardPdf({
-                student:data?.studentInfo,
+            <button onClick={() => {
+              generateMultipleIdCardPdf({
+                student: data?.studentInfo,
                 school,
                 selectedTemplate: 'visionSchool',
               });
             }} className="bg-indigo-100 dark:bg-indigo-700 dark:text-white text-indigo-700 px-4 py-2 rounded-md hover:bg-indigo-200 dark:hover:bg-indigo-600 transition">Download ID Card</button>
-            <button onClick={()=>{
-              GenerateDemandSlipPdf({student:data?.studentInfo,school})
+            <button onClick={() => {
+              GenerateDemandSlipPdf({ student: data?.studentInfo, school })
             }} className="bg-indigo-100 dark:bg-indigo-700 dark:text-white text-indigo-700 px-4 py-2 rounded-md hover:bg-indigo-200 dark:hover:bg-indigo-600 transition">Download on demand slip</button>
-            <button onClick={()=>{
-              GenerateAdmitCardPdf({student:data?.studentInfo,school,examSchedule:data?.upcomingExam})
+            <button onClick={() => {
+              GenerateAdmitCardPdf({ student: data?.studentInfo, school, examSchedule: data?.upcomingExam })
             }} className="bg-indigo-100 dark:bg-indigo-700 dark:text-white text-indigo-700 px-4 py-2 rounded-md hover:bg-indigo-200 dark:hover:bg-indigo-600 transition">Download Admit Card</button>
           </div>
         </div>

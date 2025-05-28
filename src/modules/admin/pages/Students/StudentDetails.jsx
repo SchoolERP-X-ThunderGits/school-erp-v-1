@@ -9,6 +9,9 @@ import StudentReceiptPage from '../../../../components/StudentReceiptPage';
 import Button from '../../../../components/ui/button/Button';
 import { Table, TableBody, TableCell, TableHeader, TableRow } from '../../../../components/ui/table/index';
 import Checkbox from '../../../../components/form/input/Checkbox';
+import { Modal } from '../../../../components/ui/modal';
+import moment from 'moment';
+import { FaEye } from 'react-icons/fa';
 
 const StudentDetails = () => {
     const { school } = useUserContext();
@@ -19,6 +22,7 @@ const StudentDetails = () => {
     const [feeDetails, setFeeDetails] = useState(null);
     const [selectedFees, setSelectedFees] = useState([]);
     const [AdmissionReceptPage, setAdmissionReceptPage] = useState(false);
+    const [payModal, setPayModal] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -114,7 +118,7 @@ const StudentDetails = () => {
 
             if (result && result.payment && result.payment._id) {
                 showToast('Fee collected successfully', 'success');
-                navigate(`/admin/fee-receipt/${result.payment._id}`);
+                navigate(`/fee-receipt/${result.payment._id}`);
             } else {
                 showToast('Failed to collect fee', 'error');
             }
@@ -208,90 +212,60 @@ const StudentDetails = () => {
     );
 
 
-    const renderFee = () => (
+    const renderPayment = () => (
         <div className="overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
             <div className='w-full p-4 flex justify-between items-center'>
-                <div className='text-3xl font-medium text-gray-800 dark:text-gray-200'>Fee Info</div>
-                {selectedFees.length !== 0 && (
-                    <Button onClick={(e) => { handleCollectFee(e) }}>
-                        <Link>Collect Fee</Link>
-                    </Button>
-                )}
+                <div className='text-3xl font-medium text-gray-800 dark:text-gray-200'>Payment Summary</div>
+                {/* {selectedFees.length !== 0 && ( */}
+                <Button onClick={() => { setPayModal(true) }}>
+                    <Link>Collect Payment</Link>
+                </Button>
+                {/* )} */}
             </div>
-
-            <div className="overflow-x-auto">
-                {feeDetails && feeDetails.feeStructures && feeDetails.feeStructures.length > 0 ? (
-                    <Table className="w-full min-w-[800px] text-left border-collapse">
-                        <TableHeader className='bg-gray-100 dark:bg-gray-800'>
-                            <TableRow>
-                                <th className='px-5 py-3 font-medium text-gray-500 text-left'>
-                                    <Checkbox
-                                        disabled={feeDetails.payments.some((payment) =>
-                                            feeDetails.feeStructures.some((feeStructure) =>
-                                                feeStructure.feeGroups.some((feeGroup) =>
-                                                    payment.feePaid.some((feePaid) => feePaid.feeType === feeGroup.feeType && feePaid.paidAmount > 0)
-                                                )
-                                            )
-                                        )}
-                                        checked={feeDetails.feeStructures.every(feeStructure =>
-                                            feeStructure.feeGroups.every(feeGroup =>
-                                                isSelected(feeGroup) ||
-                                                feeDetails.payments.some(payment =>
-                                                    payment.feePaid.some(feePaid =>
-                                                        feePaid.feeType === feeGroup.feeType && feePaid.paidAmount > 0
-                                                    )
-                                                )
-                                            )
-                                        )}
-                                        onChange={handleMasterCheckboxChange}
-                                    />
-                                </th>
-                                {['Fees Structure', 'Fees Type', 'Due Date', 'Amount', 'Status', 'Discount', 'Fine'].map((header) => (
-                                    <th key={header} className="px-5 py-3 font-medium text-gray-500 text-left">{header}</th>
-                                ))}
+            {feeDetails?.payments.length == 0 ?
+                <div>
+                    <p className='text-center'>No history found</p>
+                </div>
+                :
+                <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-800">
+                    <Table className="w-full text-left border-collapse">
+                        <TableHeader className="bg-gray-100 dark:bg-gray-800 sticky top-0 z-10">
+                            <TableRow className="text-sm text-gray-600 dark:text-gray-300 border-b dark:border-gray-700">
+                                <th className="px-5 py-3">Receipt No.</th>
+                                <th className="px-5 py-3">Date</th>
+                                <th className="px-5 py-3">Amount</th>
+                                <th className="px-5 py-3">Method</th>
+                                <th className="px-5 py-3">Status</th>
+                                <th className="px-5 py-3">Action</th>
                             </TableRow>
                         </TableHeader>
-
-                        <TableBody>
-                            {feeDetails.feeStructures?.map((feeStructure) =>
-                                feeStructure.feeGroups?.map((feeGroup) => (
-                                    <TableRow className='border-gray-200 dark:border-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800' key={feeGroup._id}>
-                                        <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">
-                                            <Checkbox
-                                                disabled={feeDetails.payments.some((payment) =>
-                                                    payment.feePaid.some((feePaid) => feePaid.feeType === feeGroup.feeType)
-                                                )}
-                                                style={{
-                                                    opacity: feeDetails.payments.some((payment) =>
-                                                        payment.feePaid.some((feePaid) => feePaid.feeType === feeGroup.feeType)
-                                                    ) ? 0 : 1
-                                                }}
-                                                checked={isSelected(feeGroup)}
-                                                onChange={() => handleFeeSelection(feeGroup)}
-                                            />
-                                        </TableCell>
-                                        <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{feeStructure.name}</TableCell>
-                                        <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{feeGroup.feeType}</TableCell>
-                                        <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">
-                                            {new Date(feeGroup.dueDate).toLocaleDateString()}
-                                        </TableCell>
-                                        <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">₹{feeGroup.amount}</TableCell>
-                                        <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">
-                                            {setStatusForFeeGroups(feeGroup.feeType, feeGroup.dueDate, feeDetails.payments)}
-                                        </TableCell>
-                                        <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">₹0</TableCell>
-                                        <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">₹0</TableCell>
-                                    </TableRow>
-                                ))
-                            )}
+                        <TableBody className="text-sm divide-y divide-gray-100 dark:divide-gray-800">
+                            {feeDetails?.payments?.map((item, index) => (
+                                <TableRow key={index} className="hover:bg-gray-100 dark:hover:bg-gray-800">
+                                    <TableCell className="px-5 py-4 font-medium text-indigo-600 dark:text-indigo-400">
+                                        #{item.receipt_no}
+                                    </TableCell>
+                                    {console.log('fslfslfs', item)}
+                                    <TableCell className="px-5 py-4">{moment(item.date).format("DD-MMM-YYYY").toLowerCase()}</TableCell>
+                                    <TableCell className="px-5 py-4">₹{item.amountPaid}</TableCell>
+                                    <TableCell className="px-5 py-4">{item.paymentMethod}</TableCell>
+                                    <TableCell className="px-5 py-4">
+                                        <span className="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">
+                                            Paid
+                                        </span>
+                                    </TableCell>
+                                    <TableCell className="px-5 py-4">
+                                        <button onClick={() => {
+                                            navigate(`/fee-receipt/${item._id}`);
+                                        }}>
+                                            <FaEye className='text-gray-700 dark:text-white hover:text-red-500 dark:hover:text-red-400' />
+                                        </button>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
                         </TableBody>
                     </Table>
-                ) : (
-                    <div className="text-center text-gray-600 dark:text-gray-300 py-6">
-                        No fees found
-                    </div>
-                )}
-            </div>
+                </div>}
         </div>
     );
 
@@ -326,9 +300,99 @@ const StudentDetails = () => {
                     </div>
 
                     {activeTab === 'profile' && renderProfile()}
-                    {activeTab === 'fee' && renderFee()}
+                    {activeTab === 'fee' && renderPayment()}
                 </div>
             )}
+
+            <Modal isOpen={payModal} onClose={() => {
+                setPayModal(false);
+                setErrorMessage('');
+            }} className="max-w-[700px] m-4">
+                <div className="no-scrollbar relative w-full max-w-[700px] h-[80vh] overflow-hidden rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
+                    <div className='w-full p-4 flex justify-between items-center'>
+                        <div className='text-3xl font-medium text-gray-800 dark:text-gray-200'>Fee Info</div>
+                        {selectedFees.length > 0 && (
+                            <Button onClick={(e) => handleCollectFee(e)}>
+                                <Link>Collect Fee</Link>
+                            </Button>
+                        )}
+                    </div>
+
+                    <div className="overflow-x-auto">
+                        {feeDetails && feeDetails.feeStructures && feeDetails.feeStructures.length > 0 ? (
+                            <Table className="w-full min-w-[800px] text-left border-collapse">
+                                <TableHeader className='bg-gray-100 dark:bg-gray-800'>
+                                    <TableRow>
+                                        <th className='px-5 py-3 font-medium text-gray-500 text-left'>
+                                            <Checkbox
+                                                disabled={feeDetails.payments.some((payment) =>
+                                                    feeDetails.feeStructures.some((feeStructure) =>
+                                                        feeStructure.feeGroups.some((feeGroup) =>
+                                                            payment.feePaid.some((feePaid) => feePaid.feeType === feeGroup.feeType && feePaid.paidAmount > 0)
+                                                        )
+                                                    )
+                                                )}
+                                                checked={feeDetails.feeStructures.every(feeStructure =>
+                                                    feeStructure.feeGroups.every(feeGroup =>
+                                                        isSelected(feeGroup) ||
+                                                        feeDetails.payments.some(payment =>
+                                                            payment.feePaid.some(feePaid =>
+                                                                feePaid.feeType === feeGroup.feeType && feePaid.paidAmount > 0
+                                                            )
+                                                        )
+                                                    )
+                                                )}
+                                                onChange={handleMasterCheckboxChange}
+                                            />
+                                        </th>
+                                        {['Fees Structure', 'Fees Type', 'Due Date', 'Amount', 'Status', 'Discount', 'Fine'].map((header) => (
+                                            <th key={header} className="px-5 py-3 font-medium text-gray-500 text-left">{header}</th>
+                                        ))}
+                                    </TableRow>
+                                </TableHeader>
+
+                                <TableBody>
+                                    {feeDetails.feeStructures?.map((feeStructure) =>
+                                        feeStructure.feeGroups?.map((feeGroup) => (
+                                            <TableRow className='border-gray-200 dark:border-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800' key={feeGroup._id}>
+                                                <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">
+                                                    <Checkbox
+                                                        disabled={feeDetails.payments.some((payment) =>
+                                                            payment.feePaid.some((feePaid) => feePaid.feeType === feeGroup.feeType)
+                                                        )}
+                                                        style={{
+                                                            opacity: feeDetails.payments.some((payment) =>
+                                                                payment.feePaid.some((feePaid) => feePaid.feeType === feeGroup.feeType)
+                                                            ) ? 0 : 1
+                                                        }}
+                                                        checked={isSelected(feeGroup)}
+                                                        onChange={() => handleFeeSelection(feeGroup)}
+                                                    />
+                                                </TableCell>
+                                                <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{feeStructure.name}</TableCell>
+                                                <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{feeGroup.feeType}</TableCell>
+                                                <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">
+                                                    {new Date(feeGroup.dueDate).toLocaleDateString()}
+                                                </TableCell>
+                                                <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">₹{feeGroup.amount}</TableCell>
+                                                <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">
+                                                    {setStatusForFeeGroups(feeGroup.feeType, feeGroup.dueDate, feeDetails.payments)}
+                                                </TableCell>
+                                                <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">₹0</TableCell>
+                                                <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">₹0</TableCell>
+                                            </TableRow>
+                                        ))
+                                    )}
+                                </TableBody>
+                            </Table>
+                        ) : (
+                            <div className="text-center text-gray-600 dark:text-gray-300 py-6">
+                                No fees found
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </Modal>
         </div>
     );
 };

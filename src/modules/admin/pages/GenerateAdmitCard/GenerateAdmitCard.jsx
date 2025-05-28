@@ -31,6 +31,7 @@ const GenerateAdmitCard = () => {
     const [allStudents, setAllStudents] = useState([])
     const [selectedStudents, setSelectedStudents] = useState([]);  // Track selected students
     const [loading, setLoading] = useState(false);
+    const [downloadLoading, setDownloadLoading] = useState(false)
     const [sections, setSections] = useState([]);
     const navigate = useNavigate()
     useEffect(() => {
@@ -115,13 +116,12 @@ const GenerateAdmitCard = () => {
     };
 
     const handleGenerateAdmitCardForSelected = async (forAll) => {
+        setDownloadLoading(true)
         const selectedStudentData = forAll ? allStudents : students.filter(student => selectedStudents.includes(student._id));
-        if (!forAll &&selectedStudentData.length === 0) {
+        if (!forAll && selectedStudentData.length === 0) {
             showToast('No students selected', 'error');
             return;
         }
-        console.log('sfskfskfsf',selectedStudentData)
-
         const blob = await pdf(
             <Document>
                 {selectedStudentData.map((student) => (
@@ -184,7 +184,7 @@ const GenerateAdmitCard = () => {
 
     const generateUrl = async (blob) => {
         console.log('Uploading Blob', blob);
-
+        setDownloadLoading(false)
         // Prepare FormData to send the blob to the server
         const formData = new FormData();
         formData.append('file', blob, 'Demand_Slips.pdf');  // 'file' matches the multer field name
@@ -202,7 +202,9 @@ const GenerateAdmitCard = () => {
             const responseData = await response.json();
             window.ReactNativeWebView.postMessage(responseData.pdfUrl);
             console.log('Uploaded successfully:', responseData);
+            setDownloadLoading(false)
         } catch (error) {
+            setDownloadLoading(false)
             console.error('Error uploading PDF:', error);
         }
     };
@@ -213,6 +215,12 @@ const GenerateAdmitCard = () => {
             <div className='w-full p-4 flex justify-between items-center'>
                 <div className='text-3xl font-medium'>Generate Admit Cards</div>
             </div>
+            {
+                downloadLoading &&
+                <div className="fixed inset-0 flex items-center justify-center bg-transparent z-50">
+                    <div className="h-16 w-16 animate-spin rounded-full border-4 border-solid border-white border-t-transparent"></div>
+                </div>
+            }
 
             <div className="grid grid-cols-2 p-4 gap-x-6 gap-y-5 lg:grid-cols-4">
                 <Select
@@ -280,7 +288,7 @@ const GenerateAdmitCard = () => {
                 </Button>
                 {selectedStudents.length > 0 && (
                     <Button
-                        onClick={()=>{
+                        onClick={() => {
                             handleGenerateAdmitCardForSelected()
                         }}
                         className=" bg-green-500 text-white rounded-lg hover:bg-gray-300 transition duration-300"

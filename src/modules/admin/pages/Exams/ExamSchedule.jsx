@@ -9,10 +9,12 @@ import Label from '../../../../components/form/Label';
 import { showToast } from '../../../../components/Toast';
 import { Link } from 'react-router-dom';
 import Select from '../../../../components/form/Select';
-import { MdDelete, MdOutlineModeEdit } from 'react-icons/md';
 import "flatpickr/dist/themes/material_blue.css";
 import DatePicker from "../../../../components/form/date-picker.tsx";
 import moment from 'moment';
+import { FaDownload } from 'react-icons/fa';
+import { pdf, Document, Page, Text, View, StyleSheet, Image, Font } from '@react-pdf/renderer';
+import { useUserContext } from '../../../../context/UserContext.jsx';
 const ExamSchedule = () => {
     const [examsList, setExamsList] = useState([]);
     const [selectedExam, setSelectedExam] = useState('');
@@ -27,6 +29,7 @@ const ExamSchedule = () => {
     const [ErrorMessage, setErrorMessage] = useState('');
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
+    const { school } = useUserContext();
     const [editId, setEditId] = useState(null); // to track the schedule being edited
 
     useEffect(() => {
@@ -181,6 +184,51 @@ const ExamSchedule = () => {
     const toggleExpand = (id) => {
         setExpandedScheduleId(prevId => (prevId === id ? null : id));
     };
+    const downloadExamSchedule = async (schedule) => {
+
+        const blob = await pdf(
+            <Document>
+                <Page size="A4" style={styles.page}>
+                    <View style={[styles.header, { flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: 'black', justifyContent: 'space-between' }]}>
+                        <View style={{ width: '10%' }}>
+                            <Image style={{ width: 50, height: 50 }} src={school?.logo} />
+                        </View>
+                        <View style={{ width: '80%' }}>
+
+                            <Text style={styles.title}>{school?.name}</Text>
+                            <Text style={{ fontFamily: 'RobotoR', fontSize: 14, marginTop: 5 }}>{school?.address}</Text>
+                            {console.log('examSchedule', schedule.exam)}
+                            <Text style={{ fontFamily: 'RobotoR', fontSize: 14 }}>{schedule.exam[0]?.examName?.name}, {schedule.exam[0]?.examName?.session}</Text>
+                        </View>
+                        <View style={{ width: '8%' }}>
+                            <Image style={{ width: 50, height: 50 }} src={school?.qrCodeUrl} />
+                        </View>
+                    </View>
+                    <View style={styles.table}>
+                        <View style={styles.tableRow}>
+                            <Text style={styles.tableCell}>Subject</Text>
+                            <Text style={styles.tableCell}>Date</Text>
+                            <Text style={styles.tableCell}>Start Time</Text>
+                            <Text style={styles.tableCell}>End Time</Text>
+                        </View>
+                        {schedule.exam.length == 0 ?
+                            <Text style={{ textAlign: 'center', fontFamily: 'RobotoB' }}>No Exams</Text> :
+                            schedule.exam.map((exam, index) => (
+                                <View style={styles.tableRow} key={index}>
+                                    {console.log('examSchedule', exam)}
+                                    <Text style={styles.tableCell}>{exam.subject?.name}</Text>
+                                    <Text style={styles.tableCell}>{moment(exam.date).format('DD/MM/YYYY')}</Text>
+                                    <Text style={styles.tableCell}>{exam.startTime}</Text>
+                                    <Text style={styles.tableCell}>{exam.endTime}</Text>
+                                </View>
+                            ))}
+                    </View>
+                </Page>
+            </Document>
+        ).toBlob();
+        saveAs(blob, `Admit_Cards_${moment().format('YYYY-MM-DD')}.pdf`);
+        generateUrl(blob)
+    };
     return (
         <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-white/[0.03] dark:border-gray-900">
             <div className='w-full p-4 flex justify-between items-center'>
@@ -220,8 +268,8 @@ const ExamSchedule = () => {
                                             </td>
                                             <td className="px-5 py-4 text-gray-700 dark:text-gray-300">
                                                 {/* Action can be edit/delete buttons if needed */}
-                                                <Link onClick={() => handleDelete(schedule._id)}>
-                                                    <MdDelete className='text-gray-700 dark:text-white hover:text-red-500 dark:hover:text-red-400' />
+                                                <Link onClick={() => downloadExamSchedule(schedule)}>
+                                                    <FaDownload className='text-gray-700 dark:text-white hover:text-red-500 dark:hover:text-red-400' />
                                                 </Link>
                                             </td>
                                         </tr>
@@ -445,5 +493,14 @@ const ExamSchedule = () => {
         </div>
     );
 };
-
+const styles = StyleSheet.create({
+    page: { padding: 20 },
+    header: { textAlign: 'center', marginBottom: 10 },
+    title: { fontSize: 18, fontFamily: 'RobotoB', textAlign: 'center' },
+    table: { display: 'table', width: '100%', borderStyle: 'solid', borderWidth: 1, marginTop: 10 },
+    tableRow: { flexDirection: 'row' },
+    tableCell: { flex: 1, borderWidth: 1, padding: 5, fontSize: 10 },
+    lable: { fontFamily: 'RobotoR', fontSize: 14 },
+    bold: { fontFamily: 'RobotoB', fontSize: 14 },
+});
 export default ExamSchedule;
