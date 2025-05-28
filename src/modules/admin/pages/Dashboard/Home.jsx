@@ -85,21 +85,21 @@ const AdminHome = () => {
         {/* Metric Cards for Admin */}
         {/* Students */}
         <Link to="/admin/student">
-          <MetricCard icon={<PiStudentFill />} title="Students" count={dashboardData?.counts?.totalStudents} />
+          <MetricCard icon={<PiStudentFill />} title="Students" count={students} />
         </Link>
 
         {/* Classes */}
         <Link to="/admin/class">
-          <MetricCard icon={<HiMiniAcademicCap />} title="Classes" count={dashboardData?.counts?.totalClasses} />
+          <MetricCard icon={<HiMiniAcademicCap />} title="Classes" count={classes} />
         </Link>
 
         {/* Sections */}
         <Link to="/admin/section">
-          <MetricCard icon={<BsFillSignIntersectionFill />} title="Sections" count={dashboardData?.counts?.totalSections} />
+          <MetricCard icon={<BsFillSignIntersectionFill />} title="Sections" count={sections} />
         </Link>
 
         {/* Payments */}
-        <MetricCard icon={<MdPayment />} title="Payments" count={dashboardData?.counts?.totalPayments} />
+        <MetricCard icon={<MdPayment />} title="Payments" count={payments} />
       </div>
 
       {/* Bar Chart */}
@@ -156,7 +156,7 @@ const AdminHome = () => {
       </div>
       <div className="bg-white p-6 rounded-lg shadow-md mb-8 mt-10 dark:bg-gray-800">
         <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-          Classes
+          Student Enrollment
         </h3>
         <Chart
           options={{

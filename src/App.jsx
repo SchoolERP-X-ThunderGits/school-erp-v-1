@@ -43,6 +43,7 @@ import SchoolDetails from './modules/admin/pages/Schools/SchoolDetails';
 import "flatpickr/dist/flatpickr.css";
 import Section from './modules/admin/pages/Academics/Section';
 import House from './modules/admin/pages/Academics/House';
+import PaymentHistory from './modules/admin/pages/Payment/PaymentHistory';
 function App() {
   const [loading, setLoading] = useState(true);
   const { pathname } = useLocation();
@@ -297,6 +298,12 @@ function App() {
             path="/admin/Subscription-plans"
             element={
               <SubscriptionPlans />
+            }
+          />
+          <Route
+            path="/admin/payment-history"
+            element={
+              <PaymentHistory />
             }
           />
 

@@ -78,6 +78,13 @@ const adminNavItems: NavItem[] = [
       { name: "Subscriptions", path: "/admin/subscriptions" },
     ],
   },
+  {
+    icon: <CiSettings />,
+    name: "Payment",
+    subItems: [
+      { name: "Payment History", path: "/admin/payment-history" },
+    ],
+  },
 ];
 
 const superadminNavItems: NavItem[] = [

@@ -280,9 +280,7 @@ const GenerateAdmitCard = () => {
                 </Button>
                 {selectedStudents.length > 0 && (
                     <Button
-                        onClick={()=>{
-                            handleGenerateAdmitCardForSelected()
-                        }}
+                        onClick={handleGenerateAdmitCardForSelected}
                         className=" bg-green-500 text-white rounded-lg hover:bg-gray-300 transition duration-300"
                     >
                         <FaDownload className="mr-2" /> Download Admit Cards

@@ -105,7 +105,7 @@ const House = () => {
         <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-800">
             {/* Add House Button */}
             <div className='w-full p-4 flex justify-between items-center'>
-                <div className='text-3xl font-medium text-gray-800 dark:text-white'>Houses List</div>
+                <div className='text-3xl font-medium text-gray-800 dark:text-white'>Housees List</div>
                 <Button onClick={() => { setShowModal(true), setNewHouseName(''),setNewHouseColor(''), setErrorMessage(''), setEditMode(false); }}>
                     <Link>Add House</Link>
                 </Button>

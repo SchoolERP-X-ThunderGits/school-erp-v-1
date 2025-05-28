@@ -58,6 +58,7 @@ const apiName = {
   studentPayment: 'payment/order',
   createRazorpayOrder: "payment/order",
   verifyRazorpayPayment: "payment/verify",
+  getPayHistory: "payment/getAll",
   houses: "houses",
 
 };

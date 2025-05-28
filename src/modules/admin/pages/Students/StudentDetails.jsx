@@ -127,7 +127,7 @@ const StudentDetails = () => {
     const renderProfile = () => (
         <div className="p-6 bg-gray-100 dark:bg-gray-900 min-h-screen transition-colors duration-300">
             <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                
+
                 {/* Profile Card */}
                 <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg p-6 flex flex-col items-center text-center">
                     <img
@@ -141,37 +141,41 @@ const StudentDetails = () => {
                     <p className="text-sm text-gray-600 dark:text-gray-400">
                         Admission No: {student.admission_Number}
                     </p>
+                    <p className="text-sx text-red-500 dark:text-red-500 font-bold">
+                        Due Amount: {student.due_amount ? student?.due_amount : 0} ₹
+                    </p>
+
                 </div>
-    
+
                 {/* Info Cards */}
                 <InfoCard title="Class Info">
                     <InfoItem label="Class" value={student?.class_Id?.name} />
                     <InfoItem label="Section" value={student?.section} />
                     <InfoItem label="Roll No" value={student?.roll_Number} />
                 </InfoCard>
-    
+
                 <InfoCard title="Contact Info">
                     <InfoItem label="Email" value={student.email} />
                     <InfoItem label="Phone" value={student.contact_Number} />
                     <InfoItem label="Alternate" value={student.alternet_Contact_Number} />
                 </InfoCard>
-    
+
                 <InfoCard title="Personal Details">
                     <InfoItem label="Gender" value={student.gender} />
                     <InfoItem label="DOB" value={new Date(student.date_Of_Birth).toLocaleDateString()} />
                     <InfoItem label="Blood Group" value={student.blood_Group} />
                 </InfoCard>
-    
+
                 <InfoCard title="Parents Info">
                     <InfoItem label="Father" value={`${student.father_Name} (${student.father_Occupation})`} />
                     <InfoItem label="Mother" value={`${student.mother_Name} (${student.mother_Occupation})`} />
                 </InfoCard>
-    
+
                 <InfoCard title="Address Info">
                     <InfoItem label="Permanent" value={student.permanent_Address} />
                     <InfoItem label="Correspondence" value={student.address_For_Correspondence} />
                 </InfoCard>
-    
+
                 {/* Action Button */}
                 <div className="col-span-full flex justify-end mt-4">
                     <button
@@ -184,7 +188,7 @@ const StudentDetails = () => {
             </div>
         </div>
     );
-    
+
     // InfoCard component
     const InfoCard = ({ title, children }) => (
         <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg p-6">
@@ -194,7 +198,7 @@ const StudentDetails = () => {
             <div className="space-y-2">{children}</div>
         </div>
     );
-    
+
     // InfoItem component
     const InfoItem = ({ label, value }) => (
         <p className="text-gray-700 dark:text-gray-300">
@@ -202,7 +206,7 @@ const StudentDetails = () => {
             <span>{value}</span>
         </p>
     );
-    
+
 
     const renderFee = () => (
         <div className="overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">

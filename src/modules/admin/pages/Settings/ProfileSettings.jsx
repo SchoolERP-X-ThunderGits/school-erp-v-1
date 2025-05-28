@@ -113,6 +113,8 @@ const ProfileSettings = () => {
                                 { label: 'Subdomain', value: profileData?.subdomain },
                                 { label: 'Email', value: profileData?.email },
                                 { label: 'Address', value: profileData?.address },
+                                { label: 'Razorpay Key Id', value: profileData?.razorPayID },
+                                { label: 'Razorpay Key Secret', value: profileData?.razorPaySecret },
                             ].map(({ label, value }, index) => (
                                 value && (
                                     <div key={index} className="card p-4 rounded-xl shadow-sm bg-gray-50 dark:bg-gray-700 hover:bg-indigo-50 dark:hover:bg-gray-600 transition duration-300">

@@ -129,15 +129,12 @@ const AddStudent = () => {
         setBulkStudentModal(false)
         navigate('/admin/student')
       } else {
-        // showToast(data?.message, 'success')
-        setBulkStudentModal(false)
-        navigate('/admin/student')
-        showToast(data?.failed[0]?.error, 'error')
+        showToast('Invalid file upload, please try again.', 'error')
       }
 
     } catch (error) {
       console.error("Error uploading file:", error);
-      showToast('Invalid file upload, please try again.', 'error')
+      // setResponseMessage(`Error: ${error.message}`);
     }
   };
 
@@ -300,7 +297,7 @@ const AddStudent = () => {
       ...prevFormData,
       date_Of_Admission: formData.date_Of_Admission != '' ? formData.date_Of_Admission.split('T')[0] : new Date().toISOString().split('T')[0]
     }));
-    if (!formData.first_Name || !formData.last_Name || !formData?.aadhar_number || !formData?.section || !formData?.session || !formData?.class_Id || !formData?.gender || !formData?.permanent_Address || !formData?.date_Of_Birth || !formData?.contact_Number || !formData?.date_Of_Admission || !formData?.father_Name || !formData?.mother_Name || !formData?.student_Photo || !formData?.category || !formData?.address_for_id) {
+    if (!formData.first_Name || !formData.last_Name || !formData?.aadhar_number || !formData?.section || !formData?.session  || !formData?.class_Id || !formData?.gender || !formData?.permanent_Address || !formData?.date_Of_Birth || !formData?.contact_Number || !formData?.date_Of_Admission || !formData?.father_Name || !formData?.mother_Name || !formData?.student_Photo || !formData?.category || !formData?.address_for_id) {
       showToast("Please fill all the required fields.", 'error');
       return;
     }
@@ -691,8 +688,8 @@ const AddStudent = () => {
                       />
                     </div>
 
-                    {formData?.select_tranport == 'Yes' && <div className="mb-4 ">
-                      <Label className="block text-gray-700">Transportation Address<span className="text-red-500">*</span>:</Label>
+                    <div className="mb-4 ">
+                      <Label className="block text-gray-700">Transportation Address:</Label>
                       <Input
                         type="text"
                         name="transport_address"
@@ -702,7 +699,7 @@ const AddStudent = () => {
                         className="mt-2 p-2 border border-gray-300 rounded-md w-full"
                       />
                     </div>
-                    }
+
                     {/* Father's Name */}
                     <div className="mb-4">
                       <Label className="block text-gray-700">Father's Name <span className="text-red-500">*</span>:</Label>
