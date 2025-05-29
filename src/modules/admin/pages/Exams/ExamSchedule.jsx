@@ -204,6 +204,11 @@ const ExamSchedule = () => {
                             <Image style={{ width: 50, height: 50 }} src={school?.qrCodeUrl} />
                         </View>
                     </View>
+                    <View>
+
+                        <Text style={[styles.lable, { marginVertical: 5 }]}>Class:    <Text style={styles.bold}>{schedule.class?.name}</Text></Text>
+                        <Text style={[styles.lable, { marginVertical: 5 }]}>Section:    <Text style={styles.bold}>{schedule.class?.sections.map(i => i.name).join(', ')}</Text></Text>
+                    </View>
                     <View style={styles.table}>
                         <View style={styles.tableRow}>
                             <Text style={styles.tableCell}>Subject</Text>
@@ -215,7 +220,6 @@ const ExamSchedule = () => {
                             <Text style={{ textAlign: 'center', fontFamily: 'RobotoB' }}>No Exams</Text> :
                             schedule.exam.map((exam, index) => (
                                 <View style={styles.tableRow} key={index}>
-                                    {console.log('examSchedule', exam)}
                                     <Text style={styles.tableCell}>{exam.subject?.name}</Text>
                                     <Text style={styles.tableCell}>{moment(exam.date).format('DD/MM/YYYY')}</Text>
                                     <Text style={styles.tableCell}>{exam.startTime}</Text>

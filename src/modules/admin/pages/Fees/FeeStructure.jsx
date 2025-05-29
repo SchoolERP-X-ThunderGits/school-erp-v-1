@@ -12,6 +12,8 @@ import { showToast } from '../../../../components/Toast';
 import { Link } from 'react-router-dom';
 import Select from '../../../../components/form/Select';
 import { FaTrash } from 'react-icons/fa';
+import DatePicker from '../../../../components/form/date-picker';
+import moment from 'moment';
 const FeeStructure = () => {
     const [feeStructures, setFeeStructures] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -161,29 +163,19 @@ const FeeStructure = () => {
     };
 
     // Handle Fee Type Change
-    const handleFeeGroupChange = (e, index) => {
-        const { name, value } = e.target;
+    const handleFeeGroupChange = (field, index, value) => {
         const updatedFeeGroups = [...formData.feeGroups];
 
-        if (name === 'feeType') {
+        if (field === 'feeType') {
             const selectedFeeType = feeTypes.find(fee => fee.name === value);
-            updatedFeeGroups[index][name] = selectedFeeType ? selectedFeeType.name : '';
-        } else if (name === 'dueDate') {
-            // Remove any non-digit or slash characters
-            let cleaned = value.replace(/[^\d]/g, '');
-
-            // Auto-insert slash after 2 digits
-            if (cleaned.length >= 3) {
-                cleaned = `${cleaned.slice(0, 2)}/${cleaned.slice(2, 4)}`;
-            }
-
-            updatedFeeGroups[index][name] = cleaned;
+            updatedFeeGroups[index][field] = selectedFeeType ? selectedFeeType.name : '';
         } else {
-            updatedFeeGroups[index][name] = value;
+            updatedFeeGroups[index][field] = value;
         }
 
         setFormData({ ...formData, feeGroups: updatedFeeGroups });
     };
+
 
     const handleFeeTypeGroupChange = (e, index) => {
         // const { name, value } = e.target;
@@ -398,11 +390,21 @@ const FeeStructure = () => {
                                                 type="number"
                                                 name="amount"
                                                 value={feeGroup.amount}
-                                                onChange={(e) => handleFeeGroupChange(e, index)}
+                                                onChange={(e) => handleFeeGroupChange(e.target.name, index, e.target.value)}
                                                 placeholder="Amount"
                                                 className="bg-gray-50 dark:bg-gray-700"
                                             />
-                                            <Input
+
+                                            <DatePicker
+                                                id="dueDate"
+                                                placeholder="Select a date"
+                                                onChange={(date) => {
+                                                    handleFeeGroupChange('dueDate', index, moment(date[0]).format('YYYY/MM/DD'));
+                                                }}
+                                                mode="single"
+                                            />
+
+                                            {/* <Input
                                                 type="date"
                                                 name="dueDate"
                                                 value={feeGroup.dueDate}
@@ -411,7 +413,7 @@ const FeeStructure = () => {
                                                 className="bg-gray-50 dark:bg-gray-700"
                                                 placeholder="Due Date"
                                                 maxLength={5}
-                                            />
+                                            /> */}
 
                                             <button
                                                 disabled={formData.feeGroups.length === 1}
