@@ -64,7 +64,7 @@ const ExamList = () => {
                       {exam.subject?.name}
                     </TableCell>
                     <TableCell className="py-3 px-6 text-sm text-gray-800 dark:text-gray-200">
-                      {exam.class?.name} ({exam.class?.sections?.join(', ')})
+                      {exam.class?.name} ({exam.class?.sections?.map(i=>i.name)?.join(', ')})
                     </TableCell>
                     <TableCell className="py-3 px-6 text-sm text-gray-800 dark:text-gray-200">
                       {moment(exam.date).format('dddd, DD MMMM YYYY')}

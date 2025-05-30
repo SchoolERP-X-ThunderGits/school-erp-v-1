@@ -21,7 +21,7 @@ const AdminHome = () => {
   const [students, setStudents] = useState([]);
   const [classes, setClasses] = useState([]);
   const [sections, setSections] = useState(0);
-  const [payments, setPayments] = useState(4);
+  const [payments, setPayments] = useState();
 
   // Super Admin State
   const [superAdminData, setSuperAdminData] = useState(null);
@@ -46,6 +46,8 @@ const AdminHome = () => {
     try {
       const result = await getService(`${apiName.schoolDashboard}${school?._id}`);
       setDashboardData(result?.data);
+      console.log('fldslss',result)
+      setPayments(result?.data?.counts?.totalPayments)
     } catch (error) {
       showToast('Failed to load profile details', 'error');
       setLoading(false);

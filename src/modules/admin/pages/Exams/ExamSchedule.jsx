@@ -230,7 +230,7 @@ const ExamSchedule = () => {
                 </Page>
             </Document>
         ).toBlob();
-        saveAs(blob, `Admit_Cards_${moment().format('YYYY-MM-DD')}.pdf`);
+        saveAs(blob, `Exam_schedule${moment().format('YYYY-MM-DD')}.pdf`);
         generateUrl(blob)
     };
     return (
@@ -249,7 +249,7 @@ const ExamSchedule = () => {
                         <Table className="w-full text-left border-collapse">
                             <thead className="bg-gray-100 dark:bg-gray-800">
                                 <tr>
-                                    {['Exam Name', 'Subjects', 'Action'].map((header) => (
+                                    {['Exam Name', 'Subjects', 'Class', 'Action'].map((header) => (
                                         <th key={header} className="px-5 py-3 font-medium text-gray-500 dark:text-gray-400 text-left">
                                             {header}
                                         </th>
@@ -271,6 +271,9 @@ const ExamSchedule = () => {
                                                 {schedule.exam.map((e) => e.subject.name).join(', ')}
                                             </td>
                                             <td className="px-5 py-4 text-gray-700 dark:text-gray-300">
+                                                {schedule.class?.name}
+                                            </td>
+                                            <td className="px-5 py-4 text-gray-700 dark:text-gray-300">
                                                 {/* Action can be edit/delete buttons if needed */}
                                                 <Link onClick={() => downloadExamSchedule(schedule)}>
                                                     <FaDownload className='text-gray-700 dark:text-white hover:text-red-500 dark:hover:text-red-400' />
@@ -281,11 +284,11 @@ const ExamSchedule = () => {
                                         {/* Expanded section */}
                                         {expandedScheduleId === schedule.class._id && (
                                             <tr>
-                                                <td colSpan={3} className="bg-gray-50 dark:bg-gray-700 px-5 py-4">
+                                                <td colSpan={4} className="bg-gray-50 dark:bg-gray-700 px-5 py-4">
                                                     <table className="min-w-full table-auto bg-white dark:bg-gray-600">
                                                         <thead className="bg-gray-200 dark:bg-gray-800">
                                                             <tr>
-                                                                {['Exam Date', 'Start Time', 'End Time', 'Subject'].map((header) => (
+                                                                {['Exam Date', 'Start Time', 'End Time', 'Subject', 'Session'].map((header) => (
                                                                     <th
                                                                         key={header}
                                                                         className="px-5 py-3 font-medium text-gray-500 dark:text-gray-300 text-left"
@@ -312,6 +315,9 @@ const ExamSchedule = () => {
                                                                     </td>
                                                                     <td className="px-5 py-2 text-gray-700 dark:text-gray-300">
                                                                         {examItem.subject.name}
+                                                                    </td>
+                                                                    <td className="px-5 py-2 text-gray-700 dark:text-gray-300">
+                                                                        {examItem.examName.session}
                                                                     </td>
                                                                 </tr>
                                                             ))}
