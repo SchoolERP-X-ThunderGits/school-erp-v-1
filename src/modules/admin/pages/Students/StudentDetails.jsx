@@ -307,8 +307,8 @@ const StudentDetails = () => {
             <Modal isOpen={payModal} onClose={() => {
                 setPayModal(false);
                 setErrorMessage('');
-            }} className="max-w-[700px] m-4">
-                <div className="no-scrollbar relative w-full max-w-[700px] h-[80vh] overflow-hidden rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
+            }} className="max-w-[1000px] m-4">
+                <div className="relative w-full max-w-[1000px] h-[80vh] overflow-hidden rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
                     <div className='w-full p-4 flex justify-between items-center'>
                         <div className='text-3xl font-medium text-gray-800 dark:text-gray-200'>Fee Info</div>
                         {selectedFees.length > 0 && (
