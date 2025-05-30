@@ -127,7 +127,8 @@ const FeeStructure = () => {
 
     };
 
-    const handleEditFeeStructure = (feeData) => {
+    const handleEditFeeStructure = (e,feeData) => {
+        e.preventDefault()
         setShowModal(true);
         setEditMode(true);
         setFeeToDelete(feeData._id);
@@ -137,7 +138,7 @@ const FeeStructure = () => {
             feeGroups: feeData.feeGroups.map(group => ({
                 feeType: group.feeType,
                 amount: group.amount,
-                dueDate: group.dueDate.split('T')[0] // Removing everything after the 'T' from the dueDate
+                dueDate: group.dueDate?.split('T')[0] // Removing everything after the 'T' from the dueDate
             }))
         });
     };
@@ -258,7 +259,7 @@ const FeeStructure = () => {
                                             </TableCell>
                                             <TableCell className="px-5 py-4">
                                                 <div className="flex gap-3 justify-start items-center">
-                                                    <Link onClick={() => handleEditFeeStructure(structure)}>
+                                                    <Link onClick={(e) => handleEditFeeStructure(e,structure)}>
                                                         <MdOutlineModeEdit className="dark:text-white" />
                                                     </Link>
                                                     <Link onClick={() => handleDeleteFeeStructure(structure?._id)}>
