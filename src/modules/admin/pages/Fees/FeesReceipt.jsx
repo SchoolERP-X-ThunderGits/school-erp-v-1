@@ -36,8 +36,8 @@ const FeeReceipt = () => {
                     payTo: {
                         name: school?.name,
                         address: school?.address,
-                        stateCountry: 'Rohtas, India',
-                        email: 'xyz@gmail.com',
+                        stateCountry: 'India',
+                        email:school?.email,
                     },
                     fees: data.feePaid.map(fee => ({
                         type: fee.feeType,
