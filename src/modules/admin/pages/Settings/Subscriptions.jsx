@@ -155,7 +155,7 @@ const Subscriptions = () => {
               <div className="p-8">
                 <h3 className="text-xl font-semibold text-gray-800 dark:text-white">{plan.name}</h3>
                 <p className="mt-2 text-gray-500 dark:text-gray-400">{plan.description}</p>
-                <p className="mt-4 text-3xl font-bold text-gray-900 dark:text-white">{`$${plan.price}/month`}</p>
+                <p className="mt-4 text-3xl font-bold text-gray-900 dark:text-white">{`₹${plan.price}/month`}</p>
                 <ul className="mt-6 space-y-3">
                   {plan.features.map((feature, index) => (
                     <li key={feature._id} className="flex items-center text-gray-700 dark:text-gray-300">

@@ -127,7 +127,7 @@ const FeeStructure = () => {
 
     };
 
-    const handleEditFeeStructure = (e,feeData) => {
+    const handleEditFeeStructure = (e, feeData) => {
         e.preventDefault()
         setShowModal(true);
         setEditMode(true);
@@ -138,9 +138,11 @@ const FeeStructure = () => {
             feeGroups: feeData.feeGroups.map(group => ({
                 feeType: group.feeType,
                 amount: group.amount,
-                dueDate: group.dueDate?.split('T')[0] // Removing everything after the 'T' from the dueDate
+                dueDate: group.dueDate // Removing everything after the 'T' from the dueDate
             }))
         });
+        
+        
     };
 
     const handleDeleteFeeStructure = (classId) => {
@@ -259,7 +261,7 @@ const FeeStructure = () => {
                                             </TableCell>
                                             <TableCell className="px-5 py-4">
                                                 <div className="flex gap-3 justify-start items-center">
-                                                    <Link onClick={(e) => handleEditFeeStructure(e,structure)}>
+                                                    <Link onClick={(e) => handleEditFeeStructure(e, structure)}>
                                                         <MdOutlineModeEdit className="dark:text-white" />
                                                     </Link>
                                                     <Link onClick={() => handleDeleteFeeStructure(structure?._id)}>
@@ -398,10 +400,11 @@ const FeeStructure = () => {
 
                                             <DatePicker
                                                 id="dueDate"
-                                                placeholder="Select a date"
+                                                placeholder="Edit Date"
                                                 onChange={(date) => {
                                                     handleFeeGroupChange('dueDate', index, moment(date[0]).format('YYYY/MM/DD'));
                                                 }}
+                                               defaultDate={feeGroup.dueDate !== '' ? feeGroup.dueDate.split('T')[0] : new Date().toISOString().split('T')[0]}
                                                 mode="single"
                                             />
 
