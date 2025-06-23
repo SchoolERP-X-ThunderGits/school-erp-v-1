@@ -101,7 +101,7 @@ const Section = () => {
         <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-800">
             {/* Add Section Button */}
             <div className='w-full p-4 flex justify-between items-center'>
-                <div className='text-3xl font-medium text-gray-800 dark:text-white'>Sectiones List</div>
+                <div className='text-3xl font-medium text-gray-800 dark:text-white'>Sections List</div>
                 <Button onClick={() => { setShowModal(true), setNewSectionName(''), setErrorMessage(''), setEditMode(false); }}>
                     <Link>Add Section</Link>
                 </Button>
