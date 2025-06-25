@@ -380,7 +380,7 @@ const GenerateDemandSlip = () => {
                     /> */}
                         <DatePicker
                             id="startDate"
-                            placeholder="Select a date"
+                            placeholder="Select start date"
                             onChange={(date) => {
                                 // handleStartDateChange(moment(date[0]).format('YYYY/MM/DD'))
                                 setStartDate(date[0]).format('YYYY/MM/DD');
@@ -391,7 +391,7 @@ const GenerateDemandSlip = () => {
                         />
                         <DatePicker
                             id="startDate"
-                            placeholder="Select a date"
+                            placeholder="Select end date"
                             onChange={(date) => {
                                 setEndDate(date[0]).format('YYYY/MM/DD');
                                 // handleEndDateChange(moment(date[0]).format('YYYY/MM/DD'))
