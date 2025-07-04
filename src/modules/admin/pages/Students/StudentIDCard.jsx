@@ -111,6 +111,7 @@ const StudentIDCard = () => {
     const { school } = useUserContext();
     const [templateModalOpen, setTemplateModalOpen] = useState(false); // Modal visibility
     const [selectedTemplate, setSelectedTemplate] = useState(); // Default to portrait template
+    const [DownloadLoader, setDownloadLoader] = useState(false)
     const navigate = useNavigate()
     useEffect(() => {
         setLoading(true);
@@ -255,6 +256,7 @@ const StudentIDCard = () => {
 
 
     const generateMultipleIdCardPdf = async () => {
+        setDownloadLoader(true)
         const selectedStudentData = students.filter(student => selectedStudents.includes(student._id));
         const blob = await pdf(
             <Document>
@@ -445,6 +447,7 @@ const StudentIDCard = () => {
         ).toBlob();
         saveAs(blob, `Student_ID_Cards_${moment().format('YYYYMMDD')}.pdf`);
         generateUrl(blob)
+        setLoading(false)
     };
     const generateUrl = async (blob) => {
         console.log('Uploading Blob', blob);
@@ -466,8 +469,10 @@ const StudentIDCard = () => {
             const responseData = await response.json();
             setSelectedStudents([])
             window.ReactNativeWebView.postMessage(responseData.pdfUrl);
+            setDownloadLoader(false)
             console.log('Uploaded successfully:', responseData);
         } catch (error) {
+            setDownloadLoader(false)
             console.error('Error uploading PDF:', error);
         }
     };
@@ -481,6 +486,12 @@ const StudentIDCard = () => {
     return (
         <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-900">
         {/* Add Class Button */}
+        {
+                DownloadLoader &&
+                <div className="fixed inset-0 flex items-center justify-center bg-transparent z-50">
+                    <div className="h-16 w-16 animate-spin rounded-full border-4 border-solid border-white border-t-transparent"></div>
+                </div>
+            }
         <div className='w-full p-4 flex justify-between items-center'>
             <div className='text-3xl font-medium text-gray-800 dark:text-white'>Students ID Card</div>
         </div>
