@@ -27,6 +27,7 @@ const GenerateDemandSlip = () => {
     const [endDate, setEndDate] = useState('');
     const [selectAll, setSelectAll] = useState(false); // New state for "Select All" checkbox
     const [feeDetails, setFeeDetails] = useState([]);
+    const [DownloadLoader, setDownloadLoader] = useState(false)
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -115,6 +116,7 @@ const GenerateDemandSlip = () => {
 
     // Generate PDF for all selected students
     const generateSelectedStudentsPdf = async () => {
+        setDownloadLoader(true)
         const selectedStudentData = feeDetails.filter((student) =>
             selectedStudents.includes(student.studentId)
         );
@@ -245,6 +247,7 @@ const GenerateDemandSlip = () => {
         ).toBlob();
         saveAs(blob, `Demand_Slips_${selectedStudentData.length}Students.pdf`);
         generateUrl(blob)
+        setDownloadLoader(false)
     };
 
     const generateUrl = async (blob) => {
@@ -265,9 +268,11 @@ const GenerateDemandSlip = () => {
                 throw new Error('Failed to upload PDF');
             }
             const responseData = await response.json();
+            setDownloadLoader(false)
             window.ReactNativeWebView.postMessage(responseData.pdfUrl);
             console.log('Uploaded successfully:', responseData);
         } catch (error) {
+            setDownloadLoader(false)
             console.error('Error uploading PDF:', error);
         }
     };
@@ -344,6 +349,12 @@ const GenerateDemandSlip = () => {
             <div className='w-full p-4 flex justify-between items-center'>
                 <div className='text-3xl font-medium text-gray-800 dark:text-white'>Generate Demand Slips</div>
             </div>
+            {
+                DownloadLoader &&
+                <div className="fixed inset-0 flex items-center justify-center bg-transparent z-50">
+                    <div className="h-16 w-16 animate-spin rounded-full border-4 border-solid border-white border-t-transparent"></div>
+                </div>
+            }
             {loading ? (
                 <Loader />
             ) : (
