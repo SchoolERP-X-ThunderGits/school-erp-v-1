@@ -305,98 +305,104 @@ const StudentDetails = () => {
             )}
 
             <Modal isOpen={payModal} onClose={() => {
-    setPayModal(false);
-    setErrorMessage('');
-}} className="max-w-[1000px] m-4">
-  <div className="no-scrollbar relative w-full max-w-[1000px] rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
-    {/* Header */}
-    <div className='w-full p-4 flex justify-between items-center'>
-      <div className='text-3xl font-medium text-gray-800 dark:text-gray-200'>Fee Info</div>
-      {selectedFees.length > 0 && (
-        <Button onClick={(e) => handleCollectFee(e)}>
-          <Link>Collect Fee</Link>
-        </Button>
-      )}
-    </div>
+                setPayModal(false);
+                setErrorMessage('');
+            }} className="max-w-[1000px] m-4">
+                <div className="no-scrollbar relative w-full max-w-[1000px] rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
+                    {/* Header */}
+                    <div className='w-full p-4 flex justify-between items-center'>
+                        <div className='text-3xl font-medium text-gray-800 dark:text-gray-200'>Fee Info</div>
+                        {selectedFees.length > 0 && (
+                            <Button onClick={(e) => handleCollectFee(e)}>
+                                <Link>Collect Fee</Link>
+                            </Button>
+                        )}
+                    </div>
 
-    {/* Scrollable Table Wrapper */}
-    <div className="overflow-y-auto max-h-[60vh] overflow-x-auto rounded-md border border-gray-200 dark:border-gray-800">
-      {feeDetails && feeDetails.feeStructures && feeDetails.feeStructures.length > 0 ? (
-        <Table className="w-full min-w-[800px] text-left border-collapse">
-          <TableHeader className='bg-gray-100 dark:bg-gray-800'>
-            <TableRow>
-              <th className='px-5 py-3 font-medium text-gray-500 text-left'>
-                <Checkbox
-                  disabled={feeDetails.payments.some((payment) =>
-                    feeDetails.feeStructures.some((feeStructure) =>
-                      feeStructure.feeGroups.some((feeGroup) =>
-                        payment.feePaid.some((feePaid) =>
-                          feePaid.feeType === feeGroup.feeType && feePaid.paidAmount > 0
-                        )
-                      )
-                    )
-                  )}
-                  checked={feeDetails.feeStructures.every(feeStructure =>
-                    feeStructure.feeGroups.every(feeGroup =>
-                      isSelected(feeGroup) ||
-                      feeDetails.payments.some(payment =>
-                        payment.feePaid.some(feePaid =>
-                          feePaid.feeType === feeGroup.feeType && feePaid.paidAmount > 0
-                        )
-                      )
-                    )
-                  )}
-                  onChange={handleMasterCheckboxChange}
-                />
-              </th>
-              {['Fees Structure', 'Fees Type', 'Due Date', 'Amount', 'Status', 'Discount', 'Fine'].map((header) => (
-                <th key={header} className="px-5 py-3 font-medium text-gray-500 text-left">{header}</th>
-              ))}
-            </TableRow>
-          </TableHeader>
+                    {/* Scrollable Table Wrapper */}
+                    <div className="overflow-y-auto max-h-[60vh] overflow-x-auto rounded-md border border-gray-200 dark:border-gray-800">
+                        {feeDetails && feeDetails.feeStructures && feeDetails.feeStructures.length > 0 ? (
+                            <Table className="w-full min-w-[800px] text-left border-collapse">
+                                <TableHeader className='bg-gray-100 dark:bg-gray-800'>
+                                    <TableRow>
+                                        <th className='px-5 py-3 font-medium text-gray-500 text-left'>
+                                            <Checkbox
+                                                disabled={feeDetails.payments.some((payment) =>
+                                                    feeDetails.feeStructures.some((feeStructure) =>
+                                                        feeStructure.feeGroups.some((feeGroup) =>
+                                                            payment.feePaid.some((feePaid) =>
+                                                                feePaid.feeType === feeGroup.feeType && feePaid.paidAmount > 0
+                                                            )
+                                                        )
+                                                    )
+                                                )}
+                                                checked={feeDetails.feeStructures.every(feeStructure =>
+                                                    feeStructure.feeGroups.every(feeGroup =>
+                                                        isSelected(feeGroup) ||
+                                                        feeDetails.payments.some(payment =>
+                                                            payment.feePaid.some(feePaid =>
+                                                                feePaid.feeType === feeGroup.feeType && feePaid.paidAmount > 0
+                                                            )
+                                                        )
+                                                    )
+                                                )}
+                                                onChange={handleMasterCheckboxChange}
+                                            />
+                                        </th>
+                                        {['Fees Structure', 'Fees Type', 'Due Date', 'Amount', 'Status', 'Discount', 'Fine'].map((header) => (
+                                            <th key={header} className="px-5 py-3 font-medium text-gray-500 text-left">{header}</th>
+                                        ))}
+                                    </TableRow>
+                                </TableHeader>
 
-          <TableBody>
-            {feeDetails.feeStructures?.map((feeStructure) =>
-              feeStructure.feeGroups?.map((feeGroup) => (
-                <TableRow className='border-gray-200 dark:border-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800' key={feeGroup._id}>
-                  <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">
-                    <Checkbox
-                      disabled={feeDetails.payments.some((payment) =>
-                        payment.feePaid.some((feePaid) => feePaid.feeType === feeGroup.feeType)
-                      )}
-                      style={{
-                        opacity: feeDetails.payments.some((payment) =>
-                          payment.feePaid.some((feePaid) => feePaid.feeType === feeGroup.feeType)
-                        ) ? 0 : 1
-                      }}
-                      checked={isSelected(feeGroup)}
-                      onChange={() => handleFeeSelection(feeGroup)}
-                    />
-                  </TableCell>
-                  <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{feeStructure.name}</TableCell>
-                  <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{feeGroup.feeType}</TableCell>
-                  <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">
-                    {new Date(feeGroup.dueDate).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">₹{feeGroup.amount}</TableCell>
-                  <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">
-                    {setStatusForFeeGroups(feeGroup.feeType, feeGroup.dueDate, feeDetails.payments)}
-                  </TableCell>
-                  <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">₹0</TableCell>
-                  <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">₹0</TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      ) : (
-        <div className="text-center text-gray-600 dark:text-gray-300 py-6">
-          No fees found
-        </div>
-      )}
-    </div>
-  </div>
-</Modal>
+                                <TableBody>
+                                    {[].concat(...feeDetails.feeStructures.map((feeStructure) =>
+                                        feeStructure.feeGroups.map((feeGroup) => ({
+                                            ...feeGroup,
+                                            structureName: feeStructure.name, // add structure name for rendering
+                                        }))
+                                    ))
+                                        .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate)) // sort by dueDate ascending
+                                        .map((feeGroup) => (
+                                            <TableRow className='border-gray-200 dark:border-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800' key={feeGroup._id}>
+                                                <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">
+                                                    <Checkbox
+                                                        disabled={feeDetails.payments.some((payment) =>
+                                                            payment.feePaid.some((feePaid) => feePaid.feeType === feeGroup.feeType)
+                                                        )}
+                                                        style={{
+                                                            opacity: feeDetails.payments.some((payment) =>
+                                                                payment.feePaid.some((feePaid) => feePaid.feeType === feeGroup.feeType)
+                                                            ) ? 0 : 1
+                                                        }}
+                                                        checked={isSelected(feeGroup)}
+                                                        onChange={() => handleFeeSelection(feeGroup)}
+                                                    />
+                                                </TableCell>
+                                                <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{feeGroup.structureName}</TableCell>
+                                                <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{feeGroup.feeType}</TableCell>
+                                                <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">
+                                                    {new Date(feeGroup.dueDate).toLocaleDateString()}
+                                                </TableCell>
+                                                <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">₹{feeGroup.amount}</TableCell>
+                                                <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">
+                                                    {setStatusForFeeGroups(feeGroup.feeType, feeGroup.dueDate, feeDetails.payments)}
+                                                </TableCell>
+                                                <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">₹0</TableCell>
+                                                <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">₹0</TableCell>
+                                            </TableRow>
+                                        ))}
+                                </TableBody>
+
+                            </Table>
+                        ) : (
+                            <div className="text-center text-gray-600 dark:text-gray-300 py-6">
+                                No fees found
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </Modal>
 
         </div>
     );
