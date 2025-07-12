@@ -117,7 +117,7 @@ const AdmissionReceipt = ({ studentData, setRegistrationCompleted, resetForm }) 
         </Page>
       </Document>
     ).toBlob();
-    saveAs(blob, `Admission_Receipt_${moment().format('YYYYMMDD')}.pdf`);
+    saveAs(blob, `Admission_Receipt_${moment().format('DD/MM/YYYY')}.pdf`);
     generateUrl(blob, forDownload)
   };
   const generateUrl = async (blob, forDownload) => {

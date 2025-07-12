@@ -394,7 +394,7 @@ const GenerateDemandSlip = () => {
                             placeholder="Select start date"
                             onChange={(date) => {
                                 // handleStartDateChange(moment(date[0]).format('YYYY/MM/DD'))
-                                setStartDate(date[0]).format('YYYY/MM/DD');
+                                setStartDate(date[0]).format('DD/MM/YYYY');
                             }}
                             // defaultDate={formData.date_Of_Birth !== '' ? formData.date_Of_Birth.split('T')[0] : new Date().toISOString().split('T')[0]}
                             mode="single" // or "range", "multiple", "time"
@@ -404,7 +404,7 @@ const GenerateDemandSlip = () => {
                             id="startDate"
                             placeholder="Select end date"
                             onChange={(date) => {
-                                setEndDate(date[0]).format('YYYY/MM/DD');
+                                setEndDate(date[0]).format('DD/MM/YYYY');
                                 // handleEndDateChange(moment(date[0]).format('YYYY/MM/DD'))
                             }}
                             // defaultDate={formData.date_Of_Birth !== '' ? formData.date_Of_Birth.split('T')[0] : new Date().toISOString().split('T')[0]}

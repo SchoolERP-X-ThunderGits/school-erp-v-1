@@ -178,7 +178,7 @@ const GenerateAdmitCard = () => {
                 ))}
             </Document>
         ).toBlob();
-        saveAs(blob, `Admit_Cards_${moment().format('YYYY-MM-DD')}.pdf`);
+        saveAs(blob, `Admit_Cards_${moment().format('DD-MM-YYYY')}.pdf`);
         generateUrl(blob)
     };
 

@@ -445,7 +445,7 @@ const StudentIDCard = () => {
                 ))}
             </Document>
         ).toBlob();
-        saveAs(blob, `Student_ID_Cards_${moment().format('YYYYMMDD')}.pdf`);
+        saveAs(blob, `Student_ID_Cards_${moment().format('DD/MM/YYYY')}.pdf`);
         generateUrl(blob)
         setLoading(false)
     };

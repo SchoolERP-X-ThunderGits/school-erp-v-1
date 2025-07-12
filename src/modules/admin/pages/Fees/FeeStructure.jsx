@@ -402,7 +402,7 @@ const FeeStructure = () => {
                                                 id="dueDate"
                                                 placeholder="Edit Date"
                                                 onChange={(date) => {
-                                                    handleFeeGroupChange('dueDate', index, moment(date[0]).format('YYYY/MM/DD'));
+                                                    handleFeeGroupChange('dueDate', index, moment(date[0]).format('DD/MM/YYYY'));
                                                 }}
                                                defaultDate={feeGroup.dueDate !== '' ? feeGroup.dueDate.split('T')[0] : new Date().toISOString().split('T')[0]}
                                                 mode="single"

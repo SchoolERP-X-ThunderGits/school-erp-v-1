@@ -229,7 +229,7 @@ const ExamSchedule = () => {
                 </Page>
             </Document>
         ).toBlob();
-        saveAs(blob, `Exam_schedule${moment().format('YYYY-MM-DD')}.pdf`);
+        saveAs(blob, `Exam_schedule${moment().format('DD-MM-YYYY')}.pdf`);
         generateUrl(blob)
     };
     return (
@@ -427,7 +427,7 @@ const ExamSchedule = () => {
                                                                     handleInputChange(
                                                                         index,
                                                                         'date',
-                                                                        moment(date[0]).format('YYYY/MM/DD'),
+                                                                        moment(date[0]).format('DD/MM/YYYY'),
                                                                         subject._id
                                                                     );
                                                                 }}

@@ -396,7 +396,7 @@ const EditStudent = () => {
                                 onChange={(date) => {
                                     setFormData((prevData) => ({
                                         ...prevData,
-                                        date_Of_Birth: moment(date[0]).format('YYYY/MM/DD')
+                                        date_Of_Birth: moment(date[0]).format('DD/MM/YYYY')
                                       }));
                                 }}
                                 defaultDate={formData.date_Of_Birth !== '' ? formData.date_Of_Birth.split('T')[0] : new Date().toISOString().split('T')[0]}
@@ -654,7 +654,7 @@ const EditStudent = () => {
                                 onChange={(date) => {
                                   setFormData((prevData) => ({
                                     ...prevData,
-                                    date_Of_Admission: moment(date[0]).format('YYYY/MM/DD')
+                                    date_Of_Admission: moment(date[0]).format('DD/MM/YYYY')
                                   }));
                                 }}
                                 defaultDate={formData.date_Of_Admission !== '' ? formData.date_Of_Admission.split('T')[0] : new Date().toISOString().split('T')[0]}

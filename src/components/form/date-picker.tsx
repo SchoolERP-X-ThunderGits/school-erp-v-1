@@ -29,7 +29,7 @@ export default function DatePicker({
     const picker = flatpickr(inputRef.current, {
       mode,
       monthSelectorType: "static",
-      dateFormat: "Y-m-d",
+      dateFormat: "d-m-Y",
       defaultDate,
       onChange,
     });
