@@ -13,7 +13,7 @@ const Subscriptions = () => {
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [plansList, setPlansList] = useState([]);
   const { status, data } = useSelector((state) => state.subscription);
-  console.log('sfksfksdf',data)
+  console.log('sfksfksdf', data)
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
 
@@ -49,75 +49,13 @@ const Subscriptions = () => {
 
   const currentPlanIndex = data ? getPlanIndex(data?.offerPlanId?._id) : -1;
 
-  const handleRazorpayPayment = async () => {
-    try {
-      const response = await postService(`${apiName.subscriptionPayment}/orders`,{
-        billId:data?.bill_id
-      });
-      if (response.error) {
-        alert('Failed to create Razorpay order');
-        return;
-      }
-
-      const { order_id, amount } = response.data;
-
-      const options = {
-        key: REACT_APP_RAZORPAY_KEY,
-        amount,
-        currency: 'INR',
-        order_id,
-        name: 'Your Company Name',
-        description: 'Subscription for plan',
-        image: 'https://your-logo-url.com/logo.png',
-        handler: async function (response) {
-          try {
-            const verifyResponse = await postService('/api/verify-payment', {
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature,
-              subscription_plan_id: selectedPlan._id,
-              subscriptionMonthByUser: 1,
-            });
-
-            if (verifyResponse.error) {
-              alert('Payment verification failed!');
-            } else {
-              alert('Payment successful!');
-              handleSubscriptionSuccess(selectedPlan._id);
-            }
-          } catch (error) {
-            alert('Error verifying payment');
-            console.error('Payment verification error:', error);
-          }
-        },
-        prefill: {
-          name: 'Customer Name',
-          email: 'customer@example.com',
-          contact: '9876543210',
-        },
-        notes: {
-          address: 'Address for shipping',
-        },
-        theme: {
-          color: '#3399cc',
-        },
-      };
-
-      const razorpay = new window.Razorpay(options);
-      razorpay.open();
-    } catch (error) {
-      console.error('Error creating Razorpay order:', error);
-      alert('Error while processing payment');
-    }
-  };
-
   return (
     <div className="bg-gray-50 dark:bg-gray-900 px-4 sm:px-6 lg:px-8 min-h-screen">
-      <div className="w-full p-4 flex justify-end items-center">
+      {/* <div className="w-full p-4 flex justify-end items-center">
         <Button onClick={handleRazorpayPayment}>
           <Link>Pay Amount</Link>
         </Button>
-      </div>
+      </div> */}
 
       <div className="text-center mb-12">
         <h2 className="text-3xl mt-5 font-extrabold text-gray-900 dark:text-white sm:text-5xl">
@@ -153,9 +91,10 @@ const Subscriptions = () => {
               )}
 
               <div className="p-8">
-                <h3 className="text-xl font-semibold text-gray-800 dark:text-white">{plan.name}</h3>
+                <h3 className="text-xl font-semibold text-gray-800 dark:text-white">{plan.name.charAt(0).toUpperCase() + plan.name.slice(1)}</h3>
                 <p className="mt-2 text-gray-500 dark:text-gray-400">{plan.description}</p>
-                <p className="mt-4 text-3xl font-bold text-gray-900 dark:text-white">{`₹${plan.price}/month`}</p>
+                <p className="mt-4 text-3xl font-bold text-gray-900 dark:text-white">{`₹${plan.price}/student`}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">{plan.validityInDays} days • {plan.recurence}</p>
                 <ul className="mt-6 space-y-3">
                   {plan.features.map((feature, index) => (
                     <li key={feature._id} className="flex items-center text-gray-700 dark:text-gray-300">

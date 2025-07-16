@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Modal } from '../components/ui/modal';
 import Button from '../components/ui/button/Button';
 import { useDispatch } from 'react-redux';
-import { getService } from '../constants/Service';
+import { getService, postService } from '../constants/Service';
 import apiName from '../constants/ApiName';
 import { showToast } from './Toast';
 
@@ -12,22 +12,76 @@ function SubscriptionModal({ selectedPlan, onClose, onSuccess }) {
 
   const dispatch = useDispatch();
 
-  const onSubscribe = async(e)=>{
-      e.preventDefault();
-      // const body = {
-      //     name: examName,
-      //     session: examSession,
-      // };
+  const handleRazorpayPayment = async (subscriptionId) => {
+    try {
+      const response = await postService(`${apiName.subscriptionPayment}/orders`, {
+        subscriptionId
+      });
+
+      console.log('Razorpay order response:', response);
+      const { order, billId } = response.data;
+
+      const options = {
+        key: import.meta.env.VITE_RAZORPAY_KEY, // Use the environment variable for Razorpay key
+        amount: order.amount,
+        currency: 'INR',
+        order_id: order.id,
+        name: 'Your Company Name',
+        // description: `Subscription for ${selectedPlan.name}`,
+        handler: async function (razorRes) {
           try {
-              const response = await getService(`${apiName.subscriptions}/create/${selectedPlan?._id}`);
-              console.log('respofdfnse', response)
-              onSuccess(response?.offerPlanId)
+            const verifyResponse = await postService(`${apiName.subscriptionPayment}/success`, {
+              razorpay_order_id: razorRes.razorpay_order_id,
+              razorpay_payment_id: razorRes.razorpay_payment_id,
+              razorpay_signature: razorRes.razorpay_signature,
+              subscription_plan_id: selectedPlan._id,
+              billId,
+            });
+
+            if (verifyResponse.error) {
+              alert('Payment verification failed!');
+            } else {
+              alert('Payment successful!');
+              onSuccess(response?.offerPlanId);
               showToast("Subscription activated successfully.", 'success');
+            }
           } catch (error) {
-              console.error('Error posting data:', error);
-              showToast(error?.response?.data?.message,'error')
+            alert('Error verifying payment');
+            console.error('Payment verification error:', error);
           }
-  }
+        },
+        theme: { color: '#3399cc' },
+      };
+
+      const razorpay = new window.Razorpay(options);
+      razorpay.open();
+    } catch (error) {
+      console.error('Error creating Razorpay order:', error);
+      alert('Error while processing payment');
+    }
+  };
+
+
+  const onSubscribe = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await getService(`${apiName.subscriptions}/create/${selectedPlan?._id}`);
+      console.log(response)
+      const subscriptionId = response.data?._id;
+
+      if (!subscriptionId) {
+        showToast("Failed to create subscription", 'error');
+        return;
+      }
+
+      await handleRazorpayPayment(subscriptionId); // pass it to order API
+
+    } catch (error) {
+      console.error('Error posting data:', error);
+      showToast(error?.response?.data?.message || 'Error creating subscription', 'error');
+    }
+  };
+
 
   return (
     <div>
@@ -45,7 +99,7 @@ function SubscriptionModal({ selectedPlan, onClose, onSuccess }) {
               onClick={onSubscribe}
               className="bg-indigo-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-indigo-700 transition"
             >
-             Subscribe
+              Subscribe
             </button>
             <button
               onClick={onClose}

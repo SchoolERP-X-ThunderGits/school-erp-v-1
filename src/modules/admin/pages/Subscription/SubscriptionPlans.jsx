@@ -8,7 +8,7 @@ import Input from '../../../../components/form/input/InputField';
 import Label from '../../../../components/form/Label';
 import { showToast } from '../../../../components/Toast';
 import { Link } from 'react-router-dom';
-import { FaCheck    , FaEdit, FaTrash } from 'react-icons/fa';
+import { FaCheck, FaEdit, FaTrash } from 'react-icons/fa';
 import { IoMdClose } from "react-icons/io";
 const SubscriptionPlans = () => {
     const [subscriptionsList, setSubscriptionsList] = useState([]);
@@ -24,6 +24,7 @@ const SubscriptionPlans = () => {
         validityInDays: '',
         description: '',
         color: '',
+        recurence: '',
         isVisible: true,
         limits: {
             userLimit: '',
@@ -63,6 +64,7 @@ const SubscriptionPlans = () => {
             validityInDays: subscriptionData?.validityInDays,
             description: subscriptionData?.description,
             color: subscriptionData?.color,
+            recurence: subscriptionData?.recurence,
             isVisible: subscriptionData?.isVisible,
             limits: {
                 userLimit: subscriptionData?.limits?.userLimit,
@@ -83,7 +85,7 @@ const SubscriptionPlans = () => {
         e.preventDefault();
 
         // Required fields to validate
-        const requiredFields = ['name', 'price', 'validityInDays', 'description', 'color'];
+        const requiredFields = ['name', 'price', 'validityInDays', 'description', 'color', 'recurence'];
         const limitsFields = ['userLimit', 'departmentLimit', 'medicineLimit', 'saleLimitPerDay'];
 
         let error = '';
@@ -130,6 +132,7 @@ const SubscriptionPlans = () => {
             validityInDays: Number(formData.validityInDays),
             description: formData.description,
             color: formData.color,
+            recurence: formData.recurence,
             features: formData.features.map(f => ({
                 ...f,
                 isEnabled: f.isEnabled === 'true' || f.isEnabled === true
@@ -225,6 +228,7 @@ const SubscriptionPlans = () => {
                             validityInDays: '',
                             description: '',
                             color: '',
+                            recurence: '',
                             isVisible: true,
                             limits: {
                                 userLimit: '',
@@ -275,12 +279,14 @@ const SubscriptionPlans = () => {
                                         <div className="p-8">
                                             <h3 className="text-xl font-semibold text-gray-800 dark:text-white">{plan.name}</h3>
                                             <p className="mt-2 text-gray-500 dark:text-gray-300">{plan.description}</p>
-                                            <p className="mt-4 text-3xl font-bold text-gray-900 dark:text-white">{plan.price}</p>
+                                            <div className="mt-4 text-3xl font-bold text-gray-900 dark:text-white">₹ {plan.price}/<span className='text-2xl'>Student</span> </div>
+                                            <p className="text-sm text-gray-600 dark:text-gray-400">{plan.validityInDays} days • {plan.recurence}</p>
+
                                             <ul className="mt-6 space-y-3">
-                                                {console.log('plan.featuresplan.features',plan.features)}
+                                                {console.log('plan.featuresplan.features', plan.features)}
                                                 {plan.features.map((feature, index) => (
                                                     <li key={index} className="flex items-center text-gray-700 dark:text-gray-300">
-                                                      {feature?.isEnabled?  <FaCheck className="text-green-500 mr-2" />: <IoMdClose className="text-red-500 mr-2 text-xl" />}
+                                                        {feature?.isEnabled ? <FaCheck className="text-green-500 mr-2" /> : <IoMdClose className="text-red-500 mr-2 text-xl" />}
                                                         {feature.label}
                                                     </li>
                                                 ))}
@@ -342,6 +348,7 @@ const SubscriptionPlans = () => {
                                     { label: 'Validity Days', name: 'validityInDays' },
                                     { label: 'Description', name: 'description' },
                                     { label: 'Color', name: 'color', type: 'color' },
+                                    { label: 'Recurence', name: 'recurence', },
                                 ].map(({ label, name, type = 'text' }) => (
                                     <div key={name}>
                                         <Label className="text-gray-600">{label}:</Label>

@@ -23,6 +23,21 @@ const Schools = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false); // Delete confirmation modal
   const navigate = useNavigate()
   const [schoolToDelete, setSchoolToDelete] = useState(null); // Track school to delete
+
+
+
+
+
+  const [showBillModal, setShowBillModal] = useState(false);
+  const [selectedMonth, setSelectedMonth] = useState(() => {
+    const current = new Date();
+    return `${current.getFullYear()}-${String(current.getMonth() + 1).padStart(2, '0')}`; // format: YYYY-MM
+  });
+  const [billingSchool, setBillingSchool] = useState(null); // to track which school's bill is being generated
+
+
+
+
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -37,6 +52,7 @@ const Schools = () => {
     addressForIdCard: '',
     prefix: '',
     logo: '',
+    studentCount: '',
     directorSignature: '',
     principalSignature: '',
     managerSignature: '',
@@ -56,6 +72,7 @@ const Schools = () => {
     { label: 'Address', name: 'address' },
     { label: 'Address For Id Card', name: 'addressForIdCard' },
     { label: 'Admission Number Prefix', name: 'prefix' },
+    { label: 'Student Count', name: 'studentCount' },
     { label: 'Razorpay Key Id', name: 'razorPayID' },
     { label: 'Razorpay Key Secret', name: 'razorPaySecret' },
   ];
@@ -71,6 +88,7 @@ const Schools = () => {
     { label: 'Address', name: 'address' },
     { label: 'Address For Id Card', name: 'addressForIdCard' },
     { label: 'Admission Number Prefix', name: 'prefix' },
+    { label: 'Student Count', name: 'studentCount' },
     { label: 'Razorpay Key Id', name: 'razorPayID' },
     { label: 'Razorpay Key Secret', name: 'razorPaySecret' },
   ]
@@ -112,6 +130,7 @@ const Schools = () => {
       address: schoolData?.address,
       addressForIdCard: schoolData?.addressForIdCard,
       prefix: schoolData?.prefix,
+      studentCount: schoolData?.studentCount,
       logo: schoolData?.logo,
       directorSignature: schoolData?.directorSignature,
       principalSignature: schoolData?.principalSignature,
@@ -134,12 +153,12 @@ const Schools = () => {
     // Define the required fields
     const addRequiredFields = [
       'username', 'password', 'email', 'schoolEmail', 'contactNumber', 'fullName', 'subdomain',
-      'schoolName', 'website', 'address', 'addressForIdCard', 'prefix', 'logo', 'directorSignature',
+      'schoolName', 'website', 'address', 'addressForIdCard', 'prefix', 'studentCount', 'logo', 'directorSignature',
       'principalSignature', 'managerSignature'
     ];
     const editRequiredFields = [
       'email', 'schoolEmail', 'contactNumber', 'fullName', 'subdomain',
-      'schoolName', 'website', 'address', 'addressForIdCard', 'prefix', 'logo', 'directorSignature',
+      'schoolName', 'website', 'address', 'addressForIdCard', 'prefix', 'studentCount', 'logo', 'directorSignature',
       'principalSignature', 'managerSignature'
     ];
 
@@ -188,6 +207,7 @@ const Schools = () => {
       address: formData.address,
       addressForIdCard: formData.addressForIdCard,
       prefix: formData.prefix,
+      studentCount: formData.studentCount,
       logo: formData.logo,
       directorSignature: formData.directorSignature,
       principalSignature: formData.principalSignature,
@@ -269,6 +289,7 @@ const Schools = () => {
             address: '',
             addressForIdCard: '',
             prefix: '',
+            studentCount: '',
             logo: '',
             directorSignature: '',
             principalSignature: '',
@@ -313,6 +334,15 @@ const Schools = () => {
                       <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{schoolItem.isActive ? "Active" : 'DeActive'}</TableCell>
                       <TableCell className="px-5 py-4">
                         <div className='flex gap-3 justify-start items-center'>
+                          {/* <Button
+                            onClick={() => {
+                              setBillingSchool(schoolItem); // optional: store the school object
+                              setShowBillModal(true);
+                            }}
+                          >
+                            Bill
+                          </Button> */}
+
                           <Link onClick={() => handleEdit(schoolItem)}>
                             <MdOutlineModeEdit className='dark:text-white' />
                           </Link>
@@ -442,6 +472,46 @@ const Schools = () => {
           </div>
         </div>
       </Modal>
+      <Modal
+        isOpen={showBillModal}
+        onClose={() => setShowBillModal(false)}
+        className="max-w-[500px] m-4"
+      >
+        <div className="relative w-full overflow-hidden rounded-3xl bg-white p-6 dark:bg-gray-900">
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
+            Generate Bill for {billingSchool?.name}
+          </h2>
+
+          <div className="mb-4">
+            <Label className="text-gray-600">Select Month</Label>
+            <input
+              type="month"
+              value={selectedMonth}
+              onChange={(e) => setSelectedMonth(e.target.value)}
+              className="w-full mt-2 p-3 border border-gray-300 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+            />
+          </div>
+
+          <div className="flex justify-end gap-4">
+            <Button
+              variant="outline"
+              onClick={() => setShowBillModal(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={() => {
+                console.log('Generating bill for:', billingSchool, 'Month:', selectedMonth);
+                setShowBillModal(false);
+                // you can call your API here
+              }}
+            >
+              Generate Bill
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
     </div>
   );
 };
