@@ -105,11 +105,11 @@ const SignInForm = () => {
                   {loading ? 'Signing in...' : 'Sign In'}
                 </button>
                <button
-                  onClick={() => navigate(-1)} // Navigate back to the previous page
+                  onClick={() => navigate("/student")} // Navigate back to the previous page
                   className="w-full border border-gray-500 text-black dark:text-white py-2 rounded transition mt-4"
                   disabled={loading}
                 >
-                  Back
+                  Login As Student
                 </button>
               </Form>
             )}

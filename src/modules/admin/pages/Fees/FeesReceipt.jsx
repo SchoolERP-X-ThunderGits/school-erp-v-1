@@ -8,6 +8,7 @@ import { getService } from '../../../../constants/Service';
 import apiName from '../../../../constants/ApiName';
 import { pdf, Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 import { useUserContext } from '../../../../context/UserContext';
+import moment from 'moment';
 import { BASE_URL } from '../../../../constants/Config';
 const FeeReceipt = () => {
     const { paymentId } = useParams(); // Assume you are using React Router for route parameters
@@ -24,7 +25,7 @@ const FeeReceipt = () => {
             try {
                 const data = await getService(`${apiName?.getPaymentById}/${paymentId}`)
                 const processedData = {
-                    date: new Date(data.date).toLocaleDateString(),
+                    date: moment(data.date).format('DD/MM/YYYY'),
                     receipt_no: data.receipt_no,
                     invoiceTo: {
                         name: data.studentId.first_Name + " " + data.studentId.last_Name,

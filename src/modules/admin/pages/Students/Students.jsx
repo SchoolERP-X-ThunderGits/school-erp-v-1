@@ -33,7 +33,16 @@ const Students = () => {
     const fetchStudents = async () => {
         try {
             const result = await getService(apiName.getStudent); // API to get students
-            setStudents(result);
+            // Sort students by the numeric part of the admission number
+            const sorted = result.sort((a, b) => {
+                const getNum = (adNo) => {
+                    const parts = adNo.split('-');
+                    const num = parseInt(parts[1], 10); // Extract and convert
+                    return isNaN(num) ? 0 : num;
+                };
+                return getNum(a.admission_Number) - getNum(b.admission_Number);
+            });
+            setStudents(sorted);
             setLoading(false);
         } catch (error) {
             showToast('Error fetching students', 'error');

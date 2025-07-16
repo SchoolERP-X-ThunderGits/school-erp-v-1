@@ -73,7 +73,10 @@ function App() {
           dispatch(fetchSubscriptionStatus());
         }
       }
-
+    }else{
+        if (pathname === '/') {
+          navigate('/student');
+        }
     }
   }, [pathname, navigate]);
   if (loading) return <Loader />; // Show loader while loading
