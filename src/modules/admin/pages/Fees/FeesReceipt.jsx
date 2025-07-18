@@ -30,6 +30,7 @@ const FeeReceipt = () => {
                     invoiceTo: {
                         name: data.studentId.first_Name + " " + data.studentId.last_Name,
                         roll_no: data.studentId.roll_Number,
+                        class: data.studentId.class_Id.name,
                         father: data.studentId.father_Name,
                         contact: `${data.studentId.contact_Number}`,
 
@@ -38,7 +39,7 @@ const FeeReceipt = () => {
                         name: school?.name,
                         address: school?.address,
                         stateCountry: 'India',
-                        email:school?.email,
+                        email: school?.email,
                     },
                     fees: data.feePaid.map(fee => ({
                         type: fee.feeType,
@@ -90,6 +91,7 @@ const FeeReceipt = () => {
                             <Text style={styles.label}>Invoice To:</Text>
                             <Text style={{ fontFamily: 'RobotoR', fontSize: 14 }}>Name: {invoiceData.invoiceTo.name}</Text>
                             <Text style={{ fontFamily: 'RobotoR', fontSize: 14 }}>Roll No: {invoiceData.invoiceTo.roll_no}</Text>
+                            <Text style={{ fontFamily: 'RobotoR', fontSize: 14 }}>Class: {invoiceData.invoiceTo.class}</Text>
                             <Text style={{ fontFamily: 'RobotoR', fontSize: 14 }}>Father: {invoiceData.invoiceTo.father}</Text>
                             <Text style={{ fontFamily: 'RobotoR', fontSize: 14 }}>Ph: {invoiceData.invoiceTo.contact}</Text>
                         </View>
@@ -259,6 +261,7 @@ const FeeReceipt = () => {
                         <li className="text-bold">Invoice To:</li>
                         <li>Name - {invoiceData.invoiceTo.name}</li>
                         <li>Roll No. - {invoiceData.invoiceTo.roll_no}</li>
+                        <li>Class - {invoiceData.invoiceTo.class}</li>
                         <li>Father - {invoiceData.invoiceTo.father}</li>
                         <li>Ph. No. - {invoiceData.invoiceTo.contact}</li>
                     </ul>
