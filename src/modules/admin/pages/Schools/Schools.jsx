@@ -153,7 +153,7 @@ const Schools = () => {
     // Define the required fields
     const addRequiredFields = [
       'username', 'password', 'email', 'schoolEmail', 'contactNumber', 'fullName',
-      'schoolName', , 'address', 'addressForIdCard', 'prefix', 'studentCount', 'logo'
+      'schoolName', 'address', 'addressForIdCard', 'prefix', 'studentCount', 'logo'
     ];
     const editRequiredFields = [
       'email', 'schoolEmail', 'contactNumber', 'fullName', 
