@@ -152,14 +152,12 @@ const Schools = () => {
 
     // Define the required fields
     const addRequiredFields = [
-      'username', 'password', 'email', 'schoolEmail', 'contactNumber', 'fullName', 'subdomain',
-      'schoolName', 'website', 'address', 'addressForIdCard', 'prefix', 'studentCount', 'logo', 'directorSignature',
-      'principalSignature', 'managerSignature'
+      'username', 'password', 'email', 'schoolEmail', 'contactNumber', 'fullName',
+      'schoolName', , 'address', 'addressForIdCard', 'prefix', 'studentCount', 'logo'
     ];
     const editRequiredFields = [
-      'email', 'schoolEmail', 'contactNumber', 'fullName', 'subdomain',
-      'schoolName', 'website', 'address', 'addressForIdCard', 'prefix', 'studentCount', 'logo', 'directorSignature',
-      'principalSignature', 'managerSignature'
+      'email', 'schoolEmail', 'contactNumber', 'fullName', 
+      'schoolName', 'address', 'addressForIdCard', 'prefix', 'studentCount', 'logo'
     ];
 
     const requiredFields = editMode ? editRequiredFields : addRequiredFields;
