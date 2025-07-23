@@ -19,18 +19,19 @@ const ResetPassword = () => {
         }
         try {
             // You might need to adjust the API endpoint and payload
-            console.log('Resetting password with:', { oldPassword, newPassword });
             const response = await postService(apiName.resetPassword, { oldPassword, newPassword });
-            if (response.status === 200) {
+
+            if (response.message === "Password reset successfully") {
                 setMessage('Password reset successfully.');
                 setOldPassword('');
                 setNewPassword('');
                 setConfirmPassword('');
             } else {
-                setError(response.data.message || 'Failed to reset password. Please try again.');
+                setError(response.message || 'Failed to reset password. Please try again.');
             }
         } catch (err) {
-            setError('Failed to reset password. Please try again.');
+            console.log('Error resetting password:', err);
+            setError(err.response.data.message || 'An error occurred while resetting the password.');
         }
     };
 
