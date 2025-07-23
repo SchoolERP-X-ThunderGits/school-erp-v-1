@@ -40,6 +40,7 @@ import PaymentSummary from './modules/student/pages/Payment/PaymentSummary';
 import ExamsList from './modules/student/pages/Exams/ExamsList';
 import StudentProfile from './modules/student/pages/Profile/StudentProfile';
 import SchoolDetails from './modules/admin/pages/Schools/SchoolDetails';
+import ResetPassword from './components/Authentication/ResetPassword';
 import "flatpickr/dist/flatpickr.css";
 import Section from './modules/admin/pages/Academics/Section';
 import House from './modules/admin/pages/Academics/House';
@@ -68,15 +69,15 @@ function App() {
         if (pathname === '/' || pathname === '/admin') {
           navigate('/admin/home');
         }
-        if(role == 'admin'){
+        if (role == 'admin') {
 
           dispatch(fetchSubscriptionStatus());
         }
       }
-    }else{
-        if (pathname === '/') {
-          navigate('/student');
-        }
+    } else {
+      if (pathname === '/') {
+        navigate('/student');
+      }
     }
   }, [pathname, navigate]);
   if (loading) return <Loader />; // Show loader while loading
@@ -158,7 +159,7 @@ function App() {
           <Route
             path="/fee-receipt/:paymentId"
             element={
-                <FeeReceipt />
+              <FeeReceipt />
             }
           />
           <Route
@@ -307,6 +308,12 @@ function App() {
               <PaymentHistory />
             }
           />
+          <Route
+            path="/admin/reset-password"
+            element={
+              <ResetPassword />
+            }
+          />
 
         </Route>
 
@@ -318,6 +325,12 @@ function App() {
           <Route path="/student/payment-summary" element={<PaymentSummary />} />
           <Route path="/student/exams-list" element={<ExamsList />} />
           <Route path="/student/student-profile" element={<StudentProfile />} />
+          <Route
+            path="/student/reset-password"
+            element={
+              <ResetPassword />
+            }
+          />
         </Route>
       </Routes>
     </UserProvider>

@@ -60,6 +60,7 @@ const apiName = {
   verifyRazorpayPayment: "payment/verify",
   getPayHistory: "payment/getAll",
   houses: "houses",
+  resetPassword: "user/reset-password",
 
 };
 export default apiName;

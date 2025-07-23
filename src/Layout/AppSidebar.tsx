@@ -8,7 +8,7 @@ import { PiExam, PiStudentFill } from "react-icons/pi";
 import { RxDashboard } from "react-icons/rx";
 import { LiaMoneyCheckSolid } from "react-icons/lia";
 import { CiSettings } from "react-icons/ci";
-import { MdOutlineLockOpen,MdOutlinePayment } from "react-icons/md";
+import { MdOutlineLockOpen, MdOutlinePayment } from "react-icons/md";
 import logo1 from '../assets/Images/logo/ThunderGits_Logos/1.png'
 import logo2 from '../assets/Images/logo/ThunderGits_Logos/2.png'
 import logo3 from '../assets/Images/logo/ThunderGits_Logos/3.png'
@@ -76,6 +76,7 @@ const adminNavItems: NavItem[] = [
     subItems: [
       { name: "Profile Settings", path: "/admin/profile-settings" },
       { name: "Subscriptions", path: "/admin/subscriptions" },
+      { name: "Reset Password", path: "/admin/reset-password" },
     ],
   },
   {
@@ -112,7 +113,7 @@ const superadminNavItems: NavItem[] = [
       { name: "Payment History", path: "/admin/payment-history" },
     ],
   },
-  
+
 ];
 
 const studentNavItems: NavItem[] = [
@@ -140,6 +141,7 @@ const studentNavItems: NavItem[] = [
     name: "Settings",
     subItems: [
       { name: "Profile Settings", path: "/student/student-profile" },
+      { name: "Reset Password", path: "/student/reset-password" },
     ],
   },
 ];
