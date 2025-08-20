@@ -297,7 +297,7 @@ const AddStudent = () => {
       ...prevFormData,
       date_Of_Admission: formData.date_Of_Admission != '' ? formData.date_Of_Admission.split('T')[0] : new Date().toISOString().split('T')[0]
     }));
-    if (!formData.first_Name || !formData.last_Name || !formData?.aadhar_number || !formData?.section || !formData?.session  || !formData?.class_Id || !formData?.gender || !formData?.permanent_Address || !formData?.date_Of_Birth || !formData?.contact_Number || !formData?.date_Of_Admission || !formData?.father_Name || !formData?.mother_Name || !formData?.student_Photo || !formData?.category || !formData?.address_for_id) {
+    if (!formData.first_Name || !formData.last_Name || !formData?.aadhar_number || !formData?.section || !formData?.session || !formData?.class_Id || !formData?.gender || !formData?.permanent_Address || !formData?.date_Of_Birth || !formData?.contact_Number || !formData?.date_Of_Admission || !formData?.father_Name || !formData?.mother_Name || !formData?.student_Photo || !formData?.category || !formData?.address_for_id) {
       showToast("Please fill all the required fields.", 'error');
       return;
     }
@@ -483,10 +483,10 @@ const AddStudent = () => {
                         id="date_Of_Birth"
                         placeholder="Select a date"
                         onChange={(date) => {
-                          console.log('datedate', date)
+
                           setFormData((prevData) => ({
                             ...prevData,
-                            date_Of_Birth: moment(date[0]).format('DD/MM/YYYY')
+                            date_Of_Birth: moment(date[0]).format('DD-MM-YYYY')
                           }));
                         }}
                         mode="single"
@@ -767,9 +767,10 @@ const AddStudent = () => {
                         id="date_Of_Admission"
                         // placeholder="Select a date"
                         onChange={(date) => {
+
                           setFormData((prevData) => ({
                             ...prevData,
-                            date_Of_Admission: moment(date[0]).format('DD/MM/YYYY')
+                            date_Of_Admission: moment(date[0]).format('DD-MM-YYYY')
                           }));
                         }}
                         defaultDate={formData.date_Of_Admission !== '' ? formData.date_Of_Admission.split('T')[0] : new Date().toISOString().split('T')[0]}

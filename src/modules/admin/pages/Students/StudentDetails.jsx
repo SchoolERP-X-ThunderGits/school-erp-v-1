@@ -166,7 +166,7 @@ const StudentDetails = () => {
 
                 <InfoCard title="Personal Details">
                     <InfoItem label="Gender" value={student.gender} />
-                    <InfoItem label="DOB" value={new Date(student.date_Of_Birth).toLocaleDateString()} />
+                    <InfoItem label="DOB" value={moment(student.date_Of_Birth).format("DD-MM-YYYY")} />
                     <InfoItem label="Blood Group" value={student.blood_Group} />
                 </InfoCard>
 
