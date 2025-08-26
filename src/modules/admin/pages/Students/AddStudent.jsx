@@ -54,7 +54,7 @@ const AddStudent = () => {
     mother_Name: '',
     mother_Occupation: '',
     due_amount: '',
-    date_Of_Admission: new Date().toISOString().split('T')[0],
+    date_Of_Admission: moment().format('YYYY-MM-DD'),
     student_Photo: '',
     aadhar_number: '',
     feeStructures: [],
@@ -98,7 +98,7 @@ const AddStudent = () => {
       mother_Name: '',
       mother_Occupation: '',
       due_amount: '',
-      date_Of_Admission: new Date().toISOString().split('T')[0],
+      date_Of_Admission: moment().format('YYYY-MM-DD'),
       student_Photo: '',
       aadhar_number: '',
       feeStructures: []
@@ -486,7 +486,7 @@ const AddStudent = () => {
 
                           setFormData((prevData) => ({
                             ...prevData,
-                            date_Of_Birth: moment(date[0]).format('DD-MM-YYYY')
+                            date_Of_Birth: moment(date[0]).format('YYYY-MM-DD')
                           }));
                         }}
                         mode="single"
@@ -761,29 +761,28 @@ const AddStudent = () => {
                     </div>
 
                     {/* Date of Admission */}
-                    <div className="mb-4 ">
-                      <Label className="block text-gray-700">Date of Admission <span className="text-red-500">*</span>:</Label>
+
+                    <div className="mb-4">
+                      <Label className="block text-gray-700">
+                        Date of Admission <span className="text-red-500">*</span>:
+                      </Label>
                       <DatePicker
                         id="date_Of_Admission"
-                        // placeholder="Select a date"
                         onChange={(date) => {
-
                           setFormData((prevData) => ({
                             ...prevData,
-                            date_Of_Admission: moment(date[0]).format('DD-MM-YYYY')
+                            date_Of_Admission: moment(date[0]).format("DD-MM-YYYY"),
                           }));
                         }}
-                        defaultDate={formData.date_Of_Admission !== '' ? formData.date_Of_Admission.split('T')[0] : new Date().toISOString().split('T')[0]}
-                        mode="single" // or "range", "multiple", "time"
+                        defaultDate={
+                          formData.date_Of_Admission && formData.date_Of_Admission !== ""
+                            ? new Date(formData.date_Of_Admission)
+                            : new Date()
+                        }
+                        mode="single"
                       />
-                      {/* <Input
-                        type="date"
-                        name="date_Of_Admission"
-                        value={formData.date_Of_Admission != '' ? formData.date_Of_Admission.split('T')[0] : new Date().toISOString().split('T')[0]}
-                        onChange={handleInputChange}
-                        className="mt-2 p-2 border border-gray-300 rounded-md w-full"
-                      /> */}
                     </div>
+
                     {
                       // !editMode &&
                       <div className="mb-4 ">

@@ -57,7 +57,7 @@ const SignIn = () => {
       <div className="flex flex-col flex-1">
         <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto">
           <div>
-            <h1 className="mb-2 font-semibold text-gray-800 dark:text-gray-100 text-title-sm">Sign In</h1>
+            <h1 className="mb-2 font-semibold text-gray-800 dark:text-gray-100 text-title-md">Student Login</h1>
             <p className="text-sm text-gray-500 dark:text-gray-400">Enter your Admission Number and Password to sign in!</p>
           </div>
           <Formik
