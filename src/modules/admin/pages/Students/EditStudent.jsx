@@ -394,12 +394,13 @@ const EditStudent = () => {
                                 id="date_Of_Birth"
                                 // placeholder="Select a date"
                                 onChange={(date) => {
+                                    console.log('date', date)
                                     setFormData((prevData) => ({
                                         ...prevData,
-                                        date_Of_Birth: moment(date[0]).format('YYYY-MM-DD')
-                                      }));
+                                        date_Of_Birth: date[0]
+                                    }));
                                 }}
-                                defaultDate={formData.date_Of_Birth !== '' ? formData.date_Of_Birth.split('T')[0] : new Date().toISOString().split('T')[0]}
+                                defaultDate={formData.date_Of_Birth !== '' ? new Date(formData.date_Of_Birth) : new Date()}
                                 mode="single" // or "range", "multiple", "time"
                             />
                             {/* <input
@@ -652,10 +653,10 @@ const EditStudent = () => {
                                 id="date_Of_Admission"
                                 // placeholder="Select a date"
                                 onChange={(date) => {
-                                  setFormData((prevData) => ({
-                                    ...prevData,
-                                    date_Of_Admission: moment(date[0]).format('YYYY-MM-DD')
-                                  }));
+                                    setFormData((prevData) => ({
+                                        ...prevData,
+                                        date_Of_Admission: moment(date[0]).format('YYYY-MM-DD')
+                                    }));
                                 }}
                                 defaultDate={formData.date_Of_Admission !== '' ? formData.date_Of_Admission.split('T')[0] : new Date().toISOString().split('T')[0]}
                                 mode="single" // or "range", "multiple", "time"
