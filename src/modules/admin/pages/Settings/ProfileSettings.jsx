@@ -111,6 +111,8 @@ const ProfileSettings = () => {
                                 { label: 'Contact', value: profileData?.contactNumber },
                                 { label: 'Website', value: profileData?.website },
                                 { label: 'Subdomain', value: profileData?.subdomain },
+                                { label: 'Registration Number', value: profileData?.registrationNumber },
+                                { label: 'UDISE Number', value: profileData?.udiseNumber },
                                 { label: 'Email', value: profileData?.email },
                                 { label: 'Address', value: profileData?.address },
                                 { label: 'Razorpay Key Id', value: profileData?.razorPayID },
@@ -188,6 +190,8 @@ const ProfileSettings = () => {
                             {[
                                 { label: 'School Name', name: 'name' },
                                 { label: 'Address', name: 'address' },
+                                { label: 'Registration Number', name: 'registrationNumber' },
+                                { label: 'UDISE Number', name: 'udiseNumber' },
                                 { label: 'Email', name: 'email' },
                                 { label: 'Contact Number', name: 'contactNumber' },
                                 { label: 'Website', name: 'website' },

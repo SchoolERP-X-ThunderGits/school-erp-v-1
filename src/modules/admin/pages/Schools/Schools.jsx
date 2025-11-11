@@ -40,6 +40,8 @@ const Schools = () => {
 
   const [formData, setFormData] = useState({
     username: '',
+    registrationNumber: '',
+    udiseNumber: '',
     password: '',
     email: '',
     schoolEmail: '',
@@ -66,6 +68,8 @@ const Schools = () => {
     { label: 'School Email', name: 'schoolEmail' },
     { label: 'Contact Number', name: 'contactNumber' },
     { label: 'Full Name', name: 'fullName' },
+    { label: 'Registration Number', name: 'registrationNumber' },
+    { label: 'UDISE Number', name: 'udiseNumber' },
     { label: 'Subdomain', name: 'subdomain' },
     { label: 'School Name', name: 'schoolName' },
     { label: 'Website', name: 'website' },
@@ -83,6 +87,8 @@ const Schools = () => {
     { label: 'Contact Number', name: 'contactNumber' },
     { label: 'Full Name', name: 'fullName' },
     { label: 'Subdomain', name: 'subdomain' },
+    { label: 'Registration Number', name: 'registrationNumber' },
+    { label: 'UDISE Number', name: 'udiseNumber' },
     { label: 'School Name', name: 'schoolName' },
     { label: 'Website', name: 'website' },
     { label: 'Address', name: 'address' },
@@ -121,6 +127,8 @@ const Schools = () => {
     setFormData({
       username: schoolData?.user?.username,
       email: schoolData.user?.email,
+      registrationNumber: schoolData?.registrationNumber,
+      udiseNumber: schoolData?.udiseNumber,
       schoolEmail: schoolData?.email,
       contactNumber: schoolData?.contactNumber,
       fullName: schoolData?.user?.fullName,
@@ -156,7 +164,7 @@ const Schools = () => {
       'schoolName', 'address', 'addressForIdCard', 'prefix', 'studentCount', 'logo'
     ];
     const editRequiredFields = [
-      'email', 'schoolEmail', 'contactNumber', 'fullName', 
+      'email', 'schoolEmail', 'contactNumber', 'fullName',
       'schoolName', 'address', 'addressForIdCard', 'prefix', 'studentCount', 'logo'
     ];
 
@@ -200,6 +208,8 @@ const Schools = () => {
       contactNumber: formData.contactNumber,
       fullName: formData.fullName,
       subdomain: formData.subdomain,
+      registrationNumber: formData.registrationNumber,
+      udiseNumber: formData.udiseNumber,
       schoolName: formData.schoolName,
       website: formData.website,
       address: formData.address,
@@ -282,6 +292,8 @@ const Schools = () => {
             contactNumber: '',
             fullName: '',
             subdomain: '',
+            registrationNumber: '',
+            udiseNumber: '',
             schoolName: '',
             website: '',
             address: '',

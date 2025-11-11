@@ -34,7 +34,7 @@ const SchoolDetails = () => {
 
   if (loading) {
     return (
-     <Loader/>
+      <Loader />
     );
   }
 
@@ -58,6 +58,8 @@ const SchoolDetails = () => {
             <p className="text-lg text-gray-700 dark:text-gray-300"><strong>Email:</strong> {schoolDetails.email}</p>
             <p className="text-lg text-gray-700 dark:text-gray-300"><strong>Website:</strong> <a href={`https://${schoolDetails.website}`} className="text-blue-500">{schoolDetails.website}</a></p>
             <p className="text-lg text-gray-700 dark:text-gray-300"><strong>Address:</strong> {schoolDetails.address}</p>
+            <p className="text-lg text-gray-700 dark:text-gray-300"><strong>Registration Number:</strong> {schoolDetails.registrationNumber}</p>
+            <p className="text-lg text-gray-700 dark:text-gray-300"><strong>UDIS Number:</strong> {schoolDetails.udiseNumber}</p>
             <p className="text-lg text-gray-700 dark:text-gray-300"><strong>Status:</strong> {schoolDetails.isActive ? 'Active' : 'Inactive'}</p>
           </div>
           <div className="flex justify-center items-center">

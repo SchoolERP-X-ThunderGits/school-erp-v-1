@@ -14,7 +14,22 @@ function StudentReceiptPage({ student, school, setAdmissionReceptPage }) {
               <Image source={school?.logo} style={styles.logo} />
               <View style={{ justifyContent: 'center', alignItems: 'center', width: '80%' }}>
                 <Text style={styles.schoolName}>{school?.name?.toUpperCase()}</Text>
-                <Text style={styles.location}>{school?.address}</Text>
+                <Text style={styles.location}
+                  numberOfLines={0}   // allow unlimited lines
+                  ellipsizeMode="tail" // optional; trims if needed
+                >{school?.address}</Text>
+                <Text style={styles.infoText}>
+                  Registration No.: {school?.registrationNumber}
+                </Text>
+
+                <View style={styles.row}>
+                  <Text style={styles.infoText}>
+                    Mob No.: {school?.contactNumber}
+                  </Text>
+                  <Text style={styles.infoText}>
+                    UDISE No.: {school?.udiseNumber}
+                  </Text>
+                </View>
               </View>
               <Image source={school?.qrCodeUrl} style={styles.logo} />
             </View>
@@ -147,6 +162,12 @@ function StudentReceiptPage({ student, school, setAdmissionReceptPage }) {
              bg-gradient-to-r from-blue-800 to-blue-400 
              dark:bg-gradient-to-r dark:from-indigo-200 dark:to-blue-400">{school?.name}</h1>
           <div className="school-address text-sm text-gray-400">{school?.address}</div>
+          <div className="school-address text-sm text-gray-400">Registration No.: {school?.registrationNumber}</div>
+          <div className='flex gap-3'>
+            <div className="school-address text-sm text-gray-400">Mob No.: {school?.contactNumber}</div>
+
+            <div className="school-address text-sm text-gray-400">UDISE No.: {school?.udiseNumber}</div>
+          </div>
         </div>
         <img src={school?.qrCodeUrl} alt="School QR" className="school-logo-adm-res" />
       </div>
@@ -191,8 +212,8 @@ function StudentReceiptPage({ student, school, setAdmissionReceptPage }) {
       <div className="additional-details">
         <h3 className="font-semibold text-xl text-gray-800 dark:text-white">Additional Details</h3>
         <table className="w-full">
-        <tbody>
-            <tr><td><strong>Permanent Address:</strong></td><td>{student.permanent_Address ?student.permanent_Address:'N/A'}</td></tr>
+          <tbody>
+            <tr><td><strong>Permanent Address:</strong></td><td>{student.permanent_Address ? student.permanent_Address : 'N/A'}</td></tr>
             <tr><td><strong>Email:</strong></td><td>{student.email ? student.email : 'N/A'}</td></tr>
             <tr><td><strong>Category:</strong></td><td>{student.category ? student.category : 'N/A'}</td></tr>
             <tr><td><strong>Blood Group:</strong></td><td>{student.blood_Group ? student.blood_Group : 'N/A'}</td></tr>
@@ -353,9 +374,13 @@ const styles = StyleSheet.create({
   location: {
     marginHorizontal: 10,
     fontSize: 12,
-    textAlign: "center",
-    color: "#666",
+    textAlign: 'center',
+    color: '#666',
     marginTop: 4,
+    width: '88%',
+    alignSelf: 'center',
+    lineHeight: 1.4,
+    whiteSpace: 'normal',
   },
   sectionTitle: {
     fontSize: 14,
@@ -408,6 +433,17 @@ const styles = StyleSheet.create({
     width: "40%",
     textAlign: "center",
     paddingTop: 5,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    gap: 12,
+  },
+  infoText: {
+    marginTop: 4,
+    fontSize: 10,
+    color: '#666', // Tailwind text-gray-400 equivalent
   },
 });
 
