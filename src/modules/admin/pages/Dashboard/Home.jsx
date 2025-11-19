@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { showToast } from '../../../../components/Toast';
 import { getService } from '../../../../constants/Service';
 import apiName from '../../../../constants/ApiName';
@@ -8,7 +8,6 @@ import { HiMiniAcademicCap } from "react-icons/hi2";
 import { BsFillSignIntersectionFill } from "react-icons/bs";
 import { MdPayment } from "react-icons/md";
 import Chart from "react-apexcharts";
-import { fetchSubscriptionStatus } from '../../../../redux/slices/subscriptionSlice';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { useUserContext } from '../../../../context/UserContext';
@@ -29,7 +28,6 @@ const AdminHome = () => {
 
   useEffect(() => {
 
-    dispatch(fetchSubscriptionStatus());
     if (role === 'admin') {
       fetchAdminData();
     } else if (role === 'superadmin') {
@@ -46,7 +44,7 @@ const AdminHome = () => {
     try {
       const result = await getService(`${apiName.schoolDashboard}${school?._id}`);
       setDashboardData(result?.data);
-      console.log('fldslss',result)
+      console.log('fldslss', result)
       setPayments(result?.data?.counts?.totalPayments)
     } catch (error) {
       showToast('Failed to load profile details', 'error');
@@ -158,7 +156,7 @@ const AdminHome = () => {
       </div>
       <div className="bg-white p-6 rounded-lg shadow-md mb-8 mt-10 dark:bg-gray-800">
         <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-        Classes
+          Classes
         </h3>
         <Chart
           options={{
