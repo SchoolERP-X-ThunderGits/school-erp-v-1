@@ -1,13 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaCheck } from 'react-icons/fa';
 import SubscriptionModal from '../../../../components/SubscriptionModal';
-import { getService, postService } from '../../../../constants/Service';
+import { getService } from '../../../../constants/Service';
 import apiName from '../../../../constants/ApiName';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchSubscriptionStatus } from '../../../../redux/slices/subscriptionSlice';
-import Button from '../../../../components/ui/button/Button';
-import { Link } from 'react-router-dom';
-import { REACT_APP_RAZORPAY_KEY } from '../../../../constants/Config';
 
 const Subscriptions = () => {
   const [selectedPlan, setSelectedPlan] = useState(null);
