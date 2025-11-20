@@ -27,5 +27,6 @@ if (isProd) {
 } else if (isDev) {
     RAZORPAY_SUPER_KEY = import.meta.env.VITE_DEV_RAZORPAY_SUPER_KEY;
 }
+const REACT_APP_RAZORPAY_KEY = "rzp_live_OBe5vXxoSm0c49"
 
-export { BASE_URL, RAZORPAY_SUPER_KEY };
+export { BASE_URL, RAZORPAY_SUPER_KEY, REACT_APP_RAZORPAY_KEY };
