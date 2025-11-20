@@ -161,7 +161,7 @@ const AddStudent = () => {
   const fetchClasses = async () => {
     try {
       const result = await getService(apiName.getClassList); // Get Classes API
-      setClasses(result.data);
+      setClasses(result?.data);
     } catch (error) {
       // showToast('Error fetching classes', 'error');
     }
