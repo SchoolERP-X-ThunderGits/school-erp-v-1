@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getService, postService } from '../../../../constants/Service'; // Importing services
 import apiName from '../../../../constants/ApiName'; // Importing API Names
 import { showToast } from '../../../../components/Toast'; // Show Toast Notifications
@@ -161,7 +161,7 @@ const AddStudent = () => {
   const fetchClasses = async () => {
     try {
       const result = await getService(apiName.getClassList); // Get Classes API
-      setClasses(result);
+      setClasses(result.data);
     } catch (error) {
       // showToast('Error fetching classes', 'error');
     }

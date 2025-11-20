@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { pdf, Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 import { saveAs } from 'file-saver';
 import apiName from '../../../../constants/ApiName'; // Importing API Names
@@ -39,7 +39,7 @@ const GenerateDemandSlip = () => {
     const fetchClasses = async () => {
         try {
             const result = await getService(apiName.getClassList); // Get Classes API
-            setClasses(result);
+            setClasses(result.data);
             setLoading(false)
         } catch (error) {
             showToast('Error fetching classes', 'error');
@@ -80,7 +80,7 @@ const GenerateDemandSlip = () => {
     const fetchFilteredStudents = async () => {
         try {
             const result = await getService(`${apiName.getStudentByExam}/${classFilter}/${sectionFilter}`);
-            setStudents(result);
+            setStudents(result.data);
             setLoading(false);
         } catch (error) {
             showToast('Error fetching filtered students', 'error');
@@ -89,7 +89,7 @@ const GenerateDemandSlip = () => {
     const getStudentFeeByClass = async () => {
         try {
             const result = await getService(`${apiName.dueFees}/${classFilter}/${sectionFilter}/${endDate}`);
-            console.log('bckvbkcbc', result)
+            console.log('bckvbkcbc', result.data)
             setFeeDetails(result)
         } catch (error) {
             showToast('Error fetching filtered students', 'error');

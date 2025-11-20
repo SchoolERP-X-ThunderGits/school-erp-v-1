@@ -141,8 +141,8 @@ const FeeStructure = () => {
                 dueDate: group.dueDate // Removing everything after the 'T' from the dueDate
             }))
         });
-        
-        
+
+
     };
 
     const handleDeleteFeeStructure = (classId) => {
@@ -401,12 +401,28 @@ const FeeStructure = () => {
                                             <DatePicker
                                                 id="dueDate"
                                                 placeholder="Edit Date"
-                                                onChange={(date) => {
-                                                    handleFeeGroupChange('dueDate', index, moment(date[0]).format('DD/MM/YYYY'));
-                                                }}
-                                               defaultDate={feeGroup.dueDate !== '' ? feeGroup.dueDate.split('T')[0] : new Date().toISOString().split('T')[0]}
                                                 mode="single"
+                                                onChange={(date) => {
+                                                    if (!date || !date[0]) return;
+
+                                                    // Convert JS Date → DD/MM/YYYY
+                                                    handleFeeGroupChange(
+                                                        'dueDate',
+                                                        index,
+                                                        date[0]
+                                                    );
+                                                }}
+                                                defaultDate={
+                                                    feeGroup.dueDate
+                                                        ? moment(feeGroup.dueDate, [
+                                                            "DD/MM/YYYY",
+                                                            "YYYY-MM-DD",
+                                                            moment.ISO_8601
+                                                        ]).toDate()
+                                                        : new Date()
+                                                }
                                             />
+
 
                                             {/* <Input
                                                 type="date"
