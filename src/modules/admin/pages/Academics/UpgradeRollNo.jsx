@@ -35,7 +35,7 @@ const UpgradeRollNo = () => {
     const fetchClasses = async () => {
         try {
             const result = await getService(apiName.getClassList);
-            setClasses(result);
+            setClasses(result.data);
             setLoading(false);
         } catch (error) {
             showToast('Error fetching classes', 'error');
@@ -74,15 +74,15 @@ const UpgradeRollNo = () => {
     const fetchFilteredStudents = async () => {
         try {
             const result = await getService(`${apiName.getStudentByExam}/${classFilter}/${sectionFilter}/${sessionFilter}`);
-            setStudentRollArray(result.map(i => ({
+            setStudentRollArray(result?.data.map(i => ({
                 _id: i._id,
                 roll_Number: i.roll_Number,
             })));
-            setStudentOldRollArray(result.map(i => ({
+            setStudentOldRollArray(result?.data.map(i => ({
                 _id: i._id,
                 roll_Number: i.roll_Number,
             })));
-            setStudents(result);
+            setStudents(result?.data);
             setLoading(false);
         } catch (error) {
             showToast('Error fetching filtered students', 'error');

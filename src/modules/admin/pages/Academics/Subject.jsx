@@ -34,7 +34,7 @@ const Subject = () => {
             setLoading(false)
             setEditMode(false);
             setEditId('');
-            setSubjectList(result);
+            setSubjectList(result?.data);
             setNewSubjectName('');
             setNewSubjectCode('');
             setShowModal(false);
@@ -64,7 +64,7 @@ const Subject = () => {
         }
         const body = {
             name: newSubjectName,
-            subjectCode: newSubjectCode,
+            code: newSubjectCode,
         };
 
         if (editMode) {
@@ -78,7 +78,7 @@ const Subject = () => {
             }
         } else {
             try {
-                const response = await postService(apiName.subject, body);
+                const response = await postService(`${apiName.subject}/`, body);
                 showToast("Subject added successfully.", 'success');
                 getSubjectList();
             } catch (error) {

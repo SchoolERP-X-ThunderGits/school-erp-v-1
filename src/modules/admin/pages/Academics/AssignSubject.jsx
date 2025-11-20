@@ -38,7 +38,7 @@ const AssignSubject = () => {
     const getClassList = async () => {
         try {
             const result = await getService(apiName.getClassList); // Assuming 'class' is the endpoint for classes
-            setClassList(result);
+            setClassList(result?.data);
             setLoading(false);
         } catch (error) {
             setLoading(false);
@@ -47,7 +47,7 @@ const AssignSubject = () => {
     const getAssignList = async () => {
         try {
             const result = await getService(apiName.assignSubject); // Assuming 'class' is the endpoint for classes
-            setAssignList(result);
+            setAssignList(result?.data);
             setEditId('')
             setSelectedClass('')
             setSelectedSection('')
@@ -68,7 +68,7 @@ const AssignSubject = () => {
     const getSubjectList = async () => {
         try {
             const result = await getService(apiName.subject); // API endpoint for subjects
-            setSubjectList(result);
+            setSubjectList(result?.data);
 
         } catch (error) {
             setLoading(false);

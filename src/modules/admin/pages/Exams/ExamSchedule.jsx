@@ -41,7 +41,7 @@ const ExamSchedule = () => {
     const fetchClasses = async () => {
         try {
             const result = await getService(apiName.getClassList);
-            setClasses(result);
+            setClasses(result?.data || []   );
         } catch (error) {
             // showToast('Error fetching classes', 'error');
         }
@@ -49,14 +49,14 @@ const ExamSchedule = () => {
 
     const fetchExamSchedules = async (examId, classId) => {
         const result = await getService(`${apiName.addSchedule}?examId=${examId}&classId=${classId}`);
-        setExamSchedulesList(result);
+        setExamSchedulesList(result?.data || [] );
     };
 
     const getExamsList = async () => {
         setLoading(true);
         try {
             const result = await getService(apiName.exams);
-            setExamsList(result);
+            setExamsList(result?.data || []);
             setLoading(false);
         } catch (error) {
             setLoading(false);

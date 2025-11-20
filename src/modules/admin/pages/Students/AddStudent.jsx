@@ -150,8 +150,8 @@ const AddStudent = () => {
   const fetchFeeStructures = async () => {
     try {
       const result = await getService(apiName.getFeeStructure); // API to get fee structures
-      console.log('result', result)
-      setFeeStructures(result); // Save fee structures
+      console.log('result', result.data)
+      setFeeStructures(result.data); // Save fee structures
     } catch (error) {
       showToast('Error fetching fee structures', 'error');
     }

@@ -57,9 +57,9 @@ const AdminHome = () => {
       const studentRes = await getService(apiName.getStudent);
       const classRes = await getService(apiName.getClassList);
       const result = await getService(apiName.getSectionList);
-      setStudents(studentRes?.length);
-      setClasses(classRes?.length);
-      setSections(result?.length);
+      setStudents(studentRes?.data?.length);
+      setClasses(classRes?.data?.length);
+      setSections(result?.data?.length);
     } catch (error) {
       console.log('error', error);
       showToast('Error loading admin dashboard', 'error');

@@ -34,7 +34,7 @@ const Class = () => {
     const getSectionList = async () => {
         try {
             const result = await getService(apiName.getSectionList); // API endpoint (e.g. '/posts')
-            setSectionList(result)
+            setSectionList(result.data)
         } catch (error) {
             setLoading(false);
         }
@@ -46,7 +46,7 @@ const Class = () => {
             const result = await getService(apiName.getClassList); // API endpoint (e.g. '/posts')
             setEditMode(false);
             setEditId('');
-            setClassList(result);
+            setClassList(result.data);
             setNewClassName('');
             setSelectedSections([]);
             setShowModal(false);

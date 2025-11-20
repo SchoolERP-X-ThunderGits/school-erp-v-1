@@ -32,7 +32,7 @@ const Section = () => {
             const result = await getService(apiName.getSectionList); // API endpoint (e.g. '/posts')
             setEditMode(false);
             setEditId('');
-            setSectionList(result);
+            setSectionList(result.data);
             setNewSectionName('');
             setShowModal(false);
             setLoading(false);

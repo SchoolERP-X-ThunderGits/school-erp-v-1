@@ -5,12 +5,9 @@ import { useSelector } from 'react-redux';
 const ProtectedRoute = ({ children }) => {
   const navigate = useNavigate();
   const isAuthenticated = localStorage.getItem('token'); // Replace with your actual auth check logic
-  const subscriptionStatus = useSelector((state) => state.subscription.status);
   useEffect(() => {
     if (!isAuthenticated) {
       navigate('/admin'); // Redirect to login if not authenticated
-    } else if (!subscriptionStatus) {
-      navigate('/admin/subscriptions')
     }
   }, [isAuthenticated, navigate]);
 

@@ -53,7 +53,7 @@ const FeeStructure = () => {
     const fetchFeeStructures = async () => {
         try {
             const result = await getService(apiName.getFeeStructure); // Get Fee Structures API
-            setFeeStructures(result); // Set fee structures in the state
+            setFeeStructures(result?.data || []); // Set fee structures in the state
             setLoading(false);
         } catch (error) {
             showToast('Error fetching fee structures', 'error');
@@ -65,7 +65,7 @@ const FeeStructure = () => {
     const fetchClasses = async () => {
         try {
             const result = await getService(apiName.getClassList); // Get Classes API
-            setClasses(result); // Set classes in state
+            setClasses(result?.data || []); // Set classes in state
         } catch (error) {
             showToast('Error fetching classes', 'error');
         }
@@ -75,7 +75,7 @@ const FeeStructure = () => {
     const fetchFeeTypes = async () => {
         try {
             const result = await getService(apiName.getFeeList); // Get Fee Types API
-            setFeeTypes(result); // Set fee types in state
+            setFeeTypes(result?.data || []); // Set fee types in state
         } catch (error) {
             showToast('Error fetching fee types', 'error');
         }

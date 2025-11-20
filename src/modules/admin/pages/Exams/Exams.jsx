@@ -35,7 +35,7 @@ const Exams = () => {
             const result = await getService(apiName.exams); // API endpoint (e.g. '/posts')
             setEditMode(false);
             setEditId('');
-            setExamsList(result);
+            setExamsList(result?.data || []);
             setExamName('');
             setExamSession('');
             setShowModal(false);

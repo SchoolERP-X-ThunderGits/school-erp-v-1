@@ -44,8 +44,8 @@ const GenerateAdmitCard = () => {
         try {
             const classesData = await getService(apiName.getClassList);
             const examsData = await getService(apiName.exams);
-            setClasses(classesData);
-            setExams(examsData);
+            setClasses(classesData?.data || []);
+            setExams(examsData?.data || []);
         } catch (error) {
             showToast('Error fetching data', 'error');
         } finally {
@@ -64,7 +64,7 @@ const GenerateAdmitCard = () => {
     const fetchStudents = async () => {
         try {
             const result = await getService(apiName.getStudent); // API to get students
-            setAllStudents(result);
+            setAllStudents(result?.data);
             setLoading(false);
         } catch (error) {
             showToast('Error fetching students', 'error');
