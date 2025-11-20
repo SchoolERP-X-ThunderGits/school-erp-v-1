@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
 import { Modal } from '../components/ui/modal';
-import Button from '../components/ui/button/Button';
 import { useDispatch } from 'react-redux';
 import { getService, postService } from '../constants/Service';
 import apiName from '../constants/ApiName';
 import { showToast } from './Toast';
+import { RAZORPAY_SUPER_KEY } from '../constants/Config';
 
 
 function SubscriptionModal({ selectedPlan, onClose, onSuccess }) {
@@ -22,7 +21,7 @@ function SubscriptionModal({ selectedPlan, onClose, onSuccess }) {
       const { order, billId } = response.data;
 
       const options = {
-        key: import.meta.env.VITE_RAZORPAY_KEY, // Use the environment variable for Razorpay key
+        key: RAZORPAY_SUPER_KEY, // Use the environment variable for Razorpay key
         amount: order.amount,
         currency: 'INR',
         order_id: order.id,
