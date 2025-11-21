@@ -79,9 +79,9 @@ const AssignSubject = () => {
         setShowModal(true);
         setEditMode(true);
         setEditId(classData._id);
-        setSelectedClass(classData?.class?.name)
+        setSelectedClass(classData?.class?._id)
         setSelectedSection(classData?.sectionId)
-        fetchSectionsForClass(classData?.class?.name)
+        fetchSectionsForClass(classData?.class?._id)
         setSelectedSubjects(classData?.subjects.map(subject => subject?._id));
     };
 
