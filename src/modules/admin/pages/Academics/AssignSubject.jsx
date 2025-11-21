@@ -81,7 +81,7 @@ const AssignSubject = () => {
         setEditId(classData._id);
         setSelectedClass(classData?.class?.name)
         setSelectedSection(classData?.sectionId)
-        fetchSectionsForClass(classData?.class?._id)
+        fetchSectionsForClass(classData?.class?.name)
         setSelectedSubjects(classData?.subjects.map(subject => subject?._id));
     };
 
