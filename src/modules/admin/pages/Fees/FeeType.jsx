@@ -33,7 +33,7 @@ const FeeType = () => {
             const result = await getService(apiName.getFeeList); // API endpoint (e.g. '/posts')
             setEditMode(false);
             setEditId('');
-            setFeeTypeList(result);
+            setFeeTypeList(result?.data || []); // Assuming the response has a 'data' field containing the list
             setFeeName('');
             setDescription('')
             setShowModal(false);

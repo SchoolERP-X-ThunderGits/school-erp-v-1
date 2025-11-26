@@ -31,11 +31,8 @@ import PrivacyPolicy from './modules/admin/pages/Help/PrivacyPolicy';
 import UpgradeRollNo from './modules/admin/pages/Academics/UpgradeRollNo';
 import Support from './Help/Support';
 import "flatpickr/dist/themes/material_green.css";
-import Subscriptions from './modules/admin/pages/Settings/Subscriptions';
 import Schools from './modules/admin/pages/Schools/Schools';
-import SubscriptionPlans from './modules/admin/pages/Subscription/SubscriptionPlans';
 import { useDispatch } from 'react-redux';
-import { fetchSubscriptionStatus } from './redux/slices/subscriptionSlice';
 import PaymentSummary from './modules/student/pages/Payment/PaymentSummary';
 import ExamsList from './modules/student/pages/Exams/ExamsList';
 import StudentProfile from './modules/student/pages/Profile/StudentProfile';
@@ -68,10 +65,6 @@ function App() {
       } else {
         if (pathname === '/' || pathname === '/admin') {
           navigate('/admin/home');
-        }
-        if (role == 'admin') {
-
-          dispatch(fetchSubscriptionStatus());
         }
       }
     } else {
@@ -274,14 +267,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route
-            path="/admin/subscriptions"
-            element={
-              <ProtectedRoute>
-                <Subscriptions />
-              </ProtectedRoute>
-            }
-          />
+
 
           {/* super admin routes */}
           <Route
@@ -296,12 +282,7 @@ function App() {
               <SchoolDetails />
             }
           />
-          <Route
-            path="/admin/Subscription-plans"
-            element={
-              <SubscriptionPlans />
-            }
-          />
+
           <Route
             path="/admin/payment-history"
             element={

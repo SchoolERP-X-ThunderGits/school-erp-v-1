@@ -33,7 +33,7 @@ const House = () => {
             const result = await getService(apiName.houses); // API endpoint (e.g. '/posts')
             setEditMode(false);
             setEditId('');
-            setHouseList(result);
+            setHouseList(result?.data);
             setNewHouseName('');
             setNewHouseColor('')
             setShowModal(false);
@@ -78,7 +78,7 @@ const House = () => {
             }
         } else {
             try {
-                const response = await postService(apiName.houses, body);
+                const response = await postService(`${apiName.houses}/`, body);
                 showToast("House added successfully.", 'success');
                 getHouseList();
             } catch (error) {

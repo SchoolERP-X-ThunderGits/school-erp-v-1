@@ -34,7 +34,7 @@ const Students = () => {
         try {
             const result = await getService(apiName.getStudent); // API to get students
             // Sort students by the numeric part of the admission number
-            const sorted = result.sort((a, b) => {
+            const sorted = result?.data.sort((a, b) => {
                 const getNum = (adNo) => {
                     const parts = adNo.split('-');
                     const num = parseInt(parts[1], 10); // Extract and convert
@@ -53,7 +53,7 @@ const Students = () => {
     const fetchClasses = async () => {
         try {
             const result = await getService(apiName.getClassList); // Get Classes API
-            setClasses(result);
+            setClasses(result?.data);
         } catch (error) {
             showToast('Error fetching classes', 'error');
         }

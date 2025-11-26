@@ -117,7 +117,7 @@ const EditStudent = () => {
     const fetchFeeStructures = async () => {
         try {
             const result = await getService(apiName.getFeeStructure); // API to get fee structures
-            setFeeStructures(result); // Save fee structures
+            setFeeStructures(result?.data || []); // Save fee structures
         } catch (error) {
             showToast('Error fetching fee structures', 'error');
         }

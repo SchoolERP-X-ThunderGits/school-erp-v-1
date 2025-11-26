@@ -2,19 +2,17 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router";
 import { Link } from 'react-router-dom';
 import { useSidebar } from "../context/SidebarContext";
-import { FiChevronDown } from "react-icons/fi"
+import { FiChevronDown } from "react-icons/fi";
 import { HiMiniAcademicCap } from "react-icons/hi2";
 import { PiExam, PiStudentFill } from "react-icons/pi";
 import { RxDashboard } from "react-icons/rx";
 import { LiaMoneyCheckSolid } from "react-icons/lia";
 import { CiSettings } from "react-icons/ci";
-import { MdOutlineLockOpen, MdOutlinePayment } from "react-icons/md";
-import logo1 from '../assets/Images/logo/ThunderGits_Logos/1.png'
-import logo2 from '../assets/Images/logo/ThunderGits_Logos/2.png'
-import logo3 from '../assets/Images/logo/ThunderGits_Logos/3.png'
-import logo4 from '../assets/Images/logo/ThunderGits_Logos/4.png'
-import { useSelector } from "react-redux";
-import { RootState } from "../redux/store";
+import { MdOutlinePayment } from "react-icons/md";
+import logo1 from '../assets/Images/logo/ThunderGits_Logos/1.png';
+import logo2 from '../assets/Images/logo/ThunderGits_Logos/2.png';
+import logo3 from '../assets/Images/logo/ThunderGits_Logos/3.png';
+import logo4 from '../assets/Images/logo/ThunderGits_Logos/4.png';
 
 type NavItem = {
   name: string;
@@ -75,7 +73,7 @@ const adminNavItems: NavItem[] = [
     name: "Settings",
     subItems: [
       { name: "Profile Settings", path: "/admin/profile-settings" },
-      { name: "Subscriptions", path: "/admin/subscriptions" },
+      // { name: "Subscriptions", path: "/admin/subscriptions" },
       { name: "Reset Password", path: "/admin/reset-password" },
     ],
   },
@@ -103,7 +101,7 @@ const superadminNavItems: NavItem[] = [
     icon: <CiSettings />,
     name: "Subscriptions",
     subItems: [
-      { name: "Subscription plans", path: "/admin/Subscription-plans" },
+      // { name: "Subscription plans", path: "/admin/Subscription-plans" },
     ],
   },
   {
@@ -151,7 +149,6 @@ const studentNavItems: NavItem[] = [
 const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const location = useLocation();
-  const { status } = useSelector((state: RootState) => state.subscription);
   const role = localStorage.getItem("role");
 
   const [openSubmenu, setOpenSubmenu] = useState<{ type: "main" | "others"; index: number } | null>(null);
@@ -224,7 +221,7 @@ const AppSidebar: React.FC = () => {
           ) : (
             nav.path && (
               <Link
-                to={(status || nav.name === 'Home') ? nav.path : "/admin/subscriptions"}
+                to={nav.path}
                 className={`menu-item group ${isActive(nav.path) ? "menu-item-active" : "menu-item-inactive"}`}
               >
                 <span className={`menu-item-icon-size ${isActive(nav.path) ? "menu-item-icon-active" : "menu-item-icon-inactive"}`}>
@@ -233,9 +230,6 @@ const AppSidebar: React.FC = () => {
                 {(isExpanded || isHovered || isMobileOpen) && (
                   <>
                     <span className="menu-item-text">{nav.name}</span>
-                    {(!status && nav.name !== 'Home' && role === 'admin') && (
-                      <MdOutlineLockOpen className="ml-2 text-gray-400" />
-                    )}
                   </>
                 )}
               </Link>
@@ -251,13 +245,10 @@ const AppSidebar: React.FC = () => {
                 {nav.subItems.map((subItem) => (
                   <li key={subItem.name}>
                     <Link
-                      to={(status || subItem.name === 'Dashboard' || role !== 'admin') ? subItem.path : "/admin/subscriptions"}
+                      to={subItem.path}
                       className={`menu-dropdown-item ${isActive(subItem.path) ? "menu-dropdown-item-active" : "menu-dropdown-item-inactive"}`}
                     >
                       {subItem.name}
-                      {(!status && subItem.name !== 'Dashboard' && role === 'admin') && (
-                        <MdOutlineLockOpen className="ml-2 text-gray-400" />
-                      )}
                     </Link>
                   </li>
                 ))}

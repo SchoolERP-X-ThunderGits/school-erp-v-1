@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useUserContext } from '../../../../context/UserContext';
 import apiName from '../../../../constants/ApiName';
 import { getService, putService } from '../../../../constants/Service';
@@ -33,8 +33,8 @@ const ProfileSettings = () => {
         setLoading(true);
         try {
             const result = await getService(`${apiName.getProfile}${school._id}`);
-            setProfileData(result);
-            setFormData(result);
+            setProfileData(result.data);
+            setFormData(result.data);
             setLoading(false);
         } catch (error) {
             showToast('Failed to load profile details', 'error');
@@ -46,7 +46,7 @@ const ProfileSettings = () => {
         setLoading(true);
         try {
             const result = await putService(`${apiName.getProfile}${school._id}`, formData);
-            setSchoolData(result?.tenant);
+            setSchoolData(result?.data?.tenant);
             showToast('Profile updated successfully', 'success');
             setLoading(false);
         } catch (error) {

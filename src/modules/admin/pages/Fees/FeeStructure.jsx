@@ -53,7 +53,7 @@ const FeeStructure = () => {
     const fetchFeeStructures = async () => {
         try {
             const result = await getService(apiName.getFeeStructure); // Get Fee Structures API
-            setFeeStructures(result); // Set fee structures in the state
+            setFeeStructures(result?.data || []); // Set fee structures in the state
             setLoading(false);
         } catch (error) {
             showToast('Error fetching fee structures', 'error');
@@ -65,7 +65,7 @@ const FeeStructure = () => {
     const fetchClasses = async () => {
         try {
             const result = await getService(apiName.getClassList); // Get Classes API
-            setClasses(result); // Set classes in state
+            setClasses(result?.data || []); // Set classes in state
         } catch (error) {
             showToast('Error fetching classes', 'error');
         }
@@ -75,7 +75,7 @@ const FeeStructure = () => {
     const fetchFeeTypes = async () => {
         try {
             const result = await getService(apiName.getFeeList); // Get Fee Types API
-            setFeeTypes(result); // Set fee types in state
+            setFeeTypes(result?.data || []); // Set fee types in state
         } catch (error) {
             showToast('Error fetching fee types', 'error');
         }
@@ -141,8 +141,8 @@ const FeeStructure = () => {
                 dueDate: group.dueDate // Removing everything after the 'T' from the dueDate
             }))
         });
-        
-        
+
+
     };
 
     const handleDeleteFeeStructure = (classId) => {
@@ -401,12 +401,28 @@ const FeeStructure = () => {
                                             <DatePicker
                                                 id="dueDate"
                                                 placeholder="Edit Date"
-                                                onChange={(date) => {
-                                                    handleFeeGroupChange('dueDate', index, moment(date[0]).format('DD/MM/YYYY'));
-                                                }}
-                                               defaultDate={feeGroup.dueDate !== '' ? feeGroup.dueDate.split('T')[0] : new Date().toISOString().split('T')[0]}
                                                 mode="single"
+                                                onChange={(date) => {
+                                                    if (!date || !date[0]) return;
+
+                                                    // Convert JS Date → DD/MM/YYYY
+                                                    handleFeeGroupChange(
+                                                        'dueDate',
+                                                        index,
+                                                        date[0]
+                                                    );
+                                                }}
+                                                defaultDate={
+                                                    feeGroup.dueDate
+                                                        ? moment(feeGroup.dueDate, [
+                                                            "DD/MM/YYYY",
+                                                            "YYYY-MM-DD",
+                                                            moment.ISO_8601
+                                                        ]).toDate()
+                                                        : new Date()
+                                                }
                                             />
+
 
                                             {/* <Input
                                                 type="date"

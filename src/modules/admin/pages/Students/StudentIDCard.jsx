@@ -121,7 +121,7 @@ const StudentIDCard = () => {
     const fetchClasses = async () => {
         try {
             const result = await getService(apiName.getClassList); // Get Classes API
-            setClasses(result);
+            setClasses(result?.data || []);
             setLoading(false);
         } catch (error) {
             showToast('Error fetching classes', 'error');
@@ -164,7 +164,7 @@ const StudentIDCard = () => {
     const fetchFilteredStudents = async () => {
         try {
             const result = await getService(`${apiName.getStudentByExam}/${classFilter}/${sectionFilter}`);
-            setStudents(result);
+            setStudents(result?.data);
             setSelectedStudents([])
             setLoading(false);
         } catch (error) {

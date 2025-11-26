@@ -36,7 +36,7 @@ const UpgradeClass = () => {
     const fetchClasses = async () => {
         try {
             const result = await getService(apiName.getClassList);
-            setClasses(result);
+            setClasses(result?.data);
             setLoading(false);
         } catch (error) {
             showToast('Error fetching classes', 'error');
@@ -76,7 +76,7 @@ const UpgradeClass = () => {
     const fetchFilteredStudents = async () => {
         try {
             const result = await getService(`${apiName.getStudentByExam}/${classFilter}/${sectionFilter}/${sessionFilter}`);
-            setStudents(result);
+            setStudents(result?.data);
             setSelectedStudentsId([]);
             setLoading(false);
         } catch (error) {

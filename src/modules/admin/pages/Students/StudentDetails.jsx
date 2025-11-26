@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { getService, postService } from '../../../../constants/Service';
 import apiName from '../../../../constants/ApiName';
@@ -33,8 +33,8 @@ const StudentDetails = () => {
         try {
             const student = await getService(`${apiName.getStudentById}/${studentId}`);
             const fees = await getService(`${apiName.getFeeByStudentId}/${studentId}`);
-            setStudent(student);
-            setFeeDetails(fees);
+            setStudent(student.data);
+            setFeeDetails(fees.data);
             setLoading(false);
         } catch (error) {
             showToast('Error fetching student details', 'error');

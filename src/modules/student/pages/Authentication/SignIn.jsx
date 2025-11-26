@@ -1,14 +1,12 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { postService } from '../../../../constants/Service';
 import apiName from '../../../../constants/ApiName';
 import { showToast } from '../../../../components/Toast';
 import { useUserContext } from '../../../../context/UserContext';
 import AuthLayout from '../../../admin/pages/Authentication/AuthPageLayout';
-import Input from '../../../../components/form/input/InputField';
 
 // Validation Schema using Yup
 const validationSchema = Yup.object().shape({
@@ -35,12 +33,12 @@ const SignIn = () => {
 
     try {
       const response = await postService(apiName.studentLogin, body);
-      console.log('response', response);
+      console.log('response', response.data);
       if (response.token) {
-        localStorage.setItem("token", response.token);
+        localStorage.setItem("token", response.data.token);
         localStorage.setItem("role", 'student');
-        localStorage.setItem("studentData", JSON.stringify(response?.student));
-        setSchoolData(response.tenant);
+        localStorage.setItem("studentData", JSON.stringify(response?.data?.student));
+        setSchoolData(response.data.tenant);
         showToast("Login successful.", 'success');
         navigate("/student/home");
       } else {
