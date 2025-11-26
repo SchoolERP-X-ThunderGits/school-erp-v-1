@@ -73,7 +73,7 @@ const adminNavItems: NavItem[] = [
     name: "Settings",
     subItems: [
       { name: "Profile Settings", path: "/admin/profile-settings" },
-      { name: "Subscriptions", path: "/admin/subscriptions" },
+      // { name: "Subscriptions", path: "/admin/subscriptions" },
       { name: "Reset Password", path: "/admin/reset-password" },
     ],
   },
@@ -101,7 +101,7 @@ const superadminNavItems: NavItem[] = [
     icon: <CiSettings />,
     name: "Subscriptions",
     subItems: [
-      { name: "Subscription plans", path: "/admin/Subscription-plans" },
+      // { name: "Subscription plans", path: "/admin/Subscription-plans" },
     ],
   },
   {

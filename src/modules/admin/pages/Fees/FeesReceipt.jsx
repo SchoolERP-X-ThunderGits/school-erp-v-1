@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import "../../css/FeeReceipt.css";
 import { useParams } from 'react-router-dom';
 import jsPDF from 'jspdf';
@@ -23,7 +23,7 @@ const FeeReceipt = () => {
         // Function to fetch payment data by ID
         const fetchPaymentData = async () => {
             try {
-                const data = await getService(`${apiName?.getPaymentById}/${paymentId}`)
+                const { data } = await getService(`${apiName?.getPaymentById}/${paymentId}`)
                 const processedData = {
                     date: moment(data.date).format('DD/MM/YYYY'),
                     receipt_no: data.receipt_no,

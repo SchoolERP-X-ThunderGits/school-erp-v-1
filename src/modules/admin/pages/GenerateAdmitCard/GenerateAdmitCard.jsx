@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { FaDownload, FaCheckCircle } from 'react-icons/fa';
-import { pdf, Document, Page, Text, View, StyleSheet, Image, Font } from '@react-pdf/renderer';
+import { useEffect, useState } from 'react';
+import { FaDownload } from 'react-icons/fa';
+import { pdf, Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 import { saveAs } from 'file-saver';
 import apiName from '../../../../constants/ApiName'; // Importing API Names
 import { showToast } from '../../../../components/Toast'; // Show Toast Notifications
 import Loader from '../../../../components/Loader';
 import moment from 'moment';
-import { getService, postService } from '../../../../constants/Service';
+import { getService } from '../../../../constants/Service';
 import { useUserContext } from '../../../../context/UserContext';
 import { BASE_URL } from '../../../../constants/Config';
-import images from '../../../../constants/Images';
 import { useNavigate } from 'react-router-dom';
-import { Modal } from '../../../../components/ui/modal';
 import { Table, TableBody, TableCell, TableHeader, TableRow } from '../../../../components/ui/table/index';
 import Select from '../../../../components/form/Select';
 import Button from '../../../../components/ui/button/Button';
@@ -55,8 +53,8 @@ const GenerateAdmitCard = () => {
 
     const fetchExamSchedule = async () => {
         try {
-            const response = await getService(`${apiName?.admitCardByClass}?classId=${selectedClass}&examNameId=${selectedExam}`);
-            setExamSchedule(response);
+            const response = await getService(`${apiName?.admitCardByClass}/${selectedClass}/${selectedExam}`);
+            setExamSchedule(response.data);
         } catch (error) {
             console.error("Error fetching exam schedule:", error);
         }
@@ -80,8 +78,8 @@ const GenerateAdmitCard = () => {
         }
         try {
             const response = await getService(`${apiName.getStudentByExam}/${selectedClass}/${selectedSection}/${selectedSession}`);
-            console.log('responsemvmbmvbmvmb', response)
-            setStudents(response);
+            console.log('responsemvmbmvbmvmb', response.data)
+            setStudents(response.data);
         } catch (error) {
             console.log('lbvlbvlb', error)
             showToast('Error fetching students', 'error');

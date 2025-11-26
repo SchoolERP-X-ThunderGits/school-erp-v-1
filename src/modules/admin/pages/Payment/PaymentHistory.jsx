@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import moment from 'moment'; // Make sure to install it using: npm install moment
 import { getService } from '../../../../constants/Service';
 import apiName from '../../../../constants/ApiName';
@@ -17,7 +17,7 @@ function PaymentHistory() {
   const getClassList = async () => {
     try {
       const result = await getService(apiName.getPayHistory);
-      setPaymentSummary(result);
+      setPaymentSummary(result.data);
     } catch (error) {
       console.error('Error fetching payment history:', error);
     }

@@ -13,7 +13,7 @@ import "flatpickr/dist/themes/material_blue.css";
 import DatePicker from "../../../../components/form/date-picker.tsx";
 import moment from 'moment';
 import { FaDownload } from 'react-icons/fa';
-import { pdf, Document, Page, Text, View, StyleSheet, Image, Font } from '@react-pdf/renderer';
+import { pdf, Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 import { useUserContext } from '../../../../context/UserContext.jsx';
 const ExamSchedule = () => {
     const [examsList, setExamsList] = useState([]);
@@ -41,7 +41,7 @@ const ExamSchedule = () => {
     const fetchClasses = async () => {
         try {
             const result = await getService(apiName.getClassList);
-            setClasses(result?.data || []   );
+            setClasses(result?.data || []);
         } catch (error) {
             // showToast('Error fetching classes', 'error');
         }
@@ -49,7 +49,7 @@ const ExamSchedule = () => {
 
     const fetchExamSchedules = async (examId, classId) => {
         const result = await getService(`${apiName.addSchedule}?examId=${examId}&classId=${classId}`);
-        setExamSchedulesList(result?.data || [] );
+        setExamSchedulesList(result?.data || []);
     };
 
     const getExamsList = async () => {
@@ -79,9 +79,10 @@ const ExamSchedule = () => {
     const getSubjectsByClass = async (classId) => {
         try {
             const result = await getService(`${apiName.getSubjectByClass}`);
-            const mapping = result.find((item) => item.class._id === classId);
+            const mapping = result.data.find((item) => item.class?._id === classId);
             setSubjectsList(mapping?.subjects);
         } catch (error) {
+            console.log(error)
             showToast('Error fetching subjects', 'error');
         }
     };
@@ -238,7 +239,7 @@ const ExamSchedule = () => {
                 <div className='text-3xl font-medium text-gray-800 dark:text-white'>Schedule Exams List</div>
                 <Button onClick={() => {
                     setShowModal(true), setErrorMessage(''),
-                    setSelectedClass('');
+                        setSelectedClass('');
                     setSelectedExam('');
                     setSubjectsList([]);
                     setExamSchedules([]);
@@ -427,7 +428,7 @@ const ExamSchedule = () => {
                                                                     handleInputChange(
                                                                         index,
                                                                         'date',
-                                                                        moment(date[0]).format('DD/MM/YYYY'),
+                                                                        date[0],
                                                                         subject._id
                                                                     );
                                                                 }}

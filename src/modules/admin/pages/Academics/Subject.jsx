@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MdDelete, MdOutlineModeEdit } from "react-icons/md";
 import { getService, postService, putService, deleteService } from '../../../../constants/Service';
 import apiName from '../../../../constants/ApiName';
@@ -48,7 +48,7 @@ const Subject = () => {
         setEditMode(true);
         setEditId(subjectData._id);
         setNewSubjectName(subjectData.name);
-        setNewSubjectCode(subjectData.name);
+        setNewSubjectCode(subjectData.subjectCode);
     };
 
     const handleDelete = (subjectId) => {
