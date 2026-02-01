@@ -189,35 +189,45 @@ const AddStudent = () => {
 
   const handleInputChange = (e) => {
     const { name, value, type, files } = e.target;
-    if (name == 'class_Id') {
-      const filterClassData = classes.filter((classes) => classes._id === value);
-      setSections(filterClassData[0]?.sections)
+
+    // 📞 Phone number validation (only digits, max 10)
+    if (name === 'contact_Number' || name === 'alternet_Contact_Number') {
+      if (!/^\d*$/.test(value)) return; // allow only digits
+
+      if (value.length > 10) return; // limit to 10 digits
+
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+      return;
     }
+
     if (type === 'file') {
       if (files && files[0]) {
         setFormData((prevData) => ({
           ...prevData,
-          [name]: files[0] // Store the file object directly in the state
+          [name]: files[0],
         }));
 
-        // Preview the image
         const file = files[0];
         const reader = new FileReader();
         reader.onloadend = () => {
           setTimeout(() => {
-            setImagePreview(reader.result); // Set the image preview after file is loaded
+            setImagePreview(reader.result);
           }, 2000);
         };
-        reader.readAsDataURL(file); // Read the file as a data URL
+        reader.readAsDataURL(file);
         uploadFile(file);
       }
     } else {
       setFormData((prevData) => ({
         ...prevData,
-        [name]: value // For other input types, handle them as usual
+        [name]: value,
       }));
     }
   };
+
 
   function uploadFile(file) {
     setImageLoad(true)
@@ -252,40 +262,48 @@ const AddStudent = () => {
   }
 
   const handleAadharChange = (e, index) => {
-    const { value } = e.target;
+    const value = e.target.value;
 
-    // Allow only digits and limit to 4 characters
-    if (/^\d{0,4}$/.test(value)) {
-      const updatedParts = [...aadharParts];
-      updatedParts[index] = value;
-      setAadharParts(updatedParts);
-      // Auto-focus to the next input if 4 digits are entered
-      if (value.length === 4 && index < 3) {
-        const nextInput = document.querySelector(`input[name="aadhar-${index + 1}"]`);
-        if (nextInput) nextInput.focus();
-      }
+    // ✅ allow only digits & max 4 chars
+    if (!/^\d{0,4}$/.test(value)) return;
 
-      // Auto-focus to the previous input if digits are deleted (length becomes less than 4)
-      if (value.length < 4) {
-        // Focus the previous input if the current field is emptied
-        if (value.length === 0 && index > 0) {
-          const prevInput = document.querySelector(`input[name="aadhar-${index - 1}"]`);
-          if (prevInput) prevInput.focus();
-        }
-      }
+    const updatedParts = [...aadharParts];
+    updatedParts[index] = value;
+    setAadharParts(updatedParts);
 
-      // Check if all parts are filled with 4 digits
-      const allPartsFilled = updatedParts.every((part) => part.length === 4);
-      console.log("All parts filled: ", allPartsFilled);
+    // 👉 Auto move next
+    if (value.length === 4 && index < 2) {
+      const nextInput = document.querySelector(
+        `input[name="aadhar-${index + 1}"]`
+      );
+      nextInput?.focus();
+    }
 
-      // If all parts are filled, update the final Aadhar number in formData
-      if (allPartsFilled) {
-        const fullAadhar = updatedParts.join("");
-        console.log('Full Aadhar:', fullAadhar);
-        setFormData((prevData) => ({ ...prevData, aadhar_number: fullAadhar })); // Directly update formData
-      }
+    // 👉 Auto move previous on delete
+    if (value.length === 0 && index > 0) {
+      const prevInput = document.querySelector(
+        `input[name="aadhar-${index - 1}"]`
+      );
+      prevInput?.focus();
+    }
+
+    // 🔐 Final Aadhar validation (12 digits)
+    const fullAadhar = updatedParts.join("");
+
+    if (/^\d{12}$/.test(fullAadhar)) {
+      setFormData((prev) => ({
+        ...prev,
+        aadhar_number: fullAadhar,
+      }));
+    } else {
+      // clear invalid partial value
+      setFormData((prev) => ({
+        ...prev,
+        aadhar_number: "",
+      }));
     }
   };
+
   const handleFileChange = (event) => {
     setBulkFile(event.target.files[0]);
   };
@@ -293,6 +311,37 @@ const AddStudent = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
+    if (
+      formData.select_tranport === "Yes" &&
+      !formData.transport_address.trim()
+    ) {
+      showToast(
+        "Transportation Address is required.",
+        "error"
+      );
+      return;
+    }
+
+    
+    if (!/^\d{12}$/.test(formData.aadhar_number)) {
+      showToast("Aadhar number must be exactly 12 digits.", "error");
+      return;
+    }
+
+
+    if (!/^\d{10}$/.test(formData.contact_Number)) {
+      showToast("Contact number must be exactly 10 digits.", "error");
+      return;
+    }
+
+    // Alternate number validation (only if entered)
+    if (
+      formData.alternet_Contact_Number &&
+      !/^\d{10}$/.test(formData.alternet_Contact_Number)
+    ) {
+      showToast("Alternate contact number must be exactly 10 digits.", "error");
+      return;
+    }
     setFormData((prevFormData) => ({
       ...prevFormData,
       date_Of_Admission: formData.date_Of_Admission != '' ? formData.date_Of_Admission.split('T')[0] : new Date().toISOString().split('T')[0]
@@ -471,14 +520,7 @@ const AddStudent = () => {
 
                     {/* Date of Birth */}
                     <div className="mb-4">
-                      <Label className="block text-gray-700">Date of Birth <span className="text-red-500">*</span>:</Label>
-                      {/* <Input
-                        type="date"
-                        name="date_Of_Birth"
-                        value={formData.date_Of_Birth.split('T')[0]}
-                        onChange={handleInputChange}
-                        className="mt-2 p-2 border border-gray-300 rounded-md w-full"
-                      /> */}
+                      <Label className="block text-gray-700 mb-4">Date of Birth <span className="text-red-500">*</span>:</Label>
                       <DatePicker
                         id="date_Of_Birth"
                         placeholder="Select a date"
@@ -529,12 +571,14 @@ const AddStudent = () => {
                     <div className="mb-4">
                       <Label className="block text-gray-700">Contact Number <span className="text-red-500">*</span>:</Label>
                       <Input
-                        type='number'
+                        type="text"
                         name="contact_Number"
                         value={formData.contact_Number}
                         onChange={handleInputChange}
-                        className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                        maxLength={10}
+                        placeholder="Enter 10-digit number"
                       />
+
                     </div>
 
                     <div className="mb-4 ">
@@ -567,12 +611,14 @@ const AddStudent = () => {
                     <div className="mb-4">
                       <Label className="block text-gray-700">Alternate Contact No:</Label>
                       <Input
-                        type="number"
+                        type="text"
                         name="alternet_Contact_Number"
                         value={formData.alternet_Contact_Number}
                         onChange={handleInputChange}
-                        className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                        maxLength={10}
+                        placeholder="Enter 10-digit number"
                       />
+
                     </div>
                     <div className="mb-4 ">
                       <Label className="block text-gray-700">Address for Id Card<span className="text-red-500">*</span>:</Label>
@@ -689,15 +735,23 @@ const AddStudent = () => {
                     </div>
 
                     <div className="mb-4 ">
-                      <Label className="block text-gray-700">Transportation Address:</Label>
+                      <Label className="block text-gray-700">
+                        Transportation Address
+                        {formData.select_tranport === "Yes" && (
+                          <span className="text-red-500"> *</span>
+                        )}
+                      </Label>
+
                       <Input
                         type="text"
                         name="transport_address"
                         maxLength={45}
                         value={formData.transport_address}
                         onChange={handleInputChange}
+                        disabled={formData.select_tranport !== "Yes"}
                         className="mt-2 p-2 border border-gray-300 rounded-md w-full"
                       />
+
                     </div>
 
                     {/* Father's Name */}
@@ -763,7 +817,7 @@ const AddStudent = () => {
                     {/* Date of Admission */}
 
                     <div className="mb-4">
-                      <Label className="block text-gray-700">
+                      <Label className="block text-gray-700 mb-4">
                         Date of Admission <span className="text-red-500">*</span>:
                       </Label>
                       <DatePicker
@@ -802,14 +856,15 @@ const AddStudent = () => {
                         {[0, 1, 2].map((index) => (
                           <Input
                             key={index}
-                            type="number"
+                            type="text"
                             name={`aadhar-${index}`}
                             value={aadharParts[index]}
                             onChange={(e) => handleAadharChange(e, index)}
-                            maxLength="4"
+                            maxLength={4}
                             className="p-2 border border-gray-300 rounded-md w-1/4 text-center"
                             placeholder="0000"
                           />
+
                         ))}
                       </div>
                     </div>

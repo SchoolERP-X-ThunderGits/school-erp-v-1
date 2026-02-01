@@ -12,8 +12,12 @@ import Checkbox from '../../../../components/form/input/Checkbox';
 import { Modal } from '../../../../components/ui/modal';
 import moment from 'moment';
 import { FaEye } from 'react-icons/fa';
+import { useLocation } from 'react-router-dom';
+
 
 const StudentDetails = () => {
+    const location = useLocation();
+const previousFilters = location.state;
     const { school } = useUserContext();
     const [loading, setLoading] = useState(true);
     const [student, setStudent] = useState(null);
@@ -211,9 +215,10 @@ const StudentDetails = () => {
         </p>
     );
 
-
-    const renderPayment = () => (
+    const renderFeeInformation = () => (
         <div className="overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+
+            <div className="w-full p-4 flex justify-between items-center">
             <div className='w-full p-4 flex justify-between items-center'>
                 <div className='text-3xl font-medium text-gray-800 dark:text-gray-200'>Payment Summary</div>
                 {/* {selectedFees.length !== 0 && ( */}
@@ -221,6 +226,66 @@ const StudentDetails = () => {
                     <Link>Collect Payment</Link>
                 </Button>
                 {/* )} */}
+            </div>
+
+                {selectedFees.length > 0 && (
+                    <Button onClick={handleCollectFee}>
+                        Collect Fee
+                    </Button>
+                )}
+            </div>
+
+            {/* Fee Structure Table (same as modal) */}
+            <div className="overflow-y-auto max-h-[65vh] overflow-x-auto rounded-md border border-gray-200 dark:border-gray-800">
+                {feeDetails?.feeStructures?.length > 0 ? (
+                    <Table className="w-full min-w-[800px]">
+                        <TableHeader className="bg-gray-100 dark:bg-gray-800">
+                            <TableRow>
+                                {['Structure', 'Fee Type', 'Due Date', 'Amount', 'Status'].map(h => (
+                                    <th key={h} className="px-5 py-3 text-left">{h}</th>
+                                ))}
+                            </TableRow>
+                        </TableHeader>
+
+                        <TableBody>
+                            {[].concat(...feeDetails.feeStructures.map(fs =>
+                                fs.feeGroups.map(fg => ({
+                                    ...fg,
+                                    structureName: fs.name
+                                }))
+                            ))
+                                .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
+                                .map(feeGroup => (
+                                    <TableRow key={feeGroup._id}>
+                                        <TableCell className="px-5 py-4">{feeGroup.structureName}</TableCell>
+                                        <TableCell className="px-5 py-4">{feeGroup.feeType}</TableCell>
+                                        <TableCell className="px-5 py-4">
+                                            {moment(feeGroup.dueDate).format("DD-MM-YYYY")}
+                                        </TableCell>
+                                        <TableCell className="px-5 py-4">₹{feeGroup.amount}</TableCell>
+                                        <TableCell className="px-5 py-4">
+                                            {setStatusForFeeGroups(
+                                                feeGroup.feeType,
+                                                feeGroup.dueDate,
+                                                feeDetails.payments
+                                            )}
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                        </TableBody>
+                    </Table>
+                ) : (
+                    <p className="text-center py-6">No fee information found</p>
+                )}
+            </div>
+        </div>
+    );
+
+
+    const renderPayments = () => (
+        <div className="overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+            <div className='w-full p-4 flex justify-between items-center'>
+                <div className='text-3xl font-medium text-gray-800 dark:text-gray-200'>Payment Summary</div>
             </div>
             {feeDetails?.payments.length == 0 ?
                 <div>
@@ -283,24 +348,30 @@ const StudentDetails = () => {
                 <div>
                     <div className="w-full flex justify-center mt-4 mb-8">
                         <div className="relative flex space-x-2 bg-white border border-gray-200 dark:bg-gray-900 dark:border-gray-700 px-2 py-1 rounded-full shadow-lg backdrop-blur-md">
-                            {[{ key: 'profile', label: 'Profile' }, { key: 'fee', label: 'Fee Information' }].map((tab) => (
-                                <button
-                                    key={tab.key}
-                                    onClick={() => setActiveTab(tab.key)}
-                                    className={`flex items-center space-x-2 px-5 py-2 rounded-full font-semibold text-sm md:text-base transition-all duration-300
+                            {[
+                                { key: 'profile', label: 'Profile' },
+                                { key: 'feeInfo', label: 'Fee Information' },
+                                { key: 'payments', label: 'Payments' },
+                            ]
+                                .map((tab) => (
+                                    <button
+                                        key={tab.key}
+                                        onClick={() => setActiveTab(tab.key)}
+                                        className={`flex items-center space-x-2 px-5 py-2 rounded-full font-semibold text-sm md:text-base transition-all duration-300
                                 ${activeTab === tab.key
-                                            ? 'bg-[#465fff] text-white shadow-md'
-                                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
-                                        }`}
-                                >
-                                    <span>{tab.label}</span>
-                                </button>
-                            ))}
+                                                ? 'bg-[#465fff] text-white shadow-md'
+                                                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                                            }`}
+                                    >
+                                        <span>{tab.label}</span>
+                                    </button>
+                                ))}
                         </div>
                     </div>
-
                     {activeTab === 'profile' && renderProfile()}
-                    {activeTab === 'fee' && renderPayment()}
+                    {activeTab === 'feeInfo' && renderFeeInformation()}
+                    {activeTab === 'payments' && renderPayments()}
+
                 </div>
             )}
 

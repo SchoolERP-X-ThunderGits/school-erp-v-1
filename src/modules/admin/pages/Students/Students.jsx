@@ -10,18 +10,22 @@ import Select from '../../../../components/form/Select';
 import { showToast } from '../../../../components/Toast';
 import { Link, useNavigate } from 'react-router-dom';
 import Input from '../../../../components/form/input/InputField';
+import { useSearchParams } from 'react-router-dom';
 
 const Students = () => {
+
+
+    const [searchParams, setSearchParams] = useSearchParams();
     const [loading, setLoading] = useState(false);
     const [classes, setClasses] = useState([]); // Classes for dropdown
     const [sections, setSections] = useState([]); // Sections for dropdown based on selected class
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [students, setStudents] = useState([]);
     const [studentId, setStudentId] = useState(null);
-    const [classFilter, setClassFilter] = useState('');
-    const [sectionFilter, setSectionFilter] = useState('');
+    const [classFilter, setClassFilter] = useState(searchParams.get('class') || '');
+    const [sectionFilter, setSectionFilter] = useState(searchParams.get('section') || '');
+    const [searchText, setSearchText] = useState(searchParams.get('search') || '');
     const navigate = useNavigate();
-    const [searchText, setSearchText] = useState('');
 
     useEffect(() => {
         setLoading(true);
@@ -29,6 +33,22 @@ const Students = () => {
         fetchStudents();
     }, []);
 
+    useEffect(() => {
+        const params = {};
+
+        if (classFilter) params.class = classFilter;
+        if (sectionFilter) params.section = sectionFilter;
+        if (searchText) params.search = searchText;
+
+        setSearchParams(params);
+    }, [classFilter, sectionFilter, searchText]);
+
+    useEffect(() => {
+        if (classFilter && classes.length > 0) {
+          fetchSectionsForClass(classFilter);
+        }
+      }, [classFilter, classes]);
+      
     // Fetch all students
     const fetchStudents = async () => {
         try {
@@ -137,8 +157,12 @@ const Students = () => {
                                         <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">{student?.roll_Number ? student?.roll_Number : 'N/A'}</TableCell>
                                         <TableCell className="px-5 py-4 text-left text-gray-700 dark:text-gray-300">
                                             <button
-                                                onClick={() => navigate(`/admin/student/student-details/${student?._id}`)} // Navigate to student details page
-                                                className="text-blue-500 hover:text-blue-700 transition duration-200 dark:text-blue-400 dark:hover:text-blue-500"
+                                                onClick={() =>
+                                                    navigate(
+                                                        `/admin/student/student-details/${student._id}?class=${classFilter}&section=${sectionFilter}&search=${searchText}`
+                                                    )
+                                                }
+                                                className="text-blue-500 hover:text-blue-700 transition"
                                             >
                                                 {student?.first_Name} {student?.last_Name}
                                             </button>
@@ -221,11 +245,12 @@ const Students = () => {
                                 setClassFilter('');
                                 setSectionFilter('');
                                 setSearchText('');
+                                setSearchParams({});
                             }}
-                            className="px-6 py-3 bg-gray-200 !text-black rounded-lg hover:bg-gray-300 transition duration-300"
                         >
                             Clear Filters
                         </Button>
+
                     </div>
 
                     <div className="mt-6">{renderStudentList()}</div>
