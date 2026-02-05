@@ -436,6 +436,51 @@ layer(base);
   @apply text-gray-400!;
 }
 
+.flatpickr-calendar .numInputWrapper span {
+  border: none !important;
+}
+
+/* UP arrow */
+.flatpickr-calendar .numInputWrapper span.arrowUp::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 6px;
+  transform: translateX(-50%);
+  border-left: 4px solid transparent !important;
+  border-right: 4px solid transparent !important;
+  border-bottom: 6px solid #344054 !important; /* gray-700 */
+}
+
+/* DOWN arrow */
+.flatpickr-calendar .numInputWrapper span.arrowDown::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 6px;
+  transform: translateX(-50%);
+  border-left: 4px solid transparent !important;
+  border-right: 4px solid transparent !important;
+  border-top: 6px solid #344054 !important; /* gray-700 */
+}
+
+/* DARK MODE */
+.dark .flatpickr-calendar .numInputWrapper span.arrowUp::after {
+  border-bottom-color: #e5e7eb !important; /* gray-200 */
+}
+
+.dark .flatpickr-calendar .numInputWrapper span.arrowDown::after {
+  border-top-color: #e5e7eb !important; /* gray-200 */
+}
+.flatpickr-calendar .numInputWrapper span {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.flatpickr-calendar .numInputWrapper:hover span {
+  opacity: 1 !important;
+}
+
 .flatpickr-months > .flatpickr-month {
   background: none !important;
 }

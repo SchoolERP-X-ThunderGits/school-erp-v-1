@@ -141,8 +141,8 @@ const FeeStructure = () => {
                 dueDate: group.dueDate // Removing everything after the 'T' from the dueDate
             }))
         });
-        
-        
+
+
     };
 
     const handleDeleteFeeStructure = (classId) => {
@@ -402,11 +402,17 @@ const FeeStructure = () => {
                                                 id="dueDate"
                                                 placeholder="Edit Date"
                                                 onChange={(date) => {
-                                                    handleFeeGroupChange('dueDate', index, moment(date[0]).format('DD/MM/YYYY'));
+                                                    const selectedDate = date[0];
+                                                    handleFeeGroupChange('dueDate', index, selectedDate);
                                                 }}
-                                               defaultDate={feeGroup.dueDate !== '' ? feeGroup.dueDate.split('T')[0] : new Date().toISOString().split('T')[0]}
+                                                defaultDate={
+                                                    feeGroup.dueDate
+                                                        ? new Date(feeGroup.dueDate)
+                                                        : new Date()
+                                                }
                                                 mode="single"
                                             />
+
 
                                             {/* <Input
                                                 type="date"
@@ -419,13 +425,13 @@ const FeeStructure = () => {
                                                 maxLength={5}
                                             /> */}
 
-                                            <button
+                                            {formData.feeGroups.length !== 1 && <button
                                                 disabled={formData.feeGroups.length === 1}
                                                 onClick={() => handleDeleteFeeGroup(index)}
                                                 className="bg-red text-red-500 hover:text-red-700 mt-2 sm:mt-0"
                                             >
                                                 <FaTrash />
-                                            </button>
+                                            </button>}
                                         </div>
                                     </div>
                                 ))}

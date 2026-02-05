@@ -427,11 +427,11 @@ const GenerateDemandSlip = () => {
                         </Button>
                         <Button
                             onClick={() => {
+                                setStartDate()
                                 setClassFilter('');   // Reset class filter
                                 setSectionFilter(''); // Reset section filter
                                 setStudents([])
-                                setStartDate('')
-                                setEndDate('')
+                                setEndDate()
                             }}
                             className="px-6 py-3 bg-gray-200 !text-black rounded-lg hover:bg-gray-300 transition duration-300"
                         >

@@ -79,7 +79,7 @@ const ExamSchedule = () => {
     const getSubjectsByClass = async (classId) => {
         try {
             const result = await getService(`${apiName.getSubjectByClass}`);
-            const mapping = result.find((item) => item.class._id === classId);
+            const mapping = result.find((item) => item.class?._id === classId);
             setSubjectsList(mapping?.subjects);
         } catch (error) {
             showToast('Error fetching subjects', 'error');
@@ -238,7 +238,7 @@ const ExamSchedule = () => {
                 <div className='text-3xl font-medium text-gray-800 dark:text-white'>Schedule Exams List</div>
                 <Button onClick={() => {
                     setShowModal(true), setErrorMessage(''),
-                    setSelectedClass('');
+                        setSelectedClass('');
                     setSelectedExam('');
                     setSubjectsList([]);
                     setExamSchedules([]);

@@ -46,7 +46,7 @@ const AdminHome = () => {
     try {
       const result = await getService(`${apiName.schoolDashboard}${school?._id}`);
       setDashboardData(result?.data);
-      console.log('fldslss',result)
+      console.log('fldslss', result)
       setPayments(result?.data?.counts?.totalPayments)
     } catch (error) {
       showToast('Failed to load profile details', 'error');
@@ -158,7 +158,7 @@ const AdminHome = () => {
       </div>
       <div className="bg-white p-6 rounded-lg shadow-md mb-8 mt-10 dark:bg-gray-800">
         <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-        Classes
+          Classes
         </h3>
         <Chart
           options={{
@@ -316,7 +316,9 @@ const MetricCard = ({ icon, title, count }) => (
       </div>
     )}
     <div className="mt-5">
-      <span className="text-sm text-gray-500 dark:text-gray-400">{title}</span>
+      <span className="text-sm font-medium text-black dark:text-white">
+        {title}
+      </span>
       <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">{count}</h4>
     </div>
   </div>
