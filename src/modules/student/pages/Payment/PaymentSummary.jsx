@@ -8,7 +8,7 @@ import { Modal } from '../../../../components/ui/modal';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from '../../../../components/ui/button/Button';
 import Checkbox from '../../../../components/form/input/Checkbox';
-import { REACT_APP_RAZORPAY_KEY } from '../../../../constants/Config';
+import { RAZORPAY_SUPER_KEY } from '../../../../constants/Config';
 import { useUserContext } from '../../../../context/UserContext';
 import { pdf, Document, Page, Text, View, StyleSheet, Image, Font } from '@react-pdf/renderer';
 import { FaEye } from 'react-icons/fa';
@@ -174,7 +174,7 @@ const PaymentSummary = () => {
       //   return showToast("Failed to create order", "error");
       // }
       const options = {
-        key: REACT_APP_RAZORPAY_KEY,
+        key: RAZORPAY_SUPER_KEY,
         amount: amount, // in paise
         currency: "INR",
         name: "Your School Name",
